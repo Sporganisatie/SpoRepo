@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "cd ./client && npm start"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}
