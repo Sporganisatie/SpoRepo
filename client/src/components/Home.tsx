@@ -5,6 +5,8 @@ const Home = () => {
     <div>
       ik ben Home
       <Link to="/login">klik hier om in te loggen</Link>
+      <br />
+      <Link to="/testing">Test pagina</Link>
     </div>
   );
 };

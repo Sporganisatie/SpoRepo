@@ -20,7 +20,7 @@ public class AuthenticationController : ControllerBase
         var response = AccountService.Authenticate(credentials);
 
         if (response == null) // TODO deze logica naar de service toe
-            return BadRequest(new { message = "Username or password is incorrect" });
+            return BadRequest(new { message = "Username or password is incorrect" }); // wss iets anders dan badrequest returnen
 
         return Ok(response);
     }

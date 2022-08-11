@@ -17,7 +17,7 @@ public class JwtMiddleware
 
     public async Task Invoke(HttpContext context, IAccountService accountService)
     {
-        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last(); // TODO zijn al deze stappen nodig?
 
         if (token != null)
             attachUserToContext(context, accountService, token);
@@ -34,7 +34,7 @@ public class JwtMiddleware
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                // IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
@@ -47,9 +47,9 @@ public class JwtMiddleware
             // attach user to context on successful jwt validation
             context.Items["User"] = accountService.GetById(accountId);
         }
-        catch
+        catch (Exception exception)
         {
-            // Do not attach user if auth fails
+            Console.WriteLine(exception);
         }
     }
 }
