@@ -1,3 +1,6 @@
+// import api from "../api";
+
+import axios from "axios";
 import { useState } from "react";
 
 const Login = () => {
@@ -5,7 +8,17 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(email + " " + password)
+        axios.post('authentication/login', { email, password })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log(res.data);
+                    localStorage.setItem('authToken', res.data);
+                } else {
+                }
+            })
+            .catch(function (error) {
+                throw error // foute login geeft momenteel error? statuscode 400
+            });
     }
 
     return (
