@@ -1,3 +1,4 @@
+using Dotnet2.Infrastructure.SqlDatabaseClient;
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
 
@@ -14,5 +15,11 @@ public class TestDataController : ControllerBase
     public IActionResult GetTestData()
     {
         return Ok("deze data komt vanaf de server");
+    }
+
+    [HttpGet("sql")]
+    public IActionResult MakeDBcall(string query)
+    {
+        return Ok(SqlDatabaseClient.ProcessFreeQuery(query));
     }
 }
