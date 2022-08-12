@@ -12,8 +12,8 @@ public record Account(int Id, string Email, string Password, bool admin);
 
 public interface IAccountService
 {
-    public string? Authenticate(LoginCredentials model);
-    Account? GetById(int id);
+    public string Authenticate(LoginCredentials model);
+    Account GetById(int id);
 }
 
 public class AccountService : IAccountService
@@ -31,24 +31,19 @@ public class AccountService : IAccountService
         _appSettings = appSettings.Value;
     }
 
-    public string? Authenticate(LoginCredentials model) //TODO check nullable setting
+    public string Authenticate(LoginCredentials model)
     {
         var user = _accounts.SingleOrDefault(x => x.Email == model.Email && x.Password == model.Password);
 
-        // return null if user not found
-        if (user == null) return null;
-
-        // authentication successful so generate jwt token
-        var token = generateJwtToken(user);
-
-        return token;
+        return user == null
+            ? string.Empty // TODO return expliciete error als auth niet klopt
+            : generateJwtToken(user);
     }
 
-    public Account? GetById(int id)
+    public Account GetById(int id)
     {
         return _accounts.FirstOrDefault(x => x.Id == id);
     }
-
 
     private string generateJwtToken(Account user)
     {
