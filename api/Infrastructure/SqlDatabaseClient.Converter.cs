@@ -19,7 +19,7 @@ namespace SpoRE.Infrastructure.SqlDatabaseClient
             return result;
         }
 
-        private static List<T> ConvertResult<T>(NpgsqlDataReader dataReader)
+        private static List<T> ConvertResult<T>(NpgsqlDataReader dataReader) //<T> betekent dat het returntype een argument is
         {
             List<T> result = new List<T>();
             while (dataReader.Read())
