@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Npgsql;
 
-namespace Dotnet2.Infrastructure.SqlDatabaseClient
+namespace SpoRE.Infrastructure.SqlDatabaseClient
 {
     public static partial class SqlDatabaseClient
     {
@@ -20,7 +18,7 @@ namespace Dotnet2.Infrastructure.SqlDatabaseClient
             }
             return result;
         }
-        
+
         private static List<T> ConvertResult<T>(NpgsqlDataReader dataReader)
         {
             List<T> result = new List<T>();

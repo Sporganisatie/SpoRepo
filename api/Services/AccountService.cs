@@ -1,5 +1,6 @@
 namespace SpoRE.Services;
 
+using SpoRE.Infrastructure.SqlDatabaseClient;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SpoRE.Models.Authentication;
@@ -7,8 +8,21 @@ using SpoRE.Models.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BCrypt.Net;
 
-public record Account(int Id, string Email, string Password, bool admin);
+public class Account
+{
+    public int account_id { get; set; }
+    public string username { get; set; }
+    public string password { get; set; }
+    public string email { get; set; }
+    public bool admin { get; set; }
+    public bool verified { get; set; }
+    public Account()
+    {
+
+    }
+}
 
 public interface IAccountService
 {
@@ -18,12 +32,6 @@ public interface IAccountService
 
 public class AccountService : IAccountService
 {
-    // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-    private List<Account> _accounts = new List<Account>
-    {
-        new(1, "rens@mail.com", "mypass", true)
-    };
-
     private readonly AppSettings _appSettings;
 
     public AccountService(IOptions<AppSettings> appSettings)
@@ -31,18 +39,20 @@ public class AccountService : IAccountService
         _appSettings = appSettings.Value;
     }
 
-    public string Authenticate(LoginCredentials model)
+    public string Authenticate(LoginCredentials credentials)
     {
-        var user = _accounts.SingleOrDefault(x => x.Email == model.Email && x.Password == model.Password);
+        var user = SqlDatabaseClient.GetAccount(credentials.Email);
 
-        return user == null
-            ? string.Empty // TODO return expliciete error als auth niet klopt
-            : generateJwtToken(user);
+        if (user is null || !BCrypt.Verify(credentials.Password, user.password))
+        {
+            return string.Empty;
+        }
+        return generateJwtToken(user);
     }
 
     public Account GetById(int id)
     {
-        return _accounts.FirstOrDefault(x => x.Id == id);
+        return SqlDatabaseClient.GetAccount(id);
     }
 
     private string generateJwtToken(Account user)
@@ -52,7 +62,7 @@ public class AccountService : IAccountService
         var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()), new Claim("admin", user.admin.ToString()) }),
+            Subject = new ClaimsIdentity(new[] { new Claim("id", user.account_id.ToString()), new Claim("admin", user.admin.ToString()) }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) //TODO meer over lezen
         };

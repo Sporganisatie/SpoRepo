@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
 using Npgsql;
 
-namespace Dotnet2.Infrastructure.SqlDatabaseClient
+namespace SpoRE.Infrastructure.SqlDatabaseClient
 {
     public static partial class SqlDatabaseClient
     {
         public static (List<T>, string) ProcessQuery<T>(string query)
         {
-            using var con = new NpgsqlConnection("string");
+            var SqlConnectionString = Secrets.SqlConnectionString;
+            using var con = new NpgsqlConnection(SqlConnectionString);
             con.Open();
             using var cmd = new NpgsqlCommand(query, con);
 
@@ -26,7 +25,8 @@ namespace Dotnet2.Infrastructure.SqlDatabaseClient
 
         public static (List<Object>, string) ProcessFreeQuery(string query)
         {
-            using var con = new NpgsqlConnection("string");
+            var SqlConnectionString = Secrets.SqlConnectionString;
+            using var con = new NpgsqlConnection(SqlConnectionString);
             con.Open();
             using var cmd = new NpgsqlCommand(query, con);
 
