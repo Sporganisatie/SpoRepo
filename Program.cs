@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<IAccountService, AccountService>(); // nodig zodat dit zo maar meegegeven kan worden in constructors, die interface is misschien overbodig
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();// nodig zodat dit zo maar meegegeven kan worden in constructors
 
 var app = builder.Build();
 

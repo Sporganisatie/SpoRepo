@@ -3,7 +3,7 @@ namespace SpoRE.Services;
 using SpoRE.Infrastructure.SqlDatabaseClient;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SpoRE.Models.Authentication;
+using SpoRE.Models.Input.Authentication;
 using SpoRE.Models.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

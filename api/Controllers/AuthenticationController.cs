@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using SpoRE.Models.Authentication;
+using SpoRE.Models.Input.Authentication;
 using SpoRE.Services;
 
 namespace SpoRE.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]")]// de url voor alles hier is /authentication
 public class AuthenticationController : ControllerBase
 {
     private IAccountService AccountService;
@@ -14,8 +14,8 @@ public class AuthenticationController : ControllerBase
         AccountService = accountService;
     }
 
-    [HttpPost("login")]
-    public IActionResult Login(LoginCredentials credentials)
+    [HttpPost("login")]// postcall naar /authentication/login
+    public IActionResult Login(LoginCredentials credentials) // stuurt meteen een error message als de input niet klopt
     {
         var response = AccountService.Authenticate(credentials);
 
