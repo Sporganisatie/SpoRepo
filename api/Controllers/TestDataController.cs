@@ -1,4 +1,4 @@
-using SpoRE.Infrastructure.SqlDatabaseClient;
+using SpoRE.Infrastructure.Base;
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
 using SpoRE.Services;

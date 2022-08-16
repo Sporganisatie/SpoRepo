@@ -3,11 +3,13 @@ import Layout from "./components/Layout";
 import Pages from "./Pages";
 import "./index.css";
 import { useEffect } from "react";
-import { setupAxiosInterceptor } from "./middleware"
+import { setupAxiosInterceptor } from "./AxiosInterceptor"
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
+  let navigate = useNavigate();
   useEffect(() => { // onLoad
-    setupAxiosInterceptor();
+    setupAxiosInterceptor(navigate);
   }, []);
 
   return (

@@ -1,6 +1,4 @@
-namespace SpoRE.Services;
 
-using SpoRE.Infrastructure.SqlDatabaseClient;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SpoRE.Models.Input.Authentication;
@@ -8,7 +6,9 @@ using SpoRE.Models.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BCrypt.Net;
+using SpoRE.Infrastructure.Database;
+
+namespace SpoRE.Services;
 
 public class Account
 {
@@ -41,9 +41,9 @@ public class AccountService : IAccountService
 
     public string Authenticate(LoginCredentials credentials)
     {
-        var user = SqlDatabaseClient.GetAccount(credentials.Email);
+        var user = AccountClient.Get(credentials.Email);
 
-        if (user is null || !BCrypt.Verify(credentials.Password, user.password))
+        if (user is null || !BCrypt.Net.BCrypt.Verify(credentials.Password, user.password))
         {
             return string.Empty;
         }
@@ -52,7 +52,7 @@ public class AccountService : IAccountService
 
     public Account GetById(int id)
     {
-        return SqlDatabaseClient.GetAccount(id);
+        return AccountClient.Get(id);
     }
 
     private string generateJwtToken(Account user)

@@ -22,7 +22,7 @@ public class JwtMiddleware
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault();
 
-        if (token != null)
+        if (!token.IsNullOrEmpty())
             AttachUserToContext(context, accountService, token);
 
         await _next(context);
