@@ -1,7 +1,7 @@
 using SpoRE.Infrastructure.Base;
 using Microsoft.AspNetCore.Mvc;
-using SpoRE.Attributes;
 using SpoRE.Services;
+using SpoRE.Attributes;
 
 namespace SpoRE.Controllers;
 
@@ -24,9 +24,6 @@ public class TestDataController : ControllerBase //ControllerBase is nodig voor 
     }
 
     [HttpPost("sql")] // Post calls naar /testdata/sql
-    public object MakeDBcall([FromBody] string query) // frombody omdat het een simple string is bij complexere objecten gaat het automatisch
-    {
-        var output = SqlDatabaseClient.ProcessFreeQuery(query);
-        return output.Item1;
-    }
+    public async Task<object> MakeDBcall([FromBody] string query) // frombody omdat het een simple string is bij complexere objecten gaat het automatisch
+        => await SqlDatabaseClient.ProcessFreeQuery(query);
 }

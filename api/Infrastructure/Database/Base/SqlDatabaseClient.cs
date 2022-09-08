@@ -4,8 +4,8 @@ namespace SpoRE.Infrastructure.Base;
 
 public static partial class SqlDatabaseClient
 {
-    public static (List<T>, string) ProcessQuery<T>(string query) // zoek de tutorial op die ik volgde als je dit wilt snappen
-    { //<T> betekent dat het returntype een argument is
+    public static async Task<List<T>> Get<T>(string query)
+    {
         var SqlConnectionString = Secrets.SqlConnectionString;
         using var con = new NpgsqlConnection(SqlConnectionString);
         con.Open();
@@ -13,18 +13,24 @@ public static partial class SqlDatabaseClient
 
         try
         {
-            var dataReader = cmd.ExecuteReader();
-            return (ConvertResult<T>(dataReader), "success");
-
+            var dataReader = await cmd.ExecuteReaderAsync();
+            return ConvertResult<T>(dataReader);
         }
         catch (NpgsqlException ex)
         {
-            return (new(), ex.ToString());
+            Console.WriteLine(ex);
+            return new();
         }
     }
 
-    public static (List<Object>, string) ProcessFreeQuery(string query) // deze bestaat alleen voor de admin page met open queries
-    {// kan ik wss fuseren met bovenstaande functie
+    public static async Task<T> GetSingle<T>(string query) //TODO result? class eromheen voor notfound
+    {
+        var output = await Get<T>(query);
+        return output.Count == 1 ? output.Single() : default; // TODO some error
+    }
+
+    public static async Task<List<object>> ProcessFreeQuery(string query) // deze bestaat alleen voor de admin page met open queries
+    {// kan ik wss fuseren met Get
         var SqlConnectionString = Secrets.SqlConnectionString;
         using var con = new NpgsqlConnection(SqlConnectionString);
         con.Open();
@@ -32,12 +38,13 @@ public static partial class SqlDatabaseClient
 
         try
         {
-            var dataReader = cmd.ExecuteReader();
-            return (ConvertResult(dataReader), "success");
+            var dataReader = await cmd.ExecuteReaderAsync();
+            return ConvertResult(dataReader);
         }
         catch (NpgsqlException ex)
         {
-            return (new(), ex.ToString());
+            Console.WriteLine(ex);
+            return new();
         }
     }
 }

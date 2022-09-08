@@ -26,8 +26,8 @@ public class Account
 
 public interface IAccountService
 {
-    public string Authenticate(LoginCredentials model);
-    Account GetById(int id);
+    public Task<string> AuthenticateAsync(LoginCredentials model);
+    Task<Account> GetById(int id);
 }
 
 public class AccountService : IAccountService
@@ -39,9 +39,9 @@ public class AccountService : IAccountService
         _appSettings = appSettings.Value;
     }
 
-    public string Authenticate(LoginCredentials credentials)
+    public async Task<string> AuthenticateAsync(LoginCredentials credentials)
     {
-        var user = AccountClient.Get(credentials.Email);
+        var user = await AccountClient.Get(credentials.Email);
 
         if (user is null || !BCrypt.Net.BCrypt.Verify(credentials.Password, user.password))
         {
@@ -50,9 +50,9 @@ public class AccountService : IAccountService
         return generateJwtToken(user);
     }
 
-    public Account GetById(int id)
+    public async Task<Account> GetById(int id) // Misschien weg maar gaat wss vaker gebruikt worden
     {
-        return AccountClient.Get(id);
+        return await AccountClient.GetAsync(id);
     }
 
     private string generateJwtToken(Account user)

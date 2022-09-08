@@ -15,9 +15,9 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("login")]// postcall naar /authentication/login
-    public IActionResult Login(LoginCredentials credentials) // stuurt meteen een error message als de input niet klopt
+    public async Task<IActionResult> Login(LoginCredentials credentials) // stuurt meteen een error message als de input niet klopt
     {
-        var response = AccountService.Authenticate(credentials);
+        var response = await AccountService.AuthenticateAsync(credentials);
 
         if (response == string.Empty) // TODO explicite error terugkrijgen
             return BadRequest(new { message = "Username or password is incorrect" }); // wss iets anders dan badrequest returnen
