@@ -52,7 +52,7 @@ public class AccountService : IAccountService
 
     public async Task<Account> GetById(int id) // Misschien weg maar gaat wss vaker gebruikt worden
     {
-        return await AccountClient.GetAsync(id);
+        return await AccountClient.Get(id);
     }
 
     private string generateJwtToken(Account user)

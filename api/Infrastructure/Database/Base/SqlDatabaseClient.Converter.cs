@@ -33,7 +33,7 @@ public static partial class SqlDatabaseClient
         return result;
     }
 
-    private static Object GetObject(this Dictionary<string, object> dict, Type type)
+    private static Object GetObject(this Dictionary<string, object> dict, Type type) // Hier nog ff goed naar kijken
     {
         var obj = Activator.CreateInstance(type);
 
