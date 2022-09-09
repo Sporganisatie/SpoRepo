@@ -4,7 +4,7 @@ namespace SpoRE.Infrastructure.Base;
 
 public static partial class SqlDatabaseClient
 {
-    private static List<T> ConvertResult<T>(NpgsqlDataReader dataReader)
+    private static List<T> ConvertResponse<T>(NpgsqlDataReader dataReader)
     {
         List<T> result = new List<T>();
         while (dataReader.Read())

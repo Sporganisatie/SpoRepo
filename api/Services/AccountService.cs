@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Input.Authentication;
 using SpoRE.Models.Settings;
+using SpoRE.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -26,8 +27,8 @@ public class Account // TODO deze verplaatsen en wss aanpassen
 
 public interface IAccountService
 {
-    public Task<string> AuthenticateAsync(LoginCredentials model);
-    Task<Account> GetById(int id);
+    public Task<Result<string>> AuthenticateAsync(LoginCredentials model);
+    Task<Result<Account>> GetById(int id);
 }
 
 public class AccountService : IAccountService
@@ -39,30 +40,26 @@ public class AccountService : IAccountService
         _appSettings = appSettings.Value;
     }
 
-    public async Task<string> AuthenticateAsync(LoginCredentials credentials)
-    {
-        var user = await AccountClient.Get(credentials.Email);
+    public Task<Result<string>> AuthenticateAsync(LoginCredentials credentials)
+        => AccountClient.Get(credentials.Email)
+            .ActAsync(account => GenerateTokenForValidLogin(account, credentials));
 
-        if (user is null || !BCrypt.Net.BCrypt.Verify(credentials.Password, user.password))
-        {
-            return string.Empty;
-        }
-        return generateJwtToken(user);
-    }
+    private Result<string> GenerateTokenForValidLogin(Account account, LoginCredentials credentials)
+        => BCrypt.Net.BCrypt.Verify(credentials.Password, account.password)
+            ? generateJwtToken(account)
+            : Result.WithMessages<string>(new Error("Username or password is incorrect"));
 
-    public async Task<Account> GetById(int id)
-    {
-        return await AccountClient.Get(id);
-    }
+    public Task<Result<Account>> GetById(int id)
+        => AccountClient.Get(id);
 
-    private string generateJwtToken(Account user)
+    private string generateJwtToken(Account account)
     {
         // generate token that is valid for 7 days
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", user.account_id.ToString()), new Claim("admin", user.admin.ToString()) }),
+            Subject = new ClaimsIdentity(new[] { new Claim("id", account.account_id.ToString()), new Claim("admin", account.admin.ToString()) }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) //TODO meer over lezen
         };

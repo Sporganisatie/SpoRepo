@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Models.Input.Authentication;
 using SpoRE.Services;
@@ -15,13 +16,9 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginCredentials credentials)
+    public async Task<ActionResult<string>> Login(LoginCredentials credentials)
     {
-        var response = await AccountService.AuthenticateAsync(credentials);
-
-        if (response == string.Empty) // TODO explicite error terugkrijgen
-            return BadRequest(new { message = "Username or password is incorrect" }); // wss iets anders dan badrequest returnen
-
-        return Ok(response);
+        var output = await AccountService.AuthenticateAsync(credentials);
+        return output.IsValid ? output.Value : new UnauthorizedResult();
     }
 }

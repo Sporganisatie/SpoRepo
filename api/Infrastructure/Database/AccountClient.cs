@@ -5,7 +5,7 @@ namespace SpoRE.Infrastructure.Database;
 
 public static class AccountClient
 {
-    public static async Task<Account> Get(string email)
+    public static async Task<Result<Account>> Get(string email)
     {
         var query = "SELECT * FROM account WHERE email = @email";
         var parameters = new Dictionary<string, object>()
@@ -15,7 +15,7 @@ public static class AccountClient
         return await SqlDatabaseClient.GetSingle<Account>(query, parameters);
     }
 
-    public static async Task<Account> Get(int id)
+    public static async Task<Result<Account>> Get(int id)
     {
         var query = "SELECT * FROM account WHERE account_id = @id";
         var parameters = new Dictionary<string, object>();
