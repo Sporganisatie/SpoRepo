@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SpoRE.Models.Input.Authentication;
 
-public record SignupCredentials(string Email, string Password, string RepeatedPassword);
+public record SignupCredentials([Required] string Email, [Required] string Password, [Required] string RepeatedPassword);

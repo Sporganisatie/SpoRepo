@@ -10,7 +10,7 @@ using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Services;
 
-public class Account
+public class Account // TODO deze verplaatsen en wss aanpassen
 {
     public int account_id { get; set; }
     public string username { get; set; }
@@ -50,7 +50,7 @@ public class AccountService : IAccountService
         return generateJwtToken(user);
     }
 
-    public async Task<Account> GetById(int id) // Misschien weg maar gaat wss vaker gebruikt worden
+    public async Task<Account> GetById(int id)
     {
         return await AccountClient.Get(id);
     }

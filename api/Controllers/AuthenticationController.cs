@@ -5,7 +5,7 @@ using SpoRE.Services;
 namespace SpoRE.Controllers;
 
 [ApiController]
-[Route("[controller]")]// de url voor alles hier is /authentication
+[Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
     private IAccountService AccountService;
@@ -14,8 +14,8 @@ public class AuthenticationController : ControllerBase
         AccountService = accountService;
     }
 
-    [HttpPost("login")]// postcall naar /authentication/login
-    public async Task<IActionResult> Login(LoginCredentials credentials) // stuurt meteen een error message als de input niet klopt
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginCredentials credentials)
     {
         var response = await AccountService.AuthenticateAsync(credentials);
 
