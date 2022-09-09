@@ -8,8 +8,9 @@ const Login = () => {
         event.preventDefault();
         axios.post('authentication/login', { email, password })
             .then(res => {
+                console.log(res)
                 if (res.status === 200) {
-                    console.log(res.data);
+                    console.log(res.data); // TODO remove
                     localStorage.setItem('authToken', res.data);
                 } else {
                 }

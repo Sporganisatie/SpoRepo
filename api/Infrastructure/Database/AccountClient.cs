@@ -7,7 +7,7 @@ public static class AccountClient
 {
     public static async Task<Account> Get(string email)
     {
-        var query = "SELECT * FROM account WHERE email = @ ";
+        var query = "SELECT * FROM account WHERE email = @email";
         var parameters = new Dictionary<string, object>()
         {
             {"email", email}

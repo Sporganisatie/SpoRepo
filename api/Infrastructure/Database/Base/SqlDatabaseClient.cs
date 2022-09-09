@@ -22,7 +22,7 @@ public static partial class SqlDatabaseClient
         }
         catch (NpgsqlException ex)
         {
-            Console.WriteLine(ex);
+            Console.WriteLine("SQL EXCEPTION: \n" + ex);
             return new();
         }
     }
