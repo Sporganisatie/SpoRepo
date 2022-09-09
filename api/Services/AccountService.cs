@@ -1,12 +1,12 @@
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Input.Authentication;
 using SpoRE.Models.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Services;
 

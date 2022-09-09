@@ -8,7 +8,7 @@ namespace SpoRE.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private IAccountService AccountService;
+    private readonly IAccountService AccountService;
     public AuthenticationController(IAccountService accountService)
     {
         AccountService = accountService;
