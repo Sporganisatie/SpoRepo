@@ -23,12 +23,12 @@ public class JwtMiddleware
         var token = context.Request.Headers["Authorization"].FirstOrDefault();
 
         if (!token.IsNullOrEmpty())
-            AttachUserToContext(context, accountService, token);
+            await AttachUserToContextAsync(context, accountService, token);
 
         await _next(context);
     }
 
-    private void AttachUserToContext(HttpContext context, IAccountService accountService, string token)
+    private async Task AttachUserToContextAsync(HttpContext context, IAccountService accountService, string token)
     {
         try
         {
@@ -46,7 +46,7 @@ public class JwtMiddleware
             var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation
-            context.Items["user"] = accountService.GetById(accountId);
+            context.Items["user"] = await accountService.GetById(accountId);
         }
         catch (Exception exception)
         {
