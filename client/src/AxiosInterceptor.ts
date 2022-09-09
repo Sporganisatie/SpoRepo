@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios"
+import axios, { AxiosError } from "axios"
 import { AxiosRequestConfig } from "axios";
 import { NavigateFunction } from "react-router-dom";
 
