@@ -17,7 +17,7 @@ const onResponseError = (error: AxiosError, navigate: NavigateFunction): void =>
 
 const setupAxiosInterceptor = (navigate: NavigateFunction) => {
     axios.interceptors.request.use(onRequest);
-    axios.interceptors.response.use(_ => { }, error => onResponseError(error, navigate));
+    axios.interceptors.response.use(res => res, error => onResponseError(error, navigate));
 }
 
 export { setupAxiosInterceptor }
