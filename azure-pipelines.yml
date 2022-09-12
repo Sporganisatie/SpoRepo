@@ -21,7 +21,7 @@ steps:
     version: '6.0.x'
 - task: MSBuild@1
   inputs:
-   msbuildVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 4.0
+   msbuildVersion: "17.0"
 
 - task: NuGetCommand@2
   inputs:
