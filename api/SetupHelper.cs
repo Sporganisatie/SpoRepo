@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using SpoRE.Infrastructure.Base;
 using SpoRE.Infrastructure.Database.Account;
 using SpoRE.Services;
@@ -12,6 +13,41 @@ internal static class Telemetry
 
         services.AddScoped<AccountClient, AccountClient>();
         services.AddScoped<AccountService, AccountService>();
+    }
+
+    public static void AddSwaggerLogin(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(
+            c =>
+            {
+                c.AddSecurityDefinition(
+                    "Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer",
+                        BearerFormat = "JWT",
+                        In = ParameterLocation.Header,
+                        Description =
+                            "Paste a JWT token here"
+                    });
+                c.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            Array.Empty<string>()
+                        }
+                    });
+            });
     }
 }
 
