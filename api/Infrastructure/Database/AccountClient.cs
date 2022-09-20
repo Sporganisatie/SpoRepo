@@ -1,10 +1,15 @@
+using Microsoft.Extensions.Options;
 using SpoRE.Infrastructure.Base;
+using SpoRE.Models.Settings;
 using SpoRE.Services;
 
 namespace SpoRE.Infrastructure.Database;
 
 public class AccountClient : SqlDatabaseClient // nu is er wel een risico dat we meerdere connecties open zetten, misschien aparte base class die SqlDBclient als attribute heeft
 {
+    public AccountClient(IOptions<AppSettings> configuration) : base(configuration)
+    { }
+
     public async Task<Result<Account>> Get(string email)
     {
         var query = "SELECT * FROM account WHERE email = @email";
