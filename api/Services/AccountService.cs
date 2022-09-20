@@ -1,63 +1,61 @@
-namespace SpoRE.Services;
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SpoRE.Models.Authentication;
+using SpoRE.Infrastructure.Database;
+using SpoRE.Models.Input.Authentication;
 using SpoRE.Models.Settings;
+using SpoRE.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-public record Account(int Id, string Email, string Password, bool admin);
+namespace SpoRE.Services;
 
-public interface IAccountService
+public class Account // TODO deze verplaatsen en wss aanpassen
 {
-    public string? Authenticate(LoginCredentials model);
-    Account? GetById(int id);
+    public int account_id { get; set; }
+    public string username { get; set; }
+    public string password { get; set; }
+    public string email { get; set; }
+    public bool admin { get; set; }
+    public bool verified { get; set; }
+    public Account()
+    {
+
+    }
 }
 
-public class AccountService : IAccountService
+public class AccountService
 {
-    // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-    private List<Account> _accounts = new List<Account>
-    {
-        new(1, "rens@mail.com", "mypass", true)
-    };
-
     private readonly AppSettings _appSettings;
+    private AccountClient _accountClient;
 
-    public AccountService(IOptions<AppSettings> appSettings)
+    public AccountService(IOptions<AppSettings> appSettings, AccountClient accountClient)
     {
         _appSettings = appSettings.Value;
+        _accountClient = accountClient;
     }
 
-    public string? Authenticate(LoginCredentials model) //TODO check nullable setting
-    {
-        var user = _accounts.SingleOrDefault(x => x.Email == model.Email && x.Password == model.Password);
+    public Task<Result<string>> AuthenticateAsync(LoginCredentials credentials)
+        => _accountClient.Get(credentials.Email)
+            .ActAsync(account => GenerateTokenForValidLogin(account, credentials));
 
-        // return null if user not found
-        if (user == null) return null;
+    private Result<string> GenerateTokenForValidLogin(Account account, LoginCredentials credentials)
+        => BCrypt.Net.BCrypt.Verify(credentials.Password, account.password)
+            ? generateJwtToken(account)
+            : Result.WithMessages<string>(new Error("Username or password is incorrect"));
 
-        // authentication successful so generate jwt token
-        var token = generateJwtToken(user);
+    public Task<Result<Account>> GetById(int id)
+        => _accountClient.Get(id);
 
-        return token;
-    }
-
-    public Account? GetById(int id)
-    {
-        return _accounts.FirstOrDefault(x => x.Id == id);
-    }
-
-
-    private string generateJwtToken(Account user)
+    private string generateJwtToken(Account account)
     {
         // generate token that is valid for 7 days
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()), new Claim("admin", user.admin.ToString()) }),
+            Subject = new ClaimsIdentity(new[] { new Claim("id", account.account_id.ToString()), new Claim("admin", account.admin.ToString()) }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) //TODO meer over lezen
         };

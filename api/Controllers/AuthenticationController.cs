@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SpoRE.Models.Authentication;
+using SpoRE.Models.Input.Authentication;
 using SpoRE.Services;
 
 namespace SpoRE.Controllers;
@@ -8,20 +8,16 @@ namespace SpoRE.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private IAccountService AccountService;
-    public AuthenticationController(IAccountService accountService)
+    private readonly AccountService AccountService;
+    public AuthenticationController(AccountService accountService)
     {
         AccountService = accountService;
     }
 
     [HttpPost("login")]
-    public IActionResult Login(LoginCredentials credentials)
+    public async Task<ActionResult<string>> Login(LoginCredentials credentials)
     {
-        var response = AccountService.Authenticate(credentials);
-
-        if (response == null) // TODO deze logica naar de service toe
-            return BadRequest(new { message = "Username or password is incorrect" });
-
-        return Ok(response);
+        var output = await AccountService.AuthenticateAsync(credentials);
+        return output.IsValid ? output.Value : new UnauthorizedResult();
     }
 }
