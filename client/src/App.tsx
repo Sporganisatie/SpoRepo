@@ -7,9 +7,10 @@ import { setupAxiosInterceptor } from "./AxiosInterceptor"
 import { useNavigate } from "react-router-dom";
 
 const App = () => {
-  useEffect(() => {
-    setupAxiosInterceptor(useNavigate);
-  }, []);
+  let navigate = useNavigate();
+  useEffect(() => { // onLoad
+    setupAxiosInterceptor(navigate);
+  }, [navigate]);
 
   return (
     <Routes>
