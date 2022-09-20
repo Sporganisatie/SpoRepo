@@ -2,9 +2,9 @@ using Npgsql;
 
 namespace SpoRE.Infrastructure.Base;
 
-public static partial class SqlDatabaseClient
+public partial class SqlDatabaseClient
 {
-    private static List<T> ConvertResponse<T>(NpgsqlDataReader dataReader)
+    private List<T> ConvertResponse<T>(NpgsqlDataReader dataReader)
     {
         List<T> result = new List<T>();
         while (dataReader.Read())
@@ -19,7 +19,7 @@ public static partial class SqlDatabaseClient
         return result;
     }
 
-    private static T GetObject<T>(this Dictionary<string, object> dict)
+    private T GetObject<T>(Dictionary<string, object> dict)
     {
         var type = typeof(T);
         var obj = Activator.CreateInstance(type);

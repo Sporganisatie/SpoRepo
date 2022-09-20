@@ -18,7 +18,7 @@ public class JwtMiddleware
         _appSettings = appSettings.Value;
     }
 
-    public async Task Invoke(HttpContext context, IAccountService accountService)
+    public async Task Invoke(HttpContext context, AccountService accountService) // TODO account service in de constructor
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault();
 
@@ -28,7 +28,7 @@ public class JwtMiddleware
         await _next(context);
     }
 
-    private async Task AttachUserToContextAsync(HttpContext context, IAccountService accountService, string token)
+    private async Task AttachUserToContextAsync(HttpContext context, AccountService accountService, string token)
     {
         try
         {
@@ -46,7 +46,7 @@ public class JwtMiddleware
             var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation
-            context.Items["user"] = await accountService.GetById(accountId);
+            context.Items["user"] = (await accountService.GetById(accountId)).Value; // TODO with actasync
         }
         catch (Exception exception)
         {

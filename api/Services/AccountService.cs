@@ -25,23 +25,19 @@ public class Account // TODO deze verplaatsen en wss aanpassen
     }
 }
 
-public interface IAccountService
-{
-    public Task<Result<string>> AuthenticateAsync(LoginCredentials model);
-    Task<Result<Account>> GetById(int id);
-}
-
-public class AccountService : IAccountService
+public class AccountService
 {
     private readonly AppSettings _appSettings;
+    private AccountClient _accountClient;
 
-    public AccountService(IOptions<AppSettings> appSettings)
+    public AccountService(IOptions<AppSettings> appSettings, AccountClient accountClient)
     {
         _appSettings = appSettings.Value;
+        _accountClient = accountClient;
     }
 
     public Task<Result<string>> AuthenticateAsync(LoginCredentials credentials)
-        => AccountClient.Get(credentials.Email)
+        => _accountClient.Get(credentials.Email)
             .ActAsync(account => GenerateTokenForValidLogin(account, credentials));
 
     private Result<string> GenerateTokenForValidLogin(Account account, LoginCredentials credentials)
@@ -50,7 +46,7 @@ public class AccountService : IAccountService
             : Result.WithMessages<string>(new Error("Username or password is incorrect"));
 
     public Task<Result<Account>> GetById(int id)
-        => AccountClient.Get(id);
+        => _accountClient.Get(id);
 
     private string generateJwtToken(Account account)
     {

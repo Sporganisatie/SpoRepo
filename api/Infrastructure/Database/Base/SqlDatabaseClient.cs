@@ -3,9 +3,9 @@ using SpoRE.Models;
 
 namespace SpoRE.Infrastructure.Base;
 
-public static partial class SqlDatabaseClient
+public partial class SqlDatabaseClient
 {
-    public static async Task<Result<List<T>>> Get<T>(string query, Dictionary<string, object> parameters)
+    public async Task<Result<List<T>>> Get<T>(string query, Dictionary<string, object> parameters)
     {
         using var con = new NpgsqlConnection(Secrets.SqlConnectionString);
         con.Open();
@@ -27,7 +27,7 @@ public static partial class SqlDatabaseClient
         }
     }
 
-    public static Task<Result<T>> GetSingle<T>(string query, Dictionary<string, object> parameters)
+    public Task<Result<T>> GetSingle<T>(string query, Dictionary<string, object> parameters)
         => Get<T>(query, parameters)
             .ActAsync(output => Result.For(output.Single()));
 }

@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Models.Input.Authentication;
 using SpoRE.Services;
@@ -9,8 +8,8 @@ namespace SpoRE.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IAccountService AccountService;
-    public AuthenticationController(IAccountService accountService)
+    private readonly AccountService AccountService;
+    public AuthenticationController(AccountService accountService)
     {
         AccountService = accountService;
     }
