@@ -1,23 +1,24 @@
-using Microsoft.Extensions.Options;
 using SpoRE.Infrastructure.Base;
-using SpoRE.Models.Settings;
 using SpoRE.Services;
 
 namespace SpoRE.Infrastructure.Database;
 
-public class AccountClient : SqlDatabaseClient // nu is er wel een risico dat we meerdere connecties open zetten, misschien aparte base class die SqlDBclient als attribute heeft
+public class AccountClient
 {
-    public AccountClient(IOptions<AppSettings> configuration) : base(configuration)
-    { }
+    SqlDatabaseClient DatabaseClient;
+    public AccountClient(SqlDatabaseClient databaseClient)
+    {
+        DatabaseClient = databaseClient;
+    }
 
     public async Task<Result<Account>> Get(string email)
     {
         var query = "SELECT * FROM account WHERE email = @email";
-        var parameters = new Dictionary<string, object>()
+        var parameters = new Dictionary<string, object>() //TODO iets moois maken voor parameters misschien iets automatisch kwa naam?
         {
             {"email", email}
         };
-        return await GetSingle<Account>(query, parameters);
+        return await DatabaseClient.GetSingle<Account>(query, parameters);
     }
 
     public async Task<Result<Account>> Get(int id)
@@ -25,6 +26,6 @@ public class AccountClient : SqlDatabaseClient // nu is er wel een risico dat we
         var query = "SELECT * FROM account WHERE account_id = @id";
         var parameters = new Dictionary<string, object>();
         parameters.Add("id", id);
-        return await GetSingle<Account>(query, parameters);
+        return await DatabaseClient.GetSingle<Account>(query, parameters);
     }
 }
