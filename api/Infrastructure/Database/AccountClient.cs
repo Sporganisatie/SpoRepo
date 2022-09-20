@@ -1,7 +1,6 @@
 using SpoRE.Infrastructure.Base;
-using SpoRE.Services;
 
-namespace SpoRE.Infrastructure.Database;
+namespace SpoRE.Infrastructure.Database.Account;
 
 public class AccountClient
 {

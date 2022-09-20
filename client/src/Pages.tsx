@@ -1,4 +1,3 @@
-// TODO change to TS, add model and type to the array
 import { Route } from "react-router-dom";
 import Home from "./components/Home";
 import Testing from "./components/Testing";

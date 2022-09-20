@@ -1,7 +1,7 @@
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SpoRE.Infrastructure.Database;
+using SpoRE.Infrastructure.Database.Account;
 using SpoRE.Models.Input.Authentication;
 using SpoRE.Models.Settings;
 using SpoRE.Models;
@@ -10,20 +10,6 @@ using System.Security.Claims;
 using System.Text;
 
 namespace SpoRE.Services;
-
-public class Account // TODO deze verplaatsen en wss aanpassen
-{
-    public int account_id { get; set; }
-    public string username { get; set; }
-    public string password { get; set; }
-    public string email { get; set; }
-    public bool admin { get; set; }
-    public bool verified { get; set; }
-    public Account()
-    {
-
-    }
-}
 
 public class AccountService
 {
@@ -45,9 +31,6 @@ public class AccountService
             ? generateJwtToken(account)
             : Result.WithMessages<string>(new Error("Username or password is incorrect"));
 
-    public Task<Result<Account>> GetById(int id)
-        => _accountClient.Get(id);
-
     private string generateJwtToken(Account account)
     {
         // generate token that is valid for 7 days
@@ -57,7 +40,7 @@ public class AccountService
         {
             Subject = new ClaimsIdentity(new[] { new Claim("id", account.account_id.ToString()), new Claim("admin", account.admin.ToString()) }),
             Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature) //TODO meer over lezen
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);

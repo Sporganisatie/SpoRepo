@@ -47,7 +47,7 @@ const Login = () => {
                 </button>
             </form>
             <div className="float-left">
-                {/* <PasswordRecoveryModal /> */} Todo import PasswordRecoveryModal
+                {/* <PasswordRecoveryModal /> */} Todo import PasswordRecoveryModal wss redo pagina
             </div>
         </div>
     );

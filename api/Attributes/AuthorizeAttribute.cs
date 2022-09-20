@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SpoRE.Services;
+using SpoRE.Infrastructure.Database.Account;
 
 namespace SpoRE.Attributes;
 
@@ -9,7 +9,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var user = (Account)context.HttpContext.Items["user"]; //TODO misschien hier uit DB ophalen tenzij andere plaatsen dit ook gaan gebruiken
+        var user = (Account)context.HttpContext.Items["user"];
         if (user == null)
         {
             // not logged in

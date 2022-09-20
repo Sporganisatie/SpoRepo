@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Services;
+using SpoRE.Infrastructure.Database.Account;
 
 namespace SpoRE.Controllers;
 

@@ -1,5 +1,5 @@
 using SpoRE.Infrastructure.Base;
-using SpoRE.Infrastructure.Database;
+using SpoRE.Infrastructure.Database.Account;
 using SpoRE.Services;
 
 namespace SpoRE.Setup;

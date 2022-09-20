@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SpoRE.Infrastructure.Database;
+using SpoRE.Infrastructure.Database.Account;
 using SpoRE.Models.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
