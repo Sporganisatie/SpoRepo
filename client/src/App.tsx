@@ -7,9 +7,8 @@ import { setupAxiosInterceptor } from "./AxiosInterceptor"
 import { useNavigate } from "react-router-dom";
 
 const App = () => {
-  let navigate = useNavigate();
-  useEffect(() => { // onLoad
-    setupAxiosInterceptor(navigate);
+  useEffect(() => {
+    setupAxiosInterceptor(useNavigate);
   }, []);
 
   return (
