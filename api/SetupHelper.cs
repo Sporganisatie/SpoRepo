@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using SpoRE.Infrastructure.Base;
 using SpoRE.Infrastructure.Database.Account;
+using SpoRE.Infrastructure.Database.Stage;
 using SpoRE.Services;
 
 namespace SpoRE.Setup;
@@ -11,8 +12,11 @@ internal static class Telemetry
     {
         services.AddScoped<SqlDatabaseClient, SqlDatabaseClient>();
 
-        services.AddScoped<AccountClient, AccountClient>();
         services.AddScoped<AccountService, AccountService>();
+        services.AddScoped<AccountClient, AccountClient>();
+
+        services.AddScoped<StageService, StageService>();
+        services.AddScoped<StageClient, StageClient>();
     }
 
     public static void AddSwaggerLogin(this IServiceCollection services)
