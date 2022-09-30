@@ -1,9 +1,12 @@
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using SpoRE.Models;
 using SpoRE.Models.Settings;
 
 namespace SpoRE.Infrastructure.Base;
+
+public record QueryParameter(object Value, [CallerArgumentExpression("Value")] string Name = ""); // TODO beperken tot string en nummers ipv object?
 
 public partial class SqlDatabaseClient
 {
@@ -13,14 +16,15 @@ public partial class SqlDatabaseClient
         _configuration = configuration.Value;
     }
 
-    public async Task<Result<List<T>>> Get<T>(string query, Dictionary<string, object> parameters)
+    public async Task<Result<List<T>>> Get<T>(string query, IEnumerable<QueryParameter> parameters)
     {
         using var con = new NpgsqlConnection(_configuration.MyDbConnection);
         con.Open();
         using var cmd = new NpgsqlCommand(query, con);
-        foreach (var (name, value) in parameters)
+
+        foreach (var p in parameters)
         {
-            cmd.Parameters.AddWithValue(name, value);
+            cmd.Parameters.AddWithValue(p.Name, p.Value);
         }
 
         try
@@ -35,7 +39,11 @@ public partial class SqlDatabaseClient
         }
     }
 
-    public Task<Result<T>> GetSingle<T>(string query, Dictionary<string, object> parameters)
+    public Task<Result<T>> GetSingle<T>(string query, object value, [CallerArgumentExpression("value")] string name = "")
+        => GetSingle<T>(query, new List<QueryParameter> { new(value, name) });
+
+
+    public Task<Result<T>> GetSingle<T>(string query, IEnumerable<QueryParameter> parameters)
         => Get<T>(query, parameters)
             .ActAsync(output => Result.For(output.Single()));
 }

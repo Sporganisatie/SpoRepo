@@ -5,7 +5,7 @@ using SpoRE.Infrastructure.Database.Account;
 namespace SpoRE.Controllers;
 
 [ApiController]
-[Route("[controller]")]// de url voor alles hier is /testdata
+[Route("api/[controller]")]// de url voor alles hier is /testdata
 [Authorize] // betekent dat alle calls eerst door authorizeattribute heengaan
 public class TestDataController : ControllerBase //ControllerBase is nodig voor Ok(response) moeten we nog vervangen
 {
