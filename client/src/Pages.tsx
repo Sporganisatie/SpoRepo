@@ -7,7 +7,7 @@ import StageResultTest from "./pages/StageResultTest";
 const Pages: JSX.Element[] = [
     <Route key="home" index element={<Home />} />,
     <Route key="login" path="login" element={<Login />} />,
-    <Route key="stage" path="stage/:raceid/:stagenr/" element={<StageResultTest />} />,
+    <Route key="stage" path="stage/:raceid/:stagenr" element={<StageResultTest />} />,
     <Route key="testing" path="testing" element={<Testing />} />
     // TODO zorg dat al het overige naar home gaat
 ];

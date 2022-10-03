@@ -21,7 +21,7 @@ public class StageService
             {
                 Rider = Rider.From(row),
                 StagePosition = row.stagepos,
-                StageScore = row.stagescore
+                StagePoints = row.stagescore
             };
         }));
 }
@@ -30,7 +30,7 @@ public class TeamResultRow
 {
     public Rider Rider { get; set; }
     public int StagePosition { get; set; }
-    public int StageScore { get; set; }
+    public int StagePoints { get; set; }
 }
 
 public record Rider // TODO move naar eigen file/folder

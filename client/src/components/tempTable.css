@@ -1,0 +1,19 @@
+td,
+th {
+    border: 1px solid #000000;
+    text-align: left;
+    padding: 8px;
+}
+
+thead {
+    font-weight: bold;
+    background-color: lightblue;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #dddddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
