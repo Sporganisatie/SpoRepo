@@ -10,9 +10,54 @@ public class StageService
     {
         _stageClient = stageClient;
     }
-    public async Task<object> TeamResults(int raceId, int stagenr, bool budgetParticipation)
+    public Task<Result<IEnumerable<TeamResultRow>>> TeamResults(int raceId, int stagenr, bool budgetParticipation)
+        => _stageClient.TeamResults(raceId, stagenr, budgetParticipation)
+        .ActAsync(sqlResults => BuildStageTeamResults(sqlResults));
+
+    private Result<IEnumerable<TeamResultRow>> BuildStageTeamResults(List<Infrastructure.Database.Stage.TeamResultRow> sqlResults)
+        => Result.For(sqlResults.Select(row =>
+        {
+            return new TeamResultRow()
+            {
+                Rider = Rider.From(row),
+                StagePosition = row.stagepos,
+                StageScore = row.stagescore
+            };
+        }));
+}
+
+public class TeamResultRow
+{
+    public Rider Rider { get; set; }
+    public int StagePosition { get; set; }
+    public int StageScore { get; set; }
+}
+
+public record Rider // TODO move naar eigen file/folder
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Initials { get; set; }
+    public string Country { get; set; }
+    public int RiderId { get; set; }
+    // TODO extra fields bv fullname = first + last? 
+    // initials + last
+    // ingekort
+    // (wss iets voor FE)
+    public Rider()
     {
-        // TODO mappen van TeamResultRow naar een FE model met Rider 
-        return await _stageClient.TeamResults(raceId, stagenr, budgetParticipation);
+
+    }
+
+    internal static Rider From(RowWithRider input)
+    {
+        return new()
+        {
+            FirstName = input.firstname,
+            LastName = input.lastname,
+            Initials = input.initials,
+            Country = input.country,
+            RiderId = input.rider_id
+        };
     }
 }

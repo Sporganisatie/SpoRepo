@@ -35,13 +35,19 @@ public class StageClient
     }
 }
 
-public class TeamResultRow
+public record TeamResultRow : RowWithRider
 {
     public TeamResultRow()
     { }
-    public string lastname { get; set; }
-    public string firstname { get; set; }
     public int stagepos { get; set; }
     public int stagescore { get; set; }
 }
 
+public record RowWithRider
+{
+    public string lastname { get; set; }
+    public string firstname { get; set; }
+    public string initials { get; set; }
+    public string country { get; set; }
+    public int rider_id { get; set; }
+}

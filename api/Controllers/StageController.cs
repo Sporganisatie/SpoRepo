@@ -16,8 +16,8 @@ public class StageController
     }
 
     [HttpGet("{raceId}/{stagenr}/teamresults")]
-    public async Task<object> TeamResults(int raceId, int stagenr, [FromQuery] bool? budgetParticipation)
-    { // TODO return type List<something>, kopman
+    public async Task<Result<IEnumerable<TeamResultRow>>> TeamResults(int raceId, int stagenr, [FromQuery] bool? budgetParticipation)
+    { // TODO niet return result (en misschien niet eens task)
         return await _stageService.TeamResults(raceId, stagenr, budgetParticipation ?? false);
     }
 }
