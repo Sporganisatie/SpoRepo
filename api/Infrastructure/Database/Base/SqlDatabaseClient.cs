@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using SpoRE.Infrastructure.Database.Stage;
 using SpoRE.Models;
 using SpoRE.Models.Settings;
 
@@ -16,21 +17,28 @@ public partial class SqlDatabaseClient
         _configuration = configuration.Value;
     }
 
-    public async Task<Result<List<T>>> Get<T>(string query, IEnumerable<QueryParameter> parameters)
+    public Task<Result<List<T>>> Get<T>(string query, IEnumerable<QueryParameter> parameters)
+        => Get<T>(new List<Query>() { new(query, parameters) });
+
+    internal async Task<Result<List<T>>> Get<T>(List<Query> batch2)
     {
         using var con = new NpgsqlConnection(_configuration.MyDbConnection);
         con.Open();
-        using var cmd = new NpgsqlCommand(query, con);
-
-        foreach (var p in parameters)
+        using var batch = new NpgsqlBatch(con);
+        foreach (var query in batch2)
         {
-            cmd.Parameters.AddWithValue(p.Name, p.Value);
+            var batchCommand = new NpgsqlBatchCommand(query.QueryString);
+            foreach (var p in query.Parameters)
+            {
+                batchCommand.Parameters.AddWithValue(p.Name, p.Value);
+            }
+            batch.BatchCommands.Add(batchCommand);
         }
-
         try
         {
-            var dataReader = await cmd.ExecuteReaderAsync();
-            return ConvertResponse<T>(dataReader);
+            var dataReader = await batch.ExecuteReaderAsync();
+            // https://stackoverflow.com/questions/54691579/preparing-statements-and-batching-in-npgsql veel simpelere data processing
+            return ConvertResponse<T>(dataReader); // TODO moet wss anders afhankelijk van aantal queries, met ingebouwde functies
         }
         catch (NpgsqlException ex)
         {
