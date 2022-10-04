@@ -1,22 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Table from "../components/Table";
+import Table from "../components/Table/Table";
+import { Rider } from "../models/Rider";
 
 var headers = [
     { title: "", name: "stagePosition" },
     { title: "Points", name: "stagePoints" },
     { title: "Rider", name: "rider" }
 ]
-
-interface Rider { //TODO move
-    firstName: string;
-    lastName: string;
-    initials: string;
-    country: string;
-    riderId: number;
-    type: "rider";
-}
 
 interface TeamResultRow {
     rider: Rider;
@@ -28,9 +20,6 @@ const StageResultTest = () => {
     let { raceid, stagenr } = useParams();
     const [data, setData] = useState<TeamResultRow[]>([]);
     useEffect(() => {
-        retrieveData();
-    }, [])
-    const retrieveData = () => {
         axios.get(`/api/stage/${raceid}/${stagenr}/teamresults`)
             .then(res => {
                 setData(res.data.value)
@@ -38,10 +27,9 @@ const StageResultTest = () => {
             .catch(function (error) {
                 throw error
             });
-    }
+    }, [raceid, stagenr])
 
-    return (
-        <Table headers={headers} data={data} />);
+    return (<Table headers={headers} data={data} />);
 };
 
 export default StageResultTest;

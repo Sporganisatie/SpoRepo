@@ -1,3 +1,4 @@
+import RiderCell from './Cells/RiderCell';
 import './tempTable.css';
 interface TableInput {
     headers: Header[]
@@ -11,27 +12,7 @@ interface Header {
     // https://mariusschulz.com/blog/tagged-union-types-in-typescript
     // in data of header gaat het aan union type Supported Table cell moeten voldoen
 }
-function BuildCell(name: string, data: any, index: number) {
-    switch (name) {
-        case "stagePosition":
-            return <td key={index + name}>{data.toString() + "e"}</td>
-        case "rider":
-            return <td key={index + name}>{data.lastName}</td> // TODO make rider cell in losse file
-        default:
-            return <td key={index + name}>{data.toString()}</td>
-    }
-}
-function ConvertDataToRow(row: any, headers: Header[], index: number): any {
-    var cells = [];
-    for (var header of headers) {
-        type ObjectKey = keyof typeof row;
-        const myVar = header.name as ObjectKey;
-        var data = row[myVar];
-        // var type = typeof data === 'object' ? data.type : typeof data;
-        cells.push(BuildCell(header.name, data, index))
-    }
-    return <tr key={index}>{cells}</tr>
-}
+
 const Table = (props: TableInput) => {
     var headers: any[] = [];
     props.headers.forEach(x => headers.push(<th key={x.title}>{x.title}</th>))
@@ -49,6 +30,29 @@ const Table = (props: TableInput) => {
                 {bodyRows}
             </tbody>
         </table>);
+}
+
+const ConvertDataToRow = (row: any, headers: Header[], index: number): any => { //TODO response/input types, rename to build body
+    var cells = [];
+    for (var header of headers) {
+        type ObjectKey = keyof typeof row;
+        const myVar = header.name as ObjectKey;
+        var data = row[myVar];
+        // var type = typeof data === 'object' ? data.type : typeof data;
+        cells.push(BuildCell(header.name, data, index))
+    }
+    return <tr key={index}>{cells}</tr>
+}
+
+const BuildCell = (name: string, data: any, index: number) => { //TODO response/input types
+    switch (name) {
+        case "stagePosition":
+            return <td key={index + name}>{data.toString() + "e"}</td>
+        case "rider":
+            return <RiderCell key={index + name} rider={data} />
+        default:
+            return <td key={index + name}>{data.toString()}</td>
+    }
 }
 
 export default Table;
