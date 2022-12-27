@@ -4,8 +4,8 @@ namespace SpoRE.Infrastructure.Database.Account;
 
 public class AccountClient
 {
-    SqlDatabaseClient DatabaseClient;
-    public AccountClient(SqlDatabaseClient databaseClient)
+    SqlDatabaseAdapter DatabaseClient;
+    public AccountClient(SqlDatabaseAdapter databaseClient)
     {
         DatabaseClient = databaseClient;
     }

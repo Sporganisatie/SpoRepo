@@ -10,7 +10,7 @@ internal static class Telemetry
 {
     public static void AddServicesAndClients(this IServiceCollection services)
     {
-        services.AddScoped<SqlDatabaseClient, SqlDatabaseClient>();
+        services.AddScoped<SqlDatabaseAdapter, SqlDatabaseAdapter>();
 
         services.AddScoped<AccountService, AccountService>();
         services.AddScoped<AccountClient, AccountClient>();
