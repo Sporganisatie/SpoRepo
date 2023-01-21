@@ -1,8 +1,9 @@
+import { Rider } from '../../models/Rider';
 import RiderCell from './Cells/RiderCell';
 import './tempTable.css';
 interface TableInput {
     headers: Header[]
-    data: object[] // TODO maak class voor tablerow type
+    data: Row[]
     title?: string
 }
 
@@ -13,26 +14,32 @@ interface Header {
     // in data of header gaat het aan union type Supported Table cell moeten voldoen
 }
 
-const Table = (props: TableInput) => {
-    var headers: any[] = [];
-    props.headers.forEach(x => headers.push(<th key={x.title}>{x.title}</th>))
-    var bodyRows = props.data.map((row, index) => ConvertDataToRow(row, props.headers, index))
+export interface Row {
+
+}
+
+const Table = (input: TableInput) => {
+
     return (
         <table>
             {/* TODO colgroup met widths, uitzoeken wat colgroup nog meer kan*/}
             {/* TODO caption/title */}
             <thead>
                 <tr key="headers">
-                    {headers}
+                    {input.headers.map(header => <th key={header.title}>{header.title}</th>)}
                 </tr>
             </thead>
             <tbody>
-                {bodyRows}
+                {BuildBody(input)}
             </tbody>
         </table>);
 }
 
-const ConvertDataToRow = (row: any, headers: Header[], index: number): any => { //TODO response/input types, rename to build body
+const BuildBody = (input: TableInput): JSX.Element[] => { // TODO merge met ConvertDataToRow
+    return input.data.map((row, index) => ConvertDataToRow(row, input.headers, index))
+}
+
+const ConvertDataToRow = (row: Row, headers: Header[], index: number): JSX.Element => {
     var cells = [];
     for (var header of headers) {
         type ObjectKey = keyof typeof row;
@@ -44,12 +51,12 @@ const ConvertDataToRow = (row: any, headers: Header[], index: number): any => { 
     return <tr key={index}>{cells}</tr>
 }
 
-const BuildCell = (name: string, data: any, index: number) => { //TODO response/input types
+const BuildCell = (name: string, data: Row, index: number) => { //TODO dit moet niet met een switch maar met automatische types
     switch (name) {
         case "stagePosition":
             return <td key={index + name}>{data.toString() + "e"}</td>
         case "rider":
-            return <RiderCell key={index + name} rider={data} />
+            return <RiderCell key={index + name} rider={data as Rider} />
         default:
             return <td key={index + name}>{data.toString()}</td>
     }
