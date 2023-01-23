@@ -2,11 +2,12 @@ using Npgsql;
 
 namespace SpoRE.Infrastructure.Base;
 
-public partial class SqlDatabaseClient
+public partial class SqlDatabaseAdapter
 {
     private List<T> ConvertResponse<T>(NpgsqlDataReader dataReader)
     {
         List<T> result = new List<T>();
+        // dataReader.GetColumnSchema();
         while (dataReader.Read())
         {
             var values = new Dictionary<string, object>();

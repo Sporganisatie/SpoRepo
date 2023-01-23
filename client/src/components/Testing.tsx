@@ -5,7 +5,7 @@ const Testing = () => {
   const [data, setData] = useState('Als je dit ziet dan is er nog geen call geweest');
 
   const retrieveData = () => {
-    axios.get('testdata')
+    axios.get('/api/testdata')
       .then(res => {
         setData(res.data)
       })

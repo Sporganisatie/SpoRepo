@@ -5,7 +5,7 @@ using SpoRE.Services;
 namespace SpoRE.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AuthenticationController : ControllerBase
 {
     private readonly AccountService AccountService;

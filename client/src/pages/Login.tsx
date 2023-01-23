@@ -6,7 +6,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        axios.post('authentication/login', { email, password })
+        axios.post('api/authentication/login', { email, password })
             .then(res => {
                 if (res.status === 200) {
                     localStorage.setItem('authToken', res.data);
@@ -47,7 +47,7 @@ const Login = () => {
                 </button>
             </form>
             <div className="float-left">
-                {/* <PasswordRecoveryModal /> */} Todo import PasswordRecoveryModal
+                {/* <PasswordRecoveryModal /> */} Todo import PasswordRecoveryModal wss redo pagina
             </div>
         </div>
     );
