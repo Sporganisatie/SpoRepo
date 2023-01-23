@@ -8,7 +8,7 @@ public class Account // TODO deze wss aanpassen
     public string email { get; set; }
     public bool admin { get; set; }
     public bool verified { get; set; }
-    public Account()
+    public Account() // TODO wss overbodige constructor
     {
 
     }

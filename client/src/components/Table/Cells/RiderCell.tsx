@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Rider } from "../../../models/Rider";
 
-interface RiderCellProps {
+interface RiderCellProps { // TODO kijken of het zonder dit kan
     rider: Rider,
 }
 

@@ -9,10 +9,10 @@ namespace SpoRE.Infrastructure.Base;
 
 public record QueryParameter(object Value, [CallerArgumentExpression("Value")] string Name = ""); // TODO beperken tot string en nummers ipv object?
 
-public partial class SqlDatabaseClient
+public partial class SqlDatabaseAdapter
 {
     private AppSettings _configuration;
-    public SqlDatabaseClient(IOptions<AppSettings> configuration)
+    public SqlDatabaseAdapter(IOptions<AppSettings> configuration)
     {
         _configuration = configuration.Value;
     }
@@ -20,24 +20,23 @@ public partial class SqlDatabaseClient
     public Task<Result<List<T>>> Get<T>(string query, IEnumerable<QueryParameter> parameters)
         => Get<T>(new List<Query>() { new(query, parameters) });
 
-    internal async Task<Result<List<T>>> Get<T>(List<Query> batch2)
+    internal async Task<Result<List<T>>> Get<T>(List<Query> queryBatch)
     {
         using var con = new NpgsqlConnection(_configuration.MyDbConnection);
         con.Open();
-        using var batch = new NpgsqlBatch(con);
-        foreach (var query in batch2)
+        using var slqBatch = new NpgsqlBatch(con);
+        foreach (var query in queryBatch)
         {
             var batchCommand = new NpgsqlBatchCommand(query.QueryString);
             foreach (var p in query.Parameters)
             {
                 batchCommand.Parameters.AddWithValue(p.Name, p.Value);
             }
-            batch.BatchCommands.Add(batchCommand);
+            slqBatch.BatchCommands.Add(batchCommand);
         }
         try
         {
-            var dataReader = await batch.ExecuteReaderAsync();
-            // https://stackoverflow.com/questions/54691579/preparing-statements-and-batching-in-npgsql veel simpelere data processing
+            var dataReader = await slqBatch.ExecuteReaderAsync();
             return ConvertResponse<T>(dataReader); // TODO moet wss anders afhankelijk van aantal queries, met ingebouwde functies
         }
         catch (NpgsqlException ex)

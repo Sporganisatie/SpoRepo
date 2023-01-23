@@ -6,7 +6,7 @@ const Home = () => {
       ik ben Home
       <Link to="/login">klik hier om in te loggen</Link>
       <br />
-      <Link to="/testing">Test pagina</Link>
+      <Link to="/testing">Test pagina</Link> Tijdelijk kapot in BE
       <br />
       <Link to="/stage/26/21/">Stage pagina</Link>
       <br />

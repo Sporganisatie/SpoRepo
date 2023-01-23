@@ -10,13 +10,13 @@ var headers = [
     { title: "Rider", name: "rider" }
 ]
 
-interface TeamResultRow {
+interface TeamResultRow { // TODO deze moet uit een generated ts file komen
     rider: Rider;
     stagePosition: number
     stagePoints: number
 }
 
-const StageResultTest = () => {
+const StageResultTemp = () => {
     let { raceid, stagenr } = useParams();
     const [data, setData] = useState<TeamResultRow[]>([]);
     useEffect(() => {
@@ -29,7 +29,7 @@ const StageResultTest = () => {
             });
     }, [raceid, stagenr])
 
-    return (<Table headers={headers} data={data} />);
+    return (<Table headers={headers} data={data} />); // ook col widths meegeven (misschien in TeamResultRow stoppen?)
 };
 
-export default StageResultTest;
+export default StageResultTemp;

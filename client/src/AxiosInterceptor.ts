@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from "axios";
 import { NavigateFunction } from "react-router-dom";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
-    config.headers = config.headers ?? {};
+    config.headers = config.headers ?? {}; // todo niet doen bij login endpoints
     config.headers.Authorization = localStorage.getItem("authToken") ?? "";
     return config;
 }
