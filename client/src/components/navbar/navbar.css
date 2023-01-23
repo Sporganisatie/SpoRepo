@@ -1,13 +1,34 @@
-.navbar_link{
+.navbar {
+  align-items: center;
+  background-color: #1e293b; /*gray-700*/
+  color: #e5e7eb;
+  column-gap: 1rem;
+  display: flex;
+  font-size: 1.125rem;
+  height: 3.5rem;
+  justify-content: left;
+  line-height: 1.75rem;
+  overflow: auto;
+  padding: 0 0.5rem;
+  position: fixed;
+  user-select: none;
+  width: 100%;
+  z-index: 50;
+}
+
+.navbar_link {
   display: block;
   cursor: pointer;
+  padding: 0.5rem;
   white-space: nowrap;
 }
 
 /* The links in the navbar */
 .navbar_link:hover {
+  background-color: black; /*gray-900*/
   color: white;
-  transition: 300ms;
+  border-radius: 0.5rem;
+  transition: 200ms;
 }
 
 /* The container <div> - needed to position the dropdown content */
@@ -34,20 +55,5 @@
   color: white;
   padding-left: 6px;
   padding-right: 6px;
-  transition: 0.3s;
-}
-
-.navbar_settings_dropdown_item{
-  border-top: 1px solid #6e737a; /*gray-600*/
-  font-size: 1.25rem;
-  padding: 10px;
-  padding-right: 16px;
-}
-
-.navbar_settings_dropdown_item:hover {
-  background-color: #6e737a; /*gray-600*/
-  color: white;
-  padding-left: 12px;
-  padding-right: 14px;
   transition: 0.3s;
 }
