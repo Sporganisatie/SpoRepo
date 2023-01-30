@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Card from "../components/card/Card";
+import Button from "../components/ui/button/Button";
 
 const Login = () => {
+    const navigate = useNavigate()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
@@ -10,16 +14,17 @@ const Login = () => {
             .then(res => {
                 if (res.status === 200) {
                     localStorage.setItem('authToken', res.data);
-                } else {
+                    navigate('/testing')
                 }
+                
             })
-            .catch(function (error) {
+            .catch((error) => {
                 throw error // foute login geeft momenteel error? statuscode 400
             });
     }
 
     return (
-        <div className="flex flex-col max-w-full m-auto md:mr-12 md:ml-4 mt-12 bg-white p-5 shadow-2xl rounded-md">
+        <Card>
             <div className="mt-1 mb-6 font-bold text-gray-600 text-center">
                 'Log in to manage your team'
             </div>
@@ -42,14 +47,13 @@ const Login = () => {
                         type="password"
                         placeholder="Password" />
                 </div>
-                <button className="landing_button mt-4 float-right rounded-md shadow-md">
-                    'Log in'
-                </button>
+                <Button 
+                    buttonClass=""
+                    label="Log in"
+                    type="submit"
+                />
             </form>
-            <div className="float-left">
-                {/* <PasswordRecoveryModal /> */} Todo import PasswordRecoveryModal wss redo pagina
-            </div>
-        </div>
+        </Card> 
     );
 }
 
