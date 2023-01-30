@@ -1,14 +1,17 @@
 import './button.css';
 
-type ButtonType = "";
+type ButtonType = "button" | "submit" | "reset";
+
+type ButtonClass =  "";
 
 interface Buttonprops {
-    action: () => {};
-    type: ButtonType;
-    label: string;
+    action?: () => {};
+    buttonClass?: ButtonClass;
     disabled?: boolean;
     icon?: string;
+    label?: string;
     size?: string;
+    type?: ButtonType;
 }
 
 const Button = (props: Buttonprops) => {
@@ -16,7 +19,8 @@ const Button = (props: Buttonprops) => {
       <button 
         className="button blue" 
         onClick={props.action}
-        disabled={props.disabled ?? false}>
+        disabled={props.disabled ?? false}
+        type={props.type ?? "button"}>
         {props.label}
       </button>
     )
