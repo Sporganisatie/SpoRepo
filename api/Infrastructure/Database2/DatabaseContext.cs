@@ -1,39 +1,41 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using SpoRE.Models.Settings;
 
 namespace SpoRE.Infrastructure.Database;
 
-public partial class BpbhxvvvContext : DbContext
+public partial class DatabaseContext : DbContext
 {
-    public BpbhxvvvContext()
+    private AppSettings _configuration;
+
+    public DatabaseContext(IOptions<AppSettings> configuration)
     {
+        _configuration = configuration.Value;
     }
 
-    public BpbhxvvvContext(DbContextOptions<BpbhxvvvContext> options)
-        : base(options)
-    {
-    }
+    public DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<Account> Accounts { get; set; }
+    public DbSet<AccountParticipation> AccountParticipations { get; set; }
 
-    public virtual DbSet<AccountParticipation> AccountParticipations { get; set; }
+    public DbSet<AccountToken> AccountTokens { get; set; }
 
-    public virtual DbSet<AccountToken> AccountTokens { get; set; }
+    public DbSet<Race> Races { get; set; }
 
-    public virtual DbSet<Race> Races { get; set; }
+    public DbSet<ResultsPoint> ResultsPoints { get; set; }
 
-    public virtual DbSet<ResultsPoint> ResultsPoints { get; set; }
+    public DbSet<Rider> Riders { get; set; }
 
-    public virtual DbSet<Rider> Riders { get; set; }
+    public DbSet<RiderParticipation> RiderParticipations { get; set; }
 
-    public virtual DbSet<RiderParticipation> RiderParticipations { get; set; }
+    public DbSet<Stage> Stages { get; set; }
 
-    public virtual DbSet<Stage> Stages { get; set; }
-
-    public virtual DbSet<StageSelection> StageSelections { get; set; }
+    public DbSet<StageSelection> StageSelections { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("TODO retrieve connection string from secrets");
+    {
+        optionsBuilder.UseNpgsql(_configuration.DbConnectionString);
+        optionsBuilder.LogTo(Console.WriteLine);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
