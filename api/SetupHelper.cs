@@ -8,9 +8,9 @@ internal static class Telemetry
 {
     public static void AddServicesAndClients(this IServiceCollection services)
     {
-        services.AddScoped<AccountClient, AccountClient>();
         services.AddScoped<AccountService, AccountService>();
-        services.AddScoped<DatabaseContext, DatabaseContext>();
+        services.AddScoped<AccountClient, AccountClient>();
+        // services.AddScoped<DatabaseContext, DatabaseContext>();
     }
 
     public static void AddSwaggerLogin(this IServiceCollection services)
