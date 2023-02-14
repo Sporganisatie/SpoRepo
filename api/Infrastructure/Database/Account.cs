@@ -1,6 +1,6 @@
 ﻿namespace SpoRE.Infrastructure.Database;
 
-public partial class Account
+public class Account
 {
     public int AccountId { get; set; }
 

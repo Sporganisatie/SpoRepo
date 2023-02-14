@@ -11,11 +11,13 @@ public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly AppSettings _appSettings;
+    private readonly AccountClient _accountClient;
 
-    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
+    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings, AccountClient accountClient)
     {
         _next = next;
         _appSettings = appSettings.Value;
+        _accountClient = accountClient;
     }
 
     public async Task Invoke(HttpContext context)
@@ -46,7 +48,7 @@ public class JwtMiddleware
             var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation
-            await Result.For(new Account()).AsTask() // TODO actual Call
+            await _accountClient.Get(accountId)
                 .ActAsync(user =>
                 {
                     context.Items["user"] = user;

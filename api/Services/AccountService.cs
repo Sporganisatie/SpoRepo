@@ -14,14 +14,16 @@ namespace SpoRE.Services;
 public class AccountService
 {
     private readonly AppSettings _appSettings;
+    private readonly AccountClient _accountClient;
 
-    public AccountService(IOptions<AppSettings> appSettings)
+    public AccountService(IOptions<AppSettings> appSettings, AccountClient accountClient)
     {
         _appSettings = appSettings.Value;
+        _accountClient = accountClient;
     }
 
     public Task<Result<string>> AuthenticateAsync(LoginCredentials credentials)
-        => Result.For(new Account()).AsTask() // TODO actual Call
+        => _accountClient.Get(credentials.Email)
             .ActAsync(account => GenerateTokenForValidLogin(account, credentials));
 
     private Result<string> GenerateTokenForValidLogin(Account account, LoginCredentials credentials)

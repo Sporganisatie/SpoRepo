@@ -1,6 +1,6 @@
 ﻿namespace SpoRE.Infrastructure.Database;
 
-public partial class RiderParticipation
+public class RiderParticipation
 {
     public int RiderParticipationId { get; set; }
 

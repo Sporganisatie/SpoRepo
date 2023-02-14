@@ -1,6 +1,6 @@
 ﻿namespace SpoRE.Infrastructure.Database;
 
-public partial class AccountToken
+public class AccountToken
 {
     public int TokenId { get; set; }
 

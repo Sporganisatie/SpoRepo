@@ -1,6 +1,6 @@
 ﻿namespace SpoRE.Infrastructure.Database;
 
-public partial class Race
+public class Race
 {
     public int RaceId { get; set; }
 

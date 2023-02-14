@@ -1,6 +1,6 @@
 ﻿namespace SpoRE.Infrastructure.Database;
 
-public partial class Stage
+public class Stage
 {
     public int StageId { get; set; }
 

@@ -4,7 +4,7 @@ using SpoRE.Models.Settings;
 
 namespace SpoRE.Infrastructure.Database;
 
-public partial class DatabaseContext : DbContext
+public partial class DatabaseContext : DbContext //TODO remove partial
 {
     private AppSettings _configuration;
 
