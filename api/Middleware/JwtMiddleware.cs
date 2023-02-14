@@ -11,26 +11,24 @@ public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly AppSettings _appSettings;
-    private readonly AccountClient _accountClient;
 
-    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings, AccountClient accountClient)
+    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
     {
         _next = next;
         _appSettings = appSettings.Value;
-        _accountClient = accountClient;
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context, AccountClient accountClient)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault();
 
         if (!token.IsNullOrEmpty())
-            await AttachUserToContextAsync(context, token);
+            await AttachUserToContextAsync(context, accountClient, token);
 
         await _next(context);
     }
 
-    private async Task AttachUserToContextAsync(HttpContext context, string token)
+    private async Task AttachUserToContextAsync(HttpContext context, AccountClient accountClient, string token)
     {
         try
         {
@@ -48,7 +46,7 @@ public class JwtMiddleware
             var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation
-            await _accountClient.Get(accountId)
+            await accountClient.Get(accountId)
                 .ActAsync(user =>
                 {
                     context.Items["user"] = user;

@@ -13,6 +13,12 @@ public partial class DatabaseContext : DbContext //TODO remove partial
         _configuration = configuration.Value;
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql(_configuration.DbConnectionString);
+        optionsBuilder.LogTo(Console.WriteLine); // TODO only when localdev
+    }
+
     public DbSet<Account> Accounts { get; set; }
 
     public DbSet<AccountParticipation> AccountParticipations { get; set; }
@@ -30,12 +36,6 @@ public partial class DatabaseContext : DbContext //TODO remove partial
     public DbSet<Stage> Stages { get; set; }
 
     public DbSet<StageSelection> StageSelections { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql(_configuration.DbConnectionString);
-        optionsBuilder.LogTo(Console.WriteLine);
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
