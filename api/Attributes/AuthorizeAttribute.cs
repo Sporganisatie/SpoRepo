@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SpoRE.Infrastructure.Database.Account;
+using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Attributes;
 

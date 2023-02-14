@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SpoRE.Infrastructure.Database.Account;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -18,17 +18,17 @@ public class JwtMiddleware
         _appSettings = appSettings.Value;
     }
 
-    public async Task Invoke(HttpContext context, AccountClient accountClient)
+    public async Task Invoke(HttpContext context)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault();
 
         if (!token.IsNullOrEmpty())
-            await AttachUserToContextAsync(context, accountClient, token);
+            await AttachUserToContextAsync(context, token);
 
         await _next(context);
     }
 
-    private async Task AttachUserToContextAsync(HttpContext context, AccountClient accountClient, string token)
+    private async Task AttachUserToContextAsync(HttpContext context, string token)
     {
         try
         {
@@ -46,7 +46,7 @@ public class JwtMiddleware
             var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation
-            await accountClient.Get(accountId)
+            await Result.For(new Account()).AsTask() // TODO actual Call
                 .ActAsync(user =>
                 {
                     context.Items["user"] = user;
