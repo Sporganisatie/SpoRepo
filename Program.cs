@@ -1,3 +1,4 @@
+using SpoRE.Infrastructure.Database;
 using SpoRE.Middleware;
 using SpoRE.Models.Settings;
 using SpoRE.Setup;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddScoped<DatabaseContext, DatabaseContext>();
 builder.Services.AddServicesAndClients();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSwaggerLogin();

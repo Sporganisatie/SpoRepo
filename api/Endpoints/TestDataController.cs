@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Infrastructure.Database.Account;
+using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Controllers;
 
@@ -19,6 +19,6 @@ public class TestDataController : ControllerBase //ControllerBase is nodig voor 
     public IActionResult GetTestData()
     {
         var user = (Account)_httpContextAccessor.HttpContext.Items["user"];
-        return Ok("deze data komt vanaf de server user: " + user.username);
+        return Ok("deze data komt vanaf de server user: " + user.Username);
     }
 }
