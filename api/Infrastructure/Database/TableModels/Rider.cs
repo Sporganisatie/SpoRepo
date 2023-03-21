@@ -14,5 +14,5 @@ public class Rider
 
     public string Initials { get; set; }
 
-    public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>();
+    // public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>(); TODO fix recursion error
 }

@@ -32,7 +32,7 @@ public class RiderParticipation
 
     public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
 
-    public virtual ICollection<AccountParticipation> AccountParticipations { get; } = new List<AccountParticipation>();
+    public virtual ICollection<TeamSelection> TeamSelections { get; } = new List<TeamSelection>();
 
     public virtual ICollection<StageSelection> StageSelectionsNavigation { get; } = new List<StageSelection>();
 }

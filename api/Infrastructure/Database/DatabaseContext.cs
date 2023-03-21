@@ -23,6 +23,8 @@ public partial class DatabaseContext : DbContext //TODO remove partial
 
     public DbSet<AccountParticipation> AccountParticipations { get; set; }
 
+    public DbSet<TeamSelection> TeamSelections { get; set; }
+
     public DbSet<AccountToken> AccountTokens { get; set; }
 
     public DbSet<Race> Races { get; set; }
@@ -112,6 +114,28 @@ public partial class DatabaseContext : DbContext //TODO remove partial
                 .HasForeignKey(d => d.RaceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("account_participation_race_id_fkey");
+        });
+
+        modelBuilder.Entity<TeamSelection>(entity =>
+        {
+            entity.HasKey(e => new { e.AccountParticipationId, e.RiderParticipationId }).HasName("team_selection_rider_pkey");
+
+            entity.ToTable("team_selection_rider");
+
+            entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
+            entity.Property(e => e.RiderParticipationId).HasColumnName("rider_participation_id");
+
+            entity.HasOne(d => d.AccountParticipation).WithMany(p => p.TeamSelections)
+                .HasForeignKey(d => d.AccountParticipationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("team_selection_rider_account_participation_id_fkey");
+
+
+            entity.HasOne(d => d.RiderParticipation).WithMany(p => p.TeamSelections)
+                .HasForeignKey(d => d.RiderParticipationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("team_selection_rider_rider_participation_id_fkey");
+            // TODO IndexerProperty investigate
         });
 
         modelBuilder.Entity<AccountToken>(entity =>
@@ -301,33 +325,14 @@ public partial class DatabaseContext : DbContext //TODO remove partial
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("rider_participation_race_id_fkey");
 
-            entity.HasOne(d => d.Rider).WithMany(p => p.RiderParticipations)
-                .HasForeignKey(d => d.RiderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("rider_participation_rider_id_fkey");
-
-            entity.HasMany(d => d.AccountParticipations).WithMany(p => p.RiderParticipations)
-                .UsingEntity<Dictionary<string, object>>(
-                    "TeamSelectionRider",
-                    r => r.HasOne<AccountParticipation>().WithMany()
-                        .HasForeignKey("AccountParticipationId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("team_selection_rider_account_participation_id_fkey"),
-                    l => l.HasOne<RiderParticipation>().WithMany()
-                        .HasForeignKey("RiderParticipationId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("team_selection_rider_rider_participation_id_fkey"),
-                    j =>
-                    {
-                        j.HasKey("RiderParticipationId", "AccountParticipationId").HasName("team_selection_rider_pkey");
-                        j.ToTable("team_selection_rider");
-                        j.IndexerProperty<int>("RiderParticipationId").HasColumnName("rider_participation_id");
-                        j.IndexerProperty<int>("AccountParticipationId").HasColumnName("account_participation_id");
-                    });
+            // entity.HasOne(d => d.Rider).WithMany(p => p.RiderParticipations) TODO fix recursion error
+            //     .HasForeignKey(d => d.RiderId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("rider_participation_rider_id_fkey");
 
             entity.HasMany(d => d.StageSelectionsNavigation).WithMany(p => p.RiderParticipations)
                 .UsingEntity<Dictionary<string, object>>(
-                    "StageSelectionRider",
+                    "StageSelectionRider", // TODO define stageselectionrider table like teamselection
                     r => r.HasOne<StageSelection>().WithMany()
                         .HasForeignKey("StageSelectionId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
