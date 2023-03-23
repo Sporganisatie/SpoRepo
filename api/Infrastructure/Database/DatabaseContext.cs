@@ -4,7 +4,7 @@ using SpoRE.Models.Settings;
 
 namespace SpoRE.Infrastructure.Database;
 
-public partial class DatabaseContext : DbContext //TODO remove partial
+public class DatabaseContext : DbContext
 {
     private AppSettings _configuration;
 
@@ -416,9 +416,5 @@ public partial class DatabaseContext : DbContext //TODO remove partial
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("stage_selection_stage_id_fkey");
         });
-
-        OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
