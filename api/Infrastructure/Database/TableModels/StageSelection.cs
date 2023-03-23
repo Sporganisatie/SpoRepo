@@ -20,5 +20,5 @@ public class StageSelection
 
     public virtual Stage Stage { get; set; }
 
-    public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>();
+    // public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>();
 }

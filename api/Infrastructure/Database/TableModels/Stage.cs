@@ -20,7 +20,7 @@ public class Stage
 
     public virtual Race Race { get; set; }
 
-    public virtual ICollection<ResultsPoint> ResultsPoints { get; } = new List<ResultsPoint>();
+    // public virtual ICollection<ResultsPoint> ResultsPoints { get; } = new List<ResultsPoint>();
 
-    public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
+    // public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
 }

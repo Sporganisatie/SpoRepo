@@ -12,9 +12,9 @@ public class Race
 
     public bool? Finished { get; set; }
 
-    public virtual ICollection<AccountParticipation> AccountParticipations { get; } = new List<AccountParticipation>();
+    // public virtual ICollection<AccountParticipation> AccountParticipations { get; } = new List<AccountParticipation>();
 
-    public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>();
+    // public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>();
 
-    public virtual ICollection<Stage> Stages { get; } = new List<Stage>();
+    // public virtual ICollection<Stage> Stages { get; } = new List<Stage>();
 }

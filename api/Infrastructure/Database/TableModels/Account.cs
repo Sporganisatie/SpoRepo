@@ -14,7 +14,7 @@ public class Account
 
     public bool Verified { get; set; }
 
-    public virtual ICollection<AccountParticipation> AccountParticipations { get; } = new List<AccountParticipation>();
+    // public virtual ICollection<AccountParticipation> AccountParticipations { get; } = new List<AccountParticipation>();
 
-    public virtual ICollection<AccountToken> AccountTokens { get; } = new List<AccountToken>();
+    // public virtual ICollection<AccountToken> AccountTokens { get; } = new List<AccountToken>();
 }

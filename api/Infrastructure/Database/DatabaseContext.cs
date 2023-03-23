@@ -34,6 +34,7 @@ public class DatabaseContext : DbContext
     public DbSet<Rider> Riders { get; set; }
 
     public DbSet<RiderParticipation> RiderParticipations { get; set; }
+    // public DbSet<RiderParticipationClean> RiderParticipations2 { get; set; }
 
     public DbSet<Stage> Stages { get; set; }
 
@@ -105,15 +106,15 @@ public class DatabaseContext : DbContext
                 .HasColumnName("finalscore");
             entity.Property(e => e.RaceId).HasColumnName("race_id");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.AccountParticipations)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("account_participation_account_id_fkey");
+            // entity.HasOne(d => d.Account).WithMany(p => p.AccountParticipations)
+            //     .HasForeignKey(d => d.AccountId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("account_participation_account_id_fkey");
 
-            entity.HasOne(d => d.Race).WithMany(p => p.AccountParticipations)
-                .HasForeignKey(d => d.RaceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("account_participation_race_id_fkey");
+            // entity.HasOne(d => d.Race).WithMany(p => p.AccountParticipations)
+            //     .HasForeignKey(d => d.RaceId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("account_participation_race_id_fkey");
         });
 
         modelBuilder.Entity<TeamSelection>(entity =>
@@ -125,16 +126,16 @@ public class DatabaseContext : DbContext
             entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
             entity.Property(e => e.RiderParticipationId).HasColumnName("rider_participation_id");
 
-            entity.HasOne(d => d.AccountParticipation).WithMany(p => p.TeamSelections)
-                .HasForeignKey(d => d.AccountParticipationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("team_selection_rider_account_participation_id_fkey");
+            // entity.HasOne(d => d.AccountParticipation).WithMany(p => p.TeamSelections)
+            //     .HasForeignKey(d => d.AccountParticipationId)
+            //         .OnDelete(DeleteBehavior.ClientSetNull)
+            //         .HasConstraintName("team_selection_rider_account_participation_id_fkey");
 
 
-            entity.HasOne(d => d.RiderParticipation).WithMany(p => p.TeamSelections)
-                .HasForeignKey(d => d.RiderParticipationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("team_selection_rider_rider_participation_id_fkey");
+            // entity.HasOne(d => d.RiderParticipation).WithMany(p => p.TeamSelections)
+            //     .HasForeignKey(d => d.RiderParticipationId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("team_selection_rider_rider_participation_id_fkey");
             // TODO IndexerProperty investigate
         });
 
@@ -158,10 +159,10 @@ public class DatabaseContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("type");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.AccountTokens)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("account_token_account_id_fkey");
+            // entity.HasOne(d => d.Account).WithMany(p => p.AccountTokens)
+            //     .HasForeignKey(d => d.AccountId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("account_token_account_id_fkey");
         });
 
         modelBuilder.Entity<Race>(entity =>
@@ -259,15 +260,15 @@ public class DatabaseContext : DbContext
                 .HasDefaultValueSql("0")
                 .HasColumnName("yocscore");
 
-            entity.HasOne(d => d.RiderParticipation).WithMany(p => p.ResultsPoints)
-                .HasForeignKey(d => d.RiderParticipationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("results_points_rider_participation_id_fkey");
+            // entity.HasOne(d => d.RiderParticipation).WithMany(p => p.ResultsPoints)
+            //     .HasForeignKey(d => d.RiderParticipationId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("results_points_rider_participation_id_fkey");
 
-            entity.HasOne(d => d.Stage).WithMany(p => p.ResultsPoints)
-                .HasForeignKey(d => d.StageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("results_points_stage_id_fkey");
+            // entity.HasOne(d => d.Stage).WithMany(p => p.ResultsPoints)
+            //     .HasForeignKey(d => d.StageId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("results_points_stage_id_fkey");
         });
 
         modelBuilder.Entity<Rider>(entity =>
@@ -320,34 +321,34 @@ public class DatabaseContext : DbContext
                 .HasColumnName("team");
             entity.Property(e => e.Tt).HasColumnName("tt");
 
-            entity.HasOne(d => d.Race).WithMany(p => p.RiderParticipations)
-                .HasForeignKey(d => d.RaceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("rider_participation_race_id_fkey");
+            // entity.HasOne(d => d.Race).WithMany(p => p.RiderParticipations)
+            //     .HasForeignKey(d => d.RaceId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("rider_participation_race_id_fkey");
 
             // entity.HasOne(d => d.Rider).WithMany(p => p.RiderParticipations) TODO fix recursion error
             //     .HasForeignKey(d => d.RiderId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
             //     .HasConstraintName("rider_participation_rider_id_fkey");
 
-            entity.HasMany(d => d.StageSelectionsNavigation).WithMany(p => p.RiderParticipations)
-                .UsingEntity<Dictionary<string, object>>(
-                    "StageSelectionRider", // TODO define stageselectionrider table like teamselection
-                    r => r.HasOne<StageSelection>().WithMany()
-                        .HasForeignKey("StageSelectionId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("stage_selection_rider_stage_selection_id_fkey"),
-                    l => l.HasOne<RiderParticipation>().WithMany()
-                        .HasForeignKey("RiderParticipationId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("stage_selection_rider_rider_participation_id_fkey"),
-                    j =>
-                    {
-                        j.HasKey("RiderParticipationId", "StageSelectionId").HasName("stage_selection_rider_pkey");
-                        j.ToTable("stage_selection_rider");
-                        j.IndexerProperty<int>("RiderParticipationId").HasColumnName("rider_participation_id");
-                        j.IndexerProperty<int>("StageSelectionId").HasColumnName("stage_selection_id");
-                    });
+            // entity.HasMany(d => d.StageSelectionsNavigation).WithMany(p => p.RiderParticipations)
+            //     .UsingEntity<Dictionary<string, object>>(
+            //         "StageSelectionRider", // TODO define stageselectionrider table like teamselection
+            //         r => r.HasOne<StageSelection>().WithMany()
+            //             .HasForeignKey("StageSelectionId")
+            //             .OnDelete(DeleteBehavior.ClientSetNull)
+            //             .HasConstraintName("stage_selection_rider_stage_selection_id_fkey"),
+            //         l => l.HasOne<RiderParticipation>().WithMany()
+            //             .HasForeignKey("RiderParticipationId")
+            //             .OnDelete(DeleteBehavior.ClientSetNull)
+            //             .HasConstraintName("stage_selection_rider_rider_participation_id_fkey"),
+            //         j =>
+            //         {
+            //             j.HasKey("RiderParticipationId", "StageSelectionId").HasName("stage_selection_rider_pkey");
+            //             j.ToTable("stage_selection_rider");
+            //             j.IndexerProperty<int>("RiderParticipationId").HasColumnName("rider_participation_id");
+            //             j.IndexerProperty<int>("StageSelectionId").HasColumnName("stage_selection_id");
+            //         });
         });
 
         modelBuilder.Entity<Stage>(entity =>
@@ -377,10 +378,10 @@ public class DatabaseContext : DbContext
                 .HasDefaultValueSql("1")
                 .HasColumnName("weight");
 
-            entity.HasOne(d => d.Race).WithMany(p => p.Stages)
-                .HasForeignKey(d => d.RaceId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("stage_race_id_fkey");
+            // entity.HasOne(d => d.Race).WithMany(p => p.Stages)
+            //     .HasForeignKey(d => d.RaceId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("stage_race_id_fkey");
         });
 
         modelBuilder.Entity<StageSelection>(entity =>
@@ -402,19 +403,19 @@ public class DatabaseContext : DbContext
                 .HasDefaultValueSql("0")
                 .HasColumnName("totalscore");
 
-            entity.HasOne(d => d.AccountParticipation).WithMany(p => p.StageSelections)
-                .HasForeignKey(d => d.AccountParticipationId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("stage_selection_account_participation_id_fkey");
+            // entity.HasOne(d => d.AccountParticipation).WithMany(p => p.StageSelections)
+            //     .HasForeignKey(d => d.AccountParticipationId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("stage_selection_account_participation_id_fkey");
 
-            entity.HasOne(d => d.Kopman).WithMany(p => p.StageSelections)
-                .HasForeignKey(d => d.KopmanId)
-                .HasConstraintName("stage_selection_kopman_id_fkey");
+            // entity.HasOne(d => d.Kopman).WithMany(p => p.StageSelections)
+            //     .HasForeignKey(d => d.KopmanId)
+            //     .HasConstraintName("stage_selection_kopman_id_fkey");
 
-            entity.HasOne(d => d.Stage).WithMany(p => p.StageSelections)
-                .HasForeignKey(d => d.StageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("stage_selection_stage_id_fkey");
+            // entity.HasOne(d => d.Stage).WithMany(p => p.StageSelections)
+            //     .HasForeignKey(d => d.StageId)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("stage_selection_stage_id_fkey");
         });
     }
 }

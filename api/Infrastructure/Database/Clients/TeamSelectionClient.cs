@@ -17,6 +17,14 @@ public class TeamSelectionClient
                     let ap = ts.AccountParticipation
                     where ap.RaceId == raceId && ap.AccountId == accountId && ap.Budgetparticipation == budgetParticipation
                     select ts.RiderParticipation;
+
+        // var q2 = from ap in DB.AccountParticipations
+        //             .Include(ap => ap.TeamSelections)
+        //             .ThenInclude(ts => ts.RiderParticipation)
+        //             .ThenInclude(ts => ts.Rider)
+        //          where ap.RaceId == raceId && ap.AccountId == accountId && ap.Budgetparticipation == budgetParticipation
+        //          select ap.TeamSelections;
+
         return query.ToList();
     }
 
