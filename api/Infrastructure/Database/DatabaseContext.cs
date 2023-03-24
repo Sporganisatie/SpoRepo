@@ -34,7 +34,6 @@ public class DatabaseContext : DbContext
     public DbSet<Rider> Riders { get; set; }
 
     public DbSet<RiderParticipation> RiderParticipations { get; set; }
-    // public DbSet<RiderParticipationClean> RiderParticipations2 { get; set; }
 
     public DbSet<Stage> Stages { get; set; }
 
