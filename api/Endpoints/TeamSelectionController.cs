@@ -16,14 +16,14 @@ public class TeamSelectionController : ControllerBase
     }
 
     [HttpGet("team")]
-    public IActionResult GetTeam(int raceId, bool budgetParticipation)
+    public ActionResult<IEnumerable<RiderParticipation>> GetTeam(int raceId, bool budgetParticipation)
     {
         // Todo auto attach user
         return Ok(Client.GetTeam(2, raceId, budgetParticipation));
     }
 
     [HttpGet("all")]
-    public IActionResult GetAll(int raceId, bool budgetParticipation)
+    public ActionResult<IEnumerable<RiderParticipation>> GetAll(int raceId, bool budgetParticipation)
     {
         // Todo auto attach user
         return Ok(Client.GetAll(2, raceId, budgetParticipation));
