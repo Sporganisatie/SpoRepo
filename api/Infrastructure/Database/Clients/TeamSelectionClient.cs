@@ -28,6 +28,6 @@ public class TeamSelectionClient
             .Where(rp => rp.RaceId == raceId && rp.Price < maxPrice)
             .ToList(); // TODO handle errors and return Result<T>
 
-    public int GetBudget(int raceId) // TODO misschien in race client, handle errors
-        => DB.Races.Single(r => r.RaceId == raceId).Budget;
+    public Race GetRaceInfo(int raceId) // TODO misschien in race client, handle errors
+        => DB.Races.Single(r => r.RaceId == raceId);
 }
