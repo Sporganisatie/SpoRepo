@@ -8,21 +8,21 @@ public class RiderParticipation
 
     public int RiderId { get; set; }
 
-    public int? Price { get; set; }
+    public int Price { get; set; }
 
-    public bool? Dnf { get; set; }
+    public bool Dnf { get; set; }
 
     public string Team { get; set; }
 
-    public int? Punch { get; set; }
+    public int Punch { get; set; }
 
-    public int? Climb { get; set; }
+    public int Climb { get; set; }
 
-    public int? Tt { get; set; }
+    public int Tt { get; set; }
 
-    public int? Sprint { get; set; }
+    public int Sprint { get; set; }
 
-    public int? Gc { get; set; }
+    public int Gc { get; set; }
 
     public virtual Race Race { get; set; }
 

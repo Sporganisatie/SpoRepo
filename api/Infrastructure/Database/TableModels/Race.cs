@@ -8,9 +8,9 @@ public class Race
 
     public int Year { get; set; }
 
-    public int? Budget { get; set; }
+    public int Budget { get; set; }
 
-    public bool? Finished { get; set; }
+    public bool Finished { get; set; }
 
     // public virtual ICollection<AccountParticipation> AccountParticipations { get; } = new List<AccountParticipation>();
 

@@ -1,44 +1,33 @@
 using Microsoft.EntityFrameworkCore;
+using SpoRE.Helper;
 
 namespace SpoRE.Infrastructure.Database;
 
 public class TeamSelectionClient
 {
-    DatabaseContext DB;
-    public TeamSelectionClient(DatabaseContext databaseContext)
+    private readonly Userdata User;
+    private readonly DatabaseContext DB;
+    public TeamSelectionClient(DatabaseContext databaseContext, Userdata userData)
     {
         DB = databaseContext;
+        User = userData;
     }
 
-    public IEnumerable<RiderParticipation> GetTeam(int accountId, int raceId, bool budgetParticipation)
+    public IEnumerable<RiderParticipation> GetTeam(int raceId, bool budgetParticipation) // Alleen rp.id returnen kan wss ook
     {
-        // TODO if race started return (specific redirect) error
-        var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider) // TODO fix infinite nesting
+        var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                     let ap = ts.AccountParticipation
-                    where ap.RaceId == raceId && ap.AccountId == accountId && ap.Budgetparticipation == budgetParticipation
+                    where ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation
                     select ts.RiderParticipation;
-
-        // var q2 = from ap in DB.AccountParticipations
-        //             .Include(ap => ap.TeamSelections)
-        //             .ThenInclude(ts => ts.RiderParticipation)
-        //             .ThenInclude(ts => ts.Rider)
-        //          where ap.RaceId == raceId && ap.AccountId == accountId && ap.Budgetparticipation == budgetParticipation
-        //          select ap.TeamSelections;
-
-        return query.ToList();
+        return query.ToList(); // TODO handle errors and return Result<T>
     }
 
-    private static bool IsAccountParticipationMatch(AccountParticipation ap, int raceId, int accountId, bool budgetParticipation)
-        => ap.RaceId == raceId && ap.AccountId == accountId && ap.Budgetparticipation == budgetParticipation;
+    public List<RiderParticipation> GetAll(int raceId, int maxPrice)
+        => DB.RiderParticipations
+            .Include(rp => rp.Rider)
+            .Where(rp => rp.RaceId == raceId && rp.Price < maxPrice)
+            .ToList(); // TODO handle errors and return Result<T>
 
-    public List<RiderParticipation> GetAll(int accountId, int raceId, bool budgetParticipation)
-    {
-        // TODO if race started return (specific redirect) error
-        var maxPrice = budgetParticipation ? 750_000 : int.MaxValue;
-        var query = from rp in DB.RiderParticipations.Include(rp => rp.Rider) // TODO fix infinite nesting
-                    where rp.RaceId == raceId && rp.Price < maxPrice
-                    select rp; // TODO Selectable Enum based on price and already selected
-        var output = query.ToList();
-        return output;
-    }
+    public int GetBudget(int raceId) // TODO misschien in race client, handle errors
+        => DB.Races.Single(r => r.RaceId == raceId).Budget;
 }

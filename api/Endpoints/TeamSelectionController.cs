@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Infrastructure.Database;
+using SpoRE.Models.Response;
+using SpoRE.Services;
 
 namespace SpoRE.Controllers;
 
@@ -9,23 +10,12 @@ namespace SpoRE.Controllers;
 [Authorize]
 public class TeamSelectionController : ControllerBase
 {
-    private TeamSelectionClient Client;
-    public TeamSelectionController(TeamSelectionClient client)
-    {
-        Client = client;
-    }
-
-    [HttpGet("team")]
-    public ActionResult<IEnumerable<RiderParticipation>> GetTeam(int raceId, bool budgetParticipation)
-    {
-        // Todo auto attach user
-        return Ok(Client.GetTeam(2, raceId, budgetParticipation));
-    }
+    private TeamSelectionService Service;
+    public TeamSelectionController(TeamSelectionService service)
+        => Service = service;
 
     [HttpGet("all")]
-    public ActionResult<IEnumerable<RiderParticipation>> GetAll(int raceId, bool budgetParticipation)
-    {
-        // Todo auto attach user
-        return Ok(Client.GetAll(2, raceId, budgetParticipation));
-    }
+    [ProducesResponseType(200, Type = typeof(TeamSelectionData))]
+    public IActionResult Get(int raceId, bool budgetParticipation)
+        => Ok(Service.GetTeamSelectionData(raceId, budgetParticipation));
 }
