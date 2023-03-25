@@ -14,7 +14,7 @@ public class TeamSelectionController : ControllerBase
     public TeamSelectionController(TeamSelectionService service)
         => Service = service;
 
-    [HttpGet("all")]
+    [HttpGet()]
     [ProducesResponseType(200, Type = typeof(TeamSelectionData))]
     public IActionResult Get(int raceId, bool budgetParticipation)
         => Ok(Service.GetTeamSelectionData(raceId, budgetParticipation));
