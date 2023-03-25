@@ -13,8 +13,7 @@ public class TeamSelectionService
     public TeamSelectionData GetTeamSelectionData(int raceId, bool budgetParticipation)
     {
         var raceData = Client.GetRaceInfo(raceId);
-        // uncomment if a new race/test data is available
-        // if (raceData.Finished) return null; // TODO return specific error, misschien automatische stap voor alle functies?
+        // TODO check if race started return specific error, misschien interceptor op controller
 
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
@@ -28,9 +27,9 @@ public class TeamSelectionService
 
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
-        // uncomment if a new race/test data is available
-        // if (raceData.Finished) return 0; // TODO return specific error, misschien automatische stap voor alle functies?
         var raceData = Client.GetRaceInfo(raceId);
+        // TODO check if race started return specific error, misschien interceptor op controller
+
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var team = Client.GetTeam();
         var toAdd = Client.GetRider(riderParticipationId, raceId);
@@ -59,8 +58,8 @@ public class TeamSelectionService
     internal object RemoveRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
         var raceData = Client.GetRaceInfo(raceId);
-        // uncomment if a new race/test data is available
-        // if (raceData.Finished) return 0; // TODO return specific error, misschien automatische stap voor alle functies?
+        // TODO check if race started return specific error, misschien interceptor op controller
+
         return Client.RemoveRider(riderParticipationId);
     }
 }
