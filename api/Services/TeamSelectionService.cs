@@ -25,4 +25,40 @@ public class TeamSelectionService
 
         return new(budget, budgetOver, team, allRiders);
     }
+
+    public void AddRider(int riderParticipationId, int raceId, bool budgetParticipation) // raceId optioneel
+    {
+        var raceData = Client.GetRaceInfo(raceId);
+        var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
+        var team = Client.GetTeam(raceId, budgetParticipation);
+        var toAdd = Client.GetRider(riderParticipationId);
+        if (Selectable(team, raceData, toAdd) is SelectableEnum.Open)
+        {
+            Client.AddRider(riderParticipationId, raceId, budgetParticipation);
+        }
+        // else return error?
+    }
+
+    private SelectableEnum Selectable(IEnumerable<RiderParticipation> team, Race raceData, RiderParticipation toAdd)
+    {
+        if (team.Any(r => r.RiderParticipationId == toAdd.RiderParticipationId)) return SelectableEnum.Selected;
+
+        var budgetOver = raceData.Budget - team.Sum(x => x.Price);
+        var openSpaces = 20 - team.Count();
+        var maxRiderPrice = budgetOver - openSpaces * 500_000;
+        if (toAdd.Price > maxRiderPrice) return SelectableEnum.TooExpensive;
+
+        var fourRiderteams = team.GroupBy(r => r.Team).Where(g => g.Count() >= 4).Select(g => g.Key);
+        if (fourRiderteams.Contains(toAdd.Team)) return SelectableEnum.FourFromSameTeam;
+
+        return SelectableEnum.Open;
+    }
+}
+
+public enum SelectableEnum
+{
+    Open,
+    TooExpensive,
+    FourFromSameTeam,
+    Selected
 }
