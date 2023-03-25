@@ -13,11 +13,11 @@ public class TeamSelectionClient
         User = userData;
     }
 
-    internal IEnumerable<RiderParticipation> GetTeam(int raceId, bool budgetParticipation) // Alleen rp.id returnen kan wss ook
+    internal IEnumerable<RiderParticipation> GetTeam() // Alleen rp.id returnen kan wss ook
     {
         var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                     let ap = ts.AccountParticipation
-                    where ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation
+                    where ap.AccountParticipationId == User.ParticipationId
                     select ts.RiderParticipation;
         return query.ToList(); // TODO handle errors and return Result<T>
     }
@@ -35,27 +35,20 @@ public class TeamSelectionClient
         => DB.RiderParticipations
             .Single(rp => rp.RiderParticipationId == riderParticipationId && rp.RaceId == raceId);  // TODO handle errors and return Result<T>
 
-    internal int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    internal int AddRider(int riderParticipationId)
     {
         DB.TeamSelections.Add(
             new()
             {
                 RiderParticipationId = riderParticipationId,
-                AccountParticipationId =
-                    DB.AccountParticipations
-                        .Single(ap => ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation).AccountParticipationId // TODO AccountParticipationId ook op user zetten?
+                AccountParticipationId = User.ParticipationId
             });
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
 
-    internal int RemoveRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    internal int RemoveRider(int riderParticipationId)
     {
-        var toRemove = DB.TeamSelections.Single(
-            ts => ts.RiderParticipationId == riderParticipationId &&
-                ts.AccountParticipationId ==
-                    DB.AccountParticipations
-                        .Single(ap => ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation).AccountParticipationId);
-        DB.TeamSelections.Remove(toRemove);
+        DB.TeamSelections.Remove(new() { RiderParticipationId = riderParticipationId, AccountParticipationId = User.ParticipationId });
         // TODO remove rider from stage selections, dit mag met automatische chaining als dat makkelijk kan
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }

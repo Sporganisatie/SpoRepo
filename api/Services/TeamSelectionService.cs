@@ -19,7 +19,7 @@ public class TeamSelectionService
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
-        var team = Client.GetTeam(raceId, budgetParticipation);
+        var team = Client.GetTeam();
         var allRiders = Client.GetAll(raceId, maxRiderPrice); // TODO add selectable
         var budgetOver = budget - team.Sum(x => x.Price);
 
@@ -32,11 +32,11 @@ public class TeamSelectionService
         // if (raceData.Finished) return 0; // TODO return specific error, misschien automatische stap voor alle functies?
         var raceData = Client.GetRaceInfo(raceId);
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
-        var team = Client.GetTeam(raceId, budgetParticipation);
+        var team = Client.GetTeam();
         var toAdd = Client.GetRider(riderParticipationId, raceId);
         if (Selectable(team, raceData, toAdd) is SelectableEnum.Open)
         {
-            return Client.AddRider(riderParticipationId, raceId, budgetParticipation);
+            return Client.AddRider(riderParticipationId);
         }
         return 0; // TODO error?
     }
@@ -61,7 +61,7 @@ public class TeamSelectionService
         var raceData = Client.GetRaceInfo(raceId);
         // uncomment if a new race/test data is available
         // if (raceData.Finished) return 0; // TODO return specific error, misschien automatische stap voor alle functies?
-        return Client.RemoveRider(riderParticipationId, raceId, budgetParticipation);
+        return Client.RemoveRider(riderParticipationId);
     }
 }
 
