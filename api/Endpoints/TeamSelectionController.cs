@@ -15,17 +15,17 @@ public class TeamSelectionController : ControllerBase
     public TeamSelectionController(TeamSelectionService service)
         => Service = service;
 
-    [HttpGet()]
+    [HttpGet]
     [ProducesResponseType(typeof(TeamSelectionData), 200)]
     public IActionResult Get(int raceId, bool budgetParticipation)
         => Ok(Service.GetTeamSelectionData(raceId, budgetParticipation));
 
-    [HttpPost()]
+    [HttpPost]
     [ProducesResponseType(typeof(int), 200)]
     public IActionResult Add(int riderParticipationId, int raceId, bool budgetParticipation)
         => Ok(Service.AddRider(riderParticipationId, raceId, budgetParticipation));
 
-    [HttpDelete()]
+    [HttpDelete]
     [ProducesResponseType(typeof(int), 200)]
     public IActionResult Remove(int riderParticipationId, int raceId, bool budgetParticipation)
         => Ok(Service.RemoveRider(riderParticipationId, raceId, budgetParticipation));
