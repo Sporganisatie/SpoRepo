@@ -31,11 +31,11 @@ public class TeamSelectionClient
     internal Race GetRaceInfo(int raceId) // TODO misschien in race client, handle errors
         => DB.Races.Single(r => r.RaceId == raceId);
 
-    internal RiderParticipation GetRider(int riderParticipationId)
+    internal RiderParticipation GetRider(int riderParticipationId, int raceId)
         => DB.RiderParticipations
-            .Single(rp => rp.RiderParticipationId == riderParticipationId);
+            .Single(rp => rp.RiderParticipationId == riderParticipationId && rp.RaceId == raceId);  // TODO handle errors and return Result<T>
 
-    internal void AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    internal int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
         DB.TeamSelections.Add(
             new()
@@ -43,8 +43,20 @@ public class TeamSelectionClient
                 RiderParticipationId = riderParticipationId,
                 AccountParticipationId =
                     DB.AccountParticipations
-                        .Single(ap => ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation).AccountParticipationId
+                        .Single(ap => ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation).AccountParticipationId // TODO AccountParticipationId ook op user zetten?
             });
-        DB.SaveChanges();
+        return DB.SaveChanges();  // TODO handle errors and return Result<T>
+    }
+
+    internal int RemoveRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    {
+        var toRemove = DB.TeamSelections.Single(
+            ts => ts.RiderParticipationId == riderParticipationId &&
+                ts.AccountParticipationId ==
+                    DB.AccountParticipations
+                        .Single(ap => ap.RaceId == raceId && ap.AccountId == User.Id && ap.Budgetparticipation == budgetParticipation).AccountParticipationId);
+        DB.TeamSelections.Remove(toRemove);
+        // TODO remove rider from stage selections, dit mag met automatische chaining als dat makkelijk kan
+        return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
 }

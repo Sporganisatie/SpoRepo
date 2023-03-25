@@ -14,7 +14,7 @@ public class TeamSelectionService
     {
         var raceData = Client.GetRaceInfo(raceId);
         // uncomment if a new race/test data is available
-        // if (raceData.Finished) return null; // TODO return specific error
+        // if (raceData.Finished) return null; // TODO return specific error, misschien automatische stap voor alle functies?
 
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
@@ -26,20 +26,22 @@ public class TeamSelectionService
         return new(budget, budgetOver, team, allRiders);
     }
 
-    public void AddRider(int riderParticipationId, int raceId, bool budgetParticipation) // raceId optioneel
+    public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
+        // uncomment if a new race/test data is available
+        // if (raceData.Finished) return 0; // TODO return specific error, misschien automatische stap voor alle functies?
         var raceData = Client.GetRaceInfo(raceId);
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var team = Client.GetTeam(raceId, budgetParticipation);
-        var toAdd = Client.GetRider(riderParticipationId);
+        var toAdd = Client.GetRider(riderParticipationId, raceId);
         if (Selectable(team, raceData, toAdd) is SelectableEnum.Open)
         {
-            Client.AddRider(riderParticipationId, raceId, budgetParticipation);
+            return Client.AddRider(riderParticipationId, raceId, budgetParticipation);
         }
-        // else return error?
+        return 0; // TODO error?
     }
 
-    private SelectableEnum Selectable(IEnumerable<RiderParticipation> team, Race raceData, RiderParticipation toAdd)
+    private static SelectableEnum Selectable(IEnumerable<RiderParticipation> team, Race raceData, RiderParticipation toAdd)
     {
         if (team.Any(r => r.RiderParticipationId == toAdd.RiderParticipationId)) return SelectableEnum.Selected;
 
@@ -53,9 +55,17 @@ public class TeamSelectionService
 
         return SelectableEnum.Open;
     }
+
+    internal object RemoveRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    {
+        var raceData = Client.GetRaceInfo(raceId);
+        // uncomment if a new race/test data is available
+        // if (raceData.Finished) return 0; // TODO return specific error, misschien automatische stap voor alle functies?
+        return Client.RemoveRider(riderParticipationId, raceId, budgetParticipation);
+    }
 }
 
-public enum SelectableEnum
+public enum SelectableEnum // TODO move
 {
     Open,
     TooExpensive,
