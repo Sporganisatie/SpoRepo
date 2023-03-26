@@ -10,7 +10,7 @@ public class Account
 
     public string Email { get; set; }
 
-    public bool? Admin { get; set; }
+    public bool Admin { get; set; }
 
     public bool Verified { get; set; }
 
