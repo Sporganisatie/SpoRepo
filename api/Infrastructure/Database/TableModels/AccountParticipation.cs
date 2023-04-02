@@ -16,7 +16,7 @@ public class AccountParticipation
 
     public virtual Race Race { get; set; }
 
-    public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
+    // public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
 
-    public virtual ICollection<RiderParticipation> RiderParticipations { get; } = new List<RiderParticipation>();
+    // public virtual ICollection<TeamSelection> TeamSelections { get; } = new List<TeamSelection>();
 }

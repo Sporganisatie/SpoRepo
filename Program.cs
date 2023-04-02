@@ -1,3 +1,4 @@
+using SpoRE.Helper;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Middleware;
 using SpoRE.Models.Settings;
@@ -11,8 +12,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddScoped<DatabaseContext, DatabaseContext>();
+builder.Services.AddScoped<Userdata, Userdata>();
 builder.Services.AddServicesAndClients();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerLogin();
 
 var app = builder.Build();
@@ -23,7 +25,13 @@ if (app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(config =>
+        {
+            config.ConfigObject.AdditionalItems["syntaxHighlight"] = new Dictionary<string, object>
+            {
+                ["activated"] = false
+            };
+        });
 }
 
 app.UseHttpsRedirection();

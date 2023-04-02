@@ -10,6 +10,8 @@ internal static class Telemetry
     {
         services.AddScoped<AccountService, AccountService>();
         services.AddScoped<AccountClient, AccountClient>();
+        services.AddScoped<TeamSelectionService, TeamSelectionService>();
+        services.AddScoped<TeamSelectionClient, TeamSelectionClient>();
     }
 
     public static void AddSwaggerLogin(this IServiceCollection services)
