@@ -19,7 +19,7 @@ public class TeamSelectionService
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
         var team = Client.GetTeam();
-        var allRiders = Client.GetAll(raceId, maxRiderPrice); // TODO add selectable
+        var allRiders = Client.GetAll(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, raceData, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
 
         return new(budget, budgetOver, team, allRiders);
