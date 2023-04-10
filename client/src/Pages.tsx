@@ -4,7 +4,6 @@ import DesignSandbox from "./pages/DesignSandbox";
 import Testing from "./components/Testing";
 import UserProfile from "./pages/UserProfile";
 import Login from "./pages/Login";
-import StageResultTemp from "./pages/StageResultTemp";
 import Teamselection from "./pages/teamselection/Teamselection";
 
 const Pages: JSX.Element[] = [
@@ -12,8 +11,7 @@ const Pages: JSX.Element[] = [
     <Route key="login" path="login" element={<Login />} />,
     <Route key="profile" path="profile" element={<UserProfile />} />,
     <Route key="designsandbox" path="designsandbox" element={<DesignSandbox />} />,
-    <Route key="teamselection" path=":raceid/teamselection" element={<Teamselection />} />,
-    <Route key="stage" path="stage/:raceid/:stagenr" element={<StageResultTemp />} />,
+    <Route key="teamselection" path="/teamselection/:raceId" element={<Teamselection />} />,
     <Route key="testing" path="testing" element={<Testing />} />
     // TODO zorg dat al het overige naar home gaat
 ];
