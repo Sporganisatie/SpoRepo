@@ -9,7 +9,9 @@ const Teamselection: React.FC = () => {
     const [data, setData] = useState<SelectableRider[]>([]);
     const [pending, setPending] = useState(true);
 
-    useEffect(() => {
+    useEffect(() => loadData(), [raceId])
+
+    const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId } })
             .then(res => {
                 setData(res.data.allRiders)
@@ -18,9 +20,10 @@ const Teamselection: React.FC = () => {
             .catch(function (error) {
                 throw error
             });
-    }, [raceId])
+    };
 
     const removeRider = (riderParticipationId: number) => {
+        setPending(true);
         axios.delete('/api/TeamSelection', {
             params: {
                 riderParticipationId,
@@ -29,7 +32,7 @@ const Teamselection: React.FC = () => {
             }
         })
             .then(function (response) {
-                console.log(response.data);
+                loadData();
             })
             .catch(function (error) {
                 console.log(error);
@@ -37,6 +40,7 @@ const Teamselection: React.FC = () => {
     };
 
     const addRider = (riderParticipationId: number) => {
+        setPending(true);
         axios.post('/api/TeamSelection', null, {
             params: {
                 riderParticipationId,
@@ -45,7 +49,7 @@ const Teamselection: React.FC = () => {
             }
         })
             .then(function (response) {
-                console.log(response.data);
+                loadData();
             })
             .catch(function (error) {
                 console.log(error);
