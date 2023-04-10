@@ -34,7 +34,7 @@ public class JwtMiddleware
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
-            tokenHandler.ValidateToken(token, new TokenValidationParameters //TODO handle expired error niet triggeren
+            tokenHandler.ValidateToken(token, new TokenValidationParameters //TODO handle expired error niet triggeren bij login endpoint
             {
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = false,
