@@ -24,10 +24,12 @@ const SelectableRidersTable = ({ data, loading, removeRider, addRider }: { data:
     const columns: TableColumn<SelectableRider>[] = [
         {
             name: 'Naam',
+            width: "50",
             cell: (row: SelectableRider) => <RiderLink rider={row.details.rider} />
         },
         {
             name: 'Price',
+            width: "100px",
             selector: (row: SelectableRider) => row.details.price,
         },
         {
@@ -35,28 +37,38 @@ const SelectableRidersTable = ({ data, loading, removeRider, addRider }: { data:
             selector: (row: SelectableRider) => row.details.team,
         },
         {
-            cell: (row: SelectableRider) => row.selectable == SelectableEnum.Open ? <button onClick={() => addRider(row.details.riderParticipationId)}>+</button> : <></>
-        },
-        {
-            cell: (row: SelectableRider) => row.selectable == SelectableEnum.Selected ? <button onClick={() => removeRider(row.details.riderParticipationId)}>-</button> : <></>
+            cell: (row: SelectableRider) => {
+                switch (row.selectable) {
+                    case SelectableEnum.Open:
+                        return <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => addRider(row.details.riderParticipationId)}>+</button>;
+                    case SelectableEnum.Selected:
+                        return <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => removeRider(row.details.riderParticipationId)}>-</button>;
+                    default:
+                        return <></>;
+                }
+            }
         }
     ];
 
     return (
-        <DataTable
-            columns={columns}
-            data={data}
-            progressPending={loading}
-            conditionalRowStyles={conditionalRowStyles}
-            expandableRows
-            expandableRowsComponent={SelectableRiderFoldout}
-            expandOnRowClicked
-            expandableRowsHideExpander
-            striped
-            highlightOnHover
-            pointerOnHover
-            dense
-        />
+
+        <div style={{ width: "48%", borderStyle: "solid" }} >
+            <DataTable
+                title="Alle renners"
+                columns={columns}
+                data={data}
+                progressPending={loading}
+                conditionalRowStyles={conditionalRowStyles}
+                expandableRows
+                expandableRowsComponent={SelectableRiderFoldout}
+                expandOnRowClicked
+                expandableRowsHideExpander
+                striped
+                highlightOnHover
+                pointerOnHover
+                dense
+            />
+        </div>
     );
 }
 

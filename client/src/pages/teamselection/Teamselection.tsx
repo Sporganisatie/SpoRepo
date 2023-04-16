@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { SelectableRider } from './Models/SelectableRider';
+import { TeamSelectionData } from './Models/TeamSelectionData';
 import SelectableRidersTable from './SelectableRidersTable';
+import TeamSelectionTable from './TeamSelectionTable';
 
 const Teamselection: React.FC = () => {
     let { raceId } = useParams();
-    const [data, setData] = useState<SelectableRider[]>([]);
+    const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [] });
     const [pending, setPending] = useState(true);
 
     useEffect(() => loadData(), [])
@@ -14,7 +15,7 @@ const Teamselection: React.FC = () => {
     const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId } })
             .then(res => {
-                setData(res.data.allRiders)
+                setData(res.data)
                 setPending(false);
             })
             .catch(function (error) {
@@ -57,12 +58,20 @@ const Teamselection: React.FC = () => {
     };
 
     return (
-        <SelectableRidersTable
-            data={data}
-            loading={pending}
-            removeRider={removeRider}
-            addRider={addRider}
-        />
+        <div style={{ display: "flex" }}>
+            <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>
+            <SelectableRidersTable
+                data={data.allRiders}
+                loading={pending}
+                removeRider={removeRider}
+                addRider={addRider}
+            />
+            <TeamSelectionTable
+                data={data.team}
+                loading={pending}
+                removeRider={removeRider}
+            />
+        </div>
     );
 }
 
