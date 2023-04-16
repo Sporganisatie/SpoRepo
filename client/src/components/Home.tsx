@@ -8,9 +8,7 @@ const Home = () => {
       <br />
       <Link to="/testing">Check login and DB pagina</Link>
       <br />
-      <Link to="/stage/26/21/">Stage pagina</Link>
-      <br />
-      <Link to="/stage/26/21?budgetparticipation=true">Stage pagina met budget</Link>
+      <Link to="/teamselection/27/">Team Selection</Link>
     </div>
   );
 };

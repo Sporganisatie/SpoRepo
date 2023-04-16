@@ -9,7 +9,7 @@ const Teamselection: React.FC = () => {
     const [data, setData] = useState<SelectableRider[]>([]);
     const [pending, setPending] = useState(true);
 
-    useEffect(() => loadData(), [raceId])
+    useEffect(() => loadData(), [])
 
     const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId } })
