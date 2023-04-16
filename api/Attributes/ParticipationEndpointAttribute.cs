@@ -27,6 +27,6 @@ public class ParticipationEndpointAttribute : Attribute, IActionFilter
                     return Result.OK;
                 });
         };
-        // else misschien meteen een error gooien?
+        // TODO else return error
     }
 }

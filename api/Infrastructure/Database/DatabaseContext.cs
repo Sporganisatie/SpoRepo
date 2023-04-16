@@ -16,6 +16,7 @@ public class DatabaseContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_configuration.DbConnectionString);
+        optionsBuilder.EnableSensitiveDataLogging(); // TODO only when localdev
         optionsBuilder.LogTo(Console.WriteLine); // TODO only when localdev
     }
 
