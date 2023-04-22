@@ -5,7 +5,7 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
-    private static string StartlistQuery(int raceId, HtmlNode html, IEnumerable<ScQualities> riderQualities)
+    private static string StartlistQuery(int raceId, HtmlNode html, IEnumerable<ScRider> riderQualities)
     {   // TODO (verre toekomst) kijk of dit kan zonder ExecuteSqlRaw
         var riderInserts = new List<string>();
         var riderParticipationInserts = new List<string>();
@@ -30,9 +30,9 @@ public partial class Scrape
                 var riderId = $"(SELECT rider_id FROM rider WHERE PCS_id = '{pcsId}')";
                 try
                 {
-                    var sc = riderQualities.Single(rq => CompareName(rq.Name, names));
-                    var q = sc.Qualities.ToDictionary(q => q.Name, q => q.Value);
-                    riderParticipationInserts.Add($"({raceId}, {riderId}, {sc.Price}, '{teamName}', {q["Klassement"]}, {q["Klimmen"]}, {q["Tijdrijden"]}, {q["Sprinten"]}, {q["Punchen"]})");
+                    var sc = riderQualities.Single(rq => CompareName(rq.FirstName, rq.LastName, names));
+                    var q = sc.Qualities.ToDictionary(q => q.Type, q => q.Value);
+                    riderParticipationInserts.Add($"({raceId}, {riderId}, {(int)sc.Price}, '{teamName}', {q[0]}, {q[1]}, {q[2]}, {q[3]}, {q[4]})");
                     riderInserts.Add(riderInsert);
                     rpIds.Add($"(SELECT rider_participation_id FROM rider_participation WHERE rider_id = {riderId} AND race_id = {raceId})");
                 }
@@ -60,26 +60,27 @@ public partial class Scrape
         return deleteStageSelectionQuery + deleteKopmanQuery + deleteTeamSelectionQuery + deleteStartlistQuery + riderQuery + participationQuery;
     }
 
-    private static bool CompareName(ScName name, string[] names)
+    private static bool CompareName(string firstnameSC, string lastnameSC, string[] names)
     {
         var lastname = String.Join(" ", names.Where(n => n.ToUpper().Equals(n))).ToLowerInvariant();
         var firstname = String.Join(" ", names.Where(n => !n.ToUpper().Equals(n))).ToLowerInvariant();
-        return firstname.Contains(name.FirstName.ToLowerInvariant()) && lastname.Equals(name.LastName.ToLowerInvariant());
+        return firstname.Contains(firstnameSC.ToLowerInvariant()) && lastname.Equals(lastnameSC.ToLowerInvariant());
     }
 }
 
 internal class PrijzenFile
 {
-    public IEnumerable<ScQualities> Content { get; set; }
+    public IEnumerable<ScRider> Content { get; set; }
 }
 
-internal class ScQualities
-{
-    public ScName Name { get; set; }
-    public IEnumerable<Quality> Qualities { get; set; }
-    public int Price { get; set; }
-}
+public record ScRider(
+    int Age,
+    double Price,
+    int Status,
+    int Type,
+    string FirstName,
+    string LastName,
+    string NameShort,
+    List<ScQuality> Qualities);
 
-internal record Quality(string Name, int Value);
-
-internal record ScName(string FirstName, string LastName, string FullName, string NameShort);
+public record ScQuality(int Type, int Value);

@@ -17,7 +17,9 @@ public partial class Scrape
     {
         var raceId = DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId;
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist").DocumentNode;
-        var riderQualities = JsonSerializer.Deserialize<PrijzenFile>(File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.txt")).Content; // TODO remove hardcoded
+        var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.txt");
+        var json = JsonSerializer.Deserialize<PrijzenFile>(file);
+        var riderQualities = json.Content; // TODO remove hardcoded
         var query = StartlistQuery(raceId, html, riderQualities);
         DB.Database.ExecuteSqlRaw(query);
     }
