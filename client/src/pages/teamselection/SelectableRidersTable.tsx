@@ -13,7 +13,7 @@ const conditionalRowStyles = [
         },
     },
     {
-        when: (row: SelectableRider) => row.selectable == SelectableEnum.Selected,
+        when: (row: SelectableRider) => row.selectable === SelectableEnum.Selected,
         style: {
             backgroundColor: 'yellow',
         },
