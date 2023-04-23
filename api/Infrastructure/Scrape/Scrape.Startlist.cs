@@ -30,9 +30,11 @@ public partial class Scrape
                 var riderId = $"(SELECT rider_id FROM rider WHERE PCS_id = '{pcsId}')";
                 try
                 {
-                    var sc = riderQualities.Single(rq => CompareName(rq.FirstName, rq.LastName, names));
+                    var sclist = riderQualities.Where(rq => CompareName(rq.FirstName, rq.LastName, names));
+                    var sc = sclist.First();
                     var q = sc.Qualities.ToDictionary(q => q.Type, q => q.Value);
-                    riderParticipationInserts.Add($"({raceId}, {riderId}, {(int)sc.Price}, '{teamName}', {q[0]}, {q[1]}, {q[2]}, {q[3]}, {q[4]})");
+
+                    riderParticipationInserts.Add($"({raceId}, {riderId}, {(int)sc.Price}, '{teamName}', {Qval(0, q)}, {Qval(1, q)}, {Qval(2, q)}, {Qval(3, q)}, {Qval(4, q)})");
                     riderInserts.Add(riderInsert);
                     rpIds.Add($"(SELECT rider_participation_id FROM rider_participation WHERE rider_id = {riderId} AND race_id = {raceId})");
                 }
@@ -43,6 +45,16 @@ public partial class Scrape
             }
         }
         return BuildQuery(riderInserts, riderParticipationInserts, rpIds, raceId);
+    }
+
+    private static int Qval(int pos, Dictionary<int, int> dict)
+    {
+        int value;
+        if (!dict.TryGetValue(pos, out value))
+        {
+            value = 0;
+        }
+        return value;
     }
 
     private static string BuildQuery(IEnumerable<string> riderInserts, IEnumerable<string> riderParticipationInserts, IEnumerable<string> rpIds, int raceId)
@@ -64,7 +76,10 @@ public partial class Scrape
     {
         var lastname = String.Join(" ", names.Where(n => n.ToUpper().Equals(n))).ToLowerInvariant();
         var firstname = String.Join(" ", names.Where(n => !n.ToUpper().Equals(n))).ToLowerInvariant();
-        return firstname.Contains(firstnameSC.ToLowerInvariant()) && lastname.Equals(lastnameSC.ToLowerInvariant());
+        var match = firstname.Contains(firstnameSC.ToLowerInvariant()) && lastname.Equals(lastnameSC.ToLowerInvariant());
+        if (match)
+        { return true; }
+        return false;
     }
 }
 
