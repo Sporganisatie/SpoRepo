@@ -14,9 +14,8 @@ const Login = () => {
             .then(res => {
                 if (res.status === 200) {
                     localStorage.setItem('authToken', res.data);
-                    navigate('/testing')
+                    navigate('/testing') // Todo redirect to home of argument dat je mee kan geven
                 }
-                
             })
             .catch((error) => {
                 throw error // foute login geeft momenteel error? statuscode 400
@@ -47,13 +46,13 @@ const Login = () => {
                         type="password"
                         placeholder="Password" />
                 </div>
-                <Button 
+                <Button
                     buttonClass=""
                     label="Log in"
                     type="submit"
                 />
             </form>
-        </Card> 
+        </Card>
     );
 }
 
