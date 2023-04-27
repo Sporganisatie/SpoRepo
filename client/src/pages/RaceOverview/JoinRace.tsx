@@ -3,11 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const JoinRace = () => {
     let navigate = useNavigate();
-    let { raceId } = useParams();
+    let { raceid } = useParams();
     const handleJoinRace = () => {
-        axios.post(`/api/race/${raceId}/join`)
+        axios.get(`/api/Race/join`, { params: { raceId: raceid } })
             .then(res => {
-                navigate(`/${raceId}/teamselection`);
+                navigate(`/${raceid}/teamselection`);
             })
             .catch(err => {
                 console.error(err);

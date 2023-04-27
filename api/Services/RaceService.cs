@@ -9,11 +9,13 @@ public class RaceService
 {
     private readonly AccountClient _accountClient;
     private readonly Userdata User;
+    private readonly TeamSelectionClient TeamClient;
 
-    public RaceService(AccountClient accountClient, Userdata userData)
+    public RaceService(AccountClient accountClient, Userdata userData, TeamSelectionClient databaseContext)
     {
         _accountClient = accountClient;
         User = userData;
+        TeamClient = databaseContext;
     }
 
     internal async Task<Result<RaceStateEnum>> GetRaceState(int raceId)
@@ -24,4 +26,7 @@ public class RaceService
     {
         return participationCount > 0 ? RaceStateEnum.TeamSelection : RaceStateEnum.NotJoined;
     }
+
+    public Task<Result> JoinRace(int raceId)
+        => TeamClient.JoinRace(raceId);
 }

@@ -20,7 +20,7 @@ public class RaceController : ControllerBase
         => Ok((await Service.GetRaceState(raceId)).Value);
 
     [HttpGet("join")]
-    [ProducesResponseType(typeof(RaceStateEnum), 200)]
+    [ProducesResponseType(200)]
     public IActionResult JoinRace(int raceId)
-        => Ok(Service.GetRaceState(raceId));
+        => Ok(Service.JoinRace(raceId));
 }
