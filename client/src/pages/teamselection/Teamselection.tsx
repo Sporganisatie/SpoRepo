@@ -5,12 +5,15 @@ import { SelectableRider } from './Models/SelectableRider';
 import { TeamSelectionData } from './Models/TeamSelectionData';
 import SelectableRidersTable from './SelectableRidersTable';
 import TeamSelectionTable from './TeamSelectionTable';
+import { RiderParticipation } from '../../models/RiderParticipation';
+import { Rider } from '../../models/Rider';
 
 interface Filters {
     name: string,
     minPrice: string,
     maxPrice: string,
     team: string,
+    skill: string,
 };
 
 const Teamselection: React.FC = () => {
@@ -25,6 +28,7 @@ const Teamselection: React.FC = () => {
             minPrice: "500000",
             maxPrice: "7000000",
             team: "",
+            skill: ""
         }
     }
     function updateAndFilter(part: Partial<Filters>) {
@@ -43,7 +47,7 @@ const Teamselection: React.FC = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId } })
             .then(res => {
                 setData(res.data)
-                setFilteredRiders(res.data.allRiders);
+                setFilteredRiders(res.data.allRiders.sort((A: SelectableRider, B: SelectableRider) => B.details.price - A.details.price));
                 setPending(false);
             })
             .catch(function (error) {
@@ -137,6 +141,16 @@ const Teamselection: React.FC = () => {
                     <option value="6000000">6.000.000</option>
                     <option value="7000000">7.000.000</option>
                 </select>
+                <select value={filters.skill} onChange={(e) => {
+                    updateAndFilter({ skill: e.target.value });
+                }}>
+                    <option value=""></option>
+                    <option value="gc">Klassement</option>
+                    <option value="sprint">Sprint</option>
+                    <option value="climb">Klimmen</option>
+                    <option value="tt">Tijdrijden</option>
+                    <option value="punch">Punch</option>
+                </select>
                 <input
                     type="text"
                     placeholder="teamnaam"
@@ -186,7 +200,44 @@ function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRi
             case "team":
                 riders = riders.filter(({ details }) => details.team.toLowerCase().includes(value.toLowerCase()));
                 break;
+            case "skill":
+                riders = riders.filter(({ details }) => SkillFilter(details, value))
+                riders.sort((A, B) => SkillSort(A, B, value))
         }
     }
     return riders;
 }
+
+function SkillFilter(details: RiderParticipation, value: any): unknown {
+    switch (value) {
+        case "gc":
+            return details.gc > 0;
+        case "sprint":
+            return details.sprint > 0;
+        case "climb":
+            return details.climb > 0;
+        case "tt":
+            return details.tt > 0;
+        case "punch":
+            return details.punch > 0;
+        default:
+            return true;
+    }
+}
+function SkillSort(A: SelectableRider, B: SelectableRider, value: any): number {
+    switch (value) {
+        case "gc":
+            return B.details.gc - A.details.gc;
+        case "sprint":
+            return B.details.sprint - A.details.sprint;
+        case "climb":
+            return B.details.climb - A.details.climb;
+        case "tt":
+            return B.details.tt - A.details.tt;
+        case "punch":
+            return B.details.punch - A.details.punch;
+        default:
+            return B.details.price - A.details.price;
+    }
+}
+

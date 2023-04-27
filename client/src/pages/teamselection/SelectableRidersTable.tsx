@@ -30,11 +30,11 @@ const SelectableRidersTable = ({ data, loading, removeRider, addRider }: { data:
         {
             name: 'Price',
             width: "100px",
-            selector: (row: SelectableRider) => row.details.price,
+            selector: (row: SelectableRider) => row.details.price
         },
         {
             name: 'Team',
-            selector: (row: SelectableRider) => row.details.team,
+            selector: (row: SelectableRider) => row.details.team
         },
         {
             cell: (row: SelectableRider) => {
