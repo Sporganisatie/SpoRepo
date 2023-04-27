@@ -96,6 +96,7 @@ const Teamselection: React.FC = () => {
                 <input
                     type="text"
                     value={filters.name}
+                    placeholder="naam"
                     onChange={(e) => updateAndFilter({ name: e.target.value })}
                 />
                 <select value={filters.minPrice} onChange={(e) => {
@@ -138,6 +139,7 @@ const Teamselection: React.FC = () => {
                 </select>
                 <input
                     type="text"
+                    placeholder="teamnaam"
                     value={filters.team}
                     onChange={(e) => updateAndFilter({ team: e.target.value })}
                 />
