@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const RaceRouter = () => {
             .then(res => {
                 switch (res.data) {
                     case RaceStateEnum.NotJoined: navigate(`/joinrace/${raceId}`); return;
-                    case RaceStateEnum.TeamSelection: navigate(`/${raceId}/teamselection`); return;
+                    case RaceStateEnum.TeamSelection: navigate(`/teamselection/${raceId}`); return;
                 };
                 a = "Dit moet je niet kunnen zien val Arjen lastig als je dit wel ziet";
                 // TODO wat als invalid race

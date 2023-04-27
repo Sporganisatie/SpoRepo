@@ -37,7 +37,7 @@ const Teamselection: React.FC = () => {
     }
 
 
-    useEffect(() => loadData(), [])
+    useEffect(() => loadData(), [raceId])
 
     const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId } })
