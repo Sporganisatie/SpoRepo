@@ -52,4 +52,31 @@ public class TeamSelectionClient
         // TODO remove rider from stage selections, dit mag met automatische chaining als dat makkelijk kan
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
+
+    // TODO move to different client
+    public Task<Result> JoinRace(int raceId)
+    {
+        string budgetInsert = User.Id <= 5 ? $",({User.Id},{raceId},true)" : "";
+
+        string accountParticipationQuery = $@"INSERT INTO account_participation(account_id, race_id, budgetparticipation)
+                VALUES({User.Id}, {raceId}, false) {budgetInsert}
+                ON CONFLICT (account_id, race_id, budgetparticipation) DO UPDATE SET budgetparticipation = EXCLUDED.budgetparticipation";
+
+        var rowsAffected = DB.Database.ExecuteSqlRaw(accountParticipationQuery);
+        string stage_selectionQuery = "INSERT INTO stage_selection(stage_id, account_participation_id) VALUES";
+        for (int stage = 1; stage < 23; stage++)
+        {
+            string stage_id = $"(SELECT stage_id FROM stage WHERE race_id = {raceId} AND stagenr = {stage})";
+            string budgparticipationInsert = "";
+            if (User.Id <= 5)
+            {
+                budgparticipationInsert = $",({stage_id},(SELECT account_participation_id FROM account_participation WHERE race_id = {raceId} AND account_id = {User.Id} AND budgetparticipation = true))";
+            }
+            stage_selectionQuery += $"({stage_id},(SELECT account_participation_id FROM account_participation WHERE race_id = {raceId} AND account_id = {User.Id} AND budgetparticipation = false)){budgparticipationInsert},";
+        }
+
+        stage_selectionQuery = stage_selectionQuery.Remove(stage_selectionQuery.Length - 1) + " ON CONFLICT (account_participation_id, stage_id) DO NOTHING;";
+        var rowsAffected2 = DB.Database.ExecuteSqlRaw(stage_selectionQuery);
+        return Task.FromResult(Result.OK);
+    }
 }

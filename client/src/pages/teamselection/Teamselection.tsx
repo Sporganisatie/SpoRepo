@@ -35,7 +35,7 @@ const Teamselection: React.FC = () => {
         setFilters(newFilter)
         setFilteredRiders(filterRiders(newFilter, data.allRiders));
     }
-    
+
 
     useEffect(() => loadData(), [])
 
@@ -90,17 +90,17 @@ const Teamselection: React.FC = () => {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column"}}>
-            <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>            
+        <div style={{ display: "flex", flexDirection: "column" }}>
+            <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>
             <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem", margin: "1rem" }}>
                 <input
-                    type="text" 
+                    type="text"
                     value={filters.name}
-                    onChange={(e) => updateAndFilter({name: e.target.value})}
+                    onChange={(e) => updateAndFilter({ name: e.target.value })}
                 />
                 <select value={filters.minPrice} onChange={(e) => {
-                    const maxPrice = Math.max(Number(e.target.value),Number(filters.maxPrice));
-                    updateAndFilter({minPrice: e.target.value, maxPrice: maxPrice.toString()});
+                    const maxPrice = Math.max(Number(e.target.value), Number(filters.maxPrice));
+                    updateAndFilter({ minPrice: e.target.value, maxPrice: maxPrice.toString() });
                 }}>
                     <option value="500000">500.000</option>
                     <option value="750000">750.000</option>
@@ -118,8 +118,8 @@ const Teamselection: React.FC = () => {
                     <option value="7000000">7.000.000</option>
                 </select>
                 <select value={filters.maxPrice} onChange={(e) => {
-                    const minPrice = Math.min(Number(e.target.value),Number(filters.minPrice));
-                    updateAndFilter({maxPrice: e.target.value, minPrice: minPrice.toString()});
+                    const minPrice = Math.min(Number(e.target.value), Number(filters.minPrice));
+                    updateAndFilter({ maxPrice: e.target.value, minPrice: minPrice.toString() });
                 }}>
                     <option value="500000">500.000</option>
                     <option value="750000">750.000</option>
@@ -137,9 +137,9 @@ const Teamselection: React.FC = () => {
                     <option value="7000000">7.000.000</option>
                 </select>
                 <input
-                    type="text" 
+                    type="text"
                     value={filters.team}
-                    onChange={(e) => updateAndFilter({team: e.target.value})}
+                    onChange={(e) => updateAndFilter({ team: e.target.value })}
                 />
                 <button onClick={() => resetFilter()}>
                     Reset
@@ -171,18 +171,18 @@ function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRi
         }
         switch (filterType) {
             case "name":
-                riders = riders.filter(({details}) => 
+                riders = riders.filter(({ details }) =>
                     (details.rider.firstname + details.rider.lastname).toLowerCase().includes(value.toLowerCase())
                 );
                 break;
             case "minPrice":
-                riders = riders.filter(({details}) => details.price >= Number(value));
+                riders = riders.filter(({ details }) => details.price >= Number(value));
                 break;
             case "maxPrice":
-                riders = riders.filter(({details}) => details.price <= Number(value));
+                riders = riders.filter(({ details }) => details.price <= Number(value));
                 break;
             case "team":
-                riders = riders.filter(({details}) => details.team.toLowerCase().includes(value.toLowerCase()));
+                riders = riders.filter(({ details }) => details.team.toLowerCase().includes(value.toLowerCase()));
                 break;
         }
     }
