@@ -1,9 +1,13 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  // get login state
-  // redirect to login
-  // redirect to current race/teamselection
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/race/27");
+  }, []);
+
   return (
     <div>
       Empty home page
