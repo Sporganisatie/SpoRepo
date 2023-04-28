@@ -27,6 +27,7 @@ public class TeamSelectionClient
         => DB.RiderParticipations
             .Include(rp => rp.Rider)
             .Where(rp => rp.RaceId == raceId && rp.Price < maxPrice)
+            .OrderByDescending(x => x.Price)
             .ToList(); // TODO handle errors and return Result<T>
 
     internal Race GetRaceInfo(int raceId) // TODO misschien in race client, handle errors

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SelectableRider } from './Models/SelectableRider';
 import { TeamSelectionData } from './Models/TeamSelectionData';
@@ -43,13 +43,12 @@ const Teamselection: React.FC = () => {
 
 
     useEffect(() => loadData(), [raceId, budgetParticipation])
+    useEffect(() => { updateAndFilter({}); setPending(false); }, [data])
 
     const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId, budgetParticipation } })
             .then(res => {
                 setData(res.data)
-                setFilteredRiders(res.data.allRiders.sort((A: SelectableRider, B: SelectableRider) => B.details.price - A.details.price));
-                setPending(false);
             })
             .catch(function (error) {
                 throw error

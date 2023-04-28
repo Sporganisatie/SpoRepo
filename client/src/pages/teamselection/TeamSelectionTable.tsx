@@ -27,7 +27,7 @@ const TeamSelectionTable = ({ data, loading, removeRider }: { data: RiderPartici
         <div style={{ width: "50%", borderStyle: "solid" }} >
 
             <DataTable
-                title="Jouw team"
+                title={`Jouw team ${data.length}/20`}
                 columns={columns}
                 data={data}
                 progressPending={loading}
