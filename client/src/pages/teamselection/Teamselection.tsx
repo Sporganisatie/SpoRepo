@@ -6,7 +6,7 @@ import { TeamSelectionData } from './Models/TeamSelectionData';
 import SelectableRidersTable from './SelectableRidersTable';
 import TeamSelectionTable from './TeamSelectionTable';
 import { RiderParticipation } from '../../models/RiderParticipation';
-import { BudgetContext } from '../../components/navbar/BudgetSwitch/BudgetContext';
+import { BudgetContext } from '../../components/shared/BudgetContextProvider';
 
 interface Filters {
     name: string,

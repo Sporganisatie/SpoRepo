@@ -7,7 +7,7 @@ import ChartsDropdown from './Dropdowns/ChartsDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLaptop, faShieldAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from 'react';
-import { BudgetContext, BudgetDispatchContext } from './BudgetSwitch/BudgetContext';
+import { BudgetContext, BudgetDispatchContext } from '../shared/BudgetContextProvider';
 // import { SRELogo } from '../shared/svg/all-icons.js'
 // import BudgetSwitchButton from './budgetSwitchButton';
 // import FabFourSwitchButton from './fabFourSwitchButton';
