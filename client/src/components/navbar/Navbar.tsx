@@ -6,8 +6,7 @@ import ChartsDropdown from './Dropdowns/ChartsDropdown';
 // import MobileDropdown from './Dropdowns/Mobile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLaptop, faShieldAlt, faUser } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from 'react';
-import { BudgetContext, BudgetDispatchContext } from '../shared/BudgetContextProvider';
+import { useBudgetContext, useBudgetDispatch } from '../shared/BudgetContextProvider';
 // import { SRELogo } from '../shared/svg/all-icons.js'
 // import BudgetSwitchButton from './budgetSwitchButton';
 // import FabFourSwitchButton from './fabFourSwitchButton';
@@ -24,8 +23,8 @@ interface NavbarProps {
 
 const Navbar = (props: NavbarProps) => {
   const race = props.racename;
-  const budget = useContext(BudgetContext);
-  const dispatch = useContext(BudgetDispatchContext);
+  const budget = useBudgetContext();
+  const dispatch = useBudgetDispatch();
 
   return (
     <div className="navbar">

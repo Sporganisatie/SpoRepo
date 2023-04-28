@@ -1,11 +1,21 @@
-import { Dispatch, createContext, useReducer } from "react";
+import { Dispatch, createContext, useContext, useReducer } from "react";
 
-export function BudgetReducer(budget: boolean) {
+const BudgetContext = createContext<boolean>(false);
+
+const BudgetDispatchContext = createContext<Dispatch<any>>(BudgetReducer);
+
+function BudgetReducer(budget: boolean) {
     return !budget
+
 }
 
-export const BudgetContext = createContext<boolean>(false);
-export const BudgetDispatchContext = createContext<Dispatch<any>>(BudgetReducer);
+export function useBudgetContext() {
+    return useContext(BudgetContext);
+}
+
+export function useBudgetDispatch() {
+    return useContext(BudgetDispatchContext);
+}
 
 export const BudgetStateProvider = (props: { children: React.ReactNode }) => {
     const [budget, dispatch] = useReducer(BudgetReducer, false);

@@ -6,7 +6,7 @@ import { TeamSelectionData } from './Models/TeamSelectionData';
 import SelectableRidersTable from './SelectableRidersTable';
 import TeamSelectionTable from './TeamSelectionTable';
 import { RiderParticipation } from '../../models/RiderParticipation';
-import { BudgetContext } from '../../components/shared/BudgetContextProvider';
+import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
 
 interface Filters {
     name: string,
@@ -18,7 +18,7 @@ interface Filters {
 
 const Teamselection: React.FC = () => {
     let { raceId } = useParams();
-    const budgetParticipation = useContext(BudgetContext);
+    const budgetParticipation = useBudgetContext();
     const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [] });
     const [pending, setPending] = useState(true);
     const [filteredRiders, setFilteredRiders] = useState<SelectableRider[]>([]);
