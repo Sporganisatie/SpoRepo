@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Helper;
+using Z.EntityFramework.Plus;
 
 namespace SpoRE.Infrastructure.Database;
 
@@ -48,8 +49,16 @@ public class TeamSelectionClient
 
     internal int RemoveRider(int riderParticipationId)
     {
+        var selectionRiders = DB.StageSelectionRiders
+            .Where(sr => sr.StageSelection.AccountParticipationId == User.ParticipationId && sr.RiderParticipationId == riderParticipationId);
+        DB.StageSelectionRiders.RemoveRange(selectionRiders);
+
         DB.TeamSelections.Remove(new() { RiderParticipationId = riderParticipationId, AccountParticipationId = User.ParticipationId });
-        // TODO remove rider from stage selections, dit mag met automatische chaining als dat makkelijk kan
+
+        DB.StageSelections
+            .Where(s => s.AccountParticipationId == User.ParticipationId && s.KopmanId == riderParticipationId)
+            .Update(s => new StageSelection { KopmanId = null });
+
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
 
