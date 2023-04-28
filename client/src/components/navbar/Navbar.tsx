@@ -6,6 +6,8 @@ import ChartsDropdown from './Dropdowns/ChartsDropdown';
 // import MobileDropdown from './Dropdowns/Mobile'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLaptop, faShieldAlt, faUser } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from 'react';
+import { BudgetContext, BudgetDispatchContext } from './BudgetSwitch/BudgetContext';
 // import { SRELogo } from '../shared/svg/all-icons.js'
 // import BudgetSwitchButton from './budgetSwitchButton';
 // import FabFourSwitchButton from './fabFourSwitchButton';
@@ -22,6 +24,8 @@ interface NavbarProps {
 
 const Navbar = (props: NavbarProps) => {
   const race = props.racename;
+  const budget = useContext(BudgetContext);
+  const dispatch = useContext(BudgetDispatchContext);
 
   return (
     <div className="navbar">
@@ -44,10 +48,8 @@ const Navbar = (props: NavbarProps) => {
       <Link className='navbar_link' to='/profile'>
         <FontAwesomeIcon icon={faUser} />
       </Link>
-      {/* {localStorage.getItem('authToken') ? (
-          jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "").account_id <= 5 &&
-          <div className="flex gap-x-2"><BudgetSwitchButton /><FabFourSwitchButton /></div>) : <></>
-        } */}
+      Budget
+      <input type="checkbox" checked={budget} onClick={() => dispatch({})} onChange={() => { }} />
     </div>
   )
 }

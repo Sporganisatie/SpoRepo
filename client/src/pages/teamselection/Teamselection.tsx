@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SelectableRider } from './Models/SelectableRider';
 import { TeamSelectionData } from './Models/TeamSelectionData';
 import SelectableRidersTable from './SelectableRidersTable';
 import TeamSelectionTable from './TeamSelectionTable';
 import { RiderParticipation } from '../../models/RiderParticipation';
-import { Rider } from '../../models/Rider';
+import { BudgetContext } from '../../components/navbar/BudgetSwitch/BudgetContext';
 
 interface Filters {
     name: string,
@@ -18,6 +18,7 @@ interface Filters {
 
 const Teamselection: React.FC = () => {
     let { raceId } = useParams();
+    const budgetParticipation = useContext(BudgetContext);
     const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [] });
     const [pending, setPending] = useState(true);
     const [filteredRiders, setFilteredRiders] = useState<SelectableRider[]>([]);
@@ -41,10 +42,10 @@ const Teamselection: React.FC = () => {
     }
 
 
-    useEffect(() => loadData(), [raceId])
+    useEffect(() => loadData(), [raceId, budgetParticipation])
 
     const loadData = () => {
-        axios.get(`/api/TeamSelection`, { params: { raceId } })
+        axios.get(`/api/TeamSelection`, { params: { raceId, budgetParticipation } })
             .then(res => {
                 setData(res.data)
                 setFilteredRiders(res.data.allRiders.sort((A: SelectableRider, B: SelectableRider) => B.details.price - A.details.price));
@@ -61,7 +62,7 @@ const Teamselection: React.FC = () => {
             params: {
                 riderParticipationId,
                 raceId,
-                budgetParticipation: false
+                budgetParticipation
             }
         })
             .then(function (response) {
@@ -78,7 +79,7 @@ const Teamselection: React.FC = () => {
             params: {
                 riderParticipationId,
                 raceId,
-                budgetParticipation: false
+                budgetParticipation
             }
         })
             .then(function (response) {
