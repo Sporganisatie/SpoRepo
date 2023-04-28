@@ -7,6 +7,8 @@ import ChartsDropdown from './Dropdowns/ChartsDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLaptop, faShieldAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useBudgetContext, useBudgetDispatch } from '../shared/BudgetContextProvider';
+import { AuthToken } from '../../models/AuthToken';
+import jwt_decode from "jwt-decode";
 // import { SRELogo } from '../shared/svg/all-icons.js'
 // import BudgetSwitchButton from './budgetSwitchButton';
 // import FabFourSwitchButton from './fabFourSwitchButton';
@@ -47,8 +49,9 @@ const Navbar = (props: NavbarProps) => {
       <Link className='navbar_link' to='/profile'>
         <FontAwesomeIcon icon={faUser} />
       </Link>
-      Budget
-      <input type="checkbox" checked={budget} onClick={() => dispatch({})} onChange={() => { }} />
+      {localStorage.getItem('authToken') ? (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).id <= 5 &&
+        <div> Budget
+          <input type="checkbox" checked={budget} onClick={() => dispatch({})} onChange={() => { }} /></div> : <></>}
     </div>
   )
 }
