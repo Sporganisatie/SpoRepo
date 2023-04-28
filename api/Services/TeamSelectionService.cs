@@ -49,6 +49,8 @@ public class TeamSelectionService
         var maxRiderPrice = budgetOver - openSpaces * 500_000;
         if (toAdd.Price > maxRiderPrice) return SelectableEnum.TooExpensive;
 
+        if (openSpaces <= 0) return SelectableEnum.Max20;
+
         var fourRiderteams = team.GroupBy(r => r.Team).Where(g => g.Count() >= 4).Select(g => g.Key);
         if (fourRiderteams.Contains(toAdd.Team)) return SelectableEnum.FourFromSameTeam;
 
@@ -69,5 +71,6 @@ public enum SelectableEnum // TODO move
     Open,
     TooExpensive,
     FourFromSameTeam,
+    Max20,
     Selected
 }
