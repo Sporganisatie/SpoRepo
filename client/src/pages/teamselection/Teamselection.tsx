@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SelectableRider } from './Models/SelectableRider';
 import { TeamSelectionData } from './Models/TeamSelectionData';
@@ -32,17 +32,20 @@ const Teamselection: React.FC = () => {
             skill: ""
         }
     }
-    const updateAndFilter = useCallback((part: Partial<Filters>) => {
+    function updateAndFilter(part: Partial<Filters>) {
         const newFilter = {
             ...filters,
             ...part
         }
         setFilters(newFilter)
         setFilteredRiders(filterRiders(newFilter, data.allRiders));
-        setPending(false)
-    }, [data, filters]);
+    }
 
-    const loadData = useCallback(() => {
+    /* eslint-disable */
+    useEffect(() => loadData(), [raceId, budgetParticipation])
+    useEffect(() => { updateAndFilter({}); setPending(false); }, [data])
+    /* eslint-enable */
+    const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId, budgetParticipation } })
             .then(res => {
                 setData(res.data)
@@ -50,9 +53,7 @@ const Teamselection: React.FC = () => {
             .catch(function (error) {
                 throw error
             });
-    }, [raceId, budgetParticipation]);
-
-    // useEffect(() => { updateAndFilter({}); setPending(false); }, [data, updateAndFilter])
+    };
 
     const removeRider = (riderParticipationId: number) => {
         setPending(true);
