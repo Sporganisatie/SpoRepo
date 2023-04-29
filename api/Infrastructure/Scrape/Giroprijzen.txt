@@ -190,11 +190,11 @@
 			"RiderId": 533
 		},
 		{
-			"Age": 25,
+			"Age": 26,
 			"BirthDate": "1997-04-27T00:00:00",
 			"EventRiderId": 193027,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 8,
 			"Type": 6,
 			"FirstName": "Harold",
@@ -273,7 +273,7 @@
 			"BirthDate": "2000-10-01T00:00:00",
 			"EventRiderId": 193031,
 			"Price": 2000000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 51,
 			"Type": 4,
 			"FirstName": "Jonathan",
@@ -427,7 +427,7 @@
 			"RiderId": 7522
 		},
 		{
-			"Age": 26,
+			"Age": 27,
 			"BirthDate": "1996-04-23T00:00:00",
 			"EventRiderId": 193037,
 			"Price": 3500000.0,
@@ -549,7 +549,7 @@
 			"BirthDate": "1995-04-10T00:00:00",
 			"EventRiderId": 193042,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 28,
 			"Type": 6,
 			"FirstName": "Matteo",
@@ -631,7 +631,7 @@
 			"BirthDate": "1986-03-13T00:00:00",
 			"EventRiderId": 193047,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 13,
 			"Type": 6,
 			"FirstName": "Simon",
@@ -677,7 +677,7 @@
 			"BirthDate": "1997-10-25T00:00:00",
 			"EventRiderId": 193049,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 13,
 			"Type": 6,
 			"FirstName": "Alexandre",
@@ -1005,7 +1005,7 @@
 			"BirthDate": "1989-02-07T00:00:00",
 			"EventRiderId": 193060,
 			"Price": 1500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 12,
 			"Type": 4,
 			"FirstName": "Elia",
@@ -1024,7 +1024,7 @@
 			"BirthDate": "1990-03-10T00:00:00",
 			"EventRiderId": 193061,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 12,
 			"Type": 6,
 			"FirstName": "Luke",
@@ -1043,7 +1043,7 @@
 			"BirthDate": "1998-07-27T00:00:00",
 			"EventRiderId": 193062,
 			"Price": 500000.0,
-			"Status": 2,
+			"Status": 1,
 			"TeamId": 38,
 			"Type": 6,
 			"FirstName": "Rune",
@@ -1291,7 +1291,7 @@
 			"BirthDate": "1988-11-21T00:00:00",
 			"EventRiderId": 193073,
 			"Price": 1000000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 5,
 			"Type": 6,
 			"FirstName": "Pieter",
@@ -1488,7 +1488,7 @@
 			"BirthDate": "2002-09-05T00:00:00",
 			"EventRiderId": 193081,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 48,
 			"Type": 6,
 			"FirstName": "Andrii",
@@ -1618,7 +1618,7 @@
 			"BirthDate": "1991-02-15T00:00:00",
 			"EventRiderId": 193086,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 27,
 			"Type": 6,
 			"FirstName": "Patrick",
@@ -1676,7 +1676,7 @@
 			"BirthDate": "2000-04-15T00:00:00",
 			"EventRiderId": 193088,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 27,
 			"Type": 6,
 			"FirstName": "Henri",
@@ -2081,7 +2081,7 @@
 			"BirthDate": "1995-10-30T00:00:00",
 			"EventRiderId": 193395,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 12,
 			"Type": 6,
 			"FirstName": "Connor",
@@ -2164,7 +2164,7 @@
 			"BirthDate": "1997-01-19T00:00:00",
 			"EventRiderId": 193399,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 212,
 			"Type": 5,
 			"FirstName": "Antonio",
@@ -2192,7 +2192,7 @@
 			"BirthDate": "1999-01-08T00:00:00",
 			"EventRiderId": 193401,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 212,
 			"Type": 5,
 			"FirstName": "Jan",
@@ -2206,7 +2206,7 @@
 			"BirthDate": "2001-10-26T00:00:00",
 			"EventRiderId": 193402,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 212,
 			"Type": 5,
 			"FirstName": "Matteo",
@@ -2299,7 +2299,7 @@
 			"BirthDate": "1990-03-29T00:00:00",
 			"EventRiderId": 194031,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 8,
 			"Type": 6,
 			"FirstName": "Fabio",
@@ -2353,7 +2353,7 @@
 			"BirthDate": "1995-05-06T00:00:00",
 			"EventRiderId": 194033,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 10,
 			"Type": 6,
 			"FirstName": "Óscar",
@@ -2395,7 +2395,7 @@
 			"BirthDate": "1998-06-16T00:00:00",
 			"EventRiderId": 194035,
 			"Price": 750000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 42,
 			"Type": 2,
 			"FirstName": "Jefferson Alexander",
@@ -2692,7 +2692,7 @@
 			"BirthDate": "1994-11-19T00:00:00",
 			"EventRiderId": 194534,
 			"Price": 1000000.0,
-			"Status": 2,
+			"Status": 1,
 			"TeamId": 20,
 			"Type": 4,
 			"FirstName": "Filippo",
@@ -2747,6 +2747,1448 @@
 			"NameShort": "M. Ries",
 			"Qualities": [],
 			"RiderId": 6961
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1998-11-14T00:00:00",
+			"EventRiderId": 194695,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 8,
+			"Type": 5,
+			"FirstName": "Samuele",
+			"LastName": "Battistella",
+			"NameShort": "S. Battistella",
+			"Qualities": [
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 6980
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1994-03-31T00:00:00",
+			"EventRiderId": 194696,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 52,
+			"Type": 6,
+			"FirstName": "Mads",
+			"LastName": "Würtz Schmidt",
+			"NameShort": "M. Würtz Schmidt",
+			"Qualities": [],
+			"RiderId": 1207
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1997-02-10T00:00:00",
+			"EventRiderId": 194697,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 20,
+			"Type": 2,
+			"FirstName": "Luca",
+			"LastName": "Covili",
+			"NameShort": "L. Covili",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 6435
+		},
+		{
+			"Age": 23,
+			"BirthDate": "2000-02-25T00:00:00",
+			"EventRiderId": 194714,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 25,
+			"Type": 6,
+			"FirstName": "Paul",
+			"LastName": "Lapeira",
+			"NameShort": "P. Lapeira",
+			"Qualities": [],
+			"RiderId": 7504
+		},
+		{
+			"Age": 35,
+			"BirthDate": "1988-01-02T00:00:00",
+			"EventRiderId": 194715,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 51,
+			"Type": 4,
+			"FirstName": "Andrea",
+			"LastName": "Pasqualon",
+			"NameShort": "A. Pasqualon",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				},
+				{
+					"Type": 4,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 896
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1997-11-19T00:00:00",
+			"EventRiderId": 194716,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 51,
+			"Type": 4,
+			"FirstName": "Dušan",
+			"LastName": "Rajovic",
+			"NameShort": "D. Rajovic",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 6942
+		},
+		{
+			"Age": 28,
+			"BirthDate": "1994-09-12T00:00:00",
+			"EventRiderId": 194717,
+			"Price": 2000000.0,
+			"Status": 1,
+			"TeamId": 13,
+			"Type": 4,
+			"FirstName": "Simone",
+			"LastName": "Consonni",
+			"NameShort": "S. Consonni",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 1223
+		},
+		{
+			"Age": 23,
+			"BirthDate": "1999-10-02T00:00:00",
+			"EventRiderId": 194718,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 24,
+			"Type": 4,
+			"FirstName": "Jake",
+			"LastName": "Stewart",
+			"NameShort": "J. Stewart",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				},
+				{
+					"Type": 6,
+					"Value": 1
+				}
+			],
+			"RiderId": 6489
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1993-09-03T00:00:00",
+			"EventRiderId": 194719,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 24,
+			"Type": 4,
+			"FirstName": "Fabian",
+			"LastName": "Lienhard",
+			"NameShort": "F. Lienhard",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 5413
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1999-01-21T00:00:00",
+			"EventRiderId": 194720,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 4,
+			"FirstName": "Arne",
+			"LastName": "Marit",
+			"NameShort": "A. Marit",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 7231
+		},
+		{
+			"Age": 34,
+			"BirthDate": "1989-01-30T00:00:00",
+			"EventRiderId": 194721,
+			"Price": 1500000.0,
+			"Status": 1,
+			"TeamId": 52,
+			"Type": 4,
+			"FirstName": "Giacomo",
+			"LastName": "Nizzolo",
+			"NameShort": "G. Nizzolo",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 3
+				},
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				},
+				{
+					"Type": 6,
+					"Value": 1
+				}
+			],
+			"RiderId": 693
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1998-02-02T00:00:00",
+			"EventRiderId": 194722,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 48,
+			"Type": 4,
+			"FirstName": "David",
+			"LastName": "Dekker",
+			"NameShort": "D. Dekker",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 7237
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1995-10-31T00:00:00",
+			"EventRiderId": 194723,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 4,
+			"FirstName": "German Nicolás",
+			"LastName": "Tivani",
+			"NameShort": "G. Tivani",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 7813
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1998-03-25T00:00:00",
+			"EventRiderId": 194724,
+			"Price": 2500000.0,
+			"Status": 1,
+			"TeamId": 27,
+			"Type": 4,
+			"FirstName": "Alberto",
+			"LastName": "Dainese",
+			"NameShort": "A. Dainese",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 3
+				}
+			],
+			"RiderId": 7009
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1991-08-17T00:00:00",
+			"EventRiderId": 194725,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 44,
+			"Type": 3,
+			"FirstName": "Michael",
+			"LastName": "Hepburn",
+			"NameShort": "M. Hepburn",
+			"Qualities": [
+				{
+					"Type": 2,
+					"Value": 2
+				}
+			],
+			"RiderId": 596
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1998-04-02T00:00:00",
+			"EventRiderId": 194726,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 14,
+			"Type": 1,
+			"FirstName": "Brandon",
+			"LastName": "McNulty",
+			"NameShort": "B. McNulty",
+			"Qualities": [
+				{
+					"Type": 0,
+					"Value": 2
+				},
+				{
+					"Type": 1,
+					"Value": 2
+				},
+				{
+					"Type": 2,
+					"Value": 2
+				},
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 2
+				}
+			],
+			"RiderId": 5426
+		},
+		{
+			"Age": 30,
+			"BirthDate": "1992-09-22T00:00:00",
+			"EventRiderId": 194727,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 28,
+			"Type": 5,
+			"FirstName": "Bob",
+			"LastName": "Jungels",
+			"NameShort": "B. Jungels",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				},
+				{
+					"Type": 2,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 2
+				},
+				{
+					"Type": 6,
+					"Value": 1
+				}
+			],
+			"RiderId": 250
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1991-11-28T00:00:00",
+			"EventRiderId": 194728,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 121,
+			"Type": 6,
+			"FirstName": "Alexander",
+			"LastName": "Krieger",
+			"NameShort": "A. Krieger",
+			"Qualities": [],
+			"RiderId": 6894
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1996-03-18T00:00:00",
+			"EventRiderId": 194729,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 121,
+			"Type": 6,
+			"FirstName": "Senne",
+			"LastName": "Leysen",
+			"NameShort": "S. Leysen",
+			"Qualities": [],
+			"RiderId": 5341
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1997-10-16T00:00:00",
+			"EventRiderId": 194730,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 8,
+			"Type": 6,
+			"FirstName": "Cristian",
+			"LastName": "Scaroni",
+			"NameShort": "C. Scaroni",
+			"Qualities": [],
+			"RiderId": 6493
+		},
+		{
+			"Age": 39,
+			"BirthDate": "1983-11-24T00:00:00",
+			"EventRiderId": 194731,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 8,
+			"Type": 6,
+			"FirstName": "Luis León",
+			"LastName": "Sánchez",
+			"NameShort": "L. Sánchez",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				},
+				{
+					"Type": 2,
+					"Value": 1
+				},
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 932
+		},
+		{
+			"Age": 23,
+			"BirthDate": "2000-02-16T00:00:00",
+			"EventRiderId": 194732,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 8,
+			"Type": 6,
+			"FirstName": "Yevgeniy",
+			"LastName": "Fedorov",
+			"NameShort": "Y. Fedorov",
+			"Qualities": [],
+			"RiderId": 7162
+		},
+		{
+			"Age": 21,
+			"BirthDate": "2001-10-05T00:00:00",
+			"EventRiderId": 194733,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 13,
+			"Type": 6,
+			"FirstName": "Hugo",
+			"LastName": "Toumire",
+			"NameShort": "H. Toumire",
+			"Qualities": [],
+			"RiderId": 7524
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1996-05-18T00:00:00",
+			"EventRiderId": 194734,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 13,
+			"Type": 6,
+			"FirstName": "Rémy",
+			"LastName": "Rochas",
+			"NameShort": "R. Rochas",
+			"Qualities": [
+				{
+					"Type": 0,
+					"Value": 1
+				},
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 6365
+		},
+		{
+			"Age": 36,
+			"BirthDate": "1987-01-04T00:00:00",
+			"EventRiderId": 194735,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 13,
+			"Type": 6,
+			"FirstName": "Pierre-Luc",
+			"LastName": "Périchon",
+			"NameShort": "P. Périchon",
+			"Qualities": [],
+			"RiderId": 1074
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1993-06-03T00:00:00",
+			"EventRiderId": 194736,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 13,
+			"Type": 6,
+			"FirstName": "Jonathan",
+			"LastName": "Lastra",
+			"NameShort": "J. Lastra",
+			"Qualities": [],
+			"RiderId": 5054
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1992-03-19T00:00:00",
+			"EventRiderId": 194737,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 13,
+			"Type": 6,
+			"FirstName": "François",
+			"LastName": "Bidard",
+			"NameShort": "F. Bidard",
+			"Qualities": [],
+			"RiderId": 720
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1994-01-23T00:00:00",
+			"EventRiderId": 194738,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 42,
+			"Type": 6,
+			"FirstName": "Merhawi",
+			"LastName": "Kudus",
+			"NameShort": "M. Kudus",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 177
+		},
+		{
+			"Age": 28,
+			"BirthDate": "1994-12-28T00:00:00",
+			"EventRiderId": 194739,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 42,
+			"Type": 6,
+			"FirstName": "Odd Christian",
+			"LastName": "Eiking",
+			"NameShort": "O. Eiking",
+			"Qualities": [
+				{
+					"Type": 0,
+					"Value": 1
+				},
+				{
+					"Type": 1,
+					"Value": 1
+				},
+				{
+					"Type": 4,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 814
+		},
+		{
+			"Age": 30,
+			"BirthDate": "1993-04-28T00:00:00",
+			"EventRiderId": 194740,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 42,
+			"Type": 6,
+			"FirstName": "Jonathan Klever",
+			"LastName": "Caicedo",
+			"NameShort": "J. Caicedo",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 6402
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1996-11-17T00:00:00",
+			"EventRiderId": 194741,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 42,
+			"Type": 6,
+			"FirstName": "Stefan",
+			"LastName": "de Bod",
+			"NameShort": "S. de Bod",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 6372
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1996-03-04T00:00:00",
+			"EventRiderId": 194742,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 138,
+			"Type": 6,
+			"FirstName": "Diego Pablo",
+			"LastName": "Sevilla",
+			"NameShort": "D. Sevilla",
+			"Qualities": [],
+			"RiderId": 7197
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1991-10-26T00:00:00",
+			"EventRiderId": 194743,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 138,
+			"Type": 6,
+			"FirstName": "Mirco",
+			"LastName": "Maestri",
+			"NameShort": "M. Maestri",
+			"Qualities": [],
+			"RiderId": 345
+		},
+		{
+			"Age": 38,
+			"BirthDate": "1984-08-01T00:00:00",
+			"EventRiderId": 194744,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 138,
+			"Type": 6,
+			"FirstName": "Francesco",
+			"LastName": "Gavazzi",
+			"NameShort": "F. Gavazzi",
+			"Qualities": [],
+			"RiderId": 292
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1996-10-19T00:00:00",
+			"EventRiderId": 194745,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 138,
+			"Type": 6,
+			"FirstName": "Mattia",
+			"LastName": "Bais",
+			"NameShort": "M. Bais",
+			"Qualities": [],
+			"RiderId": 6925
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1998-04-02T00:00:00",
+			"EventRiderId": 194746,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 138,
+			"Type": 6,
+			"FirstName": "Davide",
+			"LastName": "Bais",
+			"NameShort": "D. Bais",
+			"Qualities": [],
+			"RiderId": 7196
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1998-01-09T00:00:00",
+			"EventRiderId": 194747,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 20,
+			"Type": 6,
+			"FirstName": "Samuele",
+			"LastName": "Zoccarato",
+			"NameShort": "S. Zoccarato",
+			"Qualities": [],
+			"RiderId": 7169
+		},
+		{
+			"Age": 30,
+			"BirthDate": "1992-05-29T00:00:00",
+			"EventRiderId": 194748,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 20,
+			"Type": 6,
+			"FirstName": "Alessandro",
+			"LastName": "Tonelli",
+			"NameShort": "A. Tonelli",
+			"Qualities": [],
+			"RiderId": 1089
+		},
+		{
+			"Age": 23,
+			"BirthDate": "2000-03-30T00:00:00",
+			"EventRiderId": 194749,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 20,
+			"Type": 6,
+			"FirstName": "Alex",
+			"LastName": "Tolio",
+			"NameShort": "A. Tolio",
+			"Qualities": [],
+			"RiderId": 7580
+		},
+		{
+			"Age": 23,
+			"BirthDate": "2000-04-05T00:00:00",
+			"EventRiderId": 194750,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 20,
+			"Type": 6,
+			"FirstName": "Martin",
+			"LastName": "Marcellusi",
+			"NameShort": "M. Marcellusi",
+			"Qualities": [],
+			"RiderId": 7572
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1999-04-29T00:00:00",
+			"EventRiderId": 194751,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 20,
+			"Type": 6,
+			"FirstName": "Filippo",
+			"LastName": "Magli",
+			"NameShort": "F. Magli",
+			"Qualities": [],
+			"RiderId": 7776
+		},
+		{
+			"Age": 22,
+			"BirthDate": "2001-02-15T00:00:00",
+			"EventRiderId": 194752,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 24,
+			"Type": 6,
+			"FirstName": "Reuben",
+			"LastName": "Thompson",
+			"NameShort": "R. Thompson",
+			"Qualities": [],
+			"RiderId": 7734
+		},
+		{
+			"Age": 33,
+			"BirthDate": "1989-09-17T00:00:00",
+			"EventRiderId": 194753,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 24,
+			"Type": 6,
+			"FirstName": "Rudy",
+			"LastName": "Molard",
+			"NameShort": "R. Molard",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				},
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 2
+				}
+			],
+			"RiderId": 164
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1994-04-11T00:00:00",
+			"EventRiderId": 194754,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 24,
+			"Type": 6,
+			"FirstName": "Bruno",
+			"LastName": "Armirail",
+			"NameShort": "B. Armirail",
+			"Qualities": [
+				{
+					"Type": 2,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 5313
+		},
+		{
+			"Age": 36,
+			"BirthDate": "1987-04-24T00:00:00",
+			"EventRiderId": 194755,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Rein",
+			"LastName": "Taaramäe",
+			"NameShort": "R. Taaramäe",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 1044
+		},
+		{
+			"Age": 23,
+			"BirthDate": "1999-12-15T00:00:00",
+			"EventRiderId": 194756,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Laurenz",
+			"LastName": "Rex",
+			"NameShort": "L. Rex",
+			"Qualities": [],
+			"RiderId": 7171
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1993-05-04T00:00:00",
+			"EventRiderId": 194757,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Simone",
+			"LastName": "Petilli",
+			"NameShort": "S. Petilli",
+			"Qualities": [],
+			"RiderId": 168
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1998-09-24T00:00:00",
+			"EventRiderId": 194758,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Laurens",
+			"LastName": "Huys",
+			"NameShort": "L. Huys",
+			"Qualities": [],
+			"RiderId": 6526
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1992-01-21T00:00:00",
+			"EventRiderId": 194759,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Sven Erik",
+			"LastName": "Bystrøm",
+			"NameShort": "S. Bystrøm",
+			"Qualities": [],
+			"RiderId": 163
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1995-05-23T00:00:00",
+			"EventRiderId": 194760,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Lorenzo",
+			"LastName": "Rota",
+			"NameShort": "L. Rota",
+			"Qualities": [
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 638
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1996-06-09T00:00:00",
+			"EventRiderId": 194761,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 52,
+			"Type": 6,
+			"FirstName": "Stephen",
+			"LastName": "Williams",
+			"NameShort": "S. Williams",
+			"Qualities": [],
+			"RiderId": 6382
+		},
+		{
+			"Age": 21,
+			"BirthDate": "2002-03-05T00:00:00",
+			"EventRiderId": 194762,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 52,
+			"Type": 6,
+			"FirstName": "Matthew",
+			"LastName": "Riccitello",
+			"NameShort": "M. Riccitello",
+			"Qualities": [],
+			"RiderId": 7787
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1997-08-03T00:00:00",
+			"EventRiderId": 194763,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 52,
+			"Type": 6,
+			"FirstName": "Derek",
+			"LastName": "Gee",
+			"NameShort": "D. Gee",
+			"Qualities": [],
+			"RiderId": 7686
+		},
+		{
+			"Age": 23,
+			"BirthDate": "2000-03-02T00:00:00",
+			"EventRiderId": 194764,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 52,
+			"Type": 6,
+			"FirstName": "Marco",
+			"LastName": "Frigo",
+			"NameShort": "M. Frigo",
+			"Qualities": [],
+			"RiderId": 7788
+		},
+		{
+			"Age": 33,
+			"BirthDate": "1990-04-26T00:00:00",
+			"EventRiderId": 194765,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 10,
+			"Type": 6,
+			"FirstName": "Albert",
+			"LastName": "Torres",
+			"NameShort": "A. Torres",
+			"Qualities": [],
+			"RiderId": 6889
+		},
+		{
+			"Age": 37,
+			"BirthDate": "1985-06-08T00:00:00",
+			"EventRiderId": 194766,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 10,
+			"Type": 6,
+			"FirstName": "José Joaquín",
+			"LastName": "Rojas",
+			"NameShort": "J. Rojas",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 204
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1997-10-22T00:00:00",
+			"EventRiderId": 194767,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 10,
+			"Type": 6,
+			"FirstName": "Max",
+			"LastName": "Kanter",
+			"NameShort": "M. Kanter",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 6410
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1996-01-04T00:00:00",
+			"EventRiderId": 194768,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 10,
+			"Type": 6,
+			"FirstName": "Will",
+			"LastName": "Barta",
+			"NameShort": "W. Barta",
+			"Qualities": [
+				{
+					"Type": 0,
+					"Value": 1
+				},
+				{
+					"Type": 2,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 5388
+		},
+		{
+			"Age": 30,
+			"BirthDate": "1992-11-04T00:00:00",
+			"EventRiderId": 194769,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 10,
+			"Type": 6,
+			"FirstName": "Carlos",
+			"LastName": "Verona",
+			"NameShort": "C. Verona",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 2
+				}
+			],
+			"RiderId": 75
+		},
+		{
+			"Age": 21,
+			"BirthDate": "2001-11-17T00:00:00",
+			"EventRiderId": 194770,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 48,
+			"Type": 6,
+			"FirstName": "Alessandro",
+			"LastName": "Verre",
+			"NameShort": "A. Verre",
+			"Qualities": [],
+			"RiderId": 7660
+		},
+		{
+			"Age": 28,
+			"BirthDate": "1995-01-20T00:00:00",
+			"EventRiderId": 194771,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 48,
+			"Type": 6,
+			"FirstName": "Clément",
+			"LastName": "Russo",
+			"NameShort": "C. Russo",
+			"Qualities": [],
+			"RiderId": 5343
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1997-04-02T00:00:00",
+			"EventRiderId": 194772,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 48,
+			"Type": 6,
+			"FirstName": "Alan",
+			"LastName": "Riou",
+			"NameShort": "A. Riou",
+			"Qualities": [],
+			"RiderId": 6398
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1997-07-31T00:00:00",
+			"EventRiderId": 194773,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 48,
+			"Type": 6,
+			"FirstName": "Thibault",
+			"LastName": "Guernalec",
+			"NameShort": "T. Guernalec",
+			"Qualities": [
+				{
+					"Type": 2,
+					"Value": 1
+				}
+			],
+			"RiderId": 5345
+		},
+		{
+			"Age": 36,
+			"BirthDate": "1986-11-03T00:00:00",
+			"EventRiderId": 194774,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 48,
+			"Type": 6,
+			"FirstName": "Maxime",
+			"LastName": "Bouet",
+			"NameShort": "M. Bouet",
+			"Qualities": [],
+			"RiderId": 953
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1996-10-18T00:00:00",
+			"EventRiderId": 194775,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Attilio",
+			"LastName": "Viviani",
+			"NameShort": "A. Viviani",
+			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				}
+			],
+			"RiderId": 6921
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1998-09-06T00:00:00",
+			"EventRiderId": 194776,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Charlie",
+			"LastName": "Quarterman",
+			"NameShort": "C. Quarterman",
+			"Qualities": [],
+			"RiderId": 6985
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1998-07-25T00:00:00",
+			"EventRiderId": 194777,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Alexander",
+			"LastName": "Konychev",
+			"NameShort": "A. Konychev",
+			"Qualities": [],
+			"RiderId": 6978
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1996-03-28T00:00:00",
+			"EventRiderId": 194778,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Stefano",
+			"LastName": "Gandin",
+			"NameShort": "S. Gandin",
+			"Qualities": [],
+			"RiderId": 7805
+		},
+		{
+			"Age": 25,
+			"BirthDate": "1997-09-13T00:00:00",
+			"EventRiderId": 194779,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Nicolas",
+			"LastName": "Dalla Valle",
+			"NameShort": "N. Dalla Valle",
+			"Qualities": [],
+			"RiderId": 6949
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1997-04-27T00:00:00",
+			"EventRiderId": 194780,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 27,
+			"Type": 6,
+			"FirstName": "Florian",
+			"LastName": "Stork",
+			"NameShort": "F. Stork",
+			"Qualities": [],
+			"RiderId": 5478
+		},
+		{
+			"Age": 22,
+			"BirthDate": "2000-09-18T00:00:00",
+			"EventRiderId": 194781,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 27,
+			"Type": 6,
+			"FirstName": "Marius",
+			"LastName": "Mayrhofer",
+			"NameShort": "M. Mayrhofer",
+			"Qualities": [],
+			"RiderId": 6509
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1999-02-09T00:00:00",
+			"EventRiderId": 194782,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 27,
+			"Type": 6,
+			"FirstName": "Jonas Iversby",
+			"LastName": "Hvideberg",
+			"NameShort": "J. Hvideberg",
+			"Qualities": [],
+			"RiderId": 6552
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1993-09-09T00:00:00",
+			"EventRiderId": 194783,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 27,
+			"Type": 6,
+			"FirstName": "Martijn",
+			"LastName": "Tusveld",
+			"NameShort": "M. Tusveld",
+			"Qualities": [],
+			"RiderId": 2031
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1999-03-03T00:00:00",
+			"EventRiderId": 194784,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 27,
+			"Type": 6,
+			"FirstName": "Niklas",
+			"LastName": "Märkl",
+			"NameShort": "N. Märkl",
+			"Qualities": [],
+			"RiderId": 7045
+		},
+		{
+			"Age": 26,
+			"BirthDate": "1996-08-10T00:00:00",
+			"EventRiderId": 194785,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 44,
+			"Type": 6,
+			"FirstName": "Callum",
+			"LastName": "Scotson",
+			"NameShort": "C. Scotson",
+			"Qualities": [],
+			"RiderId": 6368
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1992-01-10T00:00:00",
+			"EventRiderId": 194786,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 44,
+			"Type": 6,
+			"FirstName": "Lukas",
+			"LastName": "Pöstlberger",
+			"NameShort": "L. Pöstlberger",
+			"Qualities": [
+				{
+					"Type": 6,
+					"Value": 1
+				}
+			],
+			"RiderId": 606
+		},
+		{
+			"Age": 36,
+			"BirthDate": "1986-05-19T00:00:00",
+			"EventRiderId": 194787,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 44,
+			"Type": 6,
+			"FirstName": "Alessandro",
+			"LastName": "De Marchi",
+			"NameShort": "A. De Marchi",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				},
+				{
+					"Type": 2,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 567
+		},
+		{
+			"Age": 28,
+			"BirthDate": "1994-07-15T00:00:00",
+			"EventRiderId": 194788,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 16,
+			"Type": 6,
+			"FirstName": "Otto",
+			"LastName": "Vergaerde",
+			"NameShort": "O. Vergaerde",
+			"Qualities": [],
+			"RiderId": 811
+		},
+		{
+			"Age": 31,
+			"BirthDate": "1991-06-15T00:00:00",
+			"EventRiderId": 194789,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 16,
+			"Type": 6,
+			"FirstName": "Toms",
+			"LastName": "Skujiņš",
+			"NameShort": "T. Skujiņš",
+			"Qualities": [
+				{
+					"Type": 4,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 2
+				}
+			],
+			"RiderId": 618
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1999-02-22T00:00:00",
+			"EventRiderId": 194790,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 16,
+			"Type": 6,
+			"FirstName": "Daan",
+			"LastName": "Hoole",
+			"NameShort": "D. Hoole",
+			"Qualities": [
+				{
+					"Type": 2,
+					"Value": 1
+				}
+			],
+			"RiderId": 7556
+		},
+		{
+			"Age": 28,
+			"BirthDate": "1994-08-13T00:00:00",
+			"EventRiderId": 194791,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 14,
+			"Type": 6,
+			"FirstName": "Ryan",
+			"LastName": "Gibbons",
+			"NameShort": "R. Gibbons",
+			"Qualities": [
+				{
+					"Type": 4,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 1188
 		}
 	]
 }
