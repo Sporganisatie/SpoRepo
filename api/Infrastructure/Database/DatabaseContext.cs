@@ -16,7 +16,8 @@ public class DatabaseContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_configuration.DbConnectionString);
-        optionsBuilder.LogTo(Console.WriteLine); // TODO only when localdev
+        optionsBuilder.EnableSensitiveDataLogging(); // TODO only when localdev
+        optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information); // TODO only when localdev
     }
 
     public DbSet<Account> Accounts { get; set; }
@@ -38,6 +39,8 @@ public class DatabaseContext : DbContext
     public DbSet<Stage> Stages { get; set; }
 
     public DbSet<StageSelection> StageSelections { get; set; }
+
+    public DbSet<StageSelectionRider> StageSelectionRiders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -415,6 +418,16 @@ public class DatabaseContext : DbContext
             //     .HasForeignKey(d => d.StageId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
             //     .HasConstraintName("stage_selection_stage_id_fkey");
+        });
+
+        modelBuilder.Entity<StageSelectionRider>(entity =>
+        {
+            entity.HasKey(e => new { e.StageSelectionId, e.RiderParticipationId }).HasName("stage_selection_rider_pkey");
+
+            entity.ToTable("stage_selection_rider");
+
+            entity.Property(e => e.StageSelectionId).HasColumnName("stage_selection_id");
+            entity.Property(e => e.RiderParticipationId).HasColumnName("rider_participation_id");
         });
     }
 }

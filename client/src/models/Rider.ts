@@ -1,8 +1,6 @@
-import { Row } from "../components/Table/Table";
-
-export interface Rider extends Row {
-    firstName: string;
-    lastName: string;
+export interface Rider {
+    firstname: string;
+    lastname: string;
     initials: string;
     country: string;
     riderId: number;
