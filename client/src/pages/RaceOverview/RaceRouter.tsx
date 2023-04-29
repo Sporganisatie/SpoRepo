@@ -3,11 +3,18 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+enum RaceStateEnum {
+    None,
+    NotJoined,
+    TeamSelection,
+    Started,
+    Finished
+}
+
 // TODO dit component vervangen door pure typescript
 const RaceRouter = () => {
     let navigate = useNavigate();
     let { raceId } = useParams();
-    var a = "";
     useEffect(() => {
         axios.get(`/api/Race`, { params: { raceId } })
             .then(res => {
@@ -15,27 +22,18 @@ const RaceRouter = () => {
                     case RaceStateEnum.NotJoined: navigate(`/joinrace/${raceId}`); return;
                     case RaceStateEnum.TeamSelection: navigate(`/teamselection/${raceId}`); return;
                 };
-                a = "Dit moet je niet kunnen zien val Arjen lastig als je dit wel ziet";
                 // TODO wat als invalid race
             })
             .catch(function (error) {
                 throw error
             });
-    }, [raceId])
+    }, [raceId, navigate])
 
     return (
         <div>
-            {a}
+            Dit moet je niet kunnen zien val Arjen lastig als je dit wel ziet
         </div>
     )
-}
-
-enum RaceStateEnum {
-    None,
-    NotJoined,
-    TeamSelection,
-    Started,
-    Finished
 }
 
 export default RaceRouter;

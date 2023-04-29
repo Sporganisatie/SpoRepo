@@ -41,10 +41,10 @@ const Teamselection: React.FC = () => {
         setFilteredRiders(filterRiders(newFilter, data.allRiders));
     }
 
-
+    /* eslint-disable */
     useEffect(() => loadData(), [raceId, budgetParticipation])
     useEffect(() => { updateAndFilter({}); setPending(false); }, [data])
-
+    /* eslint-enable */
     const loadData = () => {
         axios.get(`/api/TeamSelection`, { params: { raceId, budgetParticipation } })
             .then(res => {
