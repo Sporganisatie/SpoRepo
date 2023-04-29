@@ -19,6 +19,7 @@ public class TeamSelectionClient
         var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                     let ap = ts.AccountParticipation
                     where ap.AccountParticipationId == User.ParticipationId
+                    orderby ts.RiderParticipation.Price descending
                     select ts.RiderParticipation;
         return query.ToList(); // TODO handle errors and return Result<T>
     }
