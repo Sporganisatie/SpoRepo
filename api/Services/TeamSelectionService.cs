@@ -44,12 +44,13 @@ public class TeamSelectionService
     {
         if (team.Any(r => r.RiderParticipationId == toAdd.RiderParticipationId)) return SelectableEnum.Selected;
 
+        if (team.Count() >= 20) return SelectableEnum.Max20;
+
         var budgetOver = raceData.Budget - team.Sum(x => x.Price);
         var openSpaces = 20 - team.Count();
-        var maxRiderPrice = budgetOver - openSpaces * 500_000;
+        var moneyNeededAfterAdding = (openSpaces - 1) * 500_000;
+        var maxRiderPrice = budgetOver - moneyNeededAfterAdding;
         if (toAdd.Price > maxRiderPrice) return SelectableEnum.TooExpensive;
-
-        if (openSpaces <= 0) return SelectableEnum.Max20;
 
         var fourRiderteams = team.GroupBy(r => r.Team).Where(g => g.Count() >= 4).Select(g => g.Key);
         if (fourRiderteams.Contains(toAdd.Team)) return SelectableEnum.FourFromSameTeam;

@@ -7,7 +7,7 @@ const JoinRace = () => {
     const handleJoinRace = () => {
         axios.get(`/api/Race/join`, { params: { raceId } })
             .then(res => {
-                navigate(`/${raceId}/teamselection`);
+                navigate(`/teamselection/${raceId}`);
             })
             .catch(err => {
                 console.error(err);
