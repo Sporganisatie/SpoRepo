@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
@@ -22,6 +23,19 @@ public partial class Scrape
         var riderQualities = json.Content; // TODO remove hardcoded
         var query = StartlistQuery(raceId, html, riderQualities);
         DB.Database.ExecuteSqlRaw(query);
+    }
+
+    public void StageResults(string raceName, int year, int stagenr)
+    {
+        var stage = DB.Stages.SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName);
+        HtmlWeb web = new HtmlWeb();
+        var html = web.Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/stage-{stagenr}").DocumentNode;
+        var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
+        var tables = html.QuerySelectorAll(".result-cont .subTabs")
+                    .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
+                    .Select(x => x.QuerySelector("table"));
+        var query = ResultsQuery(classifications.Zip(tables), stage);
+        // DB.Database.ExecuteSqlRaw(query);
     }
 
     private string RaceString(string raceName)

@@ -25,7 +25,7 @@ public class ScrapeController : ControllerBase
     [HttpGet("stageResults")]
     public IActionResult Get(string raceName, int year, int stagenr)
     {
-        Scraper.Results(26, 12);
+        Scraper.StageResults(raceName, year, stagenr);
         return Ok();
     }
 }
