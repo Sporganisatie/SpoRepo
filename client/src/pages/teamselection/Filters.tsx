@@ -1,3 +1,4 @@
+import ArrowSelect from '../../components/ArrowSelect';
 import Select, { SelectOption } from '../../components/Select';
 
 export interface Filters {
@@ -37,10 +38,12 @@ const skillOptions: SelectOption<string>[] = [
 export interface FiltersProps {
     updateFilter: (part: Partial<Filters>) => void;
     resetFilter: () => void;
-    filters: Filters
+    filters: Filters,
+    teams: string[]
 }
 
 function FilterElements(props: FiltersProps) {
+    var teamOptions = [{ displayValue: "Alle teams", value: "" }].concat(props.teams.map(team => ({ displayValue: team, value: team })))
     return (
         <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem", margin: "1rem" }}>
             <input
@@ -68,12 +71,11 @@ function FilterElements(props: FiltersProps) {
                 onChange={(selectedValue) => {
                     props.updateFilter({ skill: selectedValue });
                 }} />
-            <input
-                type="text"
-                placeholder="teamnaam"
-                value={props.filters.team}
-                onChange={(e) => props.updateFilter({ team: e.target.value })}
-            />
+            <ArrowSelect
+                options={teamOptions}
+                onChange={(selectedValue) => {
+                    props.updateFilter({ team: selectedValue });
+                }} />
             <button onClick={() => props.resetFilter()}>
                 Reset
             </button>

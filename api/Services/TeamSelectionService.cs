@@ -21,8 +21,8 @@ public class TeamSelectionService
         var team = Client.GetTeam();
         var allRiders = Client.GetAll(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, raceData, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
-
-        return new(budget, budgetOver, team, allRiders);
+        var allTeams = allRiders.Select(r => r.Details.Team).Distinct();
+        return new(budget, budgetOver, team, allRiders, allTeams);
     }
 
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)

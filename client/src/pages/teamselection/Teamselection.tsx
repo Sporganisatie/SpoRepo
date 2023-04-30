@@ -12,7 +12,7 @@ import FilterElements, { Filters } from './Filters';
 const Teamselection: React.FC = () => {
     let { raceId } = useParams();
     const budgetParticipation = useBudgetContext();
-    const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [] });
+    const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [], allTeams: [] });
     const [pending, setPending] = useState(true);
     const [filteredRiders, setFilteredRiders] = useState<SelectableRider[]>([]);
     const [filters, setFilters] = useState(getDefaulFilterState())
@@ -91,7 +91,7 @@ const Teamselection: React.FC = () => {
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>
-            <FilterElements updateFilter={updateAndFilter} resetFilter={resetFilter} filters={filters} />
+            <FilterElements updateFilter={updateAndFilter} resetFilter={resetFilter} filters={filters} teams={data.allTeams} />
             <div style={{ display: "flex" }}>
                 <SelectableRidersTable
                     data={filteredRiders}
@@ -113,6 +113,7 @@ export default Teamselection;
 
 function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRider[] {
     for (const [filterType, value] of Object.entries(filters)) {
+        console.log(filterType, value)
         if (!value) {
             continue;
         }
