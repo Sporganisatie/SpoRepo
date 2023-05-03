@@ -30,7 +30,7 @@ public partial class Scrape
                 var riderId = $"(SELECT rider_id FROM rider WHERE PCS_id = '{pcsId}')";
                 try
                 {
-                    var sclist = riderQualities.Where(rq => CompareName(rq.FirstName, rq.LastName, names));
+                    var sclist = riderQualities.Where(rq => CompareName(rq.FirstName, rq.LastName, firstname, lastname));
                     var sc = sclist.First();
                     var q = sc.Qualities.ToDictionary(q => q.Type, q => q.Value);
 
@@ -72,15 +72,9 @@ public partial class Scrape
         return deleteStageSelectionQuery + deleteKopmanQuery + deleteTeamSelectionQuery + deleteStartlistQuery + riderQuery + participationQuery;
     }
 
-    private static bool CompareName(string firstnameSC, string lastnameSC, string[] names)
-    {
-        var lastname = String.Join(" ", names.Where(n => n.ToUpper().Equals(n))).ToLowerInvariant();
-        var firstname = String.Join(" ", names.Where(n => !n.ToUpper().Equals(n))).ToLowerInvariant();
-        var match = firstname.Contains(firstnameSC.ToLowerInvariant()) && lastname.Equals(lastnameSC.ToLowerInvariant());
-        if (match)
-        { return true; }
-        return false;
-    }
+    private static bool CompareName(string firstnameSC, string lastnameSC, string firstname, string lastname)
+        => firstname.Contains(firstnameSC, StringComparison.InvariantCultureIgnoreCase)
+            && lastname.Contains(lastnameSC, StringComparison.InvariantCultureIgnoreCase);
 }
 
 internal class PrijzenFile
