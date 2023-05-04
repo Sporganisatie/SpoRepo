@@ -28,14 +28,14 @@ public class TeamSelectionClient
             .Where(rp => rp.RaceId == raceId && rp.Price < maxPrice)
             .ToList(); // TODO handle errors and return Result<T>
 
-    internal Race GetRaceInfo(int raceId) // TODO misschien in race client, handle errors
-        => DB.Races.Single(r => r.RaceId == raceId);
+    internal Task<Result<Race>> GetRaceInfo(int raceId) // TODO misschien in race client, handle errors
+        => DB.Races.SingleResult(r => r.RaceId == raceId);
 
     internal RiderParticipation GetRider(int riderParticipationId, int raceId)
         => DB.RiderParticipations
             .Single(rp => rp.RiderParticipationId == riderParticipationId && rp.RaceId == raceId);  // TODO handle errors and return Result<T>
 
-    internal int AddRider(int riderParticipationId)
+    internal Task<int> AddRider(int riderParticipationId)
     {
         DB.TeamSelections.Add(
             new()
@@ -43,7 +43,9 @@ public class TeamSelectionClient
                 RiderParticipationId = riderParticipationId,
                 AccountParticipationId = User.ParticipationId
             });
-        return DB.SaveChanges();  // TODO handle errors and return Result<T>
+        return DB.SaveChangesAsync();
+        // if (a != 1) return Result.WithMessages(ValidationMessage.Error("did not add 1 rider"));
+        // return Result.OK;
     }
 
     internal int RemoveRider(int riderParticipationId)

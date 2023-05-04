@@ -10,9 +10,12 @@ public class TeamSelectionService
     public TeamSelectionService(TeamSelectionClient client)
         => Client = client;
 
-    public TeamSelectionData GetTeamSelectionData(int raceId, bool budgetParticipation)
+    public Task<Result<TeamSelectionData>> GetTeamSelectionData(int raceId, bool budgetParticipation)
+        => Client.GetRaceInfo(raceId)
+            .ActAsync(raceData => BuildResponse(raceData, raceId, budgetParticipation));
+
+    private Result<TeamSelectionData> BuildResponse(Race raceData, int raceId, bool budgetParticipation)
     {
-        var raceData = Client.GetRaceInfo(raceId);
         // TODO check if race started return specific error, misschien interceptor op controller
 
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
@@ -22,14 +25,15 @@ public class TeamSelectionService
         var allRiders = Client.GetAll(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, raceData, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
 
-        return new(budget, budgetOver, team, allRiders);
+        return new TeamSelectionData(budget, budgetOver, team, allRiders);
     }
 
-    public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    public Task<int> AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    //     => Client.GetRaceInfo(raceId)
+    //     .ActAsync(raceData => {
+    // // TODO check if race started return specific error, misschien interceptor op controller
     {
-        var raceData = Client.GetRaceInfo(raceId);
-        // TODO check if race started return specific error, misschien interceptor op controller
-
+        var raceData = new Race();
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var team = Client.GetTeam();
         var toAdd = Client.GetRider(riderParticipationId, raceId);
@@ -37,7 +41,7 @@ public class TeamSelectionService
         {
             return Client.AddRider(riderParticipationId);
         }
-        return 0; // TODO error?
+        return Task.FromResult(0); // TODO error?
     }
 
     private static SelectableEnum Selectable(IEnumerable<RiderParticipation> team, Race raceData, RiderParticipation toAdd)
