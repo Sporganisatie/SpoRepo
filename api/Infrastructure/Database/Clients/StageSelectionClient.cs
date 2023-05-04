@@ -17,7 +17,7 @@ public class StageSelectionClient
 
     // get classifications wss in andere client
 
-    internal IEnumerable<StageSelectableRider> GetTeam(int stagenr) // Alleen rp.id returnen kan wss ook
+    internal IEnumerable<StageSelectableRider> GetTeam(int stagenr)
     {
         var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr)
             .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { ssr.RiderParticipationId, Kopman = ss.KopmanId == ssr.RiderParticipationId });
@@ -26,7 +26,10 @@ public class StageSelectionClient
                    let ap = ts.AccountParticipation
                    where ap.AccountParticipationId == User.ParticipationId
                    orderby ts.RiderParticipation.Price descending
-                   select new StageSelectableRider(ts.RiderParticipation, stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId), stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman));
+                   select new StageSelectableRider(
+                    ts.RiderParticipation,
+                    stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId),
+                    stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman));
 
         return team.ToList();
     }
