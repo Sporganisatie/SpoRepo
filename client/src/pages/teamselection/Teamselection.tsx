@@ -50,26 +50,11 @@ const Teamselection: React.FC = () => {
             });
     };
 
-    const removeRider = (riderParticipationId: number) => {
+    const updateRider = (riderParticipationId: number, isAdding: boolean) => {
         setPending(true);
-        axios.delete('/api/TeamSelection', {
-            params: {
-                riderParticipationId,
-                raceId,
-                budgetParticipation
-            }
-        })
-            .then(function (response) {
-                loadData();
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
-    const addRider = (riderParticipationId: number) => {
-        setPending(true);
-        axios.post('/api/TeamSelection', null, {
+        axios.request({
+            method: isAdding ? 'post' : 'delete',
+            url: '/api/TeamSelection',
             params: {
                 riderParticipationId,
                 raceId,
@@ -96,13 +81,12 @@ const Teamselection: React.FC = () => {
                 <SelectableRidersTable
                     data={filteredRiders}
                     loading={pending}
-                    removeRider={removeRider}
-                    addRider={addRider}
+                    updateRider={updateRider}
                 />
                 <TeamSelectionTable
                     data={data.team}
                     loading={pending}
-                    removeRider={removeRider}
+                    updateRider={updateRider}
                 />
             </div>
         </div>
