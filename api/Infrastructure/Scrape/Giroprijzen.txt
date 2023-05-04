@@ -385,7 +385,7 @@
 			"BirthDate": "1997-01-04T00:00:00",
 			"EventRiderId": 193035,
 			"Price": 2000000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 51,
 			"Type": 1,
 			"FirstName": "Gino",
@@ -2251,8 +2251,8 @@
 			"TeamId": 5,
 			"Type": 6,
 			"FirstName": "Josef",
-			"LastName": "ČERNÝ",
-			"NameShort": "J. Cerný",
+			"LastName": "Černý",
+			"NameShort": "J. Černý",
 			"Qualities": [
 				{
 					"Type": 2,
@@ -2389,6 +2389,25 @@
 				}
 			],
 			"RiderId": 5274
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1998-06-16T00:00:00",
+			"EventRiderId": 194035,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 42,
+			"Type": 2,
+			"FirstName": "Jefferson Alexander",
+			"LastName": "Cepeda",
+			"NameShort": "J. Cepeda",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				}
+			],
+			"RiderId": 7004
 		},
 		{
 			"Age": 25,
@@ -2984,7 +3003,7 @@
 			"BirthDate": "1995-10-31T00:00:00",
 			"EventRiderId": 194723,
 			"Price": 1000000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 212,
 			"Type": 4,
 			"FirstName": "German Nicolás",
@@ -3273,7 +3292,7 @@
 			"BirthDate": "1994-01-23T00:00:00",
 			"EventRiderId": 194738,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 42,
 			"Type": 6,
 			"FirstName": "Merhawi",
@@ -3292,7 +3311,7 @@
 			"BirthDate": "1994-12-28T00:00:00",
 			"EventRiderId": 194739,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 42,
 			"Type": 6,
 			"FirstName": "Odd Christian",
@@ -3594,7 +3613,7 @@
 			"RiderId": 7171
 		},
 		{
-			"Age": 29,
+			"Age": 30,
 			"BirthDate": "1993-05-04T00:00:00",
 			"EventRiderId": 194757,
 			"Price": 500000.0,
@@ -3892,7 +3911,7 @@
 			"BirthDate": "1996-10-18T00:00:00",
 			"EventRiderId": 194775,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 212,
 			"Type": 6,
 			"FirstName": "Attilio",
@@ -4322,7 +4341,7 @@
 			"BirthDate": "1985-02-18T00:00:00",
 			"EventRiderId": 194912,
 			"Price": 1000000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 30,
 			"Type": 6,
 			"FirstName": "Jos",
@@ -4391,6 +4410,106 @@
 			"NameShort": "I. Konovalovas",
 			"Qualities": [],
 			"RiderId": 205
+		},
+		{
+			"Age": 38,
+			"BirthDate": "1984-09-22T00:00:00",
+			"EventRiderId": 194917,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 51,
+			"Type": 6,
+			"FirstName": "Yukiya",
+			"LastName": "Arashiro",
+			"NameShort": "Y. Arashiro",
+			"Qualities": [],
+			"RiderId": 133
+		},
+		{
+			"Age": 22,
+			"BirthDate": "2000-09-09T00:00:00",
+			"EventRiderId": 194918,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Karel",
+			"LastName": "Vacek",
+			"NameShort": "K. Vacek",
+			"Qualities": [],
+			"RiderId": 6448
+		},
+		{
+			"Age": 24,
+			"BirthDate": "1999-02-04T00:00:00",
+			"EventRiderId": 194919,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 212,
+			"Type": 6,
+			"FirstName": "Veljko",
+			"LastName": "Stojnić",
+			"NameShort": "V. Stojnić",
+			"Qualities": [],
+			"RiderId": 7811
+		},
+		{
+			"Age": 29,
+			"BirthDate": "1993-10-29T00:00:00",
+			"EventRiderId": 194920,
+			"Price": 1000000.0,
+			"Status": 1,
+			"TeamId": 42,
+			"Type": 5,
+			"FirstName": "Alberto",
+			"LastName": "Bettiol",
+			"NameShort": "A. Bettiol",
+			"Qualities": [
+				{
+					"Type": 2,
+					"Value": 3
+				},
+				{
+					"Type": 4,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 3
+				},
+				{
+					"Type": 6,
+					"Value": 2
+				}
+			],
+			"RiderId": 908
+		},
+		{
+			"Age": 27,
+			"BirthDate": "1995-08-15T00:00:00",
+			"EventRiderId": 194921,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 30,
+			"Type": 6,
+			"FirstName": "Sam",
+			"LastName": "Oomen",
+			"NameShort": "S. Oomen",
+			"Qualities": [
+				{
+					"Type": 0,
+					"Value": 1
+				},
+				{
+					"Type": 1,
+					"Value": 2
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 639
 		}
 	]
 }
