@@ -19,10 +19,10 @@ public class TeamSelectionService
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
         var team = Client.GetTeam();
-        var allRiders = Client.GetAll(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, raceData, rp)));
+        var allRiders = Client.GetAll(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
-
-        return new(budget, budgetOver, team, allRiders);
+        var allTeams = allRiders.Select(r => r.Details.Team).Distinct();
+        return new(budget, budgetOver, team, allRiders, allTeams);
     }
 
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
@@ -33,23 +33,24 @@ public class TeamSelectionService
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var team = Client.GetTeam();
         var toAdd = Client.GetRider(riderParticipationId, raceId);
-        if (Selectable(team, raceData, toAdd) is SelectableEnum.Open)
+        if (Selectable(team, budget, toAdd) is SelectableEnum.Open)
         {
             return Client.AddRider(riderParticipationId);
         }
         return 0; // TODO error?
     }
 
-    private static SelectableEnum Selectable(IEnumerable<RiderParticipation> team, Race raceData, RiderParticipation toAdd)
+    private static SelectableEnum Selectable(IEnumerable<RiderParticipation> team, int budget, RiderParticipation toAdd)
     {
         if (team.Any(r => r.RiderParticipationId == toAdd.RiderParticipationId)) return SelectableEnum.Selected;
 
-        var budgetOver = raceData.Budget - team.Sum(x => x.Price);
-        var openSpaces = 20 - team.Count();
-        var maxRiderPrice = budgetOver - openSpaces * 500_000;
-        if (toAdd.Price > maxRiderPrice) return SelectableEnum.TooExpensive;
+        if (team.Count() >= 20) return SelectableEnum.Max20;
 
-        if (openSpaces <= 0) return SelectableEnum.Max20;
+        var budgetOver = budget - team.Sum(x => x.Price);
+        var openSpaces = 20 - team.Count();
+        var moneyNeededAfterAdding = (openSpaces - 1) * 500_000;
+        var maxRiderPrice = budgetOver - moneyNeededAfterAdding;
+        if (toAdd.Price > maxRiderPrice) return SelectableEnum.TooExpensive;
 
         var fourRiderteams = team.GroupBy(r => r.Team).Where(g => g.Count() >= 4).Select(g => g.Key);
         if (fourRiderteams.Contains(toAdd.Team)) return SelectableEnum.FourFromSameTeam;

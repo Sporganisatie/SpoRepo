@@ -6,4 +6,5 @@ export interface TeamSelectionData {
     budgetOver: number,
     team: RiderParticipation[],
     allRiders: SelectableRider[]
+    allTeams: string[]
 }
