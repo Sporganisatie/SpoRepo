@@ -2,6 +2,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
 const JoinRace = () => {
+    document.title = "Race Deelname";
     let navigate = useNavigate();
     let { raceId } = useParams();
     const handleJoinRace = () => {

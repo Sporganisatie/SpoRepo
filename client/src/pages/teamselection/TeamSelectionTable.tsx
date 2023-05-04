@@ -3,7 +3,7 @@ import RiderLink from '../../components/shared/RiderLink';
 import { RiderParticipation } from '../../models/RiderParticipation';
 
 
-const TeamSelectionTable = ({ data, loading, removeRider }: { data: RiderParticipation[], loading: boolean, removeRider: (id: number) => void }) => {
+const TeamSelectionTable = ({ data, loading, updateRider }: { data: RiderParticipation[], loading: boolean, updateRider: (id: number, adding: boolean) => void }) => {
     const columns: TableColumn<RiderParticipation>[] = [
         {
             name: 'Naam',
@@ -18,7 +18,7 @@ const TeamSelectionTable = ({ data, loading, removeRider }: { data: RiderPartici
             selector: (row: RiderParticipation) => row.team,
         },
         {
-            cell: (row: RiderParticipation) => <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => removeRider(row.riderParticipationId)}>-</button>
+            cell: (row: RiderParticipation) => <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => updateRider(row.riderParticipationId, false)}>-</button>
         }
     ];
 

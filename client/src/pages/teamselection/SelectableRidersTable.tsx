@@ -20,7 +20,7 @@ const conditionalRowStyles = [
     },
 ];
 
-const SelectableRidersTable = ({ data, loading, removeRider, addRider }: { data: SelectableRider[], loading: boolean, removeRider: (id: number) => void, addRider: (id: number) => void }) => {
+const SelectableRidersTable = ({ data, loading, updateRider }: { data: SelectableRider[], loading: boolean, updateRider: (id: number, adding: boolean) => void }) => {
     const columns: TableColumn<SelectableRider>[] = [
         {
             name: 'Naam',
@@ -40,9 +40,9 @@ const SelectableRidersTable = ({ data, loading, removeRider, addRider }: { data:
             cell: (row: SelectableRider) => {
                 switch (row.selectable) {
                     case SelectableEnum.Open:
-                        return <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => addRider(row.details.riderParticipationId)}>+</button>;
+                        return <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => updateRider(row.details.riderParticipationId, true)}>+</button>;
                     case SelectableEnum.Selected:
-                        return <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => removeRider(row.details.riderParticipationId)}>-</button>;
+                        return <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => updateRider(row.details.riderParticipationId, false)}>-</button>;
                     default:
                         return <></>;
                 }

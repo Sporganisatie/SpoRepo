@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SelectableRider } from './Models/SelectableRider';
 import { TeamSelectionData } from './Models/TeamSelectionData';
 import SelectableRidersTable from './SelectableRidersTable';
@@ -10,6 +10,8 @@ import { useBudgetContext } from '../../components/shared/BudgetContextProvider'
 import FilterElements, { Filters } from './Filters';
 
 const Teamselection: React.FC = () => {
+    document.title = "Team Selectie";
+    let navigate = useNavigate();
     let { raceId } = useParams();
     const budgetParticipation = useBudgetContext();
     const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [], allTeams: [] });
@@ -50,26 +52,11 @@ const Teamselection: React.FC = () => {
             });
     };
 
-    const removeRider = (riderParticipationId: number) => {
+    const updateRider = (riderParticipationId: number, isAdding: boolean) => {
         setPending(true);
-        axios.delete('/api/TeamSelection', {
-            params: {
-                riderParticipationId,
-                raceId,
-                budgetParticipation
-            }
-        })
-            .then(function (response) {
-                loadData();
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
-
-    const addRider = (riderParticipationId: number) => {
-        setPending(true);
-        axios.post('/api/TeamSelection', null, {
+        axios.request({
+            method: isAdding ? 'post' : 'delete',
+            url: '/api/TeamSelection',
             params: {
                 riderParticipationId,
                 raceId,
@@ -90,19 +77,19 @@ const Teamselection: React.FC = () => {
 
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
+            <button style={{ width: 100 }} onClick={() => navigate(`/stage/${raceId}/1`)}>Etappe 1</button>
             <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>
             <FilterElements updateFilter={updateAndFilter} resetFilter={resetFilter} filters={filters} teams={data.allTeams} />
             <div style={{ display: "flex" }}>
                 <SelectableRidersTable
                     data={filteredRiders}
                     loading={pending}
-                    removeRider={removeRider}
-                    addRider={addRider}
+                    updateRider={updateRider}
                 />
                 <TeamSelectionTable
                     data={data.team}
                     loading={pending}
-                    removeRider={removeRider}
+                    updateRider={updateRider}
                 />
             </div>
         </div>
@@ -113,7 +100,6 @@ export default Teamselection;
 
 function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRider[] {
     for (const [filterType, value] of Object.entries(filters)) {
-        console.log(filterType, value)
         if (!value) {
             continue;
         }
