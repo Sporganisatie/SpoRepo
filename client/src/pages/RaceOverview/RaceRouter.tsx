@@ -31,7 +31,7 @@ const RaceRouter = () => {
 
     return (
         <div>
-            Dit moet je niet kunnen zien val Arjen lastig als je dit wel ziet
+            Als je dit na 10s nog steeds ziet val Arjen lastig
         </div>
     )
 }
