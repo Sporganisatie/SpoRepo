@@ -4,6 +4,13 @@ import { StageSelectableRider } from "../models/StageSelectableRider";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
+import ArrowSelect from "../../../components/ArrowSelect";
+import { SelectOption } from "../../../components/Select";
+
+const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
+    displayValue: (i + 1).toString(),
+    value: (i + 1).toString(),
+}));
 
 const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const { raceId, stagenr } = props;
@@ -49,8 +56,12 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
 
     return (
         <div>
-            {/* only if etappe 1 */}
-            <button onClick={() => navigate("/")}>Teamselectie</button>
+            {stagenr === "1" && <button onClick={() => navigate("/")}>Teamselectie</button>}
+            <ArrowSelect
+                value={stagenr}
+                allowLooping={false}
+                options={stages}
+                onChange={(selectedValue) => { navigate(`/stage/${raceId}/${selectedValue}`) }} />
             <StageSelectionTeam data={data} updateRider={updateRider} loading={false} />
             {/* <TopKlassementen /> */}
         </div>
