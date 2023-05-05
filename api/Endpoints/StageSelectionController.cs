@@ -23,7 +23,7 @@ public class StageSelectionController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(StageSelectionData), 200)]
     public IActionResult Get(int raceId, bool budgetParticipation, int stagenr)
-        => Ok(StageSelectionClient.GetTeam(stagenr));
+        => Ok(StageSelectionClient.GetData(raceId, stagenr));
 
     [HttpPost("rider")]
     [ProducesResponseType(typeof(int), 200)]

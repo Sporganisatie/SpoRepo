@@ -1,28 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { StageSelectableRider } from "../models/StageSelectableRider";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
 import ArrowSelect from "../../../components/ArrowSelect";
 import { SelectOption } from "../../../components/Select";
+import { StageSelectionData } from "../../teamselection/Models/StageSelectionData";
 
 const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
     displayValue: (i + 1).toString(),
     value: (i + 1).toString(),
 }));
 
+const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' };
+
 const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const { raceId, stagenr } = props;
     document.title = `Etappe ${stagenr} opstelling`;
     const budgetParticipation = useBudgetContext();
     let navigate = useNavigate();
-    const [data, setData] = useState<StageSelectableRider[]>([]);
+    const [data, setData] = useState<StageSelectionData>({ team: [], deadline: null });
 
     const loadData = () => {
         axios.get(`/api/StageSelection`, { params: { raceId, stagenr, budgetParticipation } })
             .then(res => {
-                setData(res.data)
+                setData({ team: res.data.team, deadline: new Date(res.data.deadline) }) // TODO date handling in axios interceptor
             })
             .catch(function (error) {
                 throw error
@@ -53,16 +55,16 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
             });
     };
 
-
     return (
         <div>
             {stagenr === "1" && <button onClick={() => navigate("/")}>Teamselectie</button>}
+            <div>Deadline: {data.deadline?.toLocaleDateString('nl-NL', options) ?? ""}</div>
             <ArrowSelect
                 value={stagenr}
                 allowLooping={false}
                 options={stages}
                 onChange={(selectedValue) => { navigate(`/stage/${raceId}/${selectedValue}`) }} />
-            <StageSelectionTeam data={data} updateRider={updateRider} loading={false} />
+            <StageSelectionTeam data={data.team} updateRider={updateRider} loading={false} />
             {/* <TopKlassementen /> */}
         </div>
     )
