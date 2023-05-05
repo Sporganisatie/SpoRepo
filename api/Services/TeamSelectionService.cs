@@ -13,7 +13,6 @@ public class TeamSelectionService
     public TeamSelectionData GetTeamSelectionData(int raceId, bool budgetParticipation)
     {
         var raceData = Client.GetRaceInfo(raceId);
-        // TODO check if race started return specific error, misschien interceptor op controller
 
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
@@ -28,7 +27,6 @@ public class TeamSelectionService
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
         var raceData = Client.GetRaceInfo(raceId);
-        // TODO check if race started return specific error, misschien interceptor op controller
 
         var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
         var team = Client.GetTeam();
@@ -61,7 +59,6 @@ public class TeamSelectionService
     internal object RemoveRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
         var raceData = Client.GetRaceInfo(raceId);
-        // TODO check if race started return specific error, misschien interceptor op controller
 
         return Client.RemoveRider(riderParticipationId);
     }

@@ -20,7 +20,12 @@ public class RaceService
 
     internal async Task<Result<RaceStateEnum>> GetRaceState(int raceId)
      => await _accountClient.GetParticipationCount(User.Id, raceId) // TODO ook kijken of race gestart is
-            .ActAsync(participationCount => RaceState(participationCount));
+            .ActAsync(participationCount =>
+            {
+                // get stage 1 has started
+                // get race has finished
+                return RaceState(participationCount);
+            });
 
     private Result<RaceStateEnum> RaceState(int participationCount)
     {

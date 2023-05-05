@@ -11,7 +11,8 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 const onResponseError = (error: AxiosError, navigate: NavigateFunction): void => {
     switch (error.response?.status) {
         case 401: navigate("/login"); break;
-        case 403: navigate("/home"); break;
+        case 403: navigate("/"); break;
+        case 423: navigate("/"); break;
     }
 }
 
