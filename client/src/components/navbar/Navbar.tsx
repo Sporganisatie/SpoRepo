@@ -17,7 +17,6 @@ import jwt_decode from "jwt-decode";
 
 interface NavbarProps {
   currentStageLink: string,
-  isAdmin: boolean,
   isLoading: boolean,
   isLoggedIn: boolean,
   racename: string,
@@ -38,8 +37,8 @@ const Navbar = (props: NavbarProps) => {
       {race !== null && <Link className='navbar_link' to={props.currentStageLink}><span>Current stage</span></Link>}
       {!props.isLoading && <ChartsDropdown raceSelected={race !== null} />}
       {!props.isLoading && <StatsDropdown raceSelected={race !== null} />}
-      {props.isAdmin &&
-        <Link className='navbar_link' to='/admin-sqlinterface'>
+      {localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).admin &&
+        <Link className='navbar_link' to='/admin'>
           <FontAwesomeIcon icon={faShieldAlt} />
         </Link>
       }
@@ -49,9 +48,9 @@ const Navbar = (props: NavbarProps) => {
       <Link className='navbar_link' to='/profile'>
         <FontAwesomeIcon icon={faUser} />
       </Link>
-      {localStorage.getItem('authToken') ? (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).id <= 5 &&
+      {localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).id <= 5 &&
         <div> Budget
-          <input type="checkbox" checked={budget} onClick={() => dispatch({})} onChange={() => { }} /></div> : <></>}
+          <input type="checkbox" checked={budget} onClick={() => dispatch({})} onChange={() => { }} /></div>}
     </div>
   )
 }
