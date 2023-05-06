@@ -1057,7 +1057,7 @@
 			"BirthDate": "1990-02-23T00:00:00",
 			"EventRiderId": 193063,
 			"Price": 1000000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 30,
 			"Type": 6,
 			"FirstName": "Jan",
@@ -2349,7 +2349,7 @@
 			"RiderId": 2002
 		},
 		{
-			"Age": 27,
+			"Age": 28,
 			"BirthDate": "1995-05-06T00:00:00",
 			"EventRiderId": 194033,
 			"Price": 500000.0,
@@ -4510,6 +4510,29 @@
 				}
 			],
 			"RiderId": 639
+		},
+		{
+			"Age": 21,
+			"BirthDate": "2001-09-13T00:00:00",
+			"EventRiderId": 194922,
+			"Price": 750000.0,
+			"Status": 1,
+			"TeamId": 30,
+			"Type": 6,
+			"FirstName": "Thomas",
+			"LastName": "Gloag",
+			"NameShort": "T. Gloag",
+			"Qualities": [
+				{
+					"Type": 1,
+					"Value": 1
+				},
+				{
+					"Type": 5,
+					"Value": 1
+				}
+			],
+			"RiderId": 7742
 		}
 	]
 }
