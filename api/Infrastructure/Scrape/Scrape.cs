@@ -35,7 +35,24 @@ public partial class Scrape
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
                     .Select(x => x.QuerySelector("table"));
         var query = ResultsQuery(classifications.Zip(tables), stage);
-        // DB.Database.ExecuteSqlRaw(query);
+        DB.Database.ExecuteSqlRaw(query);
+
+        CalculateUserScores(stage.StageId);
+    }
+
+    private void CalculateUserScores(int stageId)
+    {
+        var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stageId).Include(ss => ss.AccountParticipation).ToList();
+
+        foreach (var stageSelection in stageSelections)
+        {
+            var minusTeamPoints = stageSelection.AccountParticipation.Budgetparticipation ?? false ? " - teamscore" : "";
+            var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
+            var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stageId} AND rider_participation_id IN {selectedRiders})";
+            var kopmanscore = $"(SELECT stagescore/2 FROM results_points WHERE stage_id = {stageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId}))";
+            var query = $"UPDATE stage_selection SET stagescore = ({stagescore} + {kopmanscore}) WHERE stage_selection_id = {stageSelection.StageSelectionId}";
+            DB.Database.ExecuteSqlRaw(query);
+        }
     }
 
     private string RaceString(string raceName)
