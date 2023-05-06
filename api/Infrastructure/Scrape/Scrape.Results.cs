@@ -27,7 +27,7 @@ public partial class Scrape
 
     private string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)
     {
-        return @"INSERT INTO results_points(stage_id, rider_participation_id, 
+        return @$"DELETE FROM results_points WHERE stage_id = {stage.StageId}; INSERT INTO results_points(stage_id, rider_participation_id, 
                 stagepos, stagescore, stageresult, gcpos, gcscore, gcresult, gcchange,
                 pointspos, pointsscore, pointsresult, pointschange, kompos, komscore, komresult, komchange,
                 yocpos, yocscore, yocresult, yocchange, teamscore, totalscore)
@@ -54,7 +54,7 @@ public partial class Scrape
     {
         if (tab == "Teams") return;
         var pcsRows = ResultsDict(htmlResults);
-        var teamWinner = pcsRows.FirstOrDefault().Team;
+        var teamWinner = pcsRows.FirstOrDefault()?.Team;
         foreach (var pcsRow in pcsRows)
         {
             riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId));
@@ -107,7 +107,7 @@ public partial class Scrape
     private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab)
         => tab switch
         {
-            "Stage" => riderResult with
+            "" => riderResult with
             {
                 Stagepos = pcsRow.Rank,
                 Stageresult = pcsRow.Time,
