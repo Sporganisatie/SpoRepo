@@ -21,6 +21,7 @@ const RaceRouter = () => {
                 switch (res.data) {
                     case RaceStateEnum.NotJoined: navigate(`/joinrace/${raceId}`); return;
                     case RaceStateEnum.TeamSelection: navigate(`/teamselection/${raceId}`); return;
+                    case RaceStateEnum.Started: navigate(`/stage/${raceId}/`); return;
                 };
                 // TODO wat als invalid race
             })

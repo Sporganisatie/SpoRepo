@@ -1,6 +1,7 @@
 // import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import StageResult from "./Result/StageResult";
 import StageSelection from "./Selection/StageSelection";
 
 enum StageStateEnum {
@@ -23,7 +24,7 @@ const Stage = () => {
         //     .catch(function (error) {
         //         throw error
         //     });
-        setStageState(StageStateEnum.Selection)
+        setStageState(StageStateEnum.Started)
     }, [raceId, navigate])
 
 
@@ -32,8 +33,8 @@ const Stage = () => {
         switch (stageState) {
             case StageStateEnum.Selection:
                 return <StageSelection raceId={raceId!} stagenr={stagenr!} />
-            // case StageStateEnum.Started:
-            //     return <StageResult />
+            case StageStateEnum.Started:
+                 return <StageResult raceId={raceId!} stagenr={stagenr!} />
             default:
                 return <></>
         }

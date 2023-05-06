@@ -41,6 +41,19 @@ public class StageSelectionClient
         return team.ToList();
     }
 
+    public IEnumerable<AccountStageResults> GetAccountStageResults(int raceId, int stagenr)
+    {
+        var stageSelection = DB.StageSelections.Where(ss => ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
+            .Join(
+                DB.AccountParticipations,
+                ss => ss.AccountParticipationId,
+                ap => ap.AccountParticipationId,
+                (ss, ap) => new AccountStageResults(ap.Account, ss.Stagescore, ss.Totalscore)
+            );
+
+        return stageSelection.ToList();
+    }
+
     internal int AddRider(int riderParticipationId, int stagenr)
     {
         // TODO check stage niet gestart in Service
