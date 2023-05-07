@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StageResult from "./Result/StageResult";
 import StageSelection from "./Selection/StageSelection";
+import ArrowSelect from "../../components/ArrowSelect";
+import { SelectOption } from "../../components/Select";
 
 enum StageStateEnum {
     None,
@@ -11,6 +13,10 @@ enum StageStateEnum {
     Started
 }
 
+const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
+    displayValue: (i + 1).toString(),
+    value: (i + 1).toString(),
+}));
 
 const Stage = () => {
     let navigate = useNavigate();
@@ -27,18 +33,22 @@ const Stage = () => {
             });
     }, [raceId, stagenr, navigate])
 
+    const navigateStage = (newStage: string) => {
+        if (parseInt(newStage) < parseInt(stagenr!)) setStageState(StageStateEnum.None);
+        navigate(`/stage/${raceId}/${newStage}`)
+    }
 
-    // Wss dit nog omgooien zodat de etappe navigatie hierin gezet kan worden
-    return ((() => {
-        switch (stageState) {
-            case StageStateEnum.Selection:
-                return <StageSelection raceId={raceId!} stagenr={stagenr!} />
-            case StageStateEnum.Started:
-                return <StageResult raceId={raceId!} stagenr={stagenr!} />
-            default:
-                return <></>
-        }
-    })())
+    return (
+        <div>
+            <ArrowSelect
+                value={stagenr}
+                allowLooping={false}
+                options={stages}
+                onChange={(selectedValue) => { navigateStage(selectedValue) }} />
+            {stageState === StageStateEnum.Selection && <StageSelection raceId={raceId!} stagenr={stagenr!} />}
+            {stageState === StageStateEnum.Started && <StageResult raceId={raceId!} stagenr={stagenr!} />}
+        </div>
+    )
 }
 
 export default Stage;
