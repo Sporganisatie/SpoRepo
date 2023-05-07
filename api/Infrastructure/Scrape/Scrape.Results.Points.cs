@@ -13,17 +13,17 @@ public partial class Scrape
             _ => 0
         };
 
-    private int TeamScore(PcsRow pcsRow, string classification, string teamWinner, string stageType)
-    {
-        if (pcsRow.Rank == 1 || pcsRow.Team != teamWinner) return 0;
-        var teampointsDict = stageType switch
-        {
-            "REG" => new Dictionary<string, int>() { { "", 10 }, { "GC", 8 }, { "Points", 6 }, { "KOM", 3 }, { "Youth", 2 } },
-            "ITT" => new Dictionary<string, int>() { { "", 0 }, { "GC", 8 }, { "Points", 6 }, { "KOM", 3 }, { "Youth", 2 } },
-            "TTT" => new Dictionary<string, int>() { { "", 0 }, { "GC", 8 }, { "Points", 6 }, { "KOM", 3 }, { "Youth", 2 } },
-            "FinalStandings" => new Dictionary<string, int>() { { "", 0 }, { "GC", 24 }, { "Points", 18 }, { "KOM", 9 }, { "Youth", 6 } },
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        return teampointsDict.TryGetValue(classification, out var teampoints) ? teampoints : 0;
-    }
+    // private int TeamScore(PcsRow pcsRow, string classification, string teamWinner, string stageType)
+    // {
+    //     if (pcsRow.Rank == 1 || pcsRow.Team != teamWinner) return 0;
+    //     var teampointsDict = stageType switch
+    //     {
+    //         "REG" => new Dictionary<string, int>() { { "", 10 }, { "GC", 8 }, { "Points", 6 }, { "KOM", 3 }, { "Youth", 2 } },
+    //         "ITT" => new Dictionary<string, int>() { { "", 0 }, { "GC", 8 }, { "Points", 6 }, { "KOM", 3 }, { "Youth", 2 } },
+    //         "TTT" => new Dictionary<string, int>() { { "", 0 }, { "GC", 8 }, { "Points", 6 }, { "KOM", 3 }, { "Youth", 2 } },
+    //         "FinalStandings" => new Dictionary<string, int>() { { "", 0 }, { "GC", 24 }, { "Points", 18 }, { "KOM", 9 }, { "Youth", 6 } },
+    //         _ => throw new ArgumentOutOfRangeException()
+    //     };
+    //     return teampointsDict.TryGetValue(classification, out var teampoints) ? teampoints : 0;
+    // }
 }

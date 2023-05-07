@@ -29,13 +29,13 @@ public partial class Scrape
         return @$"DELETE FROM results_points WHERE stage_id = {stage.StageId}; INSERT INTO results_points(stage_id, rider_participation_id, 
                 stagepos, stagescore, stageresult, gcpos, gcscore, gcresult, gcchange,
                 pointspos, pointsscore, pointsresult, pointschange, kompos, komscore, komresult, komchange,
-                yocpos, yocscore, yocresult, yocchange, teamscore, totalscore)
+                yocpos, yocscore, yocresult, yocchange, totalscore)
                 VALUES" + string.Join(", ", riderResults.Where(x => !x.Dnf).Select(rider =>
                 @$"(
                     {stage.StageId}, (SELECT rider_participation_id FROM rider_participation WHERE race_id = {stage.RaceId} AND rider_id = (SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')),
                     {rider.Stagepos}, {rider.Stagescore}, '{rider.Stageresult}', {rider.Gcpos}, {rider.Gcscore}, '{rider.Gcresult}', '{rider.Gcchange}',
                     {rider.Pointspos}, {rider.Pointsscore}, '{rider.Pointsresult}', '{rider.Pointschange}', {rider.Kompos}, {rider.Komscore}, '{rider.Komresult}', '{rider.Komchange}',
-                    {rider.Yocpos}, {rider.Yocscore}, '{rider.Yocresult}', '{rider.Yocchange}', {rider.Teamscore}, {rider.Totalscore}
+                    {rider.Yocpos}, {rider.Yocscore}, '{rider.Yocresult}', '{rider.Yocchange}', {rider.Totalscore}
                 )"));
     }
 
@@ -53,16 +53,14 @@ public partial class Scrape
     {
         if (tab == "Teams") return;
         var pcsRows = ResultsDict(htmlResults);
-        var teamWinner = pcsRows.FirstOrDefault()?.Team;
         foreach (var pcsRow in pcsRows)
         {
             riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId));
             riderResults[pcsRow.PcsId] = AddResults(riderResults[pcsRow.PcsId], pcsRow, tab);
-            riderResults[pcsRow.PcsId].Teamscore += TeamScore(pcsRow, tab, teamWinner, type);
         }
         foreach (var (key, value) in riderResults)
         {
-            riderResults[key] = value with { Totalscore = value.Stagescore + value.Gcscore + value.Pointsscore + value.Komscore + value.Yocscore + value.Teamscore };
+            riderResults[key] = value with { Totalscore = value.Stagescore + value.Gcscore + value.Pointsscore + value.Komscore + value.Yocscore };
         }
         return;
     }
@@ -87,7 +85,6 @@ public partial class Scrape
             Rank = rank,
             RankChange = GetRankChange(fields),
             PcsId = pcsId,
-            Team = GetString(fields, "Team"),
             Time = GetString(fields, "Time"),
             Points = GetString(fields, "Points"),
         };
@@ -151,7 +148,6 @@ internal record PcsRow
     public int Rank { get; set; }
     public string RankChange { get; set; }
     public string PcsId { get; set; }
-    public string Team { get; set; }
     public string Time { get; set; }
     public string Points { get; set; }
 }
@@ -169,7 +165,6 @@ public record RiderResult(string PcsId)
     public int Pointsscore { get; set; }
     public int Komscore { get; set; }
     public int Yocscore { get; set; }
-    public int Teamscore { get; set; }
     public int Totalscore { get; set; }
     public string Stageresult { get; set; }
     public string Gcresult { get; set; }
