@@ -11,12 +11,12 @@ namespace SpoRE.Controllers;
 [Authorize]
 public class StageController : ControllerBase
 {
-    private readonly RaceClient _raceClient;
+    private readonly RaceClient RaceClient;
 
     public StageController(RaceClient raceClient)
-        => _raceClient = raceClient;
+        => RaceClient = raceClient;
 
     [HttpGet]
     [ProducesResponseType(typeof(StageStateEnum), 200)]
-    public IActionResult Get(int raceId, int stageNr) => Ok(_raceClient.StageStarted(raceId, stageNr) ? StageStateEnum.Started : StageStateEnum.Selection);
+    public IActionResult Get(int raceId, int stageNr) => Ok(RaceClient.StageStarted(raceId, stageNr) ? StageStateEnum.Started : StageStateEnum.Selection);
 }
