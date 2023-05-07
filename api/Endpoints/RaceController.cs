@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Models;
+using SpoRE.Models.Response;
 using SpoRE.Services;
 
 namespace SpoRE.Controllers;
@@ -15,7 +15,7 @@ public class RaceController : ControllerBase
         => Service = service;
 
     [HttpGet]
-    [ProducesResponseType(typeof(RaceStateEnum), 200)]
+    [ProducesResponseType(typeof(RaceState), 200)]
     public async Task<IActionResult> GetAsync(int raceId)
         => Ok((await Service.GetRaceState(raceId)).Value);
 
