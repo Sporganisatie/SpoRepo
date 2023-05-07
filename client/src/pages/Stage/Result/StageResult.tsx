@@ -4,8 +4,8 @@ import { useBudgetContext } from "../../../components/shared/BudgetContextProvid
 import { useNavigate } from "react-router-dom";
 import ArrowSelect from "../../../components/ArrowSelect";
 import { SelectOption } from "../../../components/Select";
-import { StageSelectionData } from "../../teamselection/Models/StageSelectionData";
-import TeamResultsTable, { Teamresults } from "./TeamResultsTable";
+// import { StageSelectionData } from "../../teamselection/Models/StageSelectionData";
+// import TeamResultsTable, { Teamresults } from "./TeamResultsTable";
 import UserScoreTable, { UserScore } from "./UserScoreTable";
 
 const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
@@ -13,14 +13,12 @@ const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
     value: (i + 1).toString(),
 }));
 
-const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' };
-
 const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const { raceId, stagenr } = props;
     document.title = `Etappe ${stagenr} resultaten`;
     const budgetParticipation = useBudgetContext();
     let navigate = useNavigate();
-    const [teamResultsData, setTeamResultsData] = useState<Teamresults[]>([]);
+    // const [teamResultsData, setTeamResultsData] = useState<Teamresults[]>([]);
     const [userScoreData, setUserScoreData] = useState<UserScore[]>([]);
 
     const loadData = () => {
@@ -45,7 +43,7 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
                 allowLooping={false}
                 options={stages}
                 onChange={(selectedValue) => { navigate(`/stage/${raceId}/${selectedValue}`) }} />
-            <TeamResultsTable data={[]}/>
+            {/* <TeamResultsTable data={[]} /> */}
             <UserScoreTable data={userScoreData} />
         </div>
     )

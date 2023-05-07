@@ -19,13 +19,13 @@ const Stage = () => {
 
     useEffect(() => {
         axios.get(`/api/stage`, { params: { raceId, stagenr } })
-             .then(res => {
-                 setStageState(res.data)
-             })
-             .catch(function (error) {
-                 throw error
-             });
-    }, [raceId, navigate])
+            .then(res => {
+                setStageState(res.data)
+            })
+            .catch(function (error) {
+                throw error
+            });
+    }, [raceId, stagenr, navigate])
 
 
     // Wss dit nog omgooien zodat de etappe navigatie hierin gezet kan worden
@@ -34,7 +34,7 @@ const Stage = () => {
             case StageStateEnum.Selection:
                 return <StageSelection raceId={raceId!} stagenr={stagenr!} />
             case StageStateEnum.Started:
-                 return <StageResult raceId={raceId!} stagenr={stagenr!} />
+                return <StageResult raceId={raceId!} stagenr={stagenr!} />
             default:
                 return <></>
         }
