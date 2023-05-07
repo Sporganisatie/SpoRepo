@@ -1,5 +1,6 @@
-import { StageSelectableRider } from "./StageSelectableRider";
+import { StageSelectableRider } from "./StageSelectableRider"
 
-export interface TeamSelectionData {
+export interface StageSelectionData {
     team: StageSelectableRider[],
+    deadline: Date | null
 }

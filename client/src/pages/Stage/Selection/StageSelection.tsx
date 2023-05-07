@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
-import { StageSelectionData } from "../../teamselection/Models/StageSelectionData";
+import { StageSelectionData } from "../models/StageSelectionData";
 
 const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' };
 
