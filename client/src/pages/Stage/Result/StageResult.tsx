@@ -1,21 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
-// import { StageSelectionData } from "../../teamselection/Models/StageSelectionData";
-// import TeamResultsTable, { Teamresults } from "./TeamResultsTable";
-import UserScoreTable, { UserScore } from "./UserScoreTable";
+import TeamResultsTable from "./TeamResultsTable";
+import UserScoreTable from "./UserScoreTable";
+import { StageResultData } from "../models/StageResultData";
 
 const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const { raceId, stagenr } = props;
     document.title = `Etappe ${stagenr} resultaten`;
     const budgetParticipation = useBudgetContext();
-    // const [teamResultsData, setTeamResultsData] = useState<Teamresults[]>([]);
-    const [userScoreData, setUserScoreData] = useState<UserScore[]>([]);
+    const [data, setData] = useState<StageResultData>({ userScores: [], teamResult: [] });
 
     const loadData = () => {
         axios.get(`/api/stageresults`, { params: { raceId, stagenr, budgetParticipation } })
             .then(res => {
-                setUserScoreData(res.data)
+                setData(res.data)
             })
             .catch(function (error) {
                 throw error
@@ -28,8 +27,8 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
 
     return (
         <div>
-            {/* <TeamResultsTable data={[]} /> */}
-            <UserScoreTable data={userScoreData} />
+            <TeamResultsTable data={[]} />
+            <UserScoreTable data={data.userScores} />
         </div>
     )
 }

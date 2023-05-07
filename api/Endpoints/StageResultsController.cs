@@ -11,16 +11,14 @@ namespace SpoRE.Controllers;
 [ParticipationEndpoint(Order = 2)]
 public class StageResultsController : ControllerBase
 {
-    private readonly TeamSelectionClient TeamSelectionClient;
-    private readonly StageSelectionClient StageSelectionClient;
-    public StageResultsController(TeamSelectionClient teamSelectionClient, StageSelectionClient stageSelectionClient)
+    private readonly StageResultsClient StageResultsClient;
+    public StageResultsController(StageResultsClient stageResultsClient)
     {
-        TeamSelectionClient = teamSelectionClient;
-        StageSelectionClient = stageSelectionClient;
+        StageResultsClient = stageResultsClient;
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(StageSelectionData), 200)]
+    [ProducesResponseType(typeof(UserScore), 200)]
     public IActionResult GetAccountStageResults(int raceId, bool budgetParticipation, int stagenr)
-        => Ok(StageSelectionClient.GetAccountStageResults(raceId, budgetParticipation, stagenr));
+        => Ok(StageResultsClient.GetStageResultData(raceId, budgetParticipation, stagenr));
 }
