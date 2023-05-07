@@ -26,10 +26,10 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("stageResults")]
-    public IActionResult Get(string raceName, int year, int stagenr, bool mostRecent)
+    public async Task<IActionResult> GetAsync(string raceName, int year, int stagenr, bool mostRecent)
     {
-        if (mostRecent) Scraper.StageResults(StageClient.MostRecentStartedStage());
-        else Scraper.StageResults(raceName, year, stagenr);
+        if (mostRecent) await Scraper.StageResults(StageClient.MostRecentStartedStage());
+        else await Scraper.StageResultsAsync(raceName, year, stagenr);
         return Ok();
     }
 }

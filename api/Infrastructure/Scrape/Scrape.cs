@@ -25,10 +25,10 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(query);
     }
 
-    public void StageResults(string raceName, int year, int stagenr)
-        => StageResults(DB.Stages.Include(s => s.Race).SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
+    public async Task StageResultsAsync(string raceName, int year, int stagenr)
+        => await StageResults(DB.Stages.Include(s => s.Race).SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
 
-    internal void StageResults(Stage stage)
+    internal async Task StageResults(Stage stage)
     {
         HtmlWeb web = new HtmlWeb();
         var html = web.Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stage.Stagenr}").DocumentNode;
@@ -37,7 +37,8 @@ public partial class Scrape
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
                     .Select(x => x.QuerySelector("table"));
         var query = ResultsQuery(classifications.Zip(tables), stage);
-        DB.Database.ExecuteSqlRaw(query);
+        if (query.Equals("")) return;
+        await DB.Database.ExecuteSqlRawAsync(query);
 
         CalculateUserScores(stage.StageId);
     }

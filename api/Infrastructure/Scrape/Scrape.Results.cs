@@ -1,26 +1,27 @@
 using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using SpoRE.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
-
     public string ResultsQuery(IEnumerable<(string Tab, HtmlNode Results)> classificationTables, Stage stage)
     {
         var riderResults = new Dictionary<string, RiderResult>();
+        var teamWinners = new Dictionary<string, string>();
         foreach (var table in classificationTables)
         {
-            ProcessResults(table.Tab, table.Results, ref riderResults, stage.Type);
+            ProcessResults(table.Tab, table.Results, ref riderResults, stage.Type, ref teamWinners);
         }
-
+        UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
         UpdateDnfRiders(riderResults, stage);
         if (DB.Stages.Count(s => s.RaceId == stage.RaceId) == stage.Stagenr + 1)
         {
             // eindklassement
         }
-        // TODO nothing if empty results
+        if (!riderResults.Any()) return "";
         return BuildResultsQuery(riderResults.Values, stage);
     }
 
@@ -29,33 +30,47 @@ public partial class Scrape
         return @$"DELETE FROM results_points WHERE stage_id = {stage.StageId}; INSERT INTO results_points(stage_id, rider_participation_id, 
                 stagepos, stagescore, stageresult, gcpos, gcscore, gcresult, gcchange,
                 pointspos, pointsscore, pointsresult, pointschange, kompos, komscore, komresult, komchange,
-                yocpos, yocscore, yocresult, yocchange, totalscore)
+                yocpos, yocscore, yocresult, yocchange, teamscore, totalscore)
                 VALUES" + string.Join(", ", riderResults.Where(x => !x.Dnf).Select(rider =>
                 @$"(
                     {stage.StageId}, (SELECT rider_participation_id FROM rider_participation WHERE race_id = {stage.RaceId} AND rider_id = (SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')),
                     {rider.Stagepos}, {rider.Stagescore}, '{rider.Stageresult}', {rider.Gcpos}, {rider.Gcscore}, '{rider.Gcresult}', '{rider.Gcchange}',
                     {rider.Pointspos}, {rider.Pointsscore}, '{rider.Pointsresult}', '{rider.Pointschange}', {rider.Kompos}, {rider.Komscore}, '{rider.Komresult}', '{rider.Komchange}',
-                    {rider.Yocpos}, {rider.Yocscore}, '{rider.Yocresult}', '{rider.Yocchange}', {rider.Totalscore}
+                    {rider.Yocpos}, {rider.Yocscore}, '{rider.Yocresult}', '{rider.Yocchange}', {rider.Teamscore}, {rider.Totalscore}
                 )"));
+    }
+
+    private void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, string type)
+    {
+        foreach (var rider in riderResults)
+        {
+            foreach (var tab in tabs)
+            {
+                if (tab == "Teams") continue;
+                rider.Value.Teamscore += TeamScore(rider.Value, teamWinners[tab], tab, type);
+            }
+            rider.Value.Totalscore += rider.Value.Teamscore;
+        }
     }
 
     private void UpdateDnfRiders(Dictionary<string, RiderResult> riderResults, Stage stage)
     {
         var dnfRiders = riderResults.Values.Where(x => x.Dnf);
+        if (!dnfRiders.Any()) return;
         var query = $"UPDATE rider_participation SET dnf = TRUE WHERE race_id = {stage.RaceId} AND rider_id IN("
                     + string.Join(",", riderResults.Values.Where(x => x.Dnf).Select(rider => $"(SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')"))
                     + "); ";
-        Console.WriteLine(query);
-        // DB.Database.ExecuteSqlRaw(query);
+        DB.Database.ExecuteSqlRaw(query);
     }
 
-    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, string type)
+    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, string type, ref Dictionary<string, string> teamWinners)
     {
         if (tab == "Teams") return;
         var pcsRows = ResultsDict(htmlResults);
+        teamWinners[tab] = pcsRows.FirstOrDefault()?.Team;
         foreach (var pcsRow in pcsRows)
         {
-            riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId));
+            riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId, pcsRow.Team));
             riderResults[pcsRow.PcsId] = AddResults(riderResults[pcsRow.PcsId], pcsRow, tab);
         }
         foreach (var (key, value) in riderResults)
@@ -86,6 +101,7 @@ public partial class Scrape
             RankChange = GetRankChange(fields),
             PcsId = pcsId,
             Time = GetString(fields, "Time"),
+            Team = GetString(fields, "Team"),
             Points = GetString(fields, "Points"),
         };
     }
@@ -149,10 +165,11 @@ internal record PcsRow
     public string RankChange { get; set; }
     public string PcsId { get; set; }
     public string Time { get; set; }
+    public string Team { get; set; }
     public string Points { get; set; }
 }
 
-public record RiderResult(string PcsId)
+public record RiderResult(string PcsId, string Team)
 {
     public bool Dnf { get; set; }
     public int Stagepos { get; set; }
@@ -165,6 +182,7 @@ public record RiderResult(string PcsId)
     public int Pointsscore { get; set; }
     public int Komscore { get; set; }
     public int Yocscore { get; set; }
+    public int Teamscore { get; set; }
     public int Totalscore { get; set; }
     public string Stageresult { get; set; }
     public string Gcresult { get; set; }
