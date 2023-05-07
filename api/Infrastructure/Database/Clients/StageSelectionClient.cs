@@ -48,7 +48,7 @@ public class StageSelectionClient
                 DB.AccountParticipations.Where(ap => ap.Budgetparticipation == budgetParticipation),
                 ss => ss.AccountParticipationId,
                 ap => ap.AccountParticipationId,
-                (ss, ap) => new AccountStageResults(ap.Account, ss.Stagescore, ss.Totalscore)
+                (ss, ap) => new AccountStageResults(ap.Account, ss.Stagescore ?? 0, ss.Totalscore ?? 0)
             ).ToList().OrderByDescending(asr => asr.totalscore).ThenByDescending(asr => asr.stagescore);
     }
 

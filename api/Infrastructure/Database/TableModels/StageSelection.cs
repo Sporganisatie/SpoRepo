@@ -8,9 +8,9 @@ public class StageSelection
 
     public int StageId { get; set; }
 
-    public int Stagescore { get; set; }
+    public int? Stagescore { get; set; }
 
-    public int Totalscore { get; set; }
+    public int? Totalscore { get; set; }
 
     public int? KopmanId { get; set; }
 
