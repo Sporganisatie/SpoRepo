@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
 import Home from "./components/Home";
 import DesignSandbox from "./pages/DesignSandbox";
-import Testing from "./components/Testing";
+import Admin from "./pages/Admin";
 import UserProfile from "./pages/UserProfile";
 import Login from "./pages/Login";
 import Teamselection from "./pages/teamselection/Teamselection";
@@ -18,7 +18,7 @@ const Pages: JSX.Element[] = [
     <Route key="raceRouter" path="race/:raceId" element={<RaceRouter />} />,
     <Route key="stage" path="stage/:raceId/:stagenr" element={<Stage />} />,
     <Route key="joinRace" path="joinrace/:raceId" element={<JoinRace />} />,
-    <Route key="testing" path="testing" element={<Testing />} />
+    <Route key="admin" path="admin" element={<Admin />} />,
     // TODO zorg dat al het overige naar home gaat
 ];
 

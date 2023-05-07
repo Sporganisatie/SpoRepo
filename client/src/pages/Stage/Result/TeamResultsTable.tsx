@@ -2,50 +2,46 @@ import DataTable, { TableColumn } from 'react-data-table-component';
 import RiderLink from '../../../components/shared/RiderLink';
 import { Rider } from '../../../models/Rider';
 
-export interface Teamresults {
+export interface RiderScore {
     rider: Rider
-    stagescore: number,
-    gcscore: number,
-    pointsscore: number,
-    komscore: number,
-    yocscore: number,
-    teamscore: number,
-    totalscore: number,
+    stageScore: number,
+    stagePos: number,
+    classificationScore: number,
+    teamScore: number,
+    totalScore: number
 }
 
-const TeamResultsTable = ({ data }: {data: Teamresults[]}) => {
-    const columns: TableColumn<Teamresults>[] = [
+const TeamResultsTable = ({ data }: { data: RiderScore[] }) => {
+    const columns: TableColumn<RiderScore>[] = [
+        {
+            name: 'Positie',
+            width: "12%",
+            cell: (row: RiderScore) => row.stagePos == null ? "" : row.stagePos + "e",
+        },
         {
             name: 'Renner',
-            cell: (row: Teamresults) => <RiderLink rider={row.rider} />,
+            width: "35%",
+            cell: (row: RiderScore) => row.rider == null ? "Totaal" : <RiderLink rider={row.rider} />,
         },
         {
             name: 'Dag',
-            cell: (row: Teamresults) => row.stagescore,
+            width: "12%",
+            cell: (row: RiderScore) => row.stageScore,
         },
         {
-            name: 'AK',
-            cell: (row: Teamresults) => row.gcscore,
-        },
-        {
-            name: 'Punt',
-            cell: (row: Teamresults) => row.pointsscore,
-        },
-        {
-            name: 'Berg',
-            cell: (row: Teamresults) => row.komscore,
-        },
-        {
-            name: 'Jong',
-            cell: (row: Teamresults) => row.yocscore,
+            name: 'Klassementen',
+            width: "17%",
+            cell: (row: RiderScore) => row.classificationScore,
         },
         {
             name: 'Team',
-            cell: (row: Teamresults) => row.teamscore,
+            width: "12%",
+            cell: (row: RiderScore) => row.teamScore,
         },
         {
             name: "Totaal",
-            cell: (row: Teamresults) => row.totalscore
+            width: "12%",
+            cell: (row: RiderScore) => row.totalScore
         },
     ];
 

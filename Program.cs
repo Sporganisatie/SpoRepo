@@ -1,5 +1,6 @@
 using SpoRE.Helper;
 using SpoRE.Infrastructure.Database;
+using SpoRE.Infrastructure.Scrape;
 using SpoRE.Middleware;
 using SpoRE.Models.Settings;
 using SpoRE.Setup;
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddScoped<DatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<Userdata, Userdata>();
+builder.Services.AddScoped<Scrape, Scrape>();
 builder.Services.AddServicesAndClients();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerLogin();

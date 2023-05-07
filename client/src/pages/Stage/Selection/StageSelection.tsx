@@ -3,14 +3,7 @@ import { useEffect, useState } from "react";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
-import ArrowSelect from "../../../components/ArrowSelect";
-import { SelectOption } from "../../../components/Select";
-import { StageSelectionData } from "../../teamselection/Models/StageSelectionData";
-
-const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
-    displayValue: (i + 1).toString(),
-    value: (i + 1).toString(),
-}));
+import { StageSelectionData } from "../models/StageSelectionData";
 
 const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' };
 
@@ -24,7 +17,9 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const loadData = () => {
         axios.get(`/api/StageSelection`, { params: { raceId, stagenr, budgetParticipation } })
             .then(res => {
-                setData({ team: res.data.team, deadline: new Date(res.data.deadline) }) // TODO date handling in axios interceptor
+                var deadline = new Date(res.data.deadline); // TODO date handling in axios interceptor
+                deadline.setHours(deadline.getHours() + 2)
+                setData({ team: res.data.team, deadline })
             })
             .catch(function (error) {
                 throw error
@@ -59,11 +54,6 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
         <div>
             {stagenr === "1" && <button onClick={() => navigate("/")}>Teamselectie</button>}
             <div>Deadline: {data.deadline?.toLocaleDateString('nl-NL', options) ?? ""}</div>
-            <ArrowSelect
-                value={stagenr}
-                allowLooping={false}
-                options={stages}
-                onChange={(selectedValue) => { navigate(`/stage/${raceId}/${selectedValue}`) }} />
             <StageSelectionTeam data={data.team} updateRider={updateRider} loading={false} />
             {/* <TopKlassementen /> */}
         </div>

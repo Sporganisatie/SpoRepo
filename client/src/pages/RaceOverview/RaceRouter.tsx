@@ -18,10 +18,10 @@ const RaceRouter = () => {
     useEffect(() => {
         axios.get(`/api/Race`, { params: { raceId } })
             .then(res => {
-                switch (res.data) {
+                switch (res.data.state) {
                     case RaceStateEnum.NotJoined: navigate(`/joinrace/${raceId}`); return;
                     case RaceStateEnum.TeamSelection: navigate(`/teamselection/${raceId}`); return;
-                    case RaceStateEnum.Started: navigate(`/stage/${raceId}/1`); return;
+                    case RaceStateEnum.Started: navigate(`/stage/${raceId}/${res.data.currentStage}`); return;
                 };
                 // TODO wat als invalid race
             })
@@ -32,7 +32,7 @@ const RaceRouter = () => {
 
     return (
         <div>
-            Als je dit na 10s nog steeds ziet val Arjen lastig
+            Loading...
         </div>
     )
 }

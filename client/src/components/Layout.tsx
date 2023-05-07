@@ -4,9 +4,10 @@ import { BudgetStateProvider } from "./shared/BudgetContextProvider";
 
 const Layout = () => {
   return (
+    // Todo update navbar values
     <div className="content">
       <BudgetStateProvider>
-        <Navbar isLoggedIn={true} isAdmin={true} isLoading={false} racename={"tour"} currentStageLink={"/"} />
+        <Navbar isLoggedIn={true} isLoading={false} racename={"tour"} currentStageLink={"/"} />
         <div className="pageContainer">{<Outlet />}</div>
       </BudgetStateProvider>
     </div >
