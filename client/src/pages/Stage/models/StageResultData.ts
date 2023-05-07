@@ -1,7 +1,7 @@
-import { Teamresults } from "../Result/TeamResultsTable";
+import { RiderScore } from "../Result/TeamResultsTable";
 import { UserScore } from "../Result/UserScoreTable";
 
 export interface StageResultData {
     userScores: UserScore[],
-    teamResult: Teamresults[],
+    teamResult: RiderScore[],
 }

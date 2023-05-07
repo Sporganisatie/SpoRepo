@@ -27,7 +27,7 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
 
     return (
         <div>
-            <TeamResultsTable data={[]} />
+            <TeamResultsTable data={data.teamResult} />
             <UserScoreTable data={data.userScores} />
         </div>
     )

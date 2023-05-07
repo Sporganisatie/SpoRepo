@@ -34,7 +34,7 @@ const Stage = () => {
     }, [raceId, stagenr, navigate])
 
     const navigateStage = (newStage: string) => {
-        if (parseInt(newStage) < parseInt(stagenr!)) setStageState(StageStateEnum.None);
+        if (parseInt(newStage) < parseInt(stagenr!) && stageState == StageStateEnum.Selection) setStageState(StageStateEnum.None);
         navigate(`/stage/${raceId}/${newStage}`)
     }
 
