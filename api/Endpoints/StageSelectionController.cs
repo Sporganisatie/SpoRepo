@@ -2,15 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
-using SpoRE.Services;
 
 namespace SpoRE.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-[ParticipationEndpoint]
-// [PrestageStart]
+[PreStart(Order = 1)]
+[ParticipationEndpoint(Order = 2)]
 public class StageSelectionController : ControllerBase
 {
     private readonly TeamSelectionClient TeamSelectionClient;
@@ -24,7 +23,7 @@ public class StageSelectionController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(StageSelectionData), 200)]
     public IActionResult Get(int raceId, bool budgetParticipation, int stagenr)
-        => Ok(StageSelectionClient.GetTeam(stagenr));
+        => Ok(StageSelectionClient.GetData(raceId, stagenr));
 
     [HttpPost("rider")]
     [ProducesResponseType(typeof(int), 200)]

@@ -5,11 +5,9 @@ using SpoRE.Infrastructure.Database;
 namespace SpoRE.Attributes;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-public class ParticipationEndpointAttribute : Attribute, IActionFilter
+public class ParticipationEndpointAttribute : ActionFilterAttribute
 {
-    public void OnActionExecuted(ActionExecutedContext context) { }
-
-    public async void OnActionExecuting(ActionExecutingContext context)
+    public override async void OnActionExecuting(ActionExecutingContext context)
     {
         var accountClient = context.HttpContext.RequestServices.GetService<AccountClient>();
         var userData = context.HttpContext.RequestServices.GetService<Userdata>();

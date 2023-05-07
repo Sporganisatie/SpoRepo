@@ -72,6 +72,7 @@ function FilterElements(props: FiltersProps) {
                     props.updateFilter({ skill: selectedValue });
                 }} />
             <ArrowSelect
+                allowLooping={true}
                 options={teamOptions}
                 onChange={(selectedValue) => {
                     props.updateFilter({ team: selectedValue });

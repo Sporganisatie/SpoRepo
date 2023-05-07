@@ -12,11 +12,13 @@ const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamPr
     const columns: TableColumn<StageSelectableRider>[] = [
         {
             name: 'Naam',
-            cell: (row: StageSelectableRider) => <RiderLink rider={row.rider.rider} />
+            cell: (row: StageSelectableRider) => <RiderLink rider={row.rider.rider} />,
+            sortable: true
         },
         {
             name: 'Team',
             selector: (row: StageSelectableRider) => row.rider.team,
+            sortable: true
         },
         {
             name: "",

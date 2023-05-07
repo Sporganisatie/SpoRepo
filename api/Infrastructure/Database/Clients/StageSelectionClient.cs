@@ -15,9 +15,16 @@ public class StageSelectionClient
         User = userData;
     }
 
-    // get classifications wss in andere client
+    // TODO move logic, nu beetje aparte combinatie van queries en processing die eigelijk in service hoort
 
-    internal IEnumerable<StageSelectableRider> GetTeam(int stagenr)
+    internal StageSelectionData GetData(int raceId, int stagenr)
+    {
+        var team = GetTeam(stagenr);
+        var stageInfo = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
+        return new StageSelectionData(team, stageInfo.Starttime);
+    }
+
+    private IEnumerable<StageSelectableRider> GetTeam(int stagenr)
     {
         var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr)
             .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { ssr.RiderParticipationId, Kopman = ss.KopmanId == ssr.RiderParticipationId });

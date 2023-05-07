@@ -8,7 +8,8 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-[ParticipationEndpoint]
+[PreStart(Order = 1)]
+[ParticipationEndpoint(Order = 2)]
 public class TeamSelectionController : ControllerBase
 {
     private TeamSelectionService Service;

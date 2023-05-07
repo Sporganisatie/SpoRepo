@@ -21,6 +21,7 @@ public class RaceController : ControllerBase
 
     [HttpGet("join")]
     [ProducesResponseType(200)]
+    [PreStart]
     public IActionResult JoinRace(int raceId)
         => Ok(Service.JoinRace(raceId));
 }
