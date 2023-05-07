@@ -1,4 +1,5 @@
 // import axios from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StageResult from "./Result/StageResult";
@@ -17,14 +18,13 @@ const Stage = () => {
     const [stageState, setStageState] = useState(StageStateEnum.None)
 
     useEffect(() => {
-        // axios.get(`/api/stage`, { params: { raceId, stagenr } })
-        //     .then(res => {
-        //         setStageState(res.data)
-        //     })
-        //     .catch(function (error) {
-        //         throw error
-        //     });
-        setStageState(StageStateEnum.Started)
+        axios.get(`/api/stage`, { params: { raceId, stagenr } })
+             .then(res => {
+                 setStageState(res.data)
+             })
+             .catch(function (error) {
+                 throw error
+             });
     }, [raceId, navigate])
 
 
