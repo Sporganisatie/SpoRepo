@@ -1,6 +1,5 @@
 using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
-using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Infrastructure.Scrape;
@@ -21,8 +20,8 @@ public partial class Scrape
         {
             // eindklassement
         }
+        // TODO nothing if empty results
         return BuildResultsQuery(riderResults.Values, stage);
-
     }
 
     private string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)

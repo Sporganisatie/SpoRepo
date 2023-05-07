@@ -9,7 +9,7 @@ public class RaceClient
     }
 
     public bool StageStarted(int raceId, int stagenr)
-        => DateTime.Now >= DatabaseContext.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr).Starttime;
+        => DateTime.UtcNow >= DatabaseContext.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr).Starttime;
 
     public Stage StageInfo(int raceId, int stagenr)
         => DatabaseContext.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);

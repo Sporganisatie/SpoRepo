@@ -26,7 +26,7 @@ public partial class Scrape
     }
 
     public void StageResults(string raceName, int year, int stagenr)
-        => StageResults(DB.Stages.SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
+        => StageResults(DB.Stages.Include(s => s.Race).SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
 
     internal void StageResults(Stage stage)
     {

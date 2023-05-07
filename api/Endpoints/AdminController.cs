@@ -26,16 +26,17 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("stageResults")]
-    public IActionResult Get(string raceName, int year, int stagenr)
+    public IActionResult Get(string raceName, int year, int stagenr, bool mostRecent)
     {
-        // Scraper.StageResults(raceName, year, stagenr);
+        if (mostRecent) Scraper.StageResults(StageClient.MostRecentStartedStage());
+        else Scraper.StageResults(raceName, year, stagenr);
         return Ok();
     }
 
-    [HttpGet("stageResults")]
-    public IActionResult Get()
-    {
-        // Scraper.StageResults(StageClient.MostRecentStartedStage());
-        return Ok();
-    }
+    // [HttpGet("stageResults")]
+    // public IActionResult Get()
+    // {
+    //     // Scraper.StageResults(StageClient.MostRecentStartedStage());
+    //     return Ok();
+    // }
 }

@@ -8,7 +8,7 @@ const Admin = () => {
   const [raceName, setRace] = useState("giro");
 
   const submit = (params: any) => {
-    axios.get(`/api/Admin/stageResults`, params)
+    axios.get(`/api/Admin/stageResults`, { params })
       .then(res => {
 
       })
@@ -37,8 +37,8 @@ const Admin = () => {
         onChange={e => setYear(e.target.value)}
         placeholder="year"
       />
-      <button onClick={() => submit({ params: { raceName, year, stagenr } })}>Uitslag scrape</button>
-      <button onClick={() => submit({})}>Recentste finished scrape</button>
+      <button onClick={() => submit({ raceName, year, stagenr })}>Uitslag scrape</button>
+      <button onClick={() => submit({ mostRecent: true })}>Recentste finished scrape</button>
     </div>
   );
 };

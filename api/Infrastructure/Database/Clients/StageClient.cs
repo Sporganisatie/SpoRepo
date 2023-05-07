@@ -11,5 +11,5 @@ public class StageClient
     }
 
     internal Stage MostRecentStartedStage()
-        => DB.Stages.Where(s => s.Finished).Include(s => s.Race).OrderByDescending(s => s.Starttime).First();
+        => DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).ToList().First(s => s.Starttime < DateTime.UtcNow);
 }
