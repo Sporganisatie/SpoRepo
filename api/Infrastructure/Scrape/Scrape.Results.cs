@@ -119,7 +119,7 @@ public partial class Scrape
     private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab)
         => tab switch
         {
-            "" => riderResult with
+            "" or "Stage" => riderResult with
             {
                 Stagepos = pcsRow.Rank,
                 Stageresult = pcsRow.Time,
