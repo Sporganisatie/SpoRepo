@@ -40,20 +40,23 @@ public partial class Scrape
         if (query.Equals("")) return;
         await DB.Database.ExecuteSqlRawAsync(query);
 
-        CalculateUserScores(stage.StageId);
+        CalculateUserScores(stage);
     }
 
-    private void CalculateUserScores(int stageId)
+    private void CalculateUserScores(Stage stage)
     {
-        var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stageId).Include(ss => ss.AccountParticipation).ToList();
+        var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stage.StageId).Include(ss => ss.AccountParticipation).ToList();
 
         foreach (var stageSelection in stageSelections)
         {
             var minusTeamPoints = stageSelection.AccountParticipation.Budgetparticipation ?? false ? " - teamscore" : "";
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
-            var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stageId} AND rider_participation_id IN {selectedRiders})";
-            var kopmanscore = $"(SELECT stagescore/2 FROM results_points WHERE stage_id = {stageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId}))";
-            var query = $"UPDATE stage_selection SET stagescore = ({stagescore} + {kopmanscore}) WHERE stage_selection_id = {stageSelection.StageSelectionId}";
+            var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
+            var kopmanscore = $"(SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId}))";
+            var stageScoreAll = $"({stagescore} + {kopmanscore})";
+            var prevTotal = stage.Stagenr != 1 ? DB.StageSelections.Single(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1).Totalscore : 0;
+            var totalscore = $"{prevTotal} + {stageScoreAll}";
+            var query = $"UPDATE stage_selection SET stagescore = {stageScoreAll}, totalscore = {totalscore} WHERE stage_selection_id = {stageSelection.StageSelectionId}";
             DB.Database.ExecuteSqlRaw(query);
         }
     }

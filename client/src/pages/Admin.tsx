@@ -38,7 +38,7 @@ const Admin = () => {
         placeholder="year"
       />
       <button onClick={() => submit({ raceName, year, stagenr })}>Uitslag scrape</button>
-      <button onClick={() => submit({ mostRecent: true })}>Recentste finished scrape</button>
+      <button onClick={() => submit({ mostRecent: true })}>Recentste etappe</button>
     </div>
   );
 };
