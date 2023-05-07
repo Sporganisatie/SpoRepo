@@ -32,11 +32,4 @@ public class AdminController : ControllerBase
         else Scraper.StageResults(raceName, year, stagenr);
         return Ok();
     }
-
-    // [HttpGet("stageResults")]
-    // public IActionResult Get()
-    // {
-    //     // Scraper.StageResults(StageClient.MostRecentStartedStage());
-    //     return Ok();
-    // }
 }

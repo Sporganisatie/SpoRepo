@@ -24,7 +24,9 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const loadData = () => {
         axios.get(`/api/StageSelection`, { params: { raceId, stagenr, budgetParticipation } })
             .then(res => {
-                setData({ team: res.data.team, deadline: new Date(res.data.deadline) }) // TODO date handling in axios interceptor
+                var deadline = new Date(res.data.deadline); // TODO date handling in axios interceptor
+                deadline.setHours(deadline.getHours() + 2)
+                setData({ team: res.data.team, deadline })
             })
             .catch(function (error) {
                 throw error
