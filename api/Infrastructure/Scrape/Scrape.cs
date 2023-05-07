@@ -26,10 +26,12 @@ public partial class Scrape
     }
 
     public void StageResults(string raceName, int year, int stagenr)
+        => StageResults(DB.Stages.SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
+
+    internal void StageResults(Stage stage)
     {
-        var stage = DB.Stages.SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName);
         HtmlWeb web = new HtmlWeb();
-        var html = web.Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/stage-{stagenr}").DocumentNode;
+        var html = web.Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stage.Stagenr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
         var tables = html.QuerySelectorAll(".result-cont .subTabs")
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")

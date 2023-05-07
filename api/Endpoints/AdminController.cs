@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Infrastructure.Scrape;
 
 namespace SpoRE.Controllers;
@@ -7,12 +8,14 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Admin]
-public class ScrapeController : ControllerBase
+public class AdminController : ControllerBase
 {
     private readonly Scrape Scraper;
-    public ScrapeController(Scrape scrape)
+    private readonly StageClient StageClient;
+    public AdminController(Scrape scrape, StageClient stageClient)
     {
         Scraper = scrape;
+        StageClient = stageClient;
     }
 
     [HttpGet("startlist")]
@@ -25,7 +28,14 @@ public class ScrapeController : ControllerBase
     [HttpGet("stageResults")]
     public IActionResult Get(string raceName, int year, int stagenr)
     {
-        Scraper.StageResults(raceName, year, stagenr);
+        // Scraper.StageResults(raceName, year, stagenr);
+        return Ok();
+    }
+
+    [HttpGet("stageResults")]
+    public IActionResult Get()
+    {
+        // Scraper.StageResults(StageClient.MostRecentStartedStage());
         return Ok();
     }
 }

@@ -2,28 +2,43 @@ import { useState } from "react";
 import axios from "axios";
 
 const Admin = () => {
-  const [todo, setTodo] = useState("");
+  document.title = "Admin";
+  const [stagenr, setStagenr] = useState("");
+  const [year, setYear] = useState("2023");
+  const [raceName, setRace] = useState("giro");
 
-  const handleSubmit = () => {
-    axios.get("/api/testdata")
+  const submit = (params: any) => {
+    axios.get(`/api/Admin/stageResults`, params)
       .then(res => {
-        console.log("Todo submitted successfully!");
-        setTodo("");
+
       })
       .catch(err => {
         console.error(err);
       });
-  };
+  }
 
   return (
     <div>
       <input
         type="text"
-        value={todo}
-        onChange={e => setTodo(e.target.value)}
+        value={stagenr}
+        onChange={e => setStagenr(e.target.value)}
         placeholder="stage"
       />
-      <button onClick={handleSubmit}>Uitslag scrape</button>
+      <input
+        type="text"
+        value={raceName}
+        onChange={e => setRace(e.target.value)}
+        placeholder="race"
+      />
+      <input
+        type="text"
+        value={year}
+        onChange={e => setYear(e.target.value)}
+        placeholder="year"
+      />
+      <button onClick={() => submit({ params: { raceName, year, stagenr } })}>Uitslag scrape</button>
+      <button onClick={() => submit({})}>Recentste finished scrape</button>
     </div>
   );
 };

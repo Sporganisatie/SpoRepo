@@ -10,13 +10,13 @@ public class Stage
 
     public DateTime? Starttime { get; set; }
 
-    public bool? Finished { get; set; }
+    public bool Finished { get; set; }
 
-    public bool? Complete { get; set; }
+    public bool Complete { get; set; }
 
     public string Type { get; set; }
 
-    public int? Weight { get; set; }
+    public int Weight { get; set; }
 
     public virtual Race Race { get; set; }
 
