@@ -20,7 +20,7 @@ const onResponseError = (
       navigate("/");
       break;
     case 423:
-      navigate("/stageresults");
+      navigate("/");
       break;
   }
 };

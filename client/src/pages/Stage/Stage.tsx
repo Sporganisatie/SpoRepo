@@ -1,6 +1,8 @@
 // import axios from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import StageResult from "./Result/StageResult";
 import StageSelection from "./Selection/StageSelection";
 
 enum StageStateEnum {
@@ -16,15 +18,14 @@ const Stage = () => {
     const [stageState, setStageState] = useState(StageStateEnum.None)
 
     useEffect(() => {
-        // axios.get(`/api/stage`, { params: { raceId, stagenr } })
-        //     .then(res => {
-        //         setStageState(res.data)
-        //     })
-        //     .catch(function (error) {
-        //         throw error
-        //     });
-        setStageState(StageStateEnum.Selection)
-    }, [raceId, navigate])
+        axios.get(`/api/stage`, { params: { raceId, stagenr } })
+            .then(res => {
+                setStageState(res.data)
+            })
+            .catch(function (error) {
+                throw error
+            });
+    }, [raceId, stagenr, navigate])
 
 
     // Wss dit nog omgooien zodat de etappe navigatie hierin gezet kan worden
@@ -32,8 +33,8 @@ const Stage = () => {
         switch (stageState) {
             case StageStateEnum.Selection:
                 return <StageSelection raceId={raceId!} stagenr={stagenr!} />
-            // case StageStateEnum.Started:
-            //     return <StageResult />
+            case StageStateEnum.Started:
+                return <StageResult raceId={raceId!} stagenr={stagenr!} />
             default:
                 return <></>
         }
