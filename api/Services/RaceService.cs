@@ -2,39 +2,41 @@
 using SpoRE.Helper;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models;
+using SpoRE.Models.Response;
 
 namespace SpoRE.Services;
 
 public class RaceService
 {
-    private readonly AccountClient _accountClient;
-    private readonly RaceClient _raceClient;
+    private readonly AccountClient AccountClient;
+    private readonly RaceClient RaceClient;
     private readonly Userdata User;
     private readonly TeamSelectionClient TeamClient;
 
     public RaceService(AccountClient accountClient, RaceClient raceClient, Userdata userData, TeamSelectionClient databaseContext)
     {
-        _accountClient = accountClient;
-        _raceClient = raceClient;
+        AccountClient = accountClient;
+        RaceClient = raceClient;
         User = userData;
         TeamClient = databaseContext;
     }
 
-    internal async Task<Result<RaceStateEnum>> GetRaceState(int raceId)
-     => await _accountClient.GetParticipationCount(User.Id, raceId) // TODO ook kijken of race gestart is
+    internal async Task<Result<RaceState>> GetRaceState(int raceId)
+     => await AccountClient.GetParticipationCount(User.Id, raceId)
             .ActAsync(participationCount =>
             {
-                // get race has finished
-                if (_raceClient.StageStarted(raceId, 1))
+                var currStage = RaceClient.CurrentStage(raceId);
+                if (currStage > 0)
                 {
-                    return RaceStateEnum.Started;
+                    // get race has finished
+                    return new RaceState(RaceStateEnum.Started, currStage);
                 };
                 return RaceState(participationCount);
             });
 
-    private Result<RaceStateEnum> RaceState(int participationCount)
+    private Result<RaceState> RaceState(int participationCount)
     {
-        return participationCount > 0 ? RaceStateEnum.TeamSelection : RaceStateEnum.NotJoined;
+        return new RaceState(participationCount > 0 ? RaceStateEnum.TeamSelection : RaceStateEnum.NotJoined, 0);
     }
 
     public Task<Result> JoinRace(int raceId)
