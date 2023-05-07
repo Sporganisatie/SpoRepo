@@ -22,5 +22,5 @@ public class StageResultsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(StageSelectionData), 200)]
     public IActionResult GetAccountStageResults(int raceId, bool budgetParticipation, int stagenr)
-        => Ok(StageSelectionClient.GetAccountStageResults(raceId, stagenr));
+        => Ok(StageSelectionClient.GetAccountStageResults(raceId, budgetParticipation, stagenr));
 }

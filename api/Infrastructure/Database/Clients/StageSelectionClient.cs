@@ -41,15 +41,15 @@ public class StageSelectionClient
         return team.ToList();
     }
 
-    public IEnumerable<AccountStageResults> GetAccountStageResults(int raceId, int stagenr)
+    public IEnumerable<AccountStageResults> GetAccountStageResults(int raceId, bool budgetParticipation, int stagenr)
     {
         return DB.StageSelections.Where(ss => ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
             .Join(
-                DB.AccountParticipations,
+                DB.AccountParticipations.Where(ap => ap.Budgetparticipation == budgetParticipation),
                 ss => ss.AccountParticipationId,
                 ap => ap.AccountParticipationId,
                 (ss, ap) => new AccountStageResults(ap.Account, ss.Stagescore, ss.Totalscore)
-            ).ToList();
+            ).ToList().OrderByDescending(asr => asr.totalscore).ThenByDescending(asr => asr.stagescore);
     }
 
     internal int AddRider(int riderParticipationId, int stagenr)
