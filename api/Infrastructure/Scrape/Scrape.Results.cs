@@ -7,7 +7,7 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
-    public string ResultsQuery(IEnumerable<(string Tab, HtmlNode Results)> classificationTables, Stage stage)
+    private string ResultsQuery(IEnumerable<(string Tab, HtmlNode Results)> classificationTables, Stage stage)
     {
         var riderResults = new Dictionary<string, RiderResult>();
         var teamWinners = new Dictionary<string, string>();
@@ -205,7 +205,7 @@ internal record PcsRow
     public string Points { get; set; }
 }
 
-public record RiderResult(string PcsId, string Team)
+internal record RiderResult(string PcsId, string Team)
 {
     public bool Dnf { get; set; }
     public int Stagepos { get; set; }

@@ -25,13 +25,12 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(query);
     }
 
-    public async Task StageResultsAsync(string raceName, int year, int stagenr)
+    public async Task StageResults(string raceName, int year, int stagenr)
         => await StageResults(DB.Stages.Include(s => s.Race).SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
 
-    internal async Task StageResults(Stage stage)
+    public async Task StageResults(Stage stage)
     {
-        HtmlWeb web = new HtmlWeb();
-        var html = web.Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stage.Stagenr}").DocumentNode;
+        var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stage.Stagenr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
         var tables = html.QuerySelectorAll(".result-cont .subTabs")
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
@@ -56,7 +55,8 @@ public partial class Scrape
             var stageScoreAll = $"({stagescore} + {kopmanscore})";
             var prevTotal = stage.Stagenr != 1 ? DB.StageSelections.Single(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1).Totalscore : 0;
             var totalscore = $"{prevTotal} + {stageScoreAll}";
-            var query = $"UPDATE stage_selection SET stagescore = {stageScoreAll}, totalscore = {totalscore} WHERE stage_selection_id = {stageSelection.StageSelectionId}";
+            var query = $"UPDATE stage_selection SET stagescore = {stageScoreAll}, totalscore = {totalscore} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
+            // query += update alle latere etappes met nieuwe totalscore // TODO
             DB.Database.ExecuteSqlRaw(query);
         }
     }
@@ -78,4 +78,15 @@ public partial class Scrape
             // "vuelta" => "Filename",
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    internal DateTime GetFinishTime()
+    {
+        // TODO dynamic based on race
+        var raceString = "Giro d'Italia";
+        var html = new HtmlWeb().Load($"https://www.procyclingstats.com").DocumentNode;
+
+        var raceRow = html.QuerySelectorAll("table.next-to-finish tr").First(tr => tr.InnerText.Contains(raceString));
+        if (raceRow is null) return DateTime.UtcNow.AddHours(2); // try again in ~1 hour
+        return DateTime.Parse(raceRow.QuerySelectorAll("td").First().InnerText);
+    }
 }

@@ -29,7 +29,7 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> GetAsync(string raceName, int year, int stagenr, bool mostRecent)
     {
         if (mostRecent) await Scraper.StageResults(StageClient.MostRecentStartedStage());
-        else await Scraper.StageResultsAsync(raceName, year, stagenr);
+        else await Scraper.StageResults(raceName, year, stagenr);
         return Ok();
     }
 }

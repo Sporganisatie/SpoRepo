@@ -48,5 +48,8 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); ;
+#pragma warning disable 4014 // Disable "Because this call is not awaited..." warning
+Task.Run(() => new Scheduler(app.Services).RunTimer());
+#pragma warning restore 4014 // Restore the warning
 
 app.Run();

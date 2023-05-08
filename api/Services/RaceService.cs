@@ -28,7 +28,7 @@ public class RaceService
                 if (RaceClient.StageStarted(raceId, 1))
                 {
                     // get race has finished
-                    return new RaceState(RaceStateEnum.Started, RaceClient.CurrentStage(raceId));
+                    return new RaceState(RaceStateEnum.Started, RaceClient.CurrentStagenr(raceId));
                 };
                 return RaceState(participationCount);
             });
