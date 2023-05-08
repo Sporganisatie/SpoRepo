@@ -17,12 +17,48 @@ public partial class Scrape
         }
         UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
         UpdateDnfRiders(riderResults, stage);
+        StageComplete(stage, riderResults);
+
         if (DB.Stages.Count(s => s.RaceId == stage.RaceId) == stage.Stagenr + 1)
         {
             // eindklassement
         }
         if (!riderResults.Any()) return "";
         return BuildResultsQuery(riderResults.Values, stage);
+    }
+
+    private void StageComplete(Stage stage, Dictionary<string, RiderResult> riderResults)
+    {
+        stage.Finished = true;
+        var dnfCount = riderResults.Count(r => r.Value.Dnf);
+        var stageCount = riderResults.Count(r => r.Value.Stagepos != 0);
+        var gcCount = riderResults.Count(r => r.Value.Gcpos != 0);
+        var pointsCount = riderResults.Count(r => r.Value.Pointspos != 0);
+        var komCount = riderResults.Count(r => r.Value.Kompos != 0);
+        var yocCount = riderResults.Count(r => r.Value.Yocpos != 0);
+        if (stage.Stagenr == 1)
+        {
+            var totalRiders = DB.RiderParticipations.Count(rp => rp.RaceId == stage.RaceId);
+            var stageComplete = totalRiders == stageCount + dnfCount;
+            var gcComplete = totalRiders == gcCount + dnfCount;
+            var pointsComplete = pointsCount > 0;
+            var komplete = komCount > 0; // Soms manual update nodig als bergpunten ontbreken in etappe 1
+            var yocComplete = yocCount > 0;
+            stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
+        }
+        else
+        {
+            var prevResult = DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stage.Stagenr - 1 && rp.Stage.RaceId == stage.RaceId);
+            var stageComplete = prevResult.Count(p => p.Stagepos != 0) == stageCount + dnfCount;
+            var gcComplete = prevResult.Count(p => p.Gcpos != 0) == gcCount + dnfCount;
+            var pointsComplete = prevResult.Count(p => p.Pointspos != 0) <= pointsCount + dnfCount;
+            var komplete = prevResult.Count(p => p.Kompos != 0) <= komCount + dnfCount;
+            var yocComplete = prevResult.Count(p => p.Yocpos != 0) <= yocCount + dnfCount;
+            stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
+        }
+
+
+        DB.SaveChanges();
     }
 
     private string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)
