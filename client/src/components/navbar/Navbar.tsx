@@ -49,8 +49,8 @@ const Navbar = (props: NavbarProps) => {
         <FontAwesomeIcon icon={faUser} />
       </Link>
       {localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).id <= 5 &&
-        <div> Budget
-          <input type="checkbox" checked={budget} onClick={() => dispatch({})} onChange={() => { }} /></div>}
+        <div style={{ cursor: 'pointer' }} onClick={() => dispatch({})}> Budget
+          <input type="checkbox" checked={budget} onChange={() => { }} /></div>}
     </div>
   )
 }
