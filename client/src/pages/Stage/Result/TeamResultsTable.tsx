@@ -16,7 +16,7 @@ const TeamResultsTable = ({ data }: { data: RiderScore[] }) => {
         {
             name: 'Positie',
             width: "12%",
-            cell: (row: RiderScore) => row.stagePos == null || row.stagePos == 0 ? "" : row.stagePos + "e",
+            cell: (row: RiderScore) => row.stagePos == null || row.stagePos === 0 ? "" : row.stagePos + "e",
         },
         {
             name: 'Renner',
