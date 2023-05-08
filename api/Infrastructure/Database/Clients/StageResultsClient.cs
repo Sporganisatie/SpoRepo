@@ -38,18 +38,20 @@ public class StageResultsClient
 
     private IEnumerable<RiderScore> GetRiderScores(int raceId, int stagenr, bool budgetParticipation)
     {
-        var query = from ssr in DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.Stage.Stagenr == stagenr && ssr.StageSelection.AccountParticipationId == User.ParticipationId)
-                    join rp in DB.ResultsPoints.Include(rp => rp.RiderParticipation.Rider) on ssr.RiderParticipationId equals rp.RiderParticipationId
-                    where rp.Stage.Stagenr == stagenr && rp.Stage.RaceId == raceId
+        var query = from ssr in DB.StageSelectionRiders.Include(ssr => ssr.RiderParticipation.Rider)
+                    join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
+                    from rp in results.DefaultIfEmpty()
+                    where ssr.StageSelection.Stage.Stagenr == stagenr && ssr.StageSelection.AccountParticipationId == User.ParticipationId
                     select new RiderScore
                     {
-                        Rider = rp.RiderParticipation.Rider,
+                        Rider = ssr.RiderParticipation.Rider,
                         StagePos = rp.Stagepos,
                         StageScore = (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 1.5) : rp.Stagescore) ?? 0,
                         ClassificationScore = rp.Gcscore + rp.Pointsscore + rp.Komscore + rp.Yocscore ?? 0,
                         TeamScore = budgetParticipation ? 0 : rp.Teamscore ?? 0,
                         TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 0.5) : 0)
                     };
+
         return query.ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
     }
 
