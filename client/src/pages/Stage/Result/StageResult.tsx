@@ -12,7 +12,7 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const [data, setData] = useState<StageResultData>({ userScores: [], teamResult: [] });
 
     const loadData = () => {
-        axios.get(`/api/stageresults`, { params: { raceId, stagenr, budgetParticipation } })
+        axios.get(`/api/stageresult`, { params: { raceId, stagenr, budgetParticipation } })
             .then(res => {
                 setData(res.data)
             })

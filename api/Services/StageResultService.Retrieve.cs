@@ -1,28 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using SpoRE.Helper;
 using SpoRE.Models.Response;
-using Z.EntityFramework.Plus;
 
-namespace SpoRE.Infrastructure.Database;
+namespace SpoRE.Services;
 
-public class StageResultsClient
+public partial class StageResultService
 {
-    private readonly Userdata User;
-    private readonly DatabaseContext DB;
-    public StageResultsClient(DatabaseContext databaseContext, Userdata userData)
-    {
-        DB = databaseContext;
-        User = userData;
-    }
-
-    public StageResultData GetStageResultData(int raceId, bool budgetParticipation, int stagenr)
-    {
-        var userScores = GetUserScores(raceId, budgetParticipation, stagenr);
-        var teamResult = GetTeamResult(raceId, stagenr, budgetParticipation);
-        return new(userScores, teamResult);
-    }
-
-    private IEnumerable<RiderScore> GetTeamResult(int raceId, int stagenr, bool budgetParticipation)
+    public IEnumerable<RiderScore> GetTeamResult(int raceId, int stagenr, bool budgetParticipation)
     {
         var riderScores = GetRiderScores(raceId, stagenr, budgetParticipation).ToList();
 
@@ -55,7 +38,7 @@ public class StageResultsClient
         return query.ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
     }
 
-    private IEnumerable<UserScore> GetUserScores(int raceId, bool budgetParticipation, int stagenr)
+    public IEnumerable<UserScore> GetUserScores(int raceId, bool budgetParticipation, int stagenr)
         => DB.StageSelections.Where(ss => ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
             .Join(
                 DB.AccountParticipations.Where(ap => ap.Budgetparticipation == budgetParticipation),

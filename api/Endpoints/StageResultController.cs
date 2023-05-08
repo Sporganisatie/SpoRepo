@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
+using SpoRE.Services;
 
 namespace SpoRE.Controllers;
 
@@ -9,16 +10,16 @@ namespace SpoRE.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ParticipationEndpoint(Order = 2)]
-public class StageResultsController : ControllerBase
+public class StageResultController : ControllerBase
 {
-    private readonly StageResultsClient StageResultsClient;
-    public StageResultsController(StageResultsClient stageResultsClient)
+    private readonly StageResultService Service;
+    public StageResultController(StageResultService service)
     {
-        StageResultsClient = stageResultsClient;
+        Service = service;
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(UserScore), 200)]
     public IActionResult GetAccountStageResults(int raceId, bool budgetParticipation, int stagenr)
-        => Ok(StageResultsClient.GetStageResultData(raceId, budgetParticipation, stagenr));
+        => Ok(Service.StageResultData(raceId, budgetParticipation, stagenr));
 }
