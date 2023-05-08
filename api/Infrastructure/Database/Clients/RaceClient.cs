@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace SpoRE.Infrastructure.Database;
 
 public class RaceClient
@@ -15,5 +17,5 @@ public class RaceClient
         => DB.Stages.Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).First()?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId);
 
     public Stage CurrentStage(int raceId)
-        => DB.Stages.Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).First();
+        => DB.Stages.Include(s => s.Race).Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).First();
 }
