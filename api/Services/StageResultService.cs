@@ -17,7 +17,6 @@ public partial class StageResultService
         User = userData;
     }
 
-
     public StageResultData StageResultData(int raceId, bool budgetParticipation, int stagenr)
     {
         var userScores = GetUserScores(raceId, budgetParticipation, stagenr);

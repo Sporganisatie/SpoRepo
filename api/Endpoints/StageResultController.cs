@@ -13,6 +13,7 @@ namespace SpoRE.Controllers;
 public class StageResultController : ControllerBase
 {
     private readonly StageResultService Service;
+
     public StageResultController(StageResultService service)
     {
         Service = service;
