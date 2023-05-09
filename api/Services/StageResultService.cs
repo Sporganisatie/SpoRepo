@@ -25,8 +25,10 @@ public partial class StageResultService
         return new(userScores, teamResult);
     }
 
-    public List<UserSelection> AllStageSelections(int raceId, bool budgetParticipation, int stagenr)
+    public IEnumerable<UserSelection> AllStageSelections(int raceId, bool budgetParticipation, int stagenr)
     {
+        if (DB.Stages.Single(s => s.RaceId == raceId && s.Stagenr == stagenr).Starttime > DateTime.UtcNow) return null;
+
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
         var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
         var users = DB.StageSelections.Include(ss => ss.AccountParticipation.Account).Where(ss => ss.Stage.Stagenr == stagenr && ss.Stage.RaceId == raceId && ss.AccountParticipation.Budgetparticipation == budgetParticipation).Select(ss => new { ss.StageSelectionId, ss.AccountParticipation.Account.Username }).ToList();
@@ -43,10 +45,12 @@ public partial class StageResultService
                             Rider = ssr.RiderParticipation.Rider,
                             StagePos = rp.Stagepos,
                             TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 0.5) : 0),
-                            Selected = stageSelection.Contains(ssr.RiderParticipationId) ? SelectedEnum.InStageSelection : teamSelection.Contains(ssr.RiderParticipationId) ? SelectedEnum.InTeam : SelectedEnum.None
+                            Selected = stageSelection.Contains(ssr.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(ssr.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                         };
-            output.Add(new UserSelection(user.Username, query.ToList()));
+            // add a totals row
+            output.Add(new UserSelection(user.Username, query.OrderBy(r => r.StagePos).ToList()));
         }
+        // order by totals
         return output;
     }
 }

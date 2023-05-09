@@ -1,3 +1,3 @@
 namespace SpoRE.Models.Response;
 
-public record UserSelection(string Username, List<StageComparisonRider> Riders);
+public record UserSelection(string Username, IEnumerable<StageComparisonRider> Riders);
