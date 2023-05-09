@@ -55,3 +55,17 @@ img.loadingGif {
   margin-bottom: 0;
   padding: 0;
 }
+
+.notselected> :first-child {
+  border: 2px white solid;
+  background-color: rgb(200, 200, 200);
+  color: black;
+  font-weight: bold;
+}
+
+.selected> :first-child {
+  border: 2px white solid;
+  background-color: rgb(59, 59, 59);
+  color: lightgray;
+  font-weight: bold;
+}

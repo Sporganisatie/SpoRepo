@@ -5,19 +5,11 @@ import { StageSelectedEnum, StageComparisonRider } from '../../models/UserSelect
 const conditionalRowStyles = [
     {
         when: (row: StageComparisonRider) => row.selected === StageSelectedEnum.InStageSelection,
-        style: {
-            border: '2px white solid',
-            backgroundColor: 'rgb(59, 59, 59)',
-            color: 'lightgray'
-        },
+        classNames: ["selected"]
     },
     {
         when: (row: StageComparisonRider) => row.selected === StageSelectedEnum.InTeam,
-        style: {
-            border: '2px black dotted',
-            backgroundColor: 'rgb(219, 219, 219)',
-            color: 'black'
-        },
+        classNames: ["notselected"]
     },
 ];
 
