@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Rider } from "../../models/Rider";
 
-const RiderLink = ({ rider }: { rider: Rider }) =>
+const RiderLink = ({ rider, kopman }: { rider: Rider, kopman?: boolean }) =>
     <Link className="tableLink" to={"/rider/" + rider.riderId}>
-        {rider.firstname + " " + rider.lastname}
+        {(kopman ? "*" : "") + rider.firstname + " " + rider.lastname}
     </Link>
 
 export default RiderLink
