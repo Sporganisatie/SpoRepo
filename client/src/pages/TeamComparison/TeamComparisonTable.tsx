@@ -1,10 +1,10 @@
 import DataTable, { TableColumn } from 'react-data-table-component';
 import RiderLink from '../../components/shared/RiderLink';
-import { StageSelectedEnum, StageComparisonRider, UserSelection } from '../../models/UserSelection';
+import { StageSelectedEnum, StageComparisonRider } from '../../models/UserSelection';
 
 const conditionalRowStyles = [
     {
-        when: (row: StageComparisonRider) => row.selected == StageSelectedEnum.InStageSelection,
+        when: (row: StageComparisonRider) => row.selected === StageSelectedEnum.InStageSelection,
         style: {
             border: '2px white solid',
             backgroundColor: 'rgb(59, 59, 59)',
@@ -21,7 +21,7 @@ const conditionalRowStyles = [
     },
 ];
 
-const TeamComparisonTable = (data: UserSelection) => {
+const TeamComparisonTable = ({ title, riders }: { title: string, riders: StageComparisonRider[] }) => {
     const columns: TableColumn<StageComparisonRider>[] = [
         {
             name: 'Positie',
@@ -32,7 +32,7 @@ const TeamComparisonTable = (data: UserSelection) => {
             name: 'Renner',
             minWidth: '200px',
             // width: "60%",
-            cell: (row: StageComparisonRider) => row.rider == null ? "Totaal" : <RiderLink rider={row.rider} />,
+            cell: (row: StageComparisonRider) => row.rider == null ? "Totaal" : <RiderLink rider={row.rider} kopman={row.kopman} />,
         },
         {
             name: "Totaal",
@@ -45,9 +45,9 @@ const TeamComparisonTable = (data: UserSelection) => {
     return (
         <div style={{ border: 'solid' }} >
             <DataTable
-                title={data.username}
+                title={title}
                 columns={columns}
-                data={data.riders}
+                data={riders}
                 conditionalRowStyles={conditionalRowStyles}
                 striped
                 dense

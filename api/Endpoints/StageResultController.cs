@@ -25,6 +25,6 @@ public class StageResultController : ControllerBase
 
     [HttpGet("comparison")]
     [ProducesResponseType(typeof(List<UserSelection>), 200)]
-    public IActionResult StageSelections(int raceId, bool budgetParticipation, int stagenr)
+    public IActionResult StageSelections(int raceId, bool budgetParticipation, int? stagenr)
         => Ok(Service.AllStageSelections(raceId, budgetParticipation, stagenr));
 }

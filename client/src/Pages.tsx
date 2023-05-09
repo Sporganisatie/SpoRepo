@@ -18,7 +18,8 @@ const Pages: JSX.Element[] = [
     <Route key="teamselection" path="/teamselection/:raceId" element={<Teamselection />} />,
     <Route key="raceRouter" path="race/:raceId" element={<RaceRouter />} />,
     <Route key="stage" path="stage/:raceId/:stagenr" element={<Stage />} />,
-    <Route key="teamcomparison" path="teamcomparison/:raceId/:stagenr" element={<TeamComparison />} />,
+    <Route key="stagecomparison" path="teamcomparison/:raceId/:stagenr" element={<TeamComparison />} />,
+    <Route key="teamcomparison" path="teamcomparison/:raceId/" element={<TeamComparison />} />,
     <Route key="joinRace" path="joinrace/:raceId" element={<JoinRace />} />,
     <Route key="admin" path="admin" element={<Admin />} />,
     // TODO zorg dat al het overige naar home gaat

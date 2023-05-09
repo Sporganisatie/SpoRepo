@@ -28,6 +28,7 @@ public partial class StageResultService
                     select new RiderScore
                     {
                         Rider = ssr.RiderParticipation.Rider,
+                        Kopman = ssr.RiderParticipationId == ssr.StageSelection.KopmanId,
                         StagePos = rp.Stagepos,
                         StageScore = (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 1.5) : rp.Stagescore) ?? 0,
                         ClassificationScore = rp.Gcscore + rp.Pointsscore + rp.Komscore + rp.Yocscore ?? 0,

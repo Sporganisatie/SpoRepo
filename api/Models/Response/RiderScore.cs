@@ -5,6 +5,7 @@ namespace SpoRE.Models.Response;
 public record RiderScore()
 {
     public Rider Rider { get; internal set; }
+    public bool Kopman { get; internal set; }
     public int? StagePos { get; internal set; }
     public int StageScore { get; internal set; }
     public int ClassificationScore { get; internal set; }
