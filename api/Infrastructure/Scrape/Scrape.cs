@@ -81,15 +81,13 @@ public partial class Scrape
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    internal DateTime GetFinishTime()
+    internal DateTime? GetFinishTime()
     {
         // TODO dynamic based on race
         var raceString = "Giro d'Italia";
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com").DocumentNode;
 
         var raceRow = html.QuerySelectorAll("table.next-to-finish tr").FirstOrDefault(tr => tr.InnerText.Contains(raceString));
-        // if null and on the same day but after start return now - 5 min
-        if (raceRow is null) return DateTime.UtcNow.AddHours(2); // try again in ~1 hour
-        return DateTime.Parse(raceRow.QuerySelectorAll("td").First().InnerText);
+        return raceRow is null ? null : DateTime.Parse(raceRow.QuerySelectorAll("td").First().InnerText);
     }
 }

@@ -29,7 +29,6 @@ public partial class Scrape
 
     private void StageComplete(Stage stage, Dictionary<string, RiderResult> riderResults)
     {
-        stage.Finished = true;
         var dnfCount = riderResults.Count(r => r.Value.Dnf);
         var stageCount = riderResults.Count(r => r.Value.Stagepos != 0);
         var gcCount = riderResults.Count(r => r.Value.Gcpos != 0);
@@ -57,7 +56,7 @@ public partial class Scrape
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
 
-
+        stage.Finished = stageCount > 0;
         DB.SaveChanges();
     }
 

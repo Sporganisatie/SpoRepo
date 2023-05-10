@@ -28,8 +28,9 @@ public class Scheduler
             var scrape = scope.ServiceProvider.GetService<Scrape>();
             if (!stage.Finished)
             {
-                var finishTime = scrape.GetFinishTime();
-                if ((finishTime - DateTime.UtcNow).TotalHours > 0) { ScheduleAction(finishTime - TimeSpan.FromMinutes(55)); return; }
+                var nullableFinishTime = scrape.GetFinishTime();
+
+                if (nullableFinishTime is { } finishtime && (finishtime - DateTime.UtcNow).TotalHours > 0) { ScheduleAction(finishtime - TimeSpan.FromMinutes(55)); return; }
             }
 
             await scrape.StageResults(stage);

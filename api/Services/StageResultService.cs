@@ -68,7 +68,7 @@ public partial class StageResultService
             output.Add(new UserSelection(user.Username, riderScores.Append(totals), gemistQuery.ToList()));
         }
         // order by totals
-        return output.OrderBy(x => x.Riders.Last().TotalScore);
+        return output.OrderByDescending(x => x.Riders.Last().TotalScore);
     }
 
     private IEnumerable<UserSelection> AllTeamSelections(int raceId, bool budgetParticipation)
