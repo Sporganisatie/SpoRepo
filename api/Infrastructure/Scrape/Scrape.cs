@@ -52,12 +52,14 @@ public partial class Scrape
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
             var kopmanscore = $"COALESCE((SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
-            var stageScoreAll = $"({stagescore} + {kopmanscore})";
+            var stageScoreTotal = $"({stagescore} + {kopmanscore})";
+            var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
+
             var prevTotal = stage.Stagenr != 1 ? DB.StageSelections.Single(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1).Totalscore : 0;
-            var totalscore = $"{prevTotal} + {stageScoreAll}";
-            var query = $"UPDATE stage_selection SET stagescore = {stageScoreAll}, totalscore = {totalscore} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
-            // query += update alle latere etappes met nieuwe totalscore // TODO
-            DB.Database.ExecuteSqlRaw(query);
+            var totalscore = $"{prevTotal} + {stageScoreTotal}";
+            var updateTotals = $"UPDATE stage_selection SET totalscore = {totalscore} WHERE stage_selection.account_participation_id = {stageSelection.AccountParticipationId} AND stage_id IN (SELECT stage_id FROM stage WHERE stage.stagenr >= {stage.Stagenr} AND race_id = {stage.RaceId}); ";
+
+            DB.Database.ExecuteSqlRaw(query + updateTotals);
         }
     }
 
