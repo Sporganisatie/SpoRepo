@@ -4,6 +4,7 @@ import { Rider } from '../../../models/Rider';
 
 export interface RiderScore {
     rider: Rider
+    kopman: boolean;
     stageScore: number,
     stagePos: number,
     classificationScore: number,
@@ -16,12 +17,12 @@ const TeamResultsTable = ({ data }: { data: RiderScore[] }) => {
         {
             name: 'Positie',
             width: "12%",
-            cell: (row: RiderScore) => row.stagePos == null ? "" : row.stagePos + "e",
+            cell: (row: RiderScore) => row.stagePos == null || row.stagePos === 0 ? "" : row.stagePos + "e",
         },
         {
             name: 'Renner',
             width: "35%",
-            cell: (row: RiderScore) => row.rider == null ? "Totaal" : <RiderLink rider={row.rider} />,
+            cell: (row: RiderScore) => row.rider == null ? "Totaal" : <RiderLink rider={row.rider} kopman={row.kopman} />,
         },
         {
             name: 'Dag',

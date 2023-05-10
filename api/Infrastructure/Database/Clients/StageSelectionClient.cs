@@ -31,12 +31,14 @@ public class StageSelectionClient
 
         var team = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                    let ap = ts.AccountParticipation
+                   let selected = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId)
+                   let isKopman = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman)
                    where ap.AccountParticipationId == User.ParticipationId
-                   orderby ts.RiderParticipation.Price descending
+                   orderby ts.RiderParticipation.Dnf, !isKopman, !selected, ts.RiderParticipation.Price descending
                    select new StageSelectableRider(
                     ts.RiderParticipation,
-                    stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId),
-                    stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman));
+                    selected,
+                    isKopman);
 
         return team.ToList();
     }
