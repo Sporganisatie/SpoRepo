@@ -8,6 +8,16 @@ export interface StageSelectionTeamProps {
     updateRider: (id: number, adding: boolean, type: string) => void,
 }
 
+const conditionalRowStyles = [
+    {
+        when: (row: StageSelectableRider) => row.rider.dnf,
+        style: {
+            backgroundColor: 'lightgrey',
+            color: 'grey',
+        },
+    },
+];
+
 const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamProps) => {
     const columns: TableColumn<StageSelectableRider>[] = [
         {
@@ -24,7 +34,7 @@ const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamPr
             name: "",
             cell: (row: StageSelectableRider) => {
                 return row.selected ? <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => updateRider(row.rider.riderParticipationId, false, "rider")}>-</button>
-                    : data.filter(x => x.selected).length < 9 ? <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => updateRider(row.rider.riderParticipationId, true, "rider")}>+</button>
+                    : (data.filter(x => x.selected).length < 9 && !row.rider.dnf) ? <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => updateRider(row.rider.riderParticipationId, true, "rider")}>+</button>
                         : <></>;
             }
         },
@@ -41,12 +51,12 @@ const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamPr
     return (
 
         <div style={{ width: "50%", borderStyle: "solid" }} >
-
             <DataTable
                 title={`Jouw opstelling ${data.filter(x => x.selected).length}/9`}
                 columns={columns}
                 data={data}
                 progressPending={loading}
+                conditionalRowStyles={conditionalRowStyles}
                 striped
                 highlightOnHover
                 pointerOnHover

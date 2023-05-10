@@ -56,7 +56,7 @@ public partial class StageResultService
             var gemistQuery = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                               join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr && rp.Totalscore > 0) on ts.RiderParticipationId equals rp.RiderParticipationId
                               where ts.AccountParticipationId == user.AccountParticipationId
-                                && !DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.StageSelectionId == user.StageSelectionId).Select(ssr => ssr.RiderParticipationId).Contains(ts.RiderParticipationId)
+                                && !DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.StageSelectionId == user.StageSelectionId).Any(ssr => ssr.RiderParticipationId == ts.RiderParticipationId)
                               select new StageComparisonRider
                               {
                                   Rider = ts.RiderParticipation.Rider,
