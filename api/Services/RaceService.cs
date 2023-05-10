@@ -25,11 +25,10 @@ public class RaceService
      => await AccountClient.GetParticipationCount(User.Id, raceId)
             .ActAsync(participationCount =>
             {
-                var currStage = RaceClient.CurrentStage(raceId);
-                if (currStage > 0)
+                if (RaceClient.StageStarted(raceId, 1))
                 {
                     // get race has finished
-                    return new RaceState(RaceStateEnum.Started, currStage);
+                    return new RaceState(RaceStateEnum.Started, RaceClient.CurrentStagenr(raceId));
                 };
                 return RaceState(participationCount);
             });

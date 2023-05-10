@@ -25,13 +25,12 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(query);
     }
 
-    public async Task StageResultsAsync(string raceName, int year, int stagenr)
+    public async Task StageResults(string raceName, int year, int stagenr)
         => await StageResults(DB.Stages.Include(s => s.Race).SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
 
-    internal async Task StageResults(Stage stage)
+    public async Task StageResults(Stage stage)
     {
-        HtmlWeb web = new HtmlWeb();
-        var html = web.Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stage.Stagenr}").DocumentNode;
+        var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stage.Stagenr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
         var tables = html.QuerySelectorAll(".result-cont .subTabs")
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
@@ -53,11 +52,14 @@ public partial class Scrape
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
             var kopmanscore = $"COALESCE((SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
-            var stageScoreAll = $"({stagescore} + {kopmanscore})";
+            var stageScoreTotal = $"({stagescore} + {kopmanscore})";
+            var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
+
             var prevTotal = stage.Stagenr != 1 ? DB.StageSelections.Single(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1).Totalscore : 0;
-            var totalscore = $"{prevTotal} + {stageScoreAll}";
-            var query = $"UPDATE stage_selection SET stagescore = {stageScoreAll}, totalscore = {totalscore} WHERE stage_selection_id = {stageSelection.StageSelectionId}";
-            DB.Database.ExecuteSqlRaw(query);
+            var totalscore = $"{prevTotal} + {stageScoreTotal}";
+            var updateTotals = $"UPDATE stage_selection SET totalscore = {totalscore} WHERE stage_selection.account_participation_id = {stageSelection.AccountParticipationId} AND stage_id IN (SELECT stage_id FROM stage WHERE stage.stagenr >= {stage.Stagenr} AND race_id = {stage.RaceId}); ";
+
+            DB.Database.ExecuteSqlRaw(query + updateTotals);
         }
     }
 
@@ -78,4 +80,14 @@ public partial class Scrape
             // "vuelta" => "Filename",
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    internal DateTime? GetFinishTime()
+    {
+        // TODO dynamic based on race
+        var raceString = "Giro d'Italia";
+        var html = new HtmlWeb().Load($"https://www.procyclingstats.com").DocumentNode;
+
+        var raceRow = html.QuerySelectorAll("table.next-to-finish tr").FirstOrDefault(tr => tr.InnerText.Contains(raceString));
+        return raceRow is null ? null : DateTime.Parse(raceRow.QuerySelectorAll("td").First().InnerText);
+    }
 }
