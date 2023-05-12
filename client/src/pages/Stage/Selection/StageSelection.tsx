@@ -4,6 +4,7 @@ import { useBudgetContext } from "../../../components/shared/BudgetContextProvid
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
 import { StageSelectionData } from "../models/StageSelectionData";
+import ClassificationOverview from "./ClassificationOverview";
 
 const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' };
 
@@ -12,14 +13,14 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
     document.title = `Etappe ${stagenr} opstelling`;
     const budgetParticipation = useBudgetContext();
     let navigate = useNavigate();
-    const [data, setData] = useState<StageSelectionData>({ team: [], deadline: null });
+    const [data, setData] = useState<StageSelectionData>({ team: [], deadline: null, classifications: { gc: [], points: [], kom: [], youth: [] } });
 
     const loadData = () => {
         axios.get(`/api/StageSelection`, { params: { raceId, stagenr, budgetParticipation } })
             .then(res => {
                 var deadline = new Date(res.data.deadline); // TODO date handling in axios interceptor
                 deadline.setHours(deadline.getHours() + 2)
-                setData({ team: res.data.team, deadline })
+                setData({ team: res.data.team, deadline, classifications: res.data.classifications })
             })
             .catch(function (error) {
                 throw error
@@ -52,12 +53,20 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
 
     return (
         <div>
+            <div style={{ margin: "10px 0" }}>Deadline: {data.deadline?.toLocaleDateString('nl-NL', options) ?? ""}</div>
             {stagenr === "1" && <button onClick={() => navigate("/")}>Teamselectie</button>}
-            <div>Deadline: {data.deadline?.toLocaleDateString('nl-NL', options) ?? ""}</div>
-            <StageSelectionTeam data={data.team} updateRider={updateRider} loading={false} />
-            {/* <TopKlassementen /> */}
+            <div style={{ display: "flex" }}>
+                <div style={{ margin: "0 5px" }}>
+                    <StageSelectionTeam data={data.team} updateRider={updateRider} loading={false} />
+                </div>
+                <div style={{ margin: "0 5px" }}>
+                    <ClassificationOverview data={data.classifications} />
+                </div>
+            </div>
         </div>
-    )
+    );
+
+
 }
 
 export default StageSelection;

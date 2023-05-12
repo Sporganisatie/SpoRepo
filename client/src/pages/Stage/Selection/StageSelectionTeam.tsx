@@ -49,8 +49,7 @@ const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamPr
     ];
 
     return (
-
-        <div style={{ width: "50%", borderStyle: "solid" }} >
+        <div style={{ borderStyle: "solid" }} >
             <DataTable
                 title={`Jouw opstelling ${data.filter(x => x.selected).length}/9`}
                 columns={columns}
