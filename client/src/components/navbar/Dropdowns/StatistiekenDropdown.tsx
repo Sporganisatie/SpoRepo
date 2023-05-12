@@ -9,7 +9,7 @@ const StatistiekenDropdown = (props: { raceSelected: boolean }) => {
                 // { url: "/statistics/rondewinsten", title: "Uitslagen per ronde" }
             ]}
             raceOnlyLinks={[
-                { url: "/teamcomparison/27/1", title: "Team overzichten" }, // TODO dynamic race id
+                { url: "/teamcomparison/27", title: "Team overzichten" }, // TODO dynamic race id
                 // { url: "/statistics/etappewinsten", title: "Uitslagen per etappe" },
                 // { url: "/statistics/allriders", title: "Alle renners" },
                 // { url: "/statistics/klassementen", title: "Klassementen" },
