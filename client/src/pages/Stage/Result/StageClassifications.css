@@ -1,0 +1,5 @@
+button.active {
+    /* Styles for the active button */
+    background-color: rgb(59, 59, 59);
+    color: white;
+}

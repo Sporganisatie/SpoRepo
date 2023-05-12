@@ -14,16 +14,17 @@ const classificationRowStyle = [
     },
 ];
 
-const SimpleClassification = ({ rows, title, resultColName }: { rows: ClassificationRow[], title: string, resultColName: string }) => {
+const SimpleClassification = ({ rows, title, resultColName, pagination }: { rows: ClassificationRow[], title: string, resultColName: string, pagination?: boolean }) => {
     const columns: TableColumn<ClassificationRow>[] = [
         {
             name: '',
+            maxWidth: '100px',
             selector: (row: ClassificationRow) => row.position,
             sortable: true
         },
         {
             name: 'Naam',
-            width: '200px',
+            minWidth: '200px',
             cell: (row: ClassificationRow) => <RiderLink rider={row.rider} />,
             sortable: true
         },
@@ -44,6 +45,8 @@ const SimpleClassification = ({ rows, title, resultColName }: { rows: Classifica
                 highlightOnHover
                 pointerOnHover
                 dense
+                pagination={pagination}
+                paginationPerPage={20}
             />
         </div>
     );

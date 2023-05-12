@@ -28,7 +28,7 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => {
     ];
 
     return (
-        <div style={{ width: "50%", borderStyle: "solid" }} >
+        <div style={{ borderStyle: "solid" }} >
             <DataTable
                 title="Poule stand"
                 columns={columns}

@@ -47,4 +47,60 @@ public partial class StageResultService
                 ap => ap.AccountParticipationId,
                 (ss, ap) => new UserScore(ap.Account, ss.Stagescore ?? 0, ss.Totalscore ?? 0)
             ).ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
+
+    public Classifications GetClassifications(int raceId, int stagenr, bool top5)
+    {
+        var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
+        var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
+
+        var mostRecentStage = DB.Stages.OrderByDescending(s => s.Stagenr).First(s => s.Finished && s.RaceId == raceId);
+
+        var stageResult = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Stagepos > 0).OrderBy(rp => rp.Stagepos)
+                          select new ClassificationRow
+                          {
+                              Rider = rp.RiderParticipation.Rider,
+                              Position = rp.Stagepos,
+                              Result = rp.Stageresult,
+                              Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                          };
+
+        var gcStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Gcpos > 0).OrderBy(rp => rp.Gcpos)
+                          select new ClassificationRow
+                          {
+                              Rider = rp.RiderParticipation.Rider,
+                              Position = rp.Gcpos,
+                              Result = rp.Gcresult,
+                              Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                          };
+
+        var pointsStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Pointspos > 0).OrderBy(rp => rp.Pointspos)
+                              select new ClassificationRow
+                              {
+                                  Rider = rp.RiderParticipation.Rider,
+                                  Position = rp.Pointspos,
+                                  Result = rp.Pointsresult,
+                                  Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                              };
+
+        var komStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Kompos > 0).OrderBy(rp => rp.Kompos)
+                           select new ClassificationRow
+                           {
+                               Rider = rp.RiderParticipation.Rider,
+                               Position = rp.Kompos,
+                               Result = rp.Komresult,
+                               Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                           };
+
+        var yocStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Yocpos > 0).OrderBy(rp => rp.Yocpos)
+                           select new ClassificationRow
+                           {
+                               Rider = rp.RiderParticipation.Rider,
+                               Position = rp.Yocpos,
+                               Result = rp.Yocresult,
+                               Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                           };
+
+        return top5 ? new(gcStandings.Take(5).ToList(), pointsStandings.Take(5).ToList(), komStandings.Take(5).ToList(), yocStandings.Take(5).ToList())
+                : new(gcStandings.ToList(), pointsStandings.ToList(), komStandings.ToList(), yocStandings.ToList()) { Stage = stageResult.ToList() };
+    }
 }

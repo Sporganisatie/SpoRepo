@@ -47,7 +47,7 @@ const TeamResultsTable = ({ data }: { data: RiderScore[] }) => {
     ];
 
     return (
-        <div style={{ width: "50%", borderStyle: "solid" }} >
+        <div style={{ borderStyle: "solid" }} >
             <DataTable
                 columns={columns}
                 data={data}

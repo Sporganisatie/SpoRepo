@@ -10,18 +10,22 @@ public partial class StageResultService
 {
     private readonly Userdata User;
     private readonly DatabaseContext DB;
+    private readonly RaceClient RaceClient;
 
-    public StageResultService(DatabaseContext databaseContext, Userdata userData)
+    public StageResultService(DatabaseContext databaseContext, Userdata userData, RaceClient raceClient)
     {
         DB = databaseContext;
         User = userData;
+        RaceClient = raceClient;
     }
 
     public StageResultData StageResultData(int raceId, bool budgetParticipation, int stagenr)
     {
+        if (!RaceClient.StageStarted(raceId, stagenr)) return new(new List<UserScore>(), new List<RiderScore>(), new Classifications(new List<ClassificationRow>(), new List<ClassificationRow>(), new List<ClassificationRow>(), new List<ClassificationRow>()));
         var userScores = GetUserScores(raceId, budgetParticipation, stagenr);
         var teamResult = GetTeamResult(raceId, stagenr, budgetParticipation);
-        return new(userScores, teamResult);
+        var classifications = GetClassifications(raceId, stagenr, top5: false);
+        return new(userScores, teamResult, classifications);
     }
 
     public IEnumerable<UserSelection> AllStageSelections(int raceId, bool budgetParticipation, int? stagenr)
