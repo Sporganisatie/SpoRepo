@@ -70,6 +70,7 @@ public partial class StageResultService
                               Rider = rp.RiderParticipation.Rider,
                               Position = rp.Gcpos,
                               Result = rp.Gcresult,
+                              Change = rp.Gcchange,
                               Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                           };
 
@@ -79,6 +80,7 @@ public partial class StageResultService
                                   Rider = rp.RiderParticipation.Rider,
                                   Position = rp.Pointspos,
                                   Result = rp.Pointsresult,
+                                  Change = rp.Pointschange,
                                   Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                               };
 
@@ -88,6 +90,7 @@ public partial class StageResultService
                                Rider = rp.RiderParticipation.Rider,
                                Position = rp.Kompos,
                                Result = rp.Komresult,
+                               Change = rp.Komchange,
                                Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                            };
 
@@ -97,6 +100,7 @@ public partial class StageResultService
                                Rider = rp.RiderParticipation.Rider,
                                Position = rp.Yocpos,
                                Result = rp.Yocresult,
+                               Change = rp.Yocchange,
                                Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                            };
 

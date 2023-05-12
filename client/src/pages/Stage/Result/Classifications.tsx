@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SimpleClassification from '../Selection/SimpleClassification';
 import { Classifications } from '../models/StageSelectionData';
-import './StageClassifications.css'; // Import the CSS file for styling
+import './StageClassifications.css';
 
 const StageClassifications = ({ data }: { data: Classifications }) => {
     const [activeButton, setActiveButton] = useState('Etappe');
