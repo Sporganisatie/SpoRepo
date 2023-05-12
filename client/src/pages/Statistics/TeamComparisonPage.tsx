@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import TeamComparison from "./TeamComparison";
+import TeamComparison from "../../components/shared/Comparison/TeamComparison";
 
 const TeamComparisonPage = () => {
     let { raceId } = useParams();

@@ -1,6 +1,6 @@
 import DataTable, { TableColumn } from 'react-data-table-component';
-import RiderLink from '../../components/shared/RiderLink';
-import { StageSelectedEnum, StageComparisonRider } from '../../models/UserSelection';
+import { StageComparisonRider, StageSelectedEnum } from '../../../models/UserSelection';
+import RiderLink from '../RiderLink';
 
 const conditionalRowStyles = [
     {

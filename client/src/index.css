@@ -69,3 +69,11 @@ img.loadingGif {
   color: lightgray;
   font-weight: bold;
 }
+
+.tableLink {
+  text-decoration: none;
+}
+
+.navbar_link {
+  text-decoration: none;
+}

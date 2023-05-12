@@ -5,7 +5,7 @@ import TeamResultsTable from "./TeamResultsTable";
 import UserScoreTable from "./UserScoreTable";
 import { StageResultData } from "../models/StageResultData";
 import StageClassifications from "./Classifications";
-import TeamComparison from "../../TeamComparison/TeamComparison";
+import TeamComparison from "../../../components/shared/Comparison/TeamComparison";
 
 const StageSelection = (props: { raceId: string, stagenr: string }) => {
     const { raceId, stagenr } = props;

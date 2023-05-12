@@ -48,6 +48,7 @@
   border-top: 1px solid #6e737a; /*gray-600*/
   padding: 4px;
   padding-right: 8px;
+  text-decoration: none;
 }
 
 .navbar_dropdown_item:hover {

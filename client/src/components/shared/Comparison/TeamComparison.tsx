@@ -1,9 +1,9 @@
 // import axios from "axios";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
+import { useBudgetContext } from "../BudgetContextProvider";
 import TeamComparisonTable from "./TeamComparisonTable";
-import { UserSelection } from "../../models/UserSelection";
+import { UserSelection } from "../../../models/UserSelection";
 
 const TeamComparison = ({ raceId, stagenr }: { raceId: string, stagenr?: string }) => {
     const budgetParticipation = useBudgetContext();
