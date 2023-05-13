@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Models.Response;
 using SpoRE.Services;
 
 namespace SpoRE.Controllers;
@@ -16,7 +15,6 @@ public class StatisticsController : ControllerBase
 
     [HttpGet("missedPoints")]
     [ProducesResponseType(200)]
-    [PreStart]
-    public IActionResult JoinRace(int raceId)
-        => Ok(Service.JoinRace(raceId));
+    public IActionResult MissedPoints(int raceId, bool budgetParticipation)
+        => Ok(Service.MissedPoints(raceId, budgetParticipation));
 }
