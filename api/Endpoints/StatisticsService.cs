@@ -1,14 +1,15 @@
-namespace SpoRE.Services;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
 
-public record MissedPointsData(int Etappe, int Behaald, int Optimaal, int Gemist);
+namespace SpoRE.Services;
+
+public record MissedPointsData(string Etappe, int Behaald, int Optimaal, int Gemist);
 
 public record MissedPointsTable(string Username, List<MissedPointsData> Data);
+
+public record GroupedData(int Stagenr, List<PointsData> Points);
+
+public record PointsData(int Id, int? Stage, int Total);
 
 public partial class StatisticsService
 {
@@ -42,7 +43,7 @@ public partial class StatisticsService
                 {
                     Id = g.Result.RiderParticipationId,
                     Stage = g.Result.Stagescore,
-                    Total = user.Budgetparticipation ? g.Result.Totalscore - g.Result.Teamscore : g.Result.Totalscore
+                    Total = (int)(user.Budgetparticipation ? g.Result.Totalscore - g.Result.Teamscore : g.Result.Totalscore)
                 })
                 .OrderByDescending(g => g.Total)
                 .ToList()
@@ -57,95 +58,18 @@ public partial class StatisticsService
         foreach (var riders in ridersResults)
         {
             var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).Stagescore ?? 0;
-            var optimalKopmanPoints = riders.Points.Max(r => r.Stage) * 0.5;
-            // TODO check of optimal kopman in eerste 9
+            var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
             var optimalPoints = (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints);
-            missedPoints.Add(new(riders.Stagenr, actualScore, optimalPoints, optimalPoints - actualScore));
+            missedPoints.Add(new(riders.Stagenr.ToString(), actualScore, optimalPoints, optimalPoints - actualScore));
         }
+        missedPoints.Add(new("Totaal", missedPoints.Sum(x => x.Behaald), missedPoints.Sum(x => x.Optimaal), missedPoints.Sum(x => x.Gemist)));
         return new(user.Account.Username, missedPoints);
-        // var totalQuery = $"{ridersQuery}\n{resultsQuery}";
-
-        // var results = await DB.Database.ExecuteSqlRawAsync(totalQuery);
-
-        // var outputArray = new List<Dictionary<string, object>>();
-        // var actualPoints = results[1].Rows.Select(a => a.stagescore).ToList();
-        // var optimalTotal = 0;
-        // var actualTotal = 0;
-        // var missedTotal = 0;
-
-        // for (var i = 0; i < results[0].Rows.Count; i++)
-        // {
-        //     var optimalPoints = 0;
-        //     var totalScores = results[0].Rows[i].points.Select(scores => new { score = scores.total, id = scores.id }).ToList();
-        //     var stageScores = results[0].Rows[i].points.Select(scores => new { score = scores.stage, id = scores.id }).ToList();
-        //     stageScores = stageScores.OrderByDescending(a => a.score).ToList();
-        //     var bestId = stageScores[0].id;
-        //     var pos = AttrIndex(totalScores, "index", bestId);
-        //     var forRenners = 9;
-
-        //     if (pos > 8)
-        //         forRenners = 8;
-
-        //     for (var j = 0; j < forRenners; j++)
-        //     {
-        //         if (totalScores[j] == null)
-        //             continue;
-
-        //         optimalPoints += totalScores[j].score;
-
-        //         if (totalScores[j].id == bestId)
-        //         {
-        //             optimalPoints += stageScores[0].score * 0.5;
-        //         }
-        //     }
-
-        //     if (forRenners == 8)
-        //     {
-        //         outputArray.Add(new Dictionary<string, object>
-        //     {
-        //         { "Behaald", "Zeg tegen Rens" },
-        //         { "Optimaal", "dat er iets" },
-        //         { "Gemist", "speciaals gebeurt is" }
-        //     });
-        //     }
-        //     else
-        //     {
-        //         if (i == 21)
-        //         {
-        //             outputArray.Add(new Dictionary<string, object>
-        //         {
-        //             { "Etappe", i + 1 },
-        //             { "Behaald", actualPoints[i] },
-        //             { "Optimaal", actualPoints[i] },
-        //             { "Gemist", 0 }
-        //         });
-        //         }
-        //         else
-        //         {
-        //             outputArray.Add(new Dictionary<string, object>
-        //         {
-        //             { "Etappe", i + 1 },
-        //             { "Behaald", actualPoints[i] },
-        //             { "Optimaal", optimalPoints },
-        //             { "Gemist", optimalPoints - actualPoints[i]}
-        //         });
-        //         }
-        //         optimalTotal += optimalPoints;
-        //         actualTotal += actualPoints[i];
-        //         missedTotal += optimalPoints - actualPoints[i];
-        //     }
-        // }
-        // outputArray.Add(new Dictionary<string, object>
-        //         {
-        //             { "Etappe", "Totaal" },
-        //             { "Behaald", actualTotal },
-        //             { "Optimaal", optimalTotal },
-        //             { "Gemist", missedTotal}
-        //         });
     }
 
-    private MissedPointsData MissedPointsStage(object r, StageSelection stageSelection)
+    private int OptimalKopmanPoints(IEnumerable<PointsData> points)
     {
-        throw new NotImplementedException();
+        var topStage = points.OrderByDescending(p => p.Stage).FirstOrDefault();
+        if (!points.Take(9).Any(p => p.Id == topStage.Id)) throw new Exception("kopman niet in top 9");
+        return (int)(topStage.Stage * 0.5);
     }
 }
