@@ -49,7 +49,7 @@ public partial class StageResultService
                             Rider = ssr.RiderParticipation.Rider,
                             Kopman = ssr.RiderParticipationId == ssr.StageSelection.KopmanId,
                             StagePos = rp.Stagepos,
-                            TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 0.5) : 0),
+                            TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0) ? (int)(rp.Stagescore * 0.5) : 0),
                             Selected = stageSelection.Contains(ssr.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(ssr.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                         };
             var riderScores = query.OrderBy(r => r.StagePos).ToList();

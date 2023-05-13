@@ -53,9 +53,9 @@ public partial class StageResultService
         var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
 
-        var mostRecentStage = DB.Stages.OrderByDescending(s => s.Stagenr).First(s => s.Finished && s.RaceId == raceId);
+        var stage = top5 ? DB.Stages.OrderByDescending(s => s.Stagenr).First(s => s.Finished && s.RaceId == raceId) : DB.Stages.Single(s => s.Stagenr == stagenr && s.RaceId == raceId);
 
-        var stageResult = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Stagepos > 0).OrderBy(rp => rp.Stagepos)
+        var stageResult = from rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId && rp.Stagepos > 0).OrderBy(rp => rp.Stagepos)
                           select new ClassificationRow
                           {
                               Rider = rp.RiderParticipation.Rider,
@@ -64,7 +64,7 @@ public partial class StageResultService
                               Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                           };
 
-        var gcStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Gcpos > 0).OrderBy(rp => rp.Gcpos)
+        var gcStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId && rp.Gcpos > 0).OrderBy(rp => rp.Gcpos)
                           select new ClassificationRow
                           {
                               Rider = rp.RiderParticipation.Rider,
@@ -74,7 +74,7 @@ public partial class StageResultService
                               Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                           };
 
-        var pointsStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Pointspos > 0).OrderBy(rp => rp.Pointspos)
+        var pointsStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId && rp.Pointspos > 0).OrderBy(rp => rp.Pointspos)
                               select new ClassificationRow
                               {
                                   Rider = rp.RiderParticipation.Rider,
@@ -84,7 +84,7 @@ public partial class StageResultService
                                   Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                               };
 
-        var komStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Kompos > 0).OrderBy(rp => rp.Kompos)
+        var komStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId && rp.Kompos > 0).OrderBy(rp => rp.Kompos)
                            select new ClassificationRow
                            {
                                Rider = rp.RiderParticipation.Rider,
@@ -94,7 +94,7 @@ public partial class StageResultService
                                Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                            };
 
-        var yocStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == mostRecentStage.StageId && rp.Yocpos > 0).OrderBy(rp => rp.Yocpos)
+        var yocStandings = from rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId && rp.Yocpos > 0).OrderBy(rp => rp.Yocpos)
                            select new ClassificationRow
                            {
                                Rider = rp.RiderParticipation.Rider,

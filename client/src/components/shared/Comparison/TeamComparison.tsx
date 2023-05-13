@@ -21,6 +21,15 @@ const TeamComparison = ({ raceId, stagenr }: { raceId: string, stagenr?: string 
                         throw error;
                     });
             }, 500);
+        } else {
+            axios
+                .get(`/api/stageresult/comparison`, { params: { raceId, stagenr, budgetParticipation } })
+                .then(res => {
+                    setData(res.data);
+                })
+                .catch(error => {
+                    throw error;
+                });
         }
     }, [raceId, stagenr, budgetParticipation]);
 
