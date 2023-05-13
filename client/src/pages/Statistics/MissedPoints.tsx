@@ -11,17 +11,16 @@ export type MissedPointsData = {
     gemist: number;
 };
 
-type MissedPointsTable = {
+type MissedPointsTableData = {
     username: string;
     data: MissedPointsData[];
 };
-
 
 const MissedPoints = () => {
     document.title = "Gemiste punten";
     let { raceId } = useParams();
     const budgetParticipation = useBudgetContext();
-    const [data, setData] = useState<MissedPointsTable[]>([]);
+    const [data, setData] = useState<MissedPointsTableData[]>([]);
 
     useEffect(() => {
         axios
