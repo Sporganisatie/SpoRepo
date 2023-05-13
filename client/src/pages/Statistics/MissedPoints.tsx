@@ -4,6 +4,7 @@ import { useBudgetContext } from "../../components/shared/BudgetContextProvider"
 import axios from "axios";
 
 const MissedPoints = () => {
+    document.title = "Gemiste punten";
     let { raceId } = useParams();
     const budgetParticipation = useBudgetContext();
     const [data, setData] = useState<[]>([]);
