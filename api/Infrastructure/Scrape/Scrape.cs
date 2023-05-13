@@ -48,7 +48,7 @@ public partial class Scrape
 
         foreach (var stageSelection in stageSelections)
         {
-            var minusTeamPoints = stageSelection.AccountParticipation.Budgetparticipation ?? false ? " - teamscore" : "";
+            var minusTeamPoints = stageSelection.AccountParticipation.Budgetparticipation ? " - teamscore" : "";
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
             var kopmanscore = $"COALESCE((SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
