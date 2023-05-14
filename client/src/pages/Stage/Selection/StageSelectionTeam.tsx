@@ -46,7 +46,7 @@ const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamPr
             width: '20%',
             cell: (row: StageSelectableRider) => {
                 return row.isKopman ? <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => updateRider(row.rider.riderParticipationId, false, "kopman")}>-</button>
-                    : row.selected ? <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => updateRider(row.rider.riderParticipationId, true, "kopman")}>+</button>
+                    : (row.selected && !row.rider.dnf) ? <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => updateRider(row.rider.riderParticipationId, true, "kopman")}>+</button>
                         : <></>;
             }
         }

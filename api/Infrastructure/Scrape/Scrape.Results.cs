@@ -95,6 +95,7 @@ public partial class Scrape
         var query = $"UPDATE rider_participation SET dnf = TRUE WHERE race_id = {stage.RaceId} AND rider_id IN("
                     + string.Join(",", riderResults.Values.Where(x => x.Dnf).Select(rider => $"(SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')"))
                     + "); ";
+        // TODO remove from not yet started stage selections
         DB.Database.ExecuteSqlRaw(query);
     }
 
