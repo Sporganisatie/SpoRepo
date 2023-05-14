@@ -102,6 +102,7 @@ public partial class StageResultService
                            select new ClassificationRow
                            {
                                Rider = rp.RiderParticipation.Rider,
+                               Team = rp.RiderParticipation.Team,
                                Position = rp.Yocpos,
                                Result = rp.Yocresult,
                                Change = rp.Yocchange,

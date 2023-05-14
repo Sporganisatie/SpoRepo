@@ -61,13 +61,14 @@ public partial class StageResultService
             var gemistQuery = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                               join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr) on ts.RiderParticipationId equals rp.RiderParticipationId into results
                               from rp in results.DefaultIfEmpty()
-                              where (ts.AccountParticipationId == user.AccountParticipationId) && (rp.Totalscore > 0 || allSelected.Contains(ts.RiderParticipationId))
+                              let totalScore = (budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0
+                              where (ts.AccountParticipationId == user.AccountParticipationId) && (totalScore > 0 || allSelected.Contains(ts.RiderParticipationId))
                                 && !DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.StageSelectionId == user.StageSelectionId).Any(ssr => ssr.RiderParticipationId == ts.RiderParticipationId)
                               select new StageComparisonRider
                               {
                                   Rider = ts.RiderParticipation.Rider,
                                   StagePos = rp.Stagepos,
-                                  TotalScore = (budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0,
+                                  TotalScore = totalScore,
                                   Selected = stageSelection.Contains(ts.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(ts.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
                               };
 
