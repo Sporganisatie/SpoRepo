@@ -135,7 +135,7 @@ public partial class Scrape
             Rank = rank,
             RankChange = GetRankChange(fields),
             PcsId = pcsId,
-            Time = GetString(fields, "Time"),
+            Time = GetTime(fields),
             Team = GetString(fields, "Team"),
             Points = GetString(fields, "Points"),
         };
@@ -146,6 +146,13 @@ public partial class Scrape
         var change = GetString(fields, "&#x25BC;&#x25B2;");
         var prev = GetString(fields, "Prev");
         return prev == "" ? "*" : change.Replace("&#x25BC;", "▼").Replace("&#x25B2;", "▲");
+    }
+
+    private string GetTime(Dictionary<string, HtmlNode> fields)
+    {
+        if (!fields.ContainsKey("Time")) return "";
+        var timeElement = fields["Time"].SelectSingleNode(".//text()[normalize-space()]");
+        return timeElement is not null ? timeElement.InnerHtml : "";
     }
 
     private string GetString(Dictionary<string, HtmlNode> fields, string col)
