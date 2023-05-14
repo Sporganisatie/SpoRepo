@@ -29,6 +29,12 @@ const SimpleClassification = ({ rows, title, resultColName, pagination }: { rows
             sortable: true
         },
         {
+            name: 'Team',
+            minWidth: '200px',
+            cell: (row: ClassificationRow) => row.team,
+            sortable: true
+        },
+        {
             name: resultColName,
             selector: (row: ClassificationRow) => row.result
         }

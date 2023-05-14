@@ -59,6 +59,7 @@ public partial class StageResultService
                           select new ClassificationRow
                           {
                               Rider = rp.RiderParticipation.Rider,
+                              Team = rp.RiderParticipation.Team,
                               Position = rp.Stagepos,
                               Result = rp.Stageresult,
                               Selected = stageSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
@@ -68,6 +69,7 @@ public partial class StageResultService
                           select new ClassificationRow
                           {
                               Rider = rp.RiderParticipation.Rider,
+                              Team = rp.RiderParticipation.Team,
                               Position = rp.Gcpos,
                               Result = rp.Gcresult,
                               Change = rp.Gcchange,
@@ -78,6 +80,7 @@ public partial class StageResultService
                               select new ClassificationRow
                               {
                                   Rider = rp.RiderParticipation.Rider,
+                                  Team = rp.RiderParticipation.Team,
                                   Position = rp.Pointspos,
                                   Result = rp.Pointsresult,
                                   Change = rp.Pointschange,
@@ -88,6 +91,7 @@ public partial class StageResultService
                            select new ClassificationRow
                            {
                                Rider = rp.RiderParticipation.Rider,
+                               Team = rp.RiderParticipation.Team,
                                Position = rp.Kompos,
                                Result = rp.Komresult,
                                Change = rp.Komchange,
