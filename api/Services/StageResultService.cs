@@ -94,7 +94,7 @@ public partial class StageResultService
                          select new
                          {
                              RiderParticipation = g.Key,
-                             TotalScore = (int?)g.Sum(item => item.KopmanId == item.rp.RiderParticipationId ? item.rp.Totalscore + item.rp.Stagescore * 0.5 : item.rp.Totalscore),
+                             TotalScore = (int?)g.Sum(item => item.KopmanId == item.rp.RiderParticipationId ? item.rp.Totalscore + item.rp.Stagescore * 0.5 : item.rp.Totalscore) - (budgetParticipation ? g.Sum(item => item.rp.Teamscore) : 0),
                          }) on ts.RiderParticipationId equals rp.RiderParticipation.RiderParticipationId into results
                         from rp in results.DefaultIfEmpty()
                         select new StageComparisonRider
