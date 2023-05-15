@@ -3,6 +3,7 @@ import TeamComparison from "../../components/shared/Comparison/TeamComparison";
 
 const TeamComparisonPage = () => {
     let { raceId } = useParams();
+    document.title = "Alle teams"
     return (
         <TeamComparison raceId={raceId ?? ""} />
     )

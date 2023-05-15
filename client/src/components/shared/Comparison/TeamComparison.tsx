@@ -23,7 +23,7 @@ const TeamComparison = ({ raceId, stagenr }: { raceId: string, stagenr?: string 
             }, 500);
         } else {
             axios
-                .get(`/api/stageresult/comparison`, { params: { raceId, stagenr, budgetParticipation } })
+                .get(`/api/race/comparison`, { params: { raceId, stagenr, budgetParticipation } })
                 .then(res => {
                     setData(res.data);
                 })

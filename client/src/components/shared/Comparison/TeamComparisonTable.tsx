@@ -11,6 +11,13 @@ const conditionalRowStyles = [
         when: (row: StageComparisonRider) => row.selected === StageSelectedEnum.InTeam,
         classNames: ["notselected"]
     },
+    {
+        when: (row: StageComparisonRider) => row.dnf,
+        style: {
+            textDecoration: 'line-through',
+            color: 'grey',
+        },
+    }
 ];
 
 const TeamComparisonTable = ({ title, riders }: { title: string, riders: StageComparisonRider[] }) => {

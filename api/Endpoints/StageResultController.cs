@@ -9,7 +9,7 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-[ParticipationEndpoint(Order = 2)]
+[ParticipationEndpoint]
 public class StageResultController : ControllerBase
 {
     private readonly StageResultService Service;
@@ -26,6 +26,6 @@ public class StageResultController : ControllerBase
 
     [HttpGet("comparison")]
     [ProducesResponseType(typeof(List<UserSelection>), 200)]
-    public IActionResult StageSelections(int raceId, bool budgetParticipation, int? stagenr)
+    public IActionResult StageSelections(int raceId, bool budgetParticipation, int stagenr)
         => Ok(Service.AllStageSelections(raceId, budgetParticipation, stagenr));
 }
