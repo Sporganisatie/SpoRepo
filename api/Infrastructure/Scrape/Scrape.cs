@@ -56,7 +56,7 @@ public partial class Scrape
             var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
 
             var prevTotal = stage.Stagenr != 1 ? DB.StageSelections.Single(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1).Totalscore : 0;
-            var totalscore = $"{prevTotal} + {stageScoreTotal}";
+            var totalscore = $"{prevTotal} + COALESCE({stageScoreTotal},0)";
             var updateTotals = $"UPDATE stage_selection SET totalscore = {totalscore} WHERE stage_selection.account_participation_id = {stageSelection.AccountParticipationId} AND stage_id IN (SELECT stage_id FROM stage WHERE stage.stagenr >= {stage.Stagenr} AND race_id = {stage.RaceId}); ";
 
             DB.Database.ExecuteSqlRaw(query + updateTotals);
