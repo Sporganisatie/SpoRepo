@@ -13,6 +13,7 @@ export interface StageComparisonRider {
   stagePos?: number;
   totalScore: number;
   selected: StageSelectedEnum;
+  dnf: boolean;
 }
 
 export enum StageSelectedEnum {

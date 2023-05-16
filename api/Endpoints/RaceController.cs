@@ -11,8 +11,14 @@ namespace SpoRE.Controllers;
 public class RaceController : ControllerBase
 {
     private RaceService Service;
-    public RaceController(RaceService service)
-        => Service = service;
+    private readonly StageResultService StageService;
+
+    public RaceController(RaceService service, StageResultService stageResultService)
+
+    {
+        Service = service;
+        StageService = stageResultService;
+    }
 
     [HttpGet]
     [ProducesResponseType(typeof(RaceState), 200)]
@@ -24,4 +30,10 @@ public class RaceController : ControllerBase
     [PreStart]
     public IActionResult JoinRace(int raceId)
         => Ok(Service.JoinRace(raceId));
+
+    [HttpGet("comparison")]
+    [ProducesResponseType(typeof(List<UserSelection>), 200)]
+    [ParticipationEndpoint]
+    public IActionResult StageSelections(int raceId, bool budgetParticipation)
+        => Ok(StageService.AllTeamSelections(raceId, budgetParticipation));
 }
