@@ -26,7 +26,7 @@ const Navbar = (props: NavbarProps) => {
   const race = props.racename;
   const budget = useBudgetContext();
   const dispatch = useBudgetDispatch();
-
+  const isAdmin = localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).admin == true;
   return (
     <div className="navbar">
       {
@@ -37,14 +37,16 @@ const Navbar = (props: NavbarProps) => {
       {race !== null && <Link className='navbar_link' to={props.currentStageLink}><span>Current stage</span></Link>}
       {!props.isLoading && <ChartsDropdown raceSelected={race !== null} />}
       {!props.isLoading && <StatsDropdown raceSelected={race !== null} />}
-      {localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).admin &&
+      {isAdmin &&
         <Link className='navbar_link' to='/admin'>
           <FontAwesomeIcon icon={faShieldAlt} />
         </Link>
       }
-      <Link className='navbar_link' to='/designsandbox'>
-        <FontAwesomeIcon icon={faLaptop} />
-      </Link>
+      {isAdmin &&
+        <Link className='navbar_link' to='/designsandbox'>
+          <FontAwesomeIcon icon={faLaptop} />
+        </Link>
+      }
       <Link className='navbar_link' to='/profile'>
         <FontAwesomeIcon icon={faUser} />
       </Link>
