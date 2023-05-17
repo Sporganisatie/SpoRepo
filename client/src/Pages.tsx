@@ -10,6 +10,7 @@ import JoinRace from "./pages/RaceOverview/JoinRace";
 import Stage from "./pages/Stage/Stage";
 import TeamComparisonPage from "./pages/Statistics/TeamComparisonPage";
 import MissedPoints from "./pages/Statistics/MissedPoints";
+import Uitvallers from "./pages/Statistics/Uitvallers";
 
 const Pages: JSX.Element[] = [
     <Route key="home" index element={<Home />} />,
@@ -21,6 +22,7 @@ const Pages: JSX.Element[] = [
     <Route key="stage" path="stage/:raceId/:stagenr" element={<Stage />} />,
     <Route key="teamcomparison" path="teamcomparison/:raceId" element={<TeamComparisonPage />} />,
     <Route key="missedpoints" path="missedpoints/:raceId" element={<MissedPoints />} />,
+    <Route key="uitvallers" path="uitvallers/:raceId" element={<Uitvallers />} />,
     <Route key="joinRace" path="joinrace/:raceId" element={<JoinRace />} />,
     <Route key="admin" path="admin" element={<Admin />} />,
     // TODO zorg dat al het overige naar home gaat

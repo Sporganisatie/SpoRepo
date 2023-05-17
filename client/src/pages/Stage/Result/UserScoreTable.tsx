@@ -12,17 +12,17 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => {
     const columns: TableColumn<UserScore>[] = [
         {
             name: 'Naam',
-            cell: (row: UserScore) => row.account.username,
+            selector: (row: UserScore) => row.account.username,
             sortable: true
         },
         {
             name: 'Dag',
-            cell: (row: UserScore) => row.stagescore,
+            selector: (row: UserScore) => row.stagescore,
             sortable: true
         },
         {
             name: "Totaal",
-            cell: (row: UserScore) => row.totalscore,
+            selector: (row: UserScore) => row.totalscore,
             sortable: true
         },
     ];

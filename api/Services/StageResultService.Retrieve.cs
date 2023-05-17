@@ -28,12 +28,12 @@ public partial class StageResultService
                     select new RiderScore
                     {
                         Rider = ssr.RiderParticipation.Rider,
-                        Kopman = ssr.RiderParticipationId == ssr.StageSelection.KopmanId,
+                        Kopman = ssr.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0),
                         StagePos = rp.Stagepos,
-                        StageScore = (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 1.5) : rp.Stagescore) ?? 0,
+                        StageScore = (rp.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0) ? (int)(rp.Stagescore * 1.5) : rp.Stagescore) ?? 0,
                         ClassificationScore = rp.Gcscore + rp.Pointsscore + rp.Komscore + rp.Yocscore ?? 0,
                         TeamScore = budgetParticipation ? 0 : rp.Teamscore ?? 0,
-                        TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == ssr.StageSelection.KopmanId ? (int)(rp.Stagescore * 0.5) : 0)
+                        TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0) ? (int)(rp.Stagescore * 0.5) : 0)
                     };
 
         return query.ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);

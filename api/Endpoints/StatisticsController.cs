@@ -17,4 +17,9 @@ public class StatisticsController : ControllerBase
     [ProducesResponseType(200)]
     public IActionResult MissedPoints(int raceId, bool budgetParticipation)
         => Ok(Service.MissedPoints(raceId, budgetParticipation));
+
+    [HttpGet("uitvallers")]
+    [ProducesResponseType(200)]
+    public IActionResult Uitvallers(int raceId, bool budgetParticipation)
+        => Ok(Service.Uitvallers(raceId, budgetParticipation));
 }

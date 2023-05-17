@@ -13,13 +13,6 @@ public record PointsData(int Id, int? Stage, int Total);
 
 public partial class StatisticsService
 {
-    private readonly DatabaseContext DB;
-
-    public StatisticsService(DatabaseContext databaseContext)
-    {
-        DB = databaseContext;
-    }
-
     internal IEnumerable<MissedPointsTable> MissedPoints(int raceId, bool budgetParticipation)
         => DB.AccountParticipations.Include(ss => ss.Account)
             .Where(ss => ss.RaceId == raceId && ss.Budgetparticipation == budgetParticipation).ToList()
@@ -30,7 +23,6 @@ public partial class StatisticsService
         var teamSelection = DB.TeamSelections
             .Where(tsr => tsr.AccountParticipationId == user.AccountParticipationId)
             .Select(tsr => tsr.RiderParticipationId).ToList();
-
 
         var ridersResults = DB.ResultsPoints
             .Join(DB.Stages, rp => rp.StageId, s => s.StageId, (rp, s) => new { Result = rp, Stage = s })
@@ -49,7 +41,6 @@ public partial class StatisticsService
                 .ToList()
             })
             .ToList();
-
 
         var actualScores = DB.StageSelections.Include(ss => ss.Stage).Where(ss => ss.AccountParticipationId == user.AccountParticipationId)
                 .ToList().Where(ss => ss.Stage.Starttime < DateTime.UtcNow);

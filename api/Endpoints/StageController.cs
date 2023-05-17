@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models;
-using SpoRE.Services;
 
 namespace SpoRE.Controllers;
 

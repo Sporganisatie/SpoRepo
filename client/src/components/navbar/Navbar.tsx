@@ -26,7 +26,7 @@ const Navbar = (props: NavbarProps) => {
   const race = props.racename;
   const budget = useBudgetContext();
   const dispatch = useBudgetDispatch();
-  const isAdmin = localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).admin == true;
+  const isAdmin = localStorage.getItem('authToken') && (jwt_decode<AuthToken>(localStorage.getItem('authToken') ?? "")).admin === true;
   return (
     <div className="navbar">
       {

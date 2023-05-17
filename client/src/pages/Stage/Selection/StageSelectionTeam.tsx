@@ -23,8 +23,7 @@ const StageSelectionTeam = ({ data, loading, updateRider }: StageSelectionTeamPr
         {
             name: 'Naam',
             width: '45%',
-            cell: (row: StageSelectableRider) => <RiderLink rider={row.rider.rider} />,
-            sortable: true
+            cell: (row: StageSelectableRider) => <RiderLink rider={row.rider.rider} />
         },
         {
             name: 'Team',

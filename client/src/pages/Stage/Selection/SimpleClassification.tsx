@@ -19,20 +19,17 @@ const SimpleClassification = ({ rows, title, resultColName, pagination }: { rows
         {
             name: '',
             maxWidth: '100px',
-            selector: (row: ClassificationRow) => row.position,
-            sortable: true
+            selector: (row: ClassificationRow) => row.position
         },
         {
             name: 'Naam',
             minWidth: '200px',
-            cell: (row: ClassificationRow) => <RiderLink rider={row.rider} />,
-            sortable: true
+            cell: (row: ClassificationRow) => <RiderLink rider={row.rider} />
         },
         {
             name: 'Team',
             minWidth: '200px',
-            cell: (row: ClassificationRow) => row.team,
-            sortable: true
+            cell: (row: ClassificationRow) => row.team
         },
         {
             name: resultColName,
