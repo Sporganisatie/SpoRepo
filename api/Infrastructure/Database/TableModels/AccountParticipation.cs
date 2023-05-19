@@ -8,7 +8,7 @@ public class AccountParticipation
 
     public int RaceId { get; set; }
 
-    public bool Budgetparticipation { get; set; }
+    public bool BudgetParticipation { get; set; }
 
     public int? Finalscore { get; set; }
 

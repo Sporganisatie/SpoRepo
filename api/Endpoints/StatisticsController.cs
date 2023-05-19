@@ -6,7 +6,7 @@ namespace SpoRE.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+// [Authorize]
 public class StatisticsController : ControllerBase
 {
     private StatisticsService Service;
@@ -22,4 +22,9 @@ public class StatisticsController : ControllerBase
     [ProducesResponseType(200)]
     public IActionResult Uitvallers(int raceId, bool budgetParticipation)
         => Ok(Service.Uitvallers(raceId, budgetParticipation));
+
+    [HttpGet("etappeUitslagen")]
+    [ProducesResponseType(200)]
+    public IActionResult EtappeUitslagen(int raceId, bool budgetParticipation)
+        => Ok(Service.EtappeUitslagen(raceId, budgetParticipation));
 }

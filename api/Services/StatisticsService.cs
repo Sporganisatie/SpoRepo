@@ -17,7 +17,7 @@ public partial class StatisticsService
     public IEnumerable<UitvallersData> Uitvallers(int raceId, bool budgetParticipation)
     {
         var query = from ts in DB.TeamSelections.Include(ts => ts.AccountParticipation.Account).Include(ts => ts.RiderParticipation)
-                    where ts.RiderParticipation.Dnf && ts.AccountParticipation.RaceId == raceId && ts.AccountParticipation.Budgetparticipation == budgetParticipation
+                    where ts.RiderParticipation.Dnf && ts.AccountParticipation.RaceId == raceId && ts.AccountParticipation.BudgetParticipation == budgetParticipation
                     group ts by ts.AccountParticipation.Account.Username into g
                     select new UitvallersData(g.Key, g.Count(), g.Sum(ts => ts.RiderParticipation.Price));
 

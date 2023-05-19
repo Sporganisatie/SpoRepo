@@ -42,10 +42,10 @@ public partial class StageResultService
     public IEnumerable<UserScore> GetUserScores(int raceId, bool budgetParticipation, int stagenr)
         => DB.StageSelections.Where(ss => ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
             .Join(
-                DB.AccountParticipations.Where(ap => ap.Budgetparticipation == budgetParticipation),
+                DB.AccountParticipations.Where(ap => ap.BudgetParticipation == budgetParticipation),
                 ss => ss.AccountParticipationId,
                 ap => ap.AccountParticipationId,
-                (ss, ap) => new UserScore(ap.Account, ss.Stagescore ?? 0, ss.Totalscore ?? 0)
+                (ss, ap) => new UserScore(ap.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0)
             ).ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
 
     public Classifications GetClassifications(int raceId, int stagenr, bool top5)

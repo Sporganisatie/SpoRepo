@@ -15,7 +15,7 @@ public partial class StatisticsService
 {
     internal IEnumerable<MissedPointsTable> MissedPoints(int raceId, bool budgetParticipation)
         => DB.AccountParticipations.Include(ss => ss.Account)
-            .Where(ss => ss.RaceId == raceId && ss.Budgetparticipation == budgetParticipation).ToList()
+            .Where(ss => ss.RaceId == raceId && ss.BudgetParticipation == budgetParticipation).ToList()
             .Select(MissedPointsUser);
 
     public MissedPointsTable MissedPointsUser(AccountParticipation user)
@@ -35,7 +35,7 @@ public partial class StatisticsService
                 {
                     Id = g.Result.RiderParticipationId,
                     Stage = g.Result.Stagescore,
-                    Total = (int)(user.Budgetparticipation ? g.Result.Totalscore - g.Result.Teamscore : g.Result.Totalscore)
+                    Total = (int)(user.BudgetParticipation ? g.Result.Totalscore - g.Result.Teamscore : g.Result.Totalscore)
                 })
                 .OrderByDescending(g => g.Total)
                 .ToList()
@@ -48,7 +48,7 @@ public partial class StatisticsService
         var missedPoints = new List<MissedPointsData>();
         foreach (var riders in ridersResults)
         {
-            var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).Stagescore ?? 0;
+            var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).StageScore ?? 0;
             var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
             var optimalPoints = (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints);
             missedPoints.Add(new(riders.Stagenr.ToString(), actualScore, optimalPoints, optimalPoints - actualScore));
