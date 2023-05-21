@@ -1,25 +1,24 @@
 import DataTable, { TableColumn } from 'react-data-table-component';
 
-interface DataItem {
+interface EtappeUitslag {
     stageNumber: string;
     usernamesAndScores: { username: string, score: number }[]
 }
 
 const EtappeUitslagenTable = ({ data }: any) => {
-    const usernamesAndScoresLength = data[0]?.usernamesAndScores?.length ?? 0;
-    console.log(usernamesAndScoresLength)
-    const additionalColumns = Array.from({ length: usernamesAndScoresLength }, (_, i) => i);
+    const length = data[0]?.usernamesAndScores?.length ?? 0;
+    const additionalColumns = Array.from({ length }, (_, i) => i);
 
-    const columns: TableColumn<DataItem>[] = [
+    const columns: TableColumn<EtappeUitslag>[] = [
         {
             name: 'Etappe',
-            selector: (row: DataItem) => row.stageNumber,
+            selector: (row: EtappeUitslag) => row.stageNumber,
             width: '80px'
         },
         ...additionalColumns.map((column) => (
             {
                 name: `${column + 1}e`,
-                selector: (row: DataItem) => `${row.usernamesAndScores[column]?.username} (${row.usernamesAndScores[column]?.score})`,
+                selector: (row: EtappeUitslag) => `${row.usernamesAndScores[column]?.username} (${row.usernamesAndScores[column]?.score})`,
                 width: '120px'
             }))
     ];
