@@ -27,4 +27,9 @@ public class StatisticsController : ControllerBase
     [ProducesResponseType(200)]
     public IActionResult EtappeUitslagen(int raceId, bool budgetParticipation)
         => Ok(Service.EtappeUitslagen(raceId, budgetParticipation));
+
+    [HttpGet("allRiders")]
+    [ProducesResponseType(200)]
+    public IActionResult AllRiders(int raceId, bool budgetParticipation)
+        => Ok(Service.AllRiders(raceId, budgetParticipation));
 }

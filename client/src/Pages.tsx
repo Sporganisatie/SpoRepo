@@ -12,6 +12,7 @@ import TeamComparisonPage from "./pages/Statistics/TeamComparisonPage";
 import MissedPoints from "./pages/Statistics/MissedPoints";
 import Uitvallers from "./pages/Statistics/Uitvallers";
 import EtappeUitslagen from "./pages/Statistics/EtappeUitslagen/EtappeUitslagen";
+import AllRiders from "./pages/Statistics/AllRiders";
 
 const Pages: JSX.Element[] = [
     <Route key="home" index element={<Home />} />,
@@ -28,6 +29,7 @@ const Pages: JSX.Element[] = [
     <Route key="missedpoints" path="missedpoints/:raceId" element={<MissedPoints />} />,
     <Route key="uitvallers" path="uitvallers/:raceId" element={<Uitvallers />} />,
     <Route key="etappeUitslagen" path="etappeUitslagen/:raceId" element={<EtappeUitslagen />} />,
+    <Route key="allriders" path="allRiders/:raceId" element={<AllRiders />} />,
     // TODO zorg dat al het overige naar home gaat
 ];
 
