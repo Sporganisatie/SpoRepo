@@ -6,7 +6,7 @@ namespace SpoRE.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-// [Authorize]
+[Authorize]
 public class StatisticsController : ControllerBase
 {
     private StatisticsService Service;

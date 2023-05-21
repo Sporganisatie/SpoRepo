@@ -77,7 +77,7 @@ public partial class StatisticsService
                            StageScore = ss.StageScore,
                            StageNumber = ss.Stage.Stagenr
                        };
-        var bins = new[] { 0, 50, 100, 200, 300 };
+        var bins = budgetParticipation ? new[] { 0, 10, 30, 50, 100 } : new[] { 0, 50, 100, 200, 300 };
 
         var result = from item in subquery
                      group item by item.Username into userGroup
