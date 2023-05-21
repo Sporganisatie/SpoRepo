@@ -22,4 +22,9 @@ public class StatisticsController : ControllerBase
     [ProducesResponseType(200)]
     public IActionResult Uitvallers(int raceId, bool budgetParticipation)
         => Ok(Service.Uitvallers(raceId, budgetParticipation));
+
+    [HttpGet("allRiders")]
+    [ProducesResponseType(200)]
+    public IActionResult AllRiders(int raceId, bool budgetParticipation)
+        => Ok(Service.AllRiders(raceId, budgetParticipation));
 }
