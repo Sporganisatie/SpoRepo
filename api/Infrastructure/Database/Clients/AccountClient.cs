@@ -17,7 +17,7 @@ public class AccountClient
     public Task<Result<AccountParticipation>> GetParticipation(int id, int raceId, bool budgetParticipation)
         => Result.For(
             DatabaseContext.AccountParticipations.Single(
-                x => x.AccountId == id && x.RaceId == raceId && x.Budgetparticipation == budgetParticipation)).AsTask();
+                x => x.AccountId == id && x.RaceId == raceId && x.BudgetParticipation == budgetParticipation)).AsTask();
 
     public Task<Result<int>> GetParticipationCount(int id, int raceId)
         => Result.For(

@@ -11,6 +11,7 @@ import Stage from "./pages/Stage/Stage";
 import TeamComparisonPage from "./pages/Statistics/TeamComparisonPage";
 import MissedPoints from "./pages/Statistics/MissedPoints";
 import Uitvallers from "./pages/Statistics/Uitvallers";
+import EtappeUitslagen from "./pages/Statistics/EtappeUitslagen/EtappeUitslagen";
 import AllRiders from "./pages/Statistics/AllRiders";
 
 const Pages: JSX.Element[] = [
@@ -21,12 +22,14 @@ const Pages: JSX.Element[] = [
     <Route key="teamselection" path="/teamselection/:raceId" element={<Teamselection />} />,
     <Route key="raceRouter" path="race/:raceId" element={<RaceRouter />} />,
     <Route key="stage" path="stage/:raceId/:stagenr" element={<Stage />} />,
+    <Route key="joinRace" path="joinrace/:raceId" element={<JoinRace />} />,
+    <Route key="admin" path="admin" element={<Admin />} />,
+    // statistics
     <Route key="teamcomparison" path="teamcomparison/:raceId" element={<TeamComparisonPage />} />,
     <Route key="missedpoints" path="missedpoints/:raceId" element={<MissedPoints />} />,
     <Route key="uitvallers" path="uitvallers/:raceId" element={<Uitvallers />} />,
+    <Route key="etappeUitslagen" path="etappeUitslagen/:raceId" element={<EtappeUitslagen />} />,
     <Route key="allriders" path="allRiders/:raceId" element={<AllRiders />} />,
-    <Route key="joinRace" path="joinrace/:raceId" element={<JoinRace />} />,
-    <Route key="admin" path="admin" element={<Admin />} />,
     // TODO zorg dat al het overige naar home gaat
 ];
 

@@ -96,11 +96,11 @@ public class DatabaseContext : DbContext
 
             entity.ToTable("account_participation");
 
-            entity.HasIndex(e => new { e.AccountId, e.RaceId, e.Budgetparticipation }, "account_participation_account_id_race_id_budgetparticipatio_key").IsUnique();
+            entity.HasIndex(e => new { e.AccountId, e.RaceId, e.BudgetParticipation }, "account_participation_account_id_race_id_budgetparticipatio_key").IsUnique();
 
             entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
             entity.Property(e => e.AccountId).HasColumnName("account_id");
-            entity.Property(e => e.Budgetparticipation)
+            entity.Property(e => e.BudgetParticipation)
                 .HasDefaultValueSql("false")
                 .HasColumnName("budgetparticipation");
             entity.Property(e => e.Finalscore)
@@ -398,10 +398,10 @@ public class DatabaseContext : DbContext
             entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
             entity.Property(e => e.KopmanId).HasColumnName("kopman_id");
             entity.Property(e => e.StageId).HasColumnName("stage_id");
-            entity.Property(e => e.Stagescore)
+            entity.Property(e => e.StageScore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("stagescore");
-            entity.Property(e => e.Totalscore)
+            entity.Property(e => e.TotalScore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("totalscore");
 
