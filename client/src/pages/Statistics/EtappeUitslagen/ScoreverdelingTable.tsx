@@ -10,12 +10,10 @@ interface ScoreVerdeling {
     bin4: number;
 }
 
-
 const ScoreverdelingTable = ({ data }: any) => {
     const budgetParticipation = useBudgetContext();
 
     const bins = budgetParticipation ? ['10-', '10', '30', '50', '100+'] : ['50-', '50', '100', '200', '300+']
-
 
     const columns: TableColumn<ScoreVerdeling>[] = [
         {
