@@ -10,6 +10,7 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
       ]}
       raceOnlyLinks={[
         { url: "/charts/scoreverloop/27", title: "Relatief Scoreverloop" },
+        { url: "/charts/positieverloop/27", title: "Positie Scoreverloop" },
         // { url: "/charts/userscores", title: "Relatief Scoreverloop" },
         // { url: "/charts/userrank", title: "Ranking" },
         // { url: "/charts/riderpercentage", title: "Puntenaandeel Renner per Etappe" },

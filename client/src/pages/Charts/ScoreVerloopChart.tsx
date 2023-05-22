@@ -1,11 +1,10 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } from 'recharts';
-import { useBudgetContext } from '../components/shared/BudgetContextProvider';
+import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { EtappeUitslag } from './Statistics/EtappeUitslagen/EtappeUitslagenTable';
-
-const colors = ["#00d60e", "#1C43FF", "#FF0000", "#F9F200", "#A900F9", "#FF8000", "#194D33", "#00DEF9", "#F900BB", "#6C3703"];
+import { EtappeUitslag } from '../Statistics/EtappeUitslagen/EtappeUitslagenTable';
+import { colors, convertData } from './ChartsHelper';
 
 interface ChartData {
     data: EtappeUitslag[],
@@ -27,22 +26,6 @@ const ScoreVerloopChart = () => {
             .catch(error => {
             });
     }, [raceId, budgetParticipation]);
-
-    const convertData = (data: EtappeUitslag[]): any => { // TODO deze logica naar BE
-        const convertedData: any[] = [];
-        for (let et = 0; et < data.length; et++) {
-            const stageData: { [key: string]: any } = {
-                name: data[et].stageNumber
-            };
-
-            for (let i = 0; i < data[et].usernamesAndScores.length; i++) {
-                const { username, score } = data[et].usernamesAndScores[i];
-                stageData[username] = score;
-            }
-            convertedData.push(stageData)
-        }
-        return convertedData;
-    };
 
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
