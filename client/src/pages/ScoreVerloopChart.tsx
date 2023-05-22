@@ -44,10 +44,10 @@ const ScoreVerloopChart = () => {
         return convertedData;
     };
 
-    const ticks = (): number[] => {
-        // based on maximun and minimum
-        return []
-    }
+    // const ticks = (): number[] => {
+    //     // based on maximun and minimum
+    //     return []
+    // }
 
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
