@@ -1,4 +1,4 @@
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } from 'recharts';
 import { useBudgetContext } from '../components/shared/BudgetContextProvider';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -44,21 +44,32 @@ const ScoreVerloopChart = () => {
         return convertedData;
     };
 
-    // const ticks = (): number[] => {
-    //     // based on maximun and minimum
-    //     return []
-    // }
-
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
-            <LineChart width={800} height={400} data={chartdata.data}>
+            <LineChart width={chartdata.data.length * 70} height={600} data={chartdata.data}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis domain={['dataMin -20', 'dataMax +20']} />
+                <XAxis dataKey="name" >
+                    <Label
+                        value="Etappe"
+                        position="bottom"
+                        dy={-15}
+                    />
+                </XAxis>
+                <YAxis tickCount={10}>
+                    <Label
+                        value="Relatieve Punten"
+                        angle={-90}
+                        position="left"
+                        offset={-10}
+                    />
+                </YAxis>
                 <Tooltip
                     contentStyle={{ backgroundColor: '#333', border: 'none' }}
                     labelStyle={{ color: '#fff' }} />
-                <Legend />
+                <Legend
+                    verticalAlign="top"
+                    wrapperStyle={{ marginTop: -10 }}
+                />
                 {chartdata.usernames.map((username, index) => (
                     <Line
                         key={index}
