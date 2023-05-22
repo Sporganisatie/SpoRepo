@@ -16,11 +16,11 @@ public partial class StatisticsService
     {
         var uitslagen = Uitslagen(raceId, budgetParticipation);
         var scoreVerdeling = ScoreVerdeling(raceId, budgetParticipation);
-        var userRank = UserRank(uitslagen);
+        var userRank = UserRankCounts(uitslagen);
         return new(uitslagen, scoreVerdeling, userRank);
     }
 
-    private IEnumerable<UserRank> UserRank(IEnumerable<EtappeUitslag> uitslagen)
+    private IEnumerable<UserRank> UserRankCounts(IEnumerable<EtappeUitslag> uitslagen)
     {
         var users = new Dictionary<string, int[]>();
         int length = uitslagen.First().UsernamesAndScores.Count;
@@ -42,7 +42,6 @@ public partial class StatisticsService
         }
         return users.Select(x => new UserRank(x.Key, x.Value));
     }
-
 
     private IEnumerable<EtappeUitslag> Uitslagen(int raceId, bool budgetParticipation)
     {

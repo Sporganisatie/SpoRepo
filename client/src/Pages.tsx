@@ -13,7 +13,9 @@ import MissedPoints from "./pages/Statistics/MissedPoints";
 import Uitvallers from "./pages/Statistics/Uitvallers";
 import EtappeUitslagen from "./pages/Statistics/EtappeUitslagen/EtappeUitslagen";
 import AllRiders from "./pages/Statistics/AllRiders";
-import ScoreVerloopChart from "./pages/ScoreVerloopChart";
+import ScoreVerloopChart from "./pages/Charts/ScoreVerloopChart";
+import PositieVerloopChart from "./pages/Charts/PositieVerloopChart";
+import RaceUitslagen from "./pages/Statistics/EtappeUitslagen/RaceUitslagen";
 
 const Pages: JSX.Element[] = [
     <Route key="home" index element={<Home />} />,
@@ -30,9 +32,11 @@ const Pages: JSX.Element[] = [
     <Route key="missedpoints" path="missedpoints/:raceId" element={<MissedPoints />} />,
     <Route key="uitvallers" path="uitvallers/:raceId" element={<Uitvallers />} />,
     <Route key="etappeUitslagen" path="etappeUitslagen/:raceId" element={<EtappeUitslagen />} />,
+    <Route key="raceUitslagen" path="raceUitslagen" element={<RaceUitslagen />} />,
     <Route key="allriders" path="allRiders/:raceId" element={<AllRiders />} />,
     // charts
-    <Route key="charts" path="charts/scoreverloop/:raceId" element={<ScoreVerloopChart />} />,
+    <Route key="scoreverloop" path="charts/scoreverloop/:raceId" element={<ScoreVerloopChart />} />,
+    <Route key="positieverloop" path="charts/positieverloop/:raceId" element={<PositieVerloopChart />} />,
     // TODO zorg dat al het overige naar home gaat
 ];
 

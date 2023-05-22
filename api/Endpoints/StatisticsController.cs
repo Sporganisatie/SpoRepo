@@ -13,6 +13,11 @@ public class StatisticsController : ControllerBase
     public StatisticsController(StatisticsService service)
         => Service = service;
 
+    [HttpGet("raceUitslagen")]
+    [ProducesResponseType(200)]
+    public IActionResult RaceUitslagen(bool budgetParticipation)
+        => Ok(Service.RaceUitslagenAll(budgetParticipation));
+
     [HttpGet("missedPoints")]
     [ProducesResponseType(200)]
     public IActionResult MissedPoints(int raceId, bool budgetParticipation)
