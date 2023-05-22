@@ -4,7 +4,7 @@ public record EtappeUitslagen(IEnumerable<EtappeUitslag> uitslagen, IEnumerable<
 
 public record EtappeUitslag(List<UsernameAndScore> UsernamesAndScores, int StageNumber);
 
-public record UsernameAndScore(string Username, decimal Score);
+public record UsernameAndScore(string Username, int Score);
 
 public record ScoreVerdeling(string Username, int Bin0, int Bin1, int Bin2, int Bin3, int Bin4);
 
