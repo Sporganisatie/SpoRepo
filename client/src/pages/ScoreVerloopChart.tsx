@@ -47,7 +47,7 @@ const ScoreVerloopChart = () => {
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
             <LineChart width={chartdata.data.length * 70} height={600} data={chartdata.data}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
                 <XAxis dataKey="name" >
                     <Label
                         value="Etappe"
