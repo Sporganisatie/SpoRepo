@@ -1,6 +1,6 @@
 import DataTable, { TableColumn } from 'react-data-table-component';
 
-interface EtappeUitslag {
+export interface EtappeUitslag {
     stageNumber: string;
     usernamesAndScores: { username: string, score: number }[]
 }
