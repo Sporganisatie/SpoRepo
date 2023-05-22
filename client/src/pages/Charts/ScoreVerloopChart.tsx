@@ -3,11 +3,10 @@ import { useBudgetContext } from '../../components/shared/BudgetContextProvider'
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { EtappeUitslag } from '../Statistics/EtappeUitslagen/EtappeUitslagenTable';
 import { colors, convertData } from './ChartsHelper';
 
 interface ChartData {
-    data: EtappeUitslag[],
+    data: any[],
     usernames: string[]
 }
 

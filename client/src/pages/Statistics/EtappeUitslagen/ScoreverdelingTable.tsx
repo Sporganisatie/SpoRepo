@@ -10,10 +10,12 @@ interface ScoreVerdeling {
     bin4: number;
 }
 
-const ScoreverdelingTable = ({ data }: any) => {
+const ScoreverdelingTable = ({ data, allRaces }: { data: any, allRaces: boolean }) => {
     const budgetParticipation = useBudgetContext();
 
-    const bins = budgetParticipation ? ['10-', '10', '30', '50', '100+'] : ['50-', '50', '100', '200', '300+']
+    const stageBins = budgetParticipation ? ['10-', '10', '30', '50', '100+'] : ['50-', '50', '100', '200', '300+']
+    const raceBins = budgetParticipation ? ['500-', '500', '750', '1000'] : ['4000-', '4000', '4500', '5000+']
+    const bins = allRaces ? raceBins : stageBins;
 
     const columns: TableColumn<ScoreVerdeling>[] = [
         {
@@ -38,7 +40,8 @@ const ScoreverdelingTable = ({ data }: any) => {
         },
         {
             name: bins[4],
-            selector: (row: ScoreVerdeling) => row.bin4
+            selector: (row: ScoreVerdeling) => row.bin4,
+            omit: allRaces
         }
     ];
 

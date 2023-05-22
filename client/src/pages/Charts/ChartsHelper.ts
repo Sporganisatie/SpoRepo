@@ -1,4 +1,4 @@
-import { EtappeUitslag } from "../Statistics/EtappeUitslagen/EtappeUitslagenTable";
+import { EtappeUitslag } from "../Statistics/EtappeUitslagen/UitslagenTable";
 export const colors = ["#00d60e", "#1C43FF", "#FF0000", "#F9F200", "#A900F9", "#FF8000", "#194D33", "#00DEF9", "#F900BB", "#6C3703"];
 
 export const convertData = (data: EtappeUitslag[], invert: boolean = false): any => { // TODO deze logica naar BE

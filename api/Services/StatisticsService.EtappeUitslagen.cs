@@ -43,7 +43,6 @@ public partial class StatisticsService
         return users.Select(x => new UserRank(x.Key, x.Value));
     }
 
-
     private IEnumerable<EtappeUitslag> Uitslagen(int raceId, bool budgetParticipation)
     {
         var subquery = from ss in DB.StageSelections

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
-import { EtappeUitslag } from '../Statistics/EtappeUitslagen/EtappeUitslagenTable';
 import { colors, convertData } from './ChartsHelper';
 
 
