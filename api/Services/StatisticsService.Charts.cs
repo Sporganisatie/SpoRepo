@@ -1,6 +1,6 @@
 namespace SpoRE.Services;
 
-public record EtappeTotalScore(List<UserAndTotalScore> UsernamesAndScores, int StageNumber);
+public record RaceUitslagChart(List<UserAndTotalScore> UsernamesAndScores, int StageNumber);
 
 public record UserAndTotalScore(string Username, int Score, int AccountId);
 
@@ -30,7 +30,7 @@ public partial class StatisticsService
         return result.Prepend(start);
     }
 
-    private IEnumerable<EtappeTotalScore> StandPerEtappe(int raceId, bool budgetParticipation)
+    private IEnumerable<RaceUitslagChart> StandPerEtappe(int raceId, bool budgetParticipation)
     {
         var subquery = from ss in DB.StageSelections
                        where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
@@ -44,7 +44,7 @@ public partial class StatisticsService
 
         var result = subquery
             .GroupBy(ss => ss.StageNumber)
-            .Select(g => new EtappeTotalScore(
+            .Select(g => new RaceUitslagChart(
                 g.OrderByDescending(ss => ss.TotalScore)
                  .Select(ss => new UserAndTotalScore(ss.Username, ss.TotalScore ?? 0, ss.AccountId))
                  .ToList(),
@@ -54,26 +54,25 @@ public partial class StatisticsService
         return result;
     }
 
-    public IEnumerable<EtappeUitslag> PositieVerloop(int raceId, bool budgetParticipation)
+    public IEnumerable<RaceUitslagChart> PositieVerloop(int raceId, bool budgetParticipation)
     {
         var uitslagen = StandPerEtappe(raceId, budgetParticipation);
 
-        var etappeUitslagen = new List<EtappeUitslag>();
+        var etappeUitslagen = new List<RaceUitslagChart>();
         foreach (var uitslag in uitslagen)
         {
-            var etappeUitslag = new EtappeUitslag(new List<UsernameAndScore>(), uitslag.StageNumber);
+            var etappeUitslag = new RaceUitslagChart(new List<UserAndTotalScore>(), uitslag.StageNumber);
             var rank = 0;
             var userscores = uitslag.UsernamesAndScores.ToList();
             for (int i = 0; i < userscores.Count(); i++)
             {
                 var user = userscores[i];
                 if (rank == 0 || user.Score < userscores[i - 1].Score) rank++;
-                etappeUitslag.UsernamesAndScores.Add(new UsernameAndScore(user.Username, rank));
+                etappeUitslag.UsernamesAndScores.Add(new UserAndTotalScore(user.Username, rank, user.AccountId));
             }
             etappeUitslagen.Add(etappeUitslag);
         }
-        var users = uitslagen.First().UsernamesAndScores.OrderBy(x => x.AccountId);
-        var start = new EtappeUitslag(users.Select(x => new UsernameAndScore(x.Username, (users.Count() + 1) / 2m)).ToList(), 0);
-        return etappeUitslagen.Prepend(start);
+        etappeUitslagen[0] = etappeUitslagen[0] with { UsernamesAndScores = etappeUitslagen[0].UsernamesAndScores.OrderBy(x => x.AccountId).ToList() };
+        return etappeUitslagen;
     }
 }
