@@ -21,7 +21,7 @@ const UitslagenTable = ({ data, allRaces }: { data: any, allRaces: boolean }) =>
     const additionalColumns = Array.from({ length }, (_, i) => i);
 
     const columns: TableColumn<EtappeUitslag>[] = [
-        {
+        { // TODO conditional entire object?
             name: allRaces ? 'Race' : 'Etappe',
             selector: (row: EtappeUitslag) => allRaces ? `${row.name} ${row.year}` : row.stageNumber,
             width: allRaces ? '160px' : '80px'
