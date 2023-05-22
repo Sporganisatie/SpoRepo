@@ -7,6 +7,15 @@ export interface EtappeUitslag {
     usernamesAndScores: { username: string, score: number }[]
 }
 
+const conditionalRowStyles = [
+    {
+        when: (row: EtappeUitslag) => row.name === 'Giro',
+        style: {
+            borderTop: 'solid',
+        },
+    }
+];
+
 const UitslagenTable = ({ data, allRaces }: { data: any, allRaces: boolean }) => {
     const length = data[0]?.usernamesAndScores?.length ?? 0;
     const additionalColumns = Array.from({ length }, (_, i) => i);
@@ -32,6 +41,7 @@ const UitslagenTable = ({ data, allRaces }: { data: any, allRaces: boolean }) =>
             data={data}
             highlightOnHover
             striped
+            conditionalRowStyles={conditionalRowStyles}
             dense
         />
     );
