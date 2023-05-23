@@ -14,31 +14,46 @@ const StageClassifications = ({ data }: { data: Classifications }) => {
         <div>
             <div>
                 <button
-                    className={activeButton === 'Etappe' ? 'active' : ''}
+                    className={
+                        (activeButton === 'Etappe' ? 'active' : '')
+                        + ((data.stage?.length ?? 0) > 0 ? '' : 'disabled')}
+                    disabled={data.stage?.length === 0}
                     onClick={() => handleClick('Etappe')}
                 >
                     Etappe
                 </button>
                 <button
-                    className={activeButton === 'Algemeen' ? 'active' : ''}
+                    className={
+                        (activeButton === 'Algemeen' ? 'active' : '')
+                        + ((data.gc?.length ?? 0) > 0 ? '' : 'disabled')}
+                    disabled={data.gc?.length === 0}
                     onClick={() => handleClick('Algemeen')}
                 >
                     Algemeen
                 </button>
                 <button
-                    className={activeButton === 'Punten' ? 'active' : ''}
+                    className={
+                        (activeButton === 'Punten' ? 'active' : '')
+                        + ((data.points?.length ?? 0) > 0 ? '' : 'disabled')}
+                    disabled={data.points?.length === 0}
                     onClick={() => handleClick('Punten')}
                 >
                     Punten
                 </button>
                 <button
-                    className={activeButton === 'Berg' ? 'active' : ''}
+                    className={
+                        (activeButton === 'Berg' ? 'active' : '')
+                        + ((data.kom?.length ?? 0) > 0 ? '' : 'disabled')}
+                    disabled={data.kom?.length === 0}
                     onClick={() => handleClick('Berg')}
                 >
                     Berg
                 </button>
                 <button
-                    className={activeButton === 'Jongeren' ? 'active' : ''}
+                    className={
+                        (activeButton === 'Jongeren' ? 'active' : '')
+                        + ((data.youth?.length ?? 0) > 0 ? '' : 'disabled')}
+                    disabled={data.youth?.length === 0}
                     onClick={() => handleClick('Jongeren')}
                 >
                     Jongeren
