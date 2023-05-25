@@ -50,12 +50,9 @@ public partial class StageResultService
                             StagePos = rp.Stagepos,
                             TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0) ? (int)(rp.Stagescore * 0.5) : 0),
                             Selected = stageSelection.Contains(ssr.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(ssr.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                            // TODO dnf
                         };
             var riderScores = query.OrderBy(r => r.StagePos).ToList();
-            var totals = new StageComparisonRider
-            {
-                TotalScore = riderScores.Sum(rs => rs.TotalScore)
-            };
 
             var gemistQuery = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
                               join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr) on ts.RiderParticipationId equals rp.RiderParticipationId into results
@@ -69,12 +66,12 @@ public partial class StageResultService
                                   StagePos = rp.Stagepos,
                                   TotalScore = totalScore,
                                   Selected = stageSelection.Contains(ts.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(ts.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None
+                                  // TODO dnf
                               };
 
-            output.Add(new UserSelection(user.Username, riderScores.Append(totals), gemistQuery.ToList()));
+            output.Add(new UserSelection(user.Username, riderScores, gemistQuery.ToList()));
         }
-        // order by totals
-        return output.OrderByDescending(x => x.Riders.Last().TotalScore);
+        return OrderSelectedRiders(output).OrderByDescending(x => x.Riders.Last().TotalScore);
     }
 
     public IEnumerable<UserSelection> AllTeamSelections(int raceId, bool budgetParticipation)
@@ -106,12 +103,51 @@ public partial class StageResultService
                         };
 
             var riderScores = query.ToList().OrderByDescending(x => x.TotalScore);
-            var totals = new StageComparisonRider
-            {
-                TotalScore = riderScores.Sum(rs => rs.TotalScore)
-            };
-            output.Add(new UserSelection(user.Username, riderScores.Append(totals), new List<StageComparisonRider>()));
+            output.Add(new UserSelection(user.Username, riderScores, new List<StageComparisonRider>()));
         }
-        return output;
+        return OrderSelectedRiders(output); // Add totals again
+    }
+
+    private IEnumerable<UserSelection> OrderSelectedRiders(List<UserSelection> selecties)
+    {
+        var riders = selecties.SelectMany(selection => selection.Riders.Select(rider => (selection.Username, rider)))
+            .GroupBy(x => x.rider.Rider).Select(g => g.ToList())
+            .OrderByDescending(rider => rider.Count)
+            .ThenByDescending(rider => rider.Max(u => u.Item2.TotalScore)).ToList();
+
+        var reorderedRiders = new List<List<(string, StageComparisonRider)>>();
+
+        while (riders.Any())
+        {
+            var riderLine = new List<(string, StageComparisonRider)>();
+            while (riderLine.Count() < selecties.Count())
+            {
+                var nextRider = riders.FirstOrDefault(x => !x.Select(x => x.Item1).Intersect(riderLine.Select(x => x.Item1)).Any());
+                if (nextRider is null)
+                {
+                    foreach (var user in selecties.Select(x => x.Username).Except(riderLine.Select(x => x.Item1)))
+                    {
+                        riderLine.Add(new(user, new() { TotalScore = -1 }));
+                    }
+                    continue;
+                }
+                riderLine.AddRange(nextRider);
+                riders.Remove(nextRider);
+            }
+            reorderedRiders.Add(riderLine);
+        }
+
+        return selecties.Select(user => UpdateUser(user, reorderedRiders));
+        // TODO ook return all selected riders + count
+    }
+
+    private UserSelection UpdateUser(UserSelection user, List<List<(string, StageComparisonRider)>> reorderedRiders)
+    {
+        var newRiders = reorderedRiders.Select(line => line.FirstOrDefault(x => x.Item1 == user.Username).Item2);
+        var totals = new StageComparisonRider
+        {
+            TotalScore = newRiders.Sum(rs => rs.TotalScore)
+        };
+        return new UserSelection(user.Username, newRiders.Append(totals), user.Gemist);
     }
 }

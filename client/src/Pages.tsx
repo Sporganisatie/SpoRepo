@@ -16,6 +16,7 @@ import AllRiders from "./pages/Statistics/AllRiders";
 import ScoreVerloopChart from "./pages/Charts/ScoreVerloopChart";
 import PositieVerloopChart from "./pages/Charts/PositieVerloopChart";
 import RaceUitslagen from "./pages/Statistics/EtappeUitslagen/RaceUitslagen";
+import RiderPage from "./pages/RiderPage";
 
 const Pages: JSX.Element[] = [
     <Route key="home" index element={<Home />} />,
@@ -26,6 +27,7 @@ const Pages: JSX.Element[] = [
     <Route key="raceRouter" path="race/:raceId" element={<RaceRouter />} />,
     <Route key="stage" path="stage/:raceId/:stagenr" element={<Stage />} />,
     <Route key="joinRace" path="joinrace/:raceId" element={<JoinRace />} />,
+    <Route key="rider" path="rider/:riderId" element={<RiderPage />} />,
     <Route key="admin" path="admin" element={<Admin />} />,
     // statistics
     <Route key="teamcomparison" path="teamcomparison/:raceId" element={<TeamComparisonPage />} />,

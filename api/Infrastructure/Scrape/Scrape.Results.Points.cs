@@ -13,6 +13,16 @@ public partial class Scrape
             _ => 0
         };
 
+    private int EindScore(int rank, string tab)
+        => tab switch
+        {
+            "GC" => rank > 20 ? 0 : new int[] { 0, 100, 80, 60, 50, 40, 36, 32, 28, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2 }[rank],
+            "Points" => rank > 10 ? 0 : new int[] { 0, 80, 60, 40, 30, 20, 10, 8, 6, 4, 2 }[rank],
+            "KOM" => rank > 5 ? 0 : new int[] { 0, 60, 40, 30, 20, 10 }[rank],
+            "Youth" => rank > 5 ? 0 : new int[] { 0, 50, 30, 20, 10, 5 }[rank],
+            _ => 0
+        };
+
     private int TeamScore(RiderResult rider, string teamWinner, string classification, string stageType)
     {
         if (IsLeader(rider, classification) || rider.Team != teamWinner) return 0;

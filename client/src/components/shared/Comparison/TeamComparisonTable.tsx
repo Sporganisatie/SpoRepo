@@ -31,13 +31,14 @@ const TeamComparisonTable = ({ title, riders }: { title: string, riders: StageCo
             name: 'Renner',
             minWidth: '200px',
             // width: "60%",
-            cell: (row: StageComparisonRider) => row.rider == null ? "Totaal" : <RiderLink rider={row.rider} kopman={row.kopman} />,
+            cell: (row: StageComparisonRider) => row.rider == null ? row.totalScore == -1 ? "" : "Totaal"
+                : <RiderLink rider={row.rider} kopman={row.kopman} />,
         },
         {
             name: "Totaal",
             minWidth: '10px',
             // width: "20%",
-            cell: (row: StageComparisonRider) => row.totalScore
+            cell: (row: StageComparisonRider) => row.totalScore == -1 ? "" : row.totalScore
         },
     ];
 
