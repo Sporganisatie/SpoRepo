@@ -45,14 +45,14 @@ public partial class StatisticsService
 
     private record StageSelectionQueryResult(string Username, int? StageScore, int StageNumber);
 
-    private IQueryable<StageSelectionQueryResult> GetStageSelectionQuery(int raceId, bool budgetParticipation)
-        => from ss in DB.StageSelections
-           where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
-           select new StageSelectionQueryResult(
-               ss.AccountParticipation.Account.Username,
-               ss.StageScore,
-               ss.Stage.Stagenr
-           );
+    private IEnumerable<StageSelectionQueryResult> GetStageSelectionQuery(int raceId, bool budgetParticipation)
+        => (from ss in DB.StageSelections
+            where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
+            select new StageSelectionQueryResult(
+                ss.AccountParticipation.Account.Username,
+                ss.StageScore,
+                ss.Stage.Stagenr
+            )).AsEnumerable();
 
     private IEnumerable<EtappeUitslag> Uitslagen(int raceId, bool budgetParticipation)
     {

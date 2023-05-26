@@ -46,14 +46,14 @@ public partial class StatisticsService
 
     private record UserRaceScoreQueryResult(string Username, int? Score, Race Race);
 
-    private IQueryable<UserRaceScoreQueryResult> GetUserRaceScore(bool budgetParticipation)
-        => from ap in DB.AccountParticipations.Include(ap => ap.Race)
-           where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
-           select new UserRaceScoreQueryResult(
-               ap.Account.Username,
-               ap.Finalscore,
-               ap.Race
-           );
+    private IEnumerable<UserRaceScoreQueryResult> GetUserRaceScore(bool budgetParticipation)
+        => (from ap in DB.AccountParticipations.Include(ap => ap.Race)
+            where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
+            select new UserRaceScoreQueryResult(
+                ap.Account.Username,
+                ap.Finalscore,
+                ap.Race
+            )).AsEnumerable();
 
     private IEnumerable<RaceUitslag> RaceUitslagen(bool budgetParticipation)
     {

@@ -39,8 +39,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
       </span>
       {showMenu ? (
         <div className="navbar_dropdown-content">
-          {props.raceSelected && raceOnlyLinks}
           {alwaysLinks}
+          {props.raceSelected && raceOnlyLinks}
         </div>
       ) : null}
     </div>
