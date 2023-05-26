@@ -2,7 +2,10 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
-    private int Score(int rank, string tab)
+    private int Score(int rank, string tab, string type)
+        => type.Equals("FinalStandings") ? EindScore(rank, tab) : StageScore(rank, tab);
+
+    private int StageScore(int rank, string tab)
         => tab switch
         {
             "" or "Stage" => rank > 20 ? 0 : new int[] { 0, 50, 44, 40, 36, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2 }[rank],

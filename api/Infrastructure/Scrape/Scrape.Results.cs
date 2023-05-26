@@ -19,10 +19,6 @@ public partial class Scrape
         UpdateDnfRiders(riderResults, stage);
         StageComplete(stage, riderResults);
 
-        if (DB.Stages.Count(s => s.RaceId == stage.RaceId) == stage.Stagenr + 1)
-        {
-            // eindklassement
-        }
         if (!riderResults.Any()) return "";
         return BuildResultsQuery(riderResults.Values, stage);
     }
@@ -107,7 +103,7 @@ public partial class Scrape
         foreach (var pcsRow in pcsRows)
         {
             riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId, pcsRow.Team));
-            riderResults[pcsRow.PcsId] = AddResults(riderResults[pcsRow.PcsId], pcsRow, tab);
+            riderResults[pcsRow.PcsId] = AddResults(riderResults[pcsRow.PcsId], pcsRow, tab, type);
         }
         foreach (var (key, value) in riderResults)
         {
@@ -159,42 +155,42 @@ public partial class Scrape
     private string GetString(Dictionary<string, HtmlNode> fields, string col)
         => fields.ContainsKey(col) ? fields[col].InnerText : "";
 
-    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab)
+    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, string type)
         => tab switch
         {
             "" or "Stage" => riderResult with
             {
                 Stagepos = pcsRow.Rank,
                 Stageresult = pcsRow.Time,
-                Stagescore = Score(pcsRow.Rank, tab),
+                Stagescore = Score(pcsRow.Rank, tab, type),
                 Dnf = pcsRow.Dnf
             },
             "GC" => riderResult with
             {
                 Gcpos = pcsRow.Rank,
                 Gcresult = pcsRow.Time,
-                Gcscore = Score(pcsRow.Rank, tab),
+                Gcscore = Score(pcsRow.Rank, tab, type),
                 Gcchange = pcsRow.RankChange
             },
             "Points" => riderResult with
             {
                 Pointspos = pcsRow.Rank,
                 Pointsresult = pcsRow.Points,
-                Pointsscore = Score(pcsRow.Rank, tab),
+                Pointsscore = Score(pcsRow.Rank, tab, type),
                 Pointschange = pcsRow.RankChange
             },
             "KOM" => riderResult with
             {
                 Kompos = pcsRow.Rank,
                 Komresult = pcsRow.Points,
-                Komscore = Score(pcsRow.Rank, tab),
+                Komscore = Score(pcsRow.Rank, tab, type),
                 Komchange = pcsRow.RankChange
             },
             "Youth" => riderResult with
             {
                 Yocpos = pcsRow.Rank,
                 Yocresult = pcsRow.Time,
-                Yocscore = Score(pcsRow.Rank, tab),
+                Yocscore = Score(pcsRow.Rank, tab, type),
                 Yocchange = pcsRow.RankChange
             },
             _ => riderResult

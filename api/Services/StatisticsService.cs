@@ -21,6 +21,6 @@ public partial class StatisticsService
                     group ts by ts.AccountParticipation.Account.Username into g
                     select new UitvallersData(g.Key, g.Count(), g.Sum(ts => ts.RiderParticipation.Price));
 
-        return query.ToList().OrderByDescending(x => x.Uitvallers);
+        return query.ToList().OrderByDescending(x => x.Uitvallers).ThenBy(x => x.UitvallerBudget);
     }
 }
