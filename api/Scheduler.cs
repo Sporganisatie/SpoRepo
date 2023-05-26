@@ -4,6 +4,7 @@ using Timer = System.Timers.Timer;
 using SpoRE.Infrastructure.Scrape;
 
 namespace SpoRE.Setup;
+
 public class Scheduler
 {
     private IServiceProvider serviceProvider;
@@ -23,16 +24,9 @@ public class Scheduler
             var stage = raceClient.CurrentStage(27);
             if (stage?.Starttime is null) return;
 
-            if (stage.Starttime > DateTime.UtcNow) { ScheduleAction((stage.Starttime ?? new DateTime()) + TimeSpan.FromMinutes(1)); return; }
+            if (stage.Starttime > DateTime.UtcNow) { ScheduleAction(TimeSpan.FromMinutes(1)); return; }
 
             var scrape = scope.ServiceProvider.GetService<Scrape>();
-            if (!stage.Finished)
-            {
-                var nullableFinishTime = scrape.GetFinishTime();
-
-                if (nullableFinishTime is { } finishtime && (finishtime - DateTime.UtcNow).TotalHours > 0) { ScheduleAction(finishtime - TimeSpan.FromMinutes(55)); return; }
-            }
-
             await scrape.StageResults(stage);
             ScheduleAction(TimeSpan.FromMinutes(1));
         }

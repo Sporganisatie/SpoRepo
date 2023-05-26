@@ -18,6 +18,7 @@ internal static class Telemetry
         services.AddScoped<RaceService, RaceService>();
         services.AddScoped<StageResultService, StageResultService>();
         services.AddScoped<StatisticsService, StatisticsService>();
+        services.AddSingleton<Scheduler, Scheduler>();
     }
 
     public static void AddSwaggerLogin(this IServiceCollection services)
