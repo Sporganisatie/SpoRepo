@@ -11,15 +11,34 @@ const classificationRowStyle = [
     {
         when: (row: ClassificationRow) => row.selected === StageSelectedEnum.InTeam,
         classNames: ["notselected"]
-    },
+    }
 ];
 
-const SimpleClassification = ({ rows, title, resultColName, pagination }: { rows: ClassificationRow[], title: string, resultColName: string, pagination?: boolean }) => {
+const ClassificationTable = ({ rows, title, resultColName, pagination, showRankChange }: { rows: ClassificationRow[], title: string, resultColName: string, pagination?: boolean, showRankChange?: boolean }) => {
     const columns: TableColumn<ClassificationRow>[] = [
         {
             name: '',
             maxWidth: '100px',
             selector: (row: ClassificationRow) => row.position
+        },
+        {
+            name: '',
+            width: '70px',
+            selector: (row: ClassificationRow) => row.change,
+            omit: !showRankChange,
+            conditionalCellStyles: [
+                {
+                    when: row => row.change.startsWith('▼'),
+                    style: {
+                        color: 'red'
+                    },
+                },
+                {
+                    when: row => row.change.startsWith('▲'),
+                    style: {
+                        color: 'green'
+                    },
+                }]
         },
         {
             name: 'Naam',
@@ -55,6 +74,6 @@ const SimpleClassification = ({ rows, title, resultColName, pagination }: { rows
     );
 }
 
-export default SimpleClassification;
+export default ClassificationTable;
 
 

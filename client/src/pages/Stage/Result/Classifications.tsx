@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SimpleClassification from '../Selection/SimpleClassification';
+import ClassificationTable from '../Selection/ClassificationTable';
 import { Classifications } from '../models/StageSelectionData';
 import './StageClassifications.css';
 
@@ -60,19 +60,19 @@ const StageClassifications = ({ data }: { data: Classifications }) => {
                 </button>
             </div>
             {activeButton === 'Etappe' && (
-                <SimpleClassification rows={data.stage ?? []} title="Etappe" resultColName="Tijd" pagination={true} />
+                <ClassificationTable rows={data.stage ?? []} title="Etappe" resultColName="Tijd" pagination={true} />
             )}
             {activeButton === 'Algemeen' && (
-                <SimpleClassification rows={data.gc} title="Algemeen" resultColName="Tijd" pagination={true} />
+                <ClassificationTable rows={data.gc} title="Algemeen" resultColName="Tijd" pagination={true} showRankChange={true} />
             )}
             {activeButton === 'Punten' && (
-                <SimpleClassification rows={data.points} title="Punten" resultColName="Punten" pagination={true} />
+                <ClassificationTable rows={data.points} title="Punten" resultColName="Punten" pagination={true} showRankChange={true} />
             )}
             {activeButton === 'Berg' && (
-                <SimpleClassification rows={data.kom} title="Berg" resultColName="Punten" pagination={true} />
+                <ClassificationTable rows={data.kom} title="Berg" resultColName="Punten" pagination={true} showRankChange={true} />
             )}
             {activeButton === 'Jongeren' && (
-                <SimpleClassification rows={data.youth} title="Jongeren" resultColName="Tijd" pagination={true} />
+                <ClassificationTable rows={data.youth} title="Jongeren" resultColName="Tijd" pagination={true} showRankChange={true} />
             )}
         </div>
     );

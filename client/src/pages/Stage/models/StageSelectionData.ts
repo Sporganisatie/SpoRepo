@@ -21,5 +21,6 @@ export interface ClassificationRow {
     team: string;
     position: number;
     result: string;
-    selected: StageSelectedEnum
+    selected: StageSelectedEnum;
+    change: string;
 }
