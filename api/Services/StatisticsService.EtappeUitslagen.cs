@@ -43,18 +43,20 @@ public partial class StatisticsService
         return users.Select(x => new UserRank(x.Key, x.Value));
     }
 
+    private record StageSelectionQueryResult(string Username, int? StageScore, int StageNumber);
+
+    private IQueryable<StageSelectionQueryResult> GetStageSelectionQuery(int raceId, bool budgetParticipation)
+        => from ss in DB.StageSelections
+           where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
+           select new StageSelectionQueryResult(
+               ss.AccountParticipation.Account.Username,
+               ss.StageScore,
+               ss.Stage.Stagenr
+           );
+
     private IEnumerable<EtappeUitslag> Uitslagen(int raceId, bool budgetParticipation)
     {
-        var subquery = from ss in DB.StageSelections
-                       where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
-                       select new
-                       {
-                           Username = ss.AccountParticipation.Account.Username,
-                           StageScore = ss.StageScore,
-                           StageNumber = ss.Stage.Stagenr
-                       };
-
-        var result = subquery
+        var result = GetStageSelectionQuery(raceId, budgetParticipation)
             .GroupBy(ss => ss.StageNumber)
             .Select(g => new EtappeUitslag(
                 g.OrderByDescending(ss => ss.StageScore)
@@ -68,17 +70,9 @@ public partial class StatisticsService
 
     private IEnumerable<ScoreVerdeling> ScoreVerdeling(int raceId, bool budgetParticipation)
     {
-        var subquery = from ss in DB.StageSelections
-                       where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
-                       select new
-                       {
-                           Username = ss.AccountParticipation.Account.Username,
-                           StageScore = ss.StageScore,
-                           StageNumber = ss.Stage.Stagenr
-                       };
         var bins = budgetParticipation ? new[] { 0, 10, 30, 50, 100 } : new[] { 0, 50, 100, 200, 300 };
 
-        var result = from item in subquery
+        var result = from item in GetStageSelectionQuery(raceId, budgetParticipation)
                      group item by item.Username into userGroup
                      select new ScoreVerdeling
                      (

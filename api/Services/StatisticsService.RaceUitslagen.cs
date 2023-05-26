@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Services;
 
@@ -43,22 +44,24 @@ public partial class StatisticsService
         return users.Select(x => new UserRank(x.Key, x.Value));
     }
 
+    private record UserRaceScoreQueryResult(string Username, int? Score, Race Race);
+
+    private IQueryable<UserRaceScoreQueryResult> GetUserRaceScore(bool budgetParticipation)
+        => from ap in DB.AccountParticipations.Include(ap => ap.Race)
+           where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
+           select new UserRaceScoreQueryResult(
+               ap.Account.Username,
+               ap.Finalscore,
+               ap.Race
+           );
+
     private IEnumerable<RaceUitslag> RaceUitslagen(bool budgetParticipation)
     {
-        var subquery = from ap in DB.AccountParticipations.Include(ap => ap.Race)
-                       where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
-                       select new
-                       {
-                           Username = ap.Account.Username,
-                           StageScore = ap.Finalscore,
-                           Race = ap.Race
-                       };
-
-        var result = subquery
+        var result = GetUserRaceScore(budgetParticipation)
             .GroupBy(ss => ss.Race)
             .Select(g => new RaceUitslag(
-                g.OrderByDescending(ss => ss.StageScore)
-                 .Select(ss => new UsernameAndScore(ss.Username, ss.StageScore ?? 0))
+                g.OrderByDescending(ss => ss.Score)
+                 .Select(ss => new UsernameAndScore(ss.Username, ss.Score ?? 0))
                  .ToList(),
                 g.Key.Year,
                 char.ToUpper(g.Key.Name[0]) + g.Key.Name.Substring(1),
@@ -70,25 +73,17 @@ public partial class StatisticsService
 
     private IEnumerable<ScoreVerdeling> RaceScoreVerdeling(bool budgetParticipation)
     {
-        var subquery = from ap in DB.AccountParticipations
-                       where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
-                       select new
-                       {
-                           Username = ap.Account.Username,
-                           StageScore = ap.Finalscore,
-                           StageNumber = ap.RaceId
-                       };
         var bins = budgetParticipation ? new[] { 0, 500, 750, 100 } : new[] { 0, 4000, 4500, 5000 };
 
-        var result = from item in subquery
+        var result = from item in GetUserRaceScore(budgetParticipation)
                      group item by item.Username into userGroup
                      select new ScoreVerdeling
                      (
                          userGroup.Key,
-                         userGroup.Count(item => item.StageScore >= bins[0] && item.StageScore < bins[1]),
-                         userGroup.Count(item => item.StageScore >= bins[1] && item.StageScore < bins[2]),
-                         userGroup.Count(item => item.StageScore >= bins[2] && item.StageScore < bins[3]),
-                         userGroup.Count(item => item.StageScore >= bins[3]),
+                         userGroup.Count(item => item.Score >= bins[0] && item.Score < bins[1]),
+                         userGroup.Count(item => item.Score >= bins[1] && item.Score < bins[2]),
+                         userGroup.Count(item => item.Score >= bins[2] && item.Score < bins[3]),
+                         userGroup.Count(item => item.Score >= bins[3]),
                          0);
 
         return result.ToList().OrderByDescending(x => x.Bin3).ThenByDescending(x => x.Bin2).ThenByDescending(x => x.Bin1).ThenByDescending(x => x.Bin0);

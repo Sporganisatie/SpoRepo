@@ -6,17 +6,14 @@ const StatistiekenDropdown = (props: { raceSelected: boolean }) => {
             {...props}
             name="Statistieken"
             alwaysLinks={[
-                // { url: "/statistics/rondewinsten", title: "Uitslagen per ronde" }
+                { url: "/raceUitslagen", title: "Uitslagen per race" }, // TODO dynamic race id
             ]}
             raceOnlyLinks={[
-                { url: "/teamcomparison/27", title: "Team overzichten" }, // TODO dynamic race id
+                { url: "/allRiders/27", title: "Alle Renners" }, // TODO dynamic race id
                 { url: "/missedpoints/27", title: "Gemiste punten" }, // TODO dynamic race id
                 { url: "/uitvallers/27", title: "Uitvallers" }, // TODO dynamic race id
+                { url: "/teamcomparison/27", title: "Team overzichten" }, // TODO dynamic race id
                 { url: "/etappeUitslagen/27", title: "Uitslagen per etappe" }, // TODO dynamic race id
-                { url: "/raceUitslagen", title: "Uitslagen per race" }, // TODO dynamic race id
-                { url: "/allRiders/27", title: "Alle Renners" } // TODO dynamic race id
-                // { url: "/statistics/etappewinsten", title: "Uitslagen per etappe" },
-                // { url: "/statistics/allriders", title: "Alle renners" },
                 // { url: "/statistics/klassementen", title: "Klassementen" },
                 // { url: "/statistics/missedPointsPerRider", title: "Gemiste punten per Renner" },
                 // { url: "/statistics/teamcomparisons", title: "Selectie vergelijking" },
