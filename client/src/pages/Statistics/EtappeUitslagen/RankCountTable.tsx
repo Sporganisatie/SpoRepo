@@ -6,9 +6,18 @@ interface UserRank {
 }
 
 const RankingTable = ({ data }: any) => {
-    const length = data.length ?? 0;
+    const highestNonZeroIndex = data.map((user: UserRank) => {
+        const nonZeroIndices = user.ranks.map((rank, index) => {
+            if (rank !== 0) {
+                return index;
+            }
+            return 0;
+        });
+        return Math.max(...nonZeroIndices);
+    });
+
+    const length = Math.max(...highestNonZeroIndex) + 1;
     const additionalColumns = Array.from({ length }, (_, i) => i);
-    console.log(additionalColumns)
     const columns: TableColumn<UserRank>[] = [
         {
             name: 'User',

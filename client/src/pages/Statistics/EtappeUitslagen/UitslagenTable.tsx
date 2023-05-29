@@ -17,7 +17,7 @@ const conditionalRowStyles = [
 ];
 
 const UitslagenTable = ({ data, allRaces }: { data: any, allRaces: boolean }) => {
-    const length = data[0]?.usernamesAndScores?.length ?? 0;
+    const length = Math.max(...data.map((etappe: EtappeUitslag) => etappe.usernamesAndScores.length));
     const additionalColumns = Array.from({ length }, (_, i) => i);
 
     const columns: TableColumn<EtappeUitslag>[] = [
@@ -29,14 +29,14 @@ const UitslagenTable = ({ data, allRaces }: { data: any, allRaces: boolean }) =>
         ...additionalColumns.map((column) => (
             {
                 name: `${column + 1}e`,
-                selector: (row: EtappeUitslag) => `${row.usernamesAndScores[column]?.username} (${row.usernamesAndScores[column]?.score})`,
+                selector: (row: EtappeUitslag) => row.usernamesAndScores[column] === undefined ? "" : `${row.usernamesAndScores[column]?.username} (${row.usernamesAndScores[column]?.score})`,
                 width: '120px'
             }))
     ];
 
     return (
         <DataTable
-            title="Etappe Uitslagen"
+            title={(allRaces ? 'Race' : 'Etappe') + " Uitslagen"}
             columns={columns}
             data={data}
             highlightOnHover
