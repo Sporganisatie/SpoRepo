@@ -30,7 +30,7 @@ public partial class Scrape
 
     public async Task StageResults(Stage stage)
     {
-        var stageNr = stage.Type == "FinalStandings" ? stage.Stagenr - 1 : stage.Stagenr;
+        var stageNr = stage.Type is StageType.FinalStandings ? stage.Stagenr - 1 : stage.Stagenr;
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
         var tables = html.QuerySelectorAll(".result-cont .subTabs")

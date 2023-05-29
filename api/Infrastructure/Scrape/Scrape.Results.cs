@@ -71,7 +71,7 @@ public partial class Scrape
                 )"));
     }
 
-    private void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, string type)
+    private void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, StageType type)
     {
         foreach (var rider in riderResults)
         {
@@ -95,7 +95,7 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(query);
     }
 
-    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, string type, ref Dictionary<string, string> teamWinners)
+    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
     {
         if (tab == "Teams") return;
         var pcsRows = ResultsDict(htmlResults);
@@ -155,7 +155,7 @@ public partial class Scrape
     private string GetString(Dictionary<string, HtmlNode> fields, string col)
         => fields.ContainsKey(col) ? fields[col].InnerText : "";
 
-    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, string type)
+    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, StageType type)
         => tab switch
         {
             "" or "Stage" => riderResult with

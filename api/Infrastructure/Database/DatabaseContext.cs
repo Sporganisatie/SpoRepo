@@ -374,7 +374,10 @@ public class DatabaseContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("starttime");
             entity.Property(e => e.Type)
-                .HasDefaultValueSql("'REG'::text")
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (StageType)Enum.Parse(typeof(StageType), v))
+                .HasDefaultValue(StageType.REG)
                 .HasColumnName("type");
             entity.Property(e => e.Weight)
                 .HasDefaultValueSql("1")
