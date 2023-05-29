@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
 
 namespace SpoRE.Services;
 
 public partial class StageResultService
 {
-    public IEnumerable<RiderScore> GetTeamResult(int raceId, int stagenr, bool budgetParticipation)
+    public IEnumerable<RiderScore> GetTeamResult(Stage stage, bool budgetParticipation)
     {
-        var riderScores = GetRiderScores(raceId, stagenr, budgetParticipation).ToList();
+        var riderScores = GetRiderScores(stage, budgetParticipation).ToList();
 
         var totals = new RiderScore
         {
@@ -19,13 +20,13 @@ public partial class StageResultService
         return riderScores.Append(totals);
     }
 
-    private IEnumerable<RiderScore> GetRiderScores(int raceId, int stagenr, bool budgetParticipation)
+    private IEnumerable<RiderScore> GetRiderScores(Stage stage, bool budgetParticipation)
     {
         // TODO if finalstandings use teamselection
         var query = from ssr in DB.StageSelectionRiders.Include(ssr => ssr.RiderParticipation.Rider)
-                    join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
+                    join rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
                     from rp in results.DefaultIfEmpty()
-                    where ssr.StageSelection.Stage.Stagenr == stagenr && ssr.StageSelection.AccountParticipationId == User.ParticipationId
+                    where ssr.StageSelection.StageId == stage.StageId && ssr.StageSelection.AccountParticipationId == User.ParticipationId
                     select new RiderScore
                     {
                         Rider = ssr.RiderParticipation.Rider,
@@ -40,23 +41,24 @@ public partial class StageResultService
         return query.ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
     }
 
-    public IEnumerable<UserScore> GetUserScores(int raceId, bool budgetParticipation, int stagenr)
+    public IEnumerable<UserScore> GetUserScores(Stage stage, bool budgetParticipation)
+    {
         // TODO if finalstandings use teamselection
-        => DB.StageSelections.Where(ss => ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
+
+        return DB.StageSelections.Where(ss => ss.StageId == stage.StageId)
             .Join(
                 DB.AccountParticipations.Where(ap => ap.BudgetParticipation == budgetParticipation),
                 ss => ss.AccountParticipationId,
                 ap => ap.AccountParticipationId,
                 (ss, ap) => new UserScore(ap.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0)
             ).ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
+    }
 
-    public Classifications GetClassifications(int raceId, int stagenr, bool top5)
+    public Classifications GetClassifications(Stage stage, bool top5)
     // TODO if finalstandings use teamselection
     {
-        var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
+        var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.StageId == stage.StageId).Select(ssr => ssr.RiderParticipationId).ToList();
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
-
-        var stage = top5 ? DB.Stages.OrderByDescending(s => s.Stagenr).First(s => s.Finished && s.RaceId == raceId) : DB.Stages.Single(s => s.Stagenr == stagenr && s.RaceId == raceId);
 
         var stageResult = from rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId && rp.Stagepos > 0).OrderBy(rp => rp.Stagepos)
                           select new ClassificationRow
