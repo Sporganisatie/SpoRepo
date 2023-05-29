@@ -2,6 +2,7 @@
 
 public class ResultsPoint
 {
+    // TODO split up in groups with automatic EF core mapping
     public int StageId { get; set; }
 
     public int RiderParticipationId { get; set; }
