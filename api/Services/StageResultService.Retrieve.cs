@@ -42,17 +42,9 @@ public partial class StageResultService
     }
 
     public IEnumerable<UserScore> GetUserScores(Stage stage, bool budgetParticipation)
-    {
-        // TODO if finalstandings use teamselection
-
-        return DB.StageSelections.Where(ss => ss.StageId == stage.StageId)
-            .Join(
-                DB.AccountParticipations.Where(ap => ap.BudgetParticipation == budgetParticipation),
-                ss => ss.AccountParticipationId,
-                ap => ap.AccountParticipationId,
-                (ss, ap) => new UserScore(ap.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0)
-            ).ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
-    }
+        => (from ss in DB.StageSelections.Where(ss => ss.StageId == stage.StageId && ss.AccountParticipation.BudgetParticipation == budgetParticipation)
+            select new UserScore(ss.AccountParticipation.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0))
+            .ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
 
     public Classifications GetClassifications(Stage stage, bool top5)
     // TODO if finalstandings use teamselection
