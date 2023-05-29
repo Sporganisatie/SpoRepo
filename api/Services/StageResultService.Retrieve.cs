@@ -21,6 +21,7 @@ public partial class StageResultService
 
     private IEnumerable<RiderScore> GetRiderScores(int raceId, int stagenr, bool budgetParticipation)
     {
+        // TODO if finalstandings use teamselection
         var query = from ssr in DB.StageSelectionRiders.Include(ssr => ssr.RiderParticipation.Rider)
                     join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
                     from rp in results.DefaultIfEmpty()
@@ -40,6 +41,7 @@ public partial class StageResultService
     }
 
     public IEnumerable<UserScore> GetUserScores(int raceId, bool budgetParticipation, int stagenr)
+        // TODO if finalstandings use teamselection
         => DB.StageSelections.Where(ss => ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
             .Join(
                 DB.AccountParticipations.Where(ap => ap.BudgetParticipation == budgetParticipation),
@@ -49,6 +51,7 @@ public partial class StageResultService
             ).ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
 
     public Classifications GetClassifications(int raceId, int stagenr, bool top5)
+    // TODO if finalstandings use teamselection
     {
         var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
