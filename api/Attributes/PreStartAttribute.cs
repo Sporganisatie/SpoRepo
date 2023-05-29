@@ -15,7 +15,7 @@ public class PreStartAttribute : ActionFilterAttribute
         var stagenrString = context.HttpContext.Request.Query.FirstOrDefault(x => x.Key == "stagenr").Value.FirstOrDefault();
         var stagenr = int.TryParse(stagenrString, out var stage) ? stage : 1;
 
-        if (raceClient.StageStarted(int.Parse(raceIdString), stagenr))
+        if (raceClient.ShowResults(int.Parse(raceIdString), stagenr))
         {
             context.Result = new StatusCodeResult(StatusCodes.Status423Locked);
             return;

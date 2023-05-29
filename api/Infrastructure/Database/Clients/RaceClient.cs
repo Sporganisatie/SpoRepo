@@ -10,12 +10,15 @@ public class RaceClient
         DB = databaseContext;
     }
 
-    public bool StageStarted(int raceId, int stagenr)
-        => DateTime.UtcNow >= DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr).Starttime;
+    public bool ShowResults(int raceId, int stagenr)
+    {
+        var stage = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
+        return stage.Type == "FinalStandings" || DateTime.UtcNow >= stage.Starttime;
+    }
 
     public int CurrentStagenr(int raceId)
-        => DB.Stages.Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).First()?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId);
+        => DB.Stages.Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault()?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId);
 
     public Stage CurrentStage(int raceId)
-        => DB.Stages.Include(s => s.Race).Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).First();
+        => DB.Stages.Include(s => s.Race).Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
 }

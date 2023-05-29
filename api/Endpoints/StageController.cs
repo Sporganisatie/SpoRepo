@@ -17,5 +17,5 @@ public class StageController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(StageStateEnum), 200)]
-    public IActionResult Get(int raceId, int stageNr) => Ok(RaceClient.StageStarted(raceId, stageNr) ? StageStateEnum.Started : StageStateEnum.Selection);
+    public IActionResult Get(int raceId, int stageNr) => Ok(RaceClient.ShowResults(raceId, stageNr) ? StageStateEnum.Started : StageStateEnum.Selection);
 }

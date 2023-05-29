@@ -13,7 +13,7 @@ enum StageStateEnum {
     Started
 }
 
-const stages: SelectOption<string>[] = Array.from({ length: 21 }, (_, i) => ({
+const stages: SelectOption<string>[] = Array.from({ length: 22 }, (_, i) => ({
     displayValue: (i + 1).toString(),
     value: (i + 1).toString(),
 }));

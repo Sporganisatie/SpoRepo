@@ -21,7 +21,7 @@ public partial class StageResultService
 
     public StageResultData StageResultData(int raceId, bool budgetParticipation, int stagenr)
     {
-        if (!RaceClient.StageStarted(raceId, stagenr)) return new(new List<UserScore>(), new List<RiderScore>(), new Classifications(new List<ClassificationRow>(), new List<ClassificationRow>(), new List<ClassificationRow>(), new List<ClassificationRow>()));
+        if (!RaceClient.ShowResults(raceId, stagenr)) return new(new List<UserScore>(), new List<RiderScore>(), new Classifications(new List<ClassificationRow>(), new List<ClassificationRow>(), new List<ClassificationRow>(), new List<ClassificationRow>()));
         var userScores = GetUserScores(raceId, budgetParticipation, stagenr);
         var teamResult = GetTeamResult(raceId, stagenr, budgetParticipation);
         var classifications = GetClassifications(raceId, stagenr, top5: false);
