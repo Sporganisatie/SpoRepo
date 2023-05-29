@@ -22,8 +22,8 @@ public class RaceController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(RaceState), 200)]
-    public async Task<IActionResult> GetAsync(int raceId)
-        => Ok((await Service.GetRaceState(raceId)).Value);
+    public IActionResult GetAsync(int raceId)
+        => Ok(Service.GetRaceState(raceId));
 
     [HttpGet("join")]
     [ProducesResponseType(200)]

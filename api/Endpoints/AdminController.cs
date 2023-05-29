@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Infrastructure.Scrape;
+using SpoRE.Services;
 using SpoRE.Setup;
 
 namespace SpoRE.Controllers;
@@ -12,17 +13,19 @@ namespace SpoRE.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly Scrape Scraper;
-    private readonly StageClient StageClient;
+    private readonly RaceClient RaceClient;
+    private readonly RaceService RaceService;
     private readonly Scheduler Scheduler;
-    public AdminController(Scrape scrape, StageClient stageClient, Scheduler scheduler)
+    public AdminController(Scrape scrape, RaceClient raceClient, RaceService raceService, Scheduler scheduler)
     {
         Scraper = scrape;
-        StageClient = stageClient;
+        RaceService = raceService;
+        RaceClient = raceClient;
         Scheduler = scheduler;
     }
 
     [HttpGet("startlist")]
-    public IActionResult Get(string raceName, int year)
+    public IActionResult ScrapeStartList(string raceName, int year)
     {
         Scraper.Startlist(raceName, year);
         return Ok();
@@ -33,10 +36,14 @@ public class AdminController : ControllerBase
     {
         if (mostRecent)
         {
-            await Scraper.StageResults(StageClient.MostRecentStartedStage());
+            await Scraper.StageResults(RaceClient.MostRecentStartedStage());
             Scheduler.RunTimer();
         }
         else await Scraper.StageResults(raceName, year, stagenr);
         return Ok();
     }
+
+    [HttpGet("RaceFinished")]
+    public IActionResult RaceFinished(int raceId)
+        => Ok(RaceService.SetFinished(raceId));
 }

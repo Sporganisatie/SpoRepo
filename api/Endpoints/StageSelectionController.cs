@@ -38,7 +38,7 @@ public class StageSelectionController : ControllerBase
     [HttpPost("kopman")]
     [ProducesResponseType(typeof(int), 200)]
     public IActionResult AddKopman(int raceId, bool budgetParticipation, int riderParticipationId, int stagenr)
-        => Ok(StageSelectionClient.AddKopman(riderParticipationId, stagenr));
+        => Ok(StageSelectionClient.SetKopman(riderParticipationId, stagenr));
 
     [HttpDelete("kopman")]
     [ProducesResponseType(typeof(int), 200)]

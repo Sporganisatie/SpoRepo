@@ -103,7 +103,7 @@ public class DatabaseContext : DbContext
             entity.Property(e => e.BudgetParticipation)
                 .HasDefaultValueSql("false")
                 .HasColumnName("budgetparticipation");
-            entity.Property(e => e.Finalscore)
+            entity.Property(e => e.FinalScore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("finalscore");
             entity.Property(e => e.RaceId).HasColumnName("race_id");

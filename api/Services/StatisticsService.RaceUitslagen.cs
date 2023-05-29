@@ -51,7 +51,7 @@ public partial class StatisticsService
             where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
             select new UserRaceScoreQueryResult(
                 ap.Account.Username,
-                ap.Finalscore,
+                ap.FinalScore,
                 ap.Race
             )).AsEnumerable();
 

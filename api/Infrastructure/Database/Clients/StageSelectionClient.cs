@@ -66,7 +66,7 @@ public class StageSelectionClient
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
 
-    internal int AddKopman(int riderParticipationId, int stagenr)
+    internal int SetKopman(int riderParticipationId, int stagenr)
     {
         // TODO check stage niet gestart in Service
         if (DB.StageSelectionRiders.Count(ssr =>

@@ -10,7 +10,7 @@ public class AccountParticipation
 
     public bool BudgetParticipation { get; set; }
 
-    public int? Finalscore { get; set; }
+    public int? FinalScore { get; set; }
 
     public virtual Account Account { get; set; }
 
