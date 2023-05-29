@@ -10,6 +10,7 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
       ]}
       raceOnlyLinks={[
         { url: "/charts/scoreverloop/27", title: "Relatief Scoreverloop" }, // TODO dynamic race id
+        { url: "/charts/scoreverloop", title: "Relatief Scoreverloop" }, // TODO dynamic race id
         { url: "/charts/positieverloop/27", title: "Positie Scoreverloop" }, // TODO dynamic race id
         { url: "/charts/scoreverdeling/27", title: "Score Verdeling" }, // TODO dynamic race id
         // { url: "/charts/userscores", title: "Relatief Scoreverloop" },

@@ -18,6 +18,11 @@ public class ChartsController : ControllerBase
     public IActionResult ScoreVerloop(int raceId, bool budgetParticipation)
         => Ok(Service.ScoreVerloop(raceId, budgetParticipation));
 
+    [HttpGet("raceScoreVerloop")]
+    [ProducesResponseType(200)]
+    public IActionResult RaceScoreVerloop(bool budgetParticipation)
+        => Ok(Service.RaceScoreVerloop(budgetParticipation));
+
     [HttpGet("positieVerloop")]
     [ProducesResponseType(200)]
     public IActionResult PositieVerloop(int raceId, bool budgetParticipation)
