@@ -9,7 +9,7 @@ public partial class Scrape
 
     private int StageScore(int rank, string tab)
         => tab switch
-        {
+        { // Te doen iets met TTT misschien in 2024
             "" or "Stage" => rank > 20 ? 0 : new int[] { 0, 50, 44, 40, 36, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2 }[rank],
             "GC" => rank > 5 ? 0 : new int[] { 0, 10, 8, 6, 4, 2 }[rank],
             "Points" => rank > 5 ? 0 : new int[] { 0, 8, 6, 4, 2, 1 }[rank],
