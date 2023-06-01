@@ -15,8 +15,8 @@ public partial class StatisticsService
                     {
                         RiderParticipation = g.Key,
                         Rider = g.Select(x => x.rider),
-                        StageScore = g.Sum(x => x.points.Stagescore),
-                        Klassementen = g.Sum(x => x.points.Gcscore + x.points.Pointsscore + x.points.Komscore + x.points.Yocscore ?? 0),
+                        StageScore = g.Sum(x => x.points.Day.Score),
+                        Klassementen = g.Sum(x => x.points.Gc.Score + x.points.Points.Score + x.points.Kom.Score + x.points.Youth.Score ?? 0),
                         TeamScore = g.Sum(x => x.points.Teamscore),
                         TotalScore = budgetParticipation ? g.Sum(x => x.points.Totalscore) - g.Sum(x => x.points.Teamscore) : g.Sum(x => x.points.Totalscore),
                     };

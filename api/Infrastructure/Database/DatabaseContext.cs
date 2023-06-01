@@ -196,50 +196,46 @@ public class DatabaseContext : DbContext
 
             entity.Property(e => e.StageId).HasColumnName("stage_id");
             entity.Property(e => e.RiderParticipationId).HasColumnName("rider_participation_id");
-            entity.Property(e => e.Gcchange)
+            entity.HasOne(e => e.Stage)
+                .WithMany()
+                .HasForeignKey(e => e.StageId)
+                .HasConstraintName("results_points_stage_id_fkey");
+
+            entity.Property(e => e.Gc.Change)
                 .HasDefaultValueSql("''::text")
                 .HasColumnName("gcchange");
-            entity.Property(e => e.Gcpos)
+            entity.Property(e => e.Gc.Pos)
                 .HasDefaultValueSql("0")
                 .HasColumnName("gcpos");
-            entity.Property(e => e.Gcprev)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("gcprev");
-            entity.Property(e => e.Gcresult).HasColumnName("gcresult");
-            entity.Property(e => e.Gcscore)
+            entity.Property(e => e.Gc.Result).HasColumnName("gcresult");
+            entity.Property(e => e.Gc.Score)
                 .HasDefaultValueSql("0")
                 .HasColumnName("gcscore");
-            entity.Property(e => e.Komchange)
+            entity.Property(e => e.Kom.Change)
                 .HasDefaultValueSql("''::text")
                 .HasColumnName("komchange");
-            entity.Property(e => e.Kompos)
+            entity.Property(e => e.Kom.Pos)
                 .HasDefaultValueSql("0")
                 .HasColumnName("kompos");
-            entity.Property(e => e.Komprev)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("komprev");
-            entity.Property(e => e.Komresult).HasColumnName("komresult");
-            entity.Property(e => e.Komscore)
+            entity.Property(e => e.Kom.Result).HasColumnName("komresult");
+            entity.Property(e => e.Kom.Score)
                 .HasDefaultValueSql("0")
                 .HasColumnName("komscore");
-            entity.Property(e => e.Pointschange)
+            entity.Property(e => e.Points.Change)
                 .HasDefaultValueSql("''::text")
                 .HasColumnName("pointschange");
-            entity.Property(e => e.Pointspos)
+            entity.Property(e => e.Points.Pos)
                 .HasDefaultValueSql("0")
                 .HasColumnName("pointspos");
-            entity.Property(e => e.Pointsprev)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("pointsprev");
-            entity.Property(e => e.Pointsresult).HasColumnName("pointsresult");
-            entity.Property(e => e.Pointsscore)
+            entity.Property(e => e.Points.Result).HasColumnName("pointsresult");
+            entity.Property(e => e.Points.Score)
                 .HasDefaultValueSql("0")
                 .HasColumnName("pointsscore");
-            entity.Property(e => e.Stagepos)
+            entity.Property(e => e.Day.Pos)
                 .HasDefaultValueSql("0")
                 .HasColumnName("stagepos");
-            entity.Property(e => e.Stageresult).HasColumnName("stageresult");
-            entity.Property(e => e.Stagescore)
+            entity.Property(e => e.Day.Result).HasColumnName("stageresult");
+            entity.Property(e => e.Day.Score)
                 .HasDefaultValueSql("0")
                 .HasColumnName("stagescore");
             entity.Property(e => e.Teamscore)
@@ -248,29 +244,16 @@ public class DatabaseContext : DbContext
             entity.Property(e => e.Totalscore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("totalscore");
-            entity.Property(e => e.Yocchange)
+            entity.Property(e => e.Youth.Change)
                 .HasDefaultValueSql("''::text")
                 .HasColumnName("yocchange");
-            entity.Property(e => e.Yocpos)
+            entity.Property(e => e.Youth.Pos)
                 .HasDefaultValueSql("0")
                 .HasColumnName("yocpos");
-            entity.Property(e => e.Yocprev)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("yocprev");
-            entity.Property(e => e.Yocresult).HasColumnName("yocresult");
-            entity.Property(e => e.Yocscore)
+            entity.Property(e => e.Youth.Result).HasColumnName("yocresult");
+            entity.Property(e => e.Youth.Score)
                 .HasDefaultValueSql("0")
                 .HasColumnName("yocscore");
-
-            // entity.HasOne(d => d.RiderParticipation).WithMany(p => p.ResultsPoints)
-            //     .HasForeignKey(d => d.RiderParticipationId)
-            //     .OnDelete(DeleteBehavior.ClientSetNull)
-            //     .HasConstraintName("results_points_rider_participation_id_fkey");
-
-            // entity.HasOne(d => d.Stage).WithMany(p => p.ResultsPoints)
-            //     .HasForeignKey(d => d.StageId)
-            //     .OnDelete(DeleteBehavior.ClientSetNull)
-            //     .HasConstraintName("results_points_stage_id_fkey");
         });
 
         modelBuilder.Entity<Rider>(entity =>

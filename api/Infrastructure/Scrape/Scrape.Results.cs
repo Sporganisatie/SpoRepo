@@ -44,11 +44,11 @@ public partial class Scrape
         else
         {
             var prevResult = DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stage.Stagenr - 1 && rp.Stage.RaceId == stage.RaceId);
-            var stageComplete = prevResult.Count(p => p.Stagepos != 0) == stageCount + dnfCount;
-            var gcComplete = prevResult.Count(p => p.Gcpos != 0) == gcCount + dnfCount;
-            var pointsComplete = prevResult.Count(p => p.Pointspos != 0) <= pointsCount + dnfCount;
-            var komplete = prevResult.Count(p => p.Kompos != 0) <= komCount + dnfCount;
-            var yocComplete = prevResult.Count(p => p.Yocpos != 0) <= yocCount + dnfCount;
+            var stageComplete = prevResult.Count(p => p.Day.Pos != 0) == stageCount + dnfCount;
+            var gcComplete = prevResult.Count(p => p.Gc.Pos != 0) == gcCount + dnfCount;
+            var pointsComplete = prevResult.Count(p => p.Points.Pos != 0) <= pointsCount + dnfCount;
+            var komplete = prevResult.Count(p => p.Kom.Pos != 0) <= komCount + dnfCount;
+            var yocComplete = prevResult.Count(p => p.Youth.Pos != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
 
