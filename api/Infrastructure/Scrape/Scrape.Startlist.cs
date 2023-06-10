@@ -10,20 +10,20 @@ public partial class Scrape
         var riderInserts = new List<string>();
         var riderParticipationInserts = new List<string>();
         var rpIds = new List<string>();
-
-        foreach (var team in html.QuerySelectorAll("li.team"))
+        foreach (var team in html.QuerySelector("ul.startlist_v4").Children())
         {
-            var teamName = team.QuerySelector("b a").InnerText;
+            var teamName = team.QuerySelector("a.team").InnerText;
+            teamName = teamName.Substring(0, teamName.IndexOf('(') - 1);
             foreach (var rider in team.QuerySelectorAll("li"))
             {
                 // Extract PCS data
                 var names = rider.QuerySelector("a").InnerText.Split(" ");
-                var lastname = String.Join(" ", names.Where(n => n.ToUpperInvariant().Equals(n)));
+                var lastname = String.Join(" ", names.Where(n => n.ToUpperInvariant().Equals(n))).Replace("'", "''");
                 var firstnames = names.Where(n => !n.ToUpperInvariant().Equals(n));
                 var initials = String.Join(".", firstnames.Select(vn => vn[0]));
-                var firstname = String.Join(" ", firstnames);
+                var firstname = String.Join(" ", firstnames).Replace("'", "''");
                 var pcsId = rider.QuerySelector("a").GetAttributeValue("href", "").Substring(6);
-                var country = rider.QuerySelector("span").GetAttributeValue("class", "").Split(" ")[1];
+                var country = rider.QuerySelector("span.flag").GetAttributeValue("class", "").Split(" ")[1];
                 var riderInsert = $"('{pcsId}', '{country}', '{firstname}', '{lastname}', '{initials}')";
 
                 // Combine with price/qualities data

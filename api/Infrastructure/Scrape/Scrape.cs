@@ -18,10 +18,9 @@ public partial class Scrape
     {
         var raceId = DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId;
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist").DocumentNode;
-        var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.txt");
+        var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.json");
         var json = JsonSerializer.Deserialize<PrijzenFile>(file);
-        var riderQualities = json.Content; // TODO remove hardcoded
-        var query = StartlistQuery(raceId, html, riderQualities);
+        var query = StartlistQuery(raceId, html, json.Content);
         DB.Database.ExecuteSqlRaw(query);
     }
 
@@ -77,7 +76,7 @@ public partial class Scrape
         => raceName switch
         {
             "giro" => "Giroprijzen",
-            // "tour" => "Filename",
+            "tour" => "Tourprijzen",
             // "vuelta" => "Filename",
             _ => throw new ArgumentOutOfRangeException()
         };
