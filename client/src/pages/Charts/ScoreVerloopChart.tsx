@@ -49,9 +49,9 @@ const ScoreVerloopChart = () => {
                     {positieVerloop ? (
                         <YAxis
                             tickCount={10}
-                            domain={['dataMin - 0.5', 'dataMax + 0.5']}
+                            // domain={['dataMin - 0.5', 'dataMax + 0.5']}
                             tickFormatter={(value) => (-value).toString()}
-                            ticks={Array.from({ length: chartdata.usernames.length }, (_, index) => -(index + 1))}
+                        // ticks={Array.from({ length: chartdata.usernames.length }, (_, index) => -(index + 1))}
                         >
                             <Label value="Positie" angle={-90} position="left" offset={-10} />
                         </YAxis>
