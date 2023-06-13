@@ -2,7 +2,7 @@
 
 public class BaseResult
 {
-    public int? Pos { get; set; }
+    public int? Position { get; set; }
     public int? Score { get; set; }
     public string Result { get; set; }
     public string Change { get; set; }
@@ -12,7 +12,9 @@ public class ResultsPoint
 {
     public int StageId { get; set; }
     public int RiderParticipationId { get; set; }
-    public BaseResult Day { get; set; }
+    public int? StagePos { get; set; }
+    public int? StageScore { get; set; }
+    public string StageResult { get; set; }
     public BaseResult Gc { get; set; }
     public BaseResult Points { get; set; }
     public BaseResult Kom { get; set; }

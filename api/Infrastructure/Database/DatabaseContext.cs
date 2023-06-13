@@ -201,60 +201,83 @@ public class DatabaseContext : DbContext
                 .HasForeignKey(e => e.StageId)
                 .HasConstraintName("results_points_stage_id_fkey");
 
-            entity.Property(e => e.Gc.Change)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("gcchange");
-            entity.Property(e => e.Gc.Pos)
-                .HasDefaultValueSql("0")
-                .HasColumnName("gcpos");
-            entity.Property(e => e.Gc.Result).HasColumnName("gcresult");
-            entity.Property(e => e.Gc.Score)
-                .HasDefaultValueSql("0")
-                .HasColumnName("gcscore");
-            entity.Property(e => e.Kom.Change)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("komchange");
-            entity.Property(e => e.Kom.Pos)
-                .HasDefaultValueSql("0")
-                .HasColumnName("kompos");
-            entity.Property(e => e.Kom.Result).HasColumnName("komresult");
-            entity.Property(e => e.Kom.Score)
-                .HasDefaultValueSql("0")
-                .HasColumnName("komscore");
-            entity.Property(e => e.Points.Change)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("pointschange");
-            entity.Property(e => e.Points.Pos)
-                .HasDefaultValueSql("0")
-                .HasColumnName("pointspos");
-            entity.Property(e => e.Points.Result).HasColumnName("pointsresult");
-            entity.Property(e => e.Points.Score)
-                .HasDefaultValueSql("0")
-                .HasColumnName("pointsscore");
-            entity.Property(e => e.Day.Pos)
+            entity.Property(e => e.StagePos)
                 .HasDefaultValueSql("0")
                 .HasColumnName("stagepos");
-            entity.Property(e => e.Day.Result).HasColumnName("stageresult");
-            entity.Property(e => e.Day.Score)
+            entity.Property(e => e.StageResult).HasColumnName("stageresult");
+            entity.Property(e => e.StageScore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("stagescore");
+
+            entity.OwnsOne(e => e.Gc, gc =>
+            {
+                gc.Property(p => p.Change)
+                    .HasDefaultValueSql("''::text")
+                    .HasColumnName("gcchange");
+                gc.Property(p => p.Position)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("gcpos");
+                gc.Property(p => p.Result)
+                    .HasColumnName("gcresult");
+                gc.Property(p => p.Score)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("gcscore");
+            });
+
+            entity.OwnsOne(e => e.Points, points =>
+            {
+                points.Property(p => p.Change)
+                    .HasDefaultValueSql("''::text")
+                    .HasColumnName("pointschange");
+                points.Property(p => p.Position)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("pointspos");
+                points.Property(p => p.Result)
+                    .HasColumnName("pointsresult");
+                points.Property(p => p.Score)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("pointsscore");
+            });
+
+            entity.OwnsOne(e => e.Kom, kom =>
+            {
+                kom.Property(p => p.Change)
+                    .HasDefaultValueSql("''::text")
+                    .HasColumnName("komchange");
+                kom.Property(p => p.Position)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("kompos");
+                kom.Property(p => p.Result)
+                    .HasColumnName("komresult");
+                kom.Property(p => p.Score)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("komscore");
+            });
+
+            entity.OwnsOne(e => e.Youth, youth =>
+            {
+                youth.Property(p => p.Change)
+                    .HasDefaultValueSql("''::text")
+                    .HasColumnName("yocchange");
+                youth.Property(p => p.Position)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("yocpos");
+                youth.Property(p => p.Result)
+                    .HasColumnName("yocresult");
+                youth.Property(p => p.Score)
+                    .HasDefaultValueSql("0")
+                    .HasColumnName("yocscore");
+            });
+
             entity.Property(e => e.Teamscore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("teamscore");
+
             entity.Property(e => e.Totalscore)
                 .HasDefaultValueSql("0")
                 .HasColumnName("totalscore");
-            entity.Property(e => e.Youth.Change)
-                .HasDefaultValueSql("''::text")
-                .HasColumnName("yocchange");
-            entity.Property(e => e.Youth.Pos)
-                .HasDefaultValueSql("0")
-                .HasColumnName("yocpos");
-            entity.Property(e => e.Youth.Result).HasColumnName("yocresult");
-            entity.Property(e => e.Youth.Score)
-                .HasDefaultValueSql("0")
-                .HasColumnName("yocscore");
         });
+
 
         modelBuilder.Entity<Rider>(entity =>
         {

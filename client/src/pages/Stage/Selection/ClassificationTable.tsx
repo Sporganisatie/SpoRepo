@@ -19,22 +19,22 @@ const ClassificationTable = ({ rows, title, resultColName, pagination, showRankC
         {
             name: '',
             maxWidth: '100px',
-            selector: (row: ClassificationRow) => row.position
+            selector: (row: ClassificationRow) => row.result.position
         },
         {
             name: '',
             width: '70px',
-            selector: (row: ClassificationRow) => row.change,
+            selector: (row: ClassificationRow) => row.result.change,
             omit: !showRankChange,
             conditionalCellStyles: [
                 {
-                    when: row => row.change.startsWith('▼'),
+                    when: row => row.result.change.startsWith('▼'),
                     style: {
                         color: 'red'
                     },
                 },
                 {
-                    when: row => row.change.startsWith('▲'),
+                    when: row => row.result.change.startsWith('▲'),
                     style: {
                         color: 'green'
                     },
@@ -52,7 +52,7 @@ const ClassificationTable = ({ rows, title, resultColName, pagination, showRankC
         },
         {
             name: resultColName,
-            selector: (row: ClassificationRow) => row.result
+            selector: (row: ClassificationRow) => row.result.result
         }
     ];
 
