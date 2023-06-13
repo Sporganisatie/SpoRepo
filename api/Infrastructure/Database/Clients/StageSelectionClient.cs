@@ -25,8 +25,8 @@ public class StageSelectionClient
     {
         var team = GetTeam(stagenr);
         var stageInfo = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
-        var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).First(s => s.Finished && s.RaceId == raceId);
-        var topClassifications = StageResultService.GetClassifications(mostRecentFinished, top5: true);
+        var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).FirstOrDefault(s => s.Finished && s.RaceId == raceId);
+        var topClassifications = mostRecentFinished is null ? Classifications.Empty : StageResultService.GetClassifications(mostRecentFinished, top5: true);
         return new StageSelectionData(team, stageInfo.Starttime, topClassifications);
     }
 
