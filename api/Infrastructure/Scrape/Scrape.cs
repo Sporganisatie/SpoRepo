@@ -29,7 +29,7 @@ public partial class Scrape
 
     public async Task StageResults(Stage stage)
     {
-        var stageNr = stage.Type == "FinalStandings" ? stage.Stagenr - 1 : stage.Stagenr;
+        var stageNr = stage.IsFinalStandings ? stage.Stagenr - 1 : stage.Stagenr;
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
         var tables = html.QuerySelectorAll(".result-cont .subTabs")
@@ -49,13 +49,16 @@ public partial class Scrape
         foreach (var stageSelection in stageSelections)
         {
             var minusTeamPoints = stageSelection.AccountParticipation.BudgetParticipation ? " - teamscore" : "";
-            var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
+            var selectedRiders = stage.IsFinalStandings
+                ? $"(SELECT rider_participation_id FROM team_selection_rider WHERE account_participation_id = {stageSelection.AccountParticipationId})"
+                : $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
+
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
             var kopmanscore = $"COALESCE((SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
             var stageScoreTotal = $"({stagescore} + {kopmanscore})";
             var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
 
-            var prevTotal = stage.Stagenr != 1 ? DB.StageSelections.Single(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1).TotalScore : 0;
+            var prevTotal = DB.StageSelections.FirstOrDefault(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1)?.TotalScore ?? 0;
             var totalscore = $"{prevTotal} + COALESCE({stageScoreTotal},0)";
             var updateTotals = $"UPDATE stage_selection SET totalscore = {totalscore} WHERE stage_selection.account_participation_id = {stageSelection.AccountParticipationId} AND stage_id IN (SELECT stage_id FROM stage WHERE stage.stagenr >= {stage.Stagenr} AND race_id = {stage.RaceId}); ";
 

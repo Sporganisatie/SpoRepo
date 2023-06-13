@@ -14,13 +14,23 @@ public class Stage
 
     public bool Complete { get; set; }
 
-    public string Type { get; set; }
+    public StageType Type { get; set; }
 
     public int Weight { get; set; }
 
     public virtual Race Race { get; set; }
 
+    public bool IsFinalStandings => Type is StageType.FinalStandings;
+
     // public virtual ICollection<ResultsPoint> ResultsPoints { get; } = new List<ResultsPoint>();
 
     // public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
+}
+
+public enum StageType
+{
+    ITT,
+    TTT,
+    REG,
+    FinalStandings
 }

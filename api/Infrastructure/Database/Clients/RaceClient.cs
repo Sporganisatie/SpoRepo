@@ -13,7 +13,7 @@ public class RaceClient
     public bool ShowResults(int raceId, int stagenr)
     {
         var stage = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
-        return stage.Type == "FinalStandings" || DateTime.UtcNow >= stage.Starttime;
+        return stage.Type == StageType.FinalStandings || DateTime.UtcNow >= stage.Starttime;
     }
 
     public Stage CurrentStage(int raceId)
