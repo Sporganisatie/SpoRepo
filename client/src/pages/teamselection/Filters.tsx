@@ -50,7 +50,7 @@ function FilterElements(props: FiltersProps) {
                 type="text"
                 value={props.filters.name}
                 placeholder="naam"
-                onChange={(e) => props.updateFilter({ name: e.target.value })}
+                onChange={(e) => props.updateFilter({ name: e.target.value.trim() })}
             />
             <Select<number>
                 value={props.filters.minPrice}

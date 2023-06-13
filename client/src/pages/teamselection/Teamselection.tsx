@@ -64,6 +64,7 @@ const Teamselection: React.FC = () => {
             }
         })
             .then(function (response) {
+                resetFilter()
                 loadData();
             })
             .catch(function (error) {

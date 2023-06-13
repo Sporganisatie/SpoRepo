@@ -5,13 +5,12 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/race/27");
+    navigate("/race/28");
   }, [navigate]);
 
   return (
     <div>
-      Empty home page
-      Dit zou je niet moeten kunnen zien. Val Arjen lastig als je dit wel ziet.
+      Loading...
     </div>
   );
 };

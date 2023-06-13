@@ -73,7 +73,7 @@ public partial class StatisticsService
 
     private IEnumerable<ScoreVerdeling> RaceScoreVerdeling(bool budgetParticipation)
     {
-        var bins = budgetParticipation ? new[] { 0, 500, 750, 100 } : new[] { 0, 4000, 4500, 5000 };
+        var bins = budgetParticipation ? new[] { 0, 500, 750, 1000 } : new[] { 0, 4000, 4500, 5000 };
 
         var result = from item in GetUserRaceScore(budgetParticipation)
                      group item by item.Username into userGroup
