@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
+using SpoRE.Services.StageSelection;
 
 namespace SpoRE.Controllers;
 
@@ -12,11 +12,10 @@ namespace SpoRE.Controllers;
 [ParticipationEndpoint(Order = 2)]
 public class StageSelectionController : ControllerBase
 {
-    private readonly TeamSelectionClient TeamSelectionClient;
-    private readonly StageSelectionClient StageSelectionClient;
-    public StageSelectionController(TeamSelectionClient teamSelectionClient, StageSelectionClient stageSelectionClient)
+    private readonly StageSelectionService StageSelectionClient;
+
+    public StageSelectionController(StageSelectionService stageSelectionClient)
     {
-        TeamSelectionClient = teamSelectionClient;
         StageSelectionClient = stageSelectionClient;
     }
 

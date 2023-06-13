@@ -1,25 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Helper;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
-using SpoRE.Services;
 using Z.EntityFramework.Plus;
 
-namespace SpoRE.Infrastructure.Database;
+namespace SpoRE.Services.StageSelection;
 
-public class StageSelectionClient
+public class StageSelectionService
 {
     private readonly Userdata User;
     private readonly DatabaseContext DB;
     private readonly StageResultService StageResultService;
 
-    public StageSelectionClient(DatabaseContext databaseContext, Userdata userData, StageResultService stageResultService)
+    public StageSelectionService(DatabaseContext databaseContext, Userdata userData, StageResultService stageResultService)
     {
         DB = databaseContext;
         User = userData;
         StageResultService = stageResultService;
     }
-
-    // TODO move logic, nu beetje aparte combinatie van queries en processing die eigelijk in service hoort
 
     internal StageSelectionData GetData(int raceId, int stagenr)
     {
@@ -51,7 +49,6 @@ public class StageSelectionClient
 
     internal int AddRider(int riderParticipationId, int stagenr)
     {
-        // TODO check stage niet gestart in Service
         var stageSelectionId = DB.StageSelections
             .Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr)
             .Select(ss => ss.StageSelectionId)
@@ -69,7 +66,6 @@ public class StageSelectionClient
 
     internal int SetKopman(int riderParticipationId, int stagenr)
     {
-        // TODO check stage niet gestart in Service
         if (DB.StageSelectionRiders.Count(ssr =>
             ssr.StageSelection.AccountParticipationId == User.ParticipationId
             && ssr.StageSelection.Stage.Stagenr == stagenr
@@ -81,7 +77,6 @@ public class StageSelectionClient
 
     internal int RemoveRider(int riderParticipationId, int stagenr)
     {
-        // TODO check stage niet gestart in Service
         var riderToDelete = DB.StageSelectionRiders.Single(sr =>
             sr.StageSelection.AccountParticipationId == User.ParticipationId
             && sr.RiderParticipationId == riderParticipationId
@@ -91,14 +86,13 @@ public class StageSelectionClient
 
         DB.StageSelections
             .Where(s => s.AccountParticipationId == User.ParticipationId && s.Stage.Stagenr == stagenr && s.KopmanId == riderParticipationId)
-            .Update(s => new StageSelection { KopmanId = null });
+            .Update(s => new StageSelectie { KopmanId = null });
 
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
 
     internal int RemoveKopman(int riderParticipationId, int stagenr)
     {
-        // TODO check stage niet gestart in Service
         DB.StageSelections
             .First(s => s.AccountParticipationId == User.ParticipationId && s.Stage.Stagenr == stagenr).KopmanId = null;
 

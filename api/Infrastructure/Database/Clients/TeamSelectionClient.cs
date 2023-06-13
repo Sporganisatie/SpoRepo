@@ -59,7 +59,7 @@ public class TeamSelectionClient
 
         DB.StageSelections
             .Where(s => s.AccountParticipationId == User.ParticipationId && s.KopmanId == riderParticipationId)
-            .Update(s => new StageSelection { KopmanId = null });
+            .Update(s => new StageSelectie { KopmanId = null });
 
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }

@@ -38,7 +38,7 @@ public class DatabaseContext : DbContext
 
     public DbSet<Stage> Stages { get; set; }
 
-    public DbSet<StageSelection> StageSelections { get; set; }
+    public DbSet<StageSelectie> StageSelections { get; set; }
 
     public DbSet<StageSelectionRider> StageSelectionRiders { get; set; }
 
@@ -395,7 +395,7 @@ public class DatabaseContext : DbContext
             //     .HasConstraintName("stage_race_id_fkey");
         });
 
-        modelBuilder.Entity<StageSelection>(entity =>
+        modelBuilder.Entity<StageSelectie>(entity =>
         {
             entity.HasKey(e => e.StageSelectionId).HasName("stage_selection_pkey");
 
