@@ -61,75 +61,63 @@ public partial class StageResultService
             select new UserScore(ss.AccountParticipation.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0))
             .ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
 
-    private static StageSelectedEnum GetStageSelectedEnum(int riderParticipationId, List<int> stageSelection, List<int> teamSelection)
-    {
-        if (stageSelection.Contains(riderParticipationId))
-        {
-            return StageSelectedEnum.InStageSelection;
-        }
-        else if (teamSelection.Contains(riderParticipationId))
-        {
-            return StageSelectedEnum.InTeam;
-        }
-        else
-        {
-            return StageSelectedEnum.None;
-        }
-    }
-
-    private static ClassificationRow GetClassificationRow(ResultsPoint rp, BaseResult result, List<int> stageSelection, List<int> teamSelection)
-    {
-        return new ClassificationRow
-        {
-            Rider = rp.RiderParticipation.Rider,
-            Team = rp.RiderParticipation.Team,
-            Result = result,
-            Selected = GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection)
-        };
-    }
-
-    private static IEnumerable<ClassificationRow> GetClassification(List<ResultsPoint> resultsPoints, List<int> stageSelection, List<int> teamSelection, string field, bool top5)
-    {
-        return resultsPoints
-            .Where(rp => GetProperty(rp, field).Position > 0)
-            .OrderBy(rp => GetProperty(rp, field).Position)
-            .Select(rp => GetClassificationRow(rp, GetProperty(rp, field), stageSelection, teamSelection))
-            .Take(top5 ? 5 : int.MaxValue);
-    }
-
-    private static BaseResult GetProperty(ResultsPoint rp, string field)
-    {
-        if (field == "Stage") return new BaseResult
-        {
-            Position = rp.StagePos,
-            Score = rp.StageScore,
-            Result = rp.StageResult
-        };
-        var property = typeof(ResultsPoint).GetProperty(field);
-        if (property == null || !typeof(BaseResult).IsAssignableFrom(property.PropertyType))
-        {
-            throw new ArgumentException($"Invalid field: {field}");
-        }
-
-        return (BaseResult)property.GetValue(rp);
-    }
-
     public Classifications GetClassifications(Stage stage, bool top5)
     {
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
         var stageSelection = stage.IsFinalStandings
             ? teamSelection
             : DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.StageId == stage.StageId).Select(ssr => ssr.RiderParticipationId).ToList();
-        var ResultsPoints = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider).Where(rp => rp.StageId == stage.StageId).ToList();
+        var riderResults = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider)
+            .Where(rp => rp.StageId == stage.StageId).ToList()
+            .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection)));
 
-        var stageResult = GetClassification(ResultsPoints, stageSelection, teamSelection, "Stage", top5);
-        var gcStandings = GetClassification(ResultsPoints, stageSelection, teamSelection, "Gc", top5);
-        var komStandings = GetClassification(ResultsPoints, stageSelection, teamSelection, "Kom", top5);
-        var pointsStandings = GetClassification(ResultsPoints, stageSelection, teamSelection, "Points", top5);
-        var youthStandings = GetClassification(ResultsPoints, stageSelection, teamSelection, "Youth", top5);
+        var stageResult = GetClassification(riderResults, "Stage", top5);
+        var gcStandings = GetClassification(riderResults, "Gc", top5);
+        var komStandings = GetClassification(riderResults, "Kom", top5);
+        var pointsStandings = GetClassification(riderResults, "Points", top5);
+        var youthStandings = GetClassification(riderResults, "Youth", top5);
 
         var response = new Classifications(gcStandings, pointsStandings, komStandings, youthStandings);
 
         return top5 ? response : response with { Stage = stageResult.ToList() };
     }
+
+    private static StageSelectedEnum GetStageSelectedEnum(int riderParticipationId, List<int> stageSelection, List<int> teamSelection)
+        => stageSelection.Contains(riderParticipationId)
+            ? StageSelectedEnum.InStageSelection
+            : teamSelection.Contains(riderParticipationId)
+                ? StageSelectedEnum.InTeam
+                : StageSelectedEnum.None;
+
+    private static IEnumerable<ClassificationRow> GetClassification(IEnumerable<(ResultsPoint results, StageSelectedEnum selected)> resultsPoints, string field, bool top5)
+        => resultsPoints
+            .Where(rp => GetProperty(rp.results, field).Position > 0)
+            .OrderBy(rp => GetProperty(rp.results, field).Position)
+            .Select(rp => GetClassificationRow(rp.results, rp.selected, GetProperty(rp.results, field)))
+            .Take(top5 ? 5 : int.MaxValue);
+
+    private static BaseResult GetProperty(ResultsPoint rp, string field)
+        => field switch
+        {
+            "Stage" => new BaseResult
+            {
+                Position = rp.StagePos,
+                Score = rp.StageScore,
+                Result = rp.StageResult
+            },
+            "Gc" => rp.Gc,
+            "Points" => rp.Points,
+            "Kom" => rp.Kom,
+            "Youth" => rp.Youth,
+            _ => throw new ArgumentException($"Invalid field: {field}")
+        };
+
+    private static ClassificationRow GetClassificationRow(ResultsPoint rp, StageSelectedEnum selected, BaseResult result)
+        => new ClassificationRow
+        {
+            Rider = rp.RiderParticipation.Rider,
+            Team = rp.RiderParticipation.Team,
+            Result = result,
+            Selected = selected
+        };
 }
