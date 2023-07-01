@@ -21,7 +21,7 @@ public class Scheduler
             var raceClient = scope.ServiceProvider.GetService<RaceClient>();
             // race done -> return
 
-            var stage = raceClient.CurrentStage(27);
+            var stage = raceClient.CurrentStage(28);
             if (stage?.Starttime is null) return;
 
             if (stage.Starttime > DateTime.UtcNow) { ScheduleAction(TimeSpan.FromMinutes(1)); return; }

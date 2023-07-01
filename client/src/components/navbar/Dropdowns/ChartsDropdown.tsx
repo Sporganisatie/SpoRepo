@@ -9,8 +9,8 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
         // { url: "/charts/totalscorespread", title: "Score verdeling Totaal" }
       ]}
       raceOnlyLinks={[
-        { url: "/charts/scoreverloop/27", title: "Relatief Scoreverloop" }, // TODO dynamic race id
-        { url: "/charts/scoreverdeling/27", title: "Score Verdeling" }, // TODO dynamic race id
+        { url: "/charts/scoreverloop/28", title: "Relatief Scoreverloop" }, // TODO dynamic race id
+        { url: "/charts/scoreverdeling/28", title: "Score Verdeling" }, // TODO dynamic race id
         // { url: "/charts/userscores", title: "Relatief Scoreverloop" },
         // { url: "/charts/userrank", title: "Ranking" },
         // { url: "/charts/riderpercentage", title: "Puntenaandeel Renner per Etappe" },
