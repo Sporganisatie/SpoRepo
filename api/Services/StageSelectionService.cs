@@ -38,7 +38,7 @@ public class StageSelectionService
                    let selected = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId)
                    let isKopman = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman)
                    where ap.AccountParticipationId == User.ParticipationId
-                   orderby ts.RiderParticipation.Dnf, !isKopman, !selected, ts.RiderParticipation.Price descending
+                   orderby ts.RiderParticipation.Dnf, !isKopman, !selected, ts.RiderParticipation.Price descending, ts.RiderParticipationId
                    select new StageSelectableRider(
                     ts.RiderParticipation,
                     selected,

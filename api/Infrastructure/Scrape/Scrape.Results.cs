@@ -19,7 +19,7 @@ public partial class Scrape
         UpdateDnfRiders(riderResults, stage);
         StageComplete(stage, riderResults);
 
-        if (!riderResults.Any()) return "";
+        if (!riderResults.Any(r => !r.Value.Dnf)) return "";
         return BuildResultsQuery(riderResults.Values, stage);
     }
 
