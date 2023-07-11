@@ -61,12 +61,13 @@ public partial class StageResultService
             select new UserScore(ss.AccountParticipation.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0))
             .ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
 
-    public Classifications GetClassifications(Stage stage, bool top5)
+    public Classifications GetClassifications(Stage stage, bool top5, int? selectingStage = null)
     {
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
         var stageSelection = stage.IsFinalStandings
             ? teamSelection
-            : DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.StageId == stage.StageId).Select(ssr => ssr.RiderParticipationId).ToList();
+            : DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == (selectingStage ?? stage.Stagenr) && ssr.StageSelection.Stage.RaceId == stage.RaceId)
+                .Select(ssr => ssr.RiderParticipationId).ToList();
         var riderResults = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider)
             .Where(rp => rp.StageId == stage.StageId).ToList()
             .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection)));
