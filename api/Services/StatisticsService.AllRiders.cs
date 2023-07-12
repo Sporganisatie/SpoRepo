@@ -6,7 +6,8 @@ public partial class StatisticsService
 {
     public IEnumerable<object> AllRiders(int raceId, bool budgetParticipation)
     {
-        var query = from rp in DB.RiderParticipations.Include(rp => rp.Rider).Where(rp => rp.RaceId == 28 && rp.Price <= (budgetParticipation ? 750000 : int.MaxValue))
+        // todo aantal keer geselecteerd verbergen voor race start
+        var query = from rp in DB.RiderParticipations.Include(rp => rp.Rider).Where(rp => rp.RaceId == raceId && rp.Price <= (budgetParticipation ? 750000 : int.MaxValue))
                     join rider in DB.Riders on rp.RiderId equals rider.RiderId
                     join repo in DB.ResultsPoints on rp.RiderParticipationId equals repo.RiderParticipationId into results
                     from points in results.DefaultIfEmpty()
