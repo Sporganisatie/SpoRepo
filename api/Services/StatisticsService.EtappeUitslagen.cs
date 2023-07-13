@@ -45,7 +45,7 @@ public partial class StatisticsService
                          userGroup.Count(item => item.StageScore >= bins[3] && item.StageScore < bins[4]),
                          userGroup.Count(item => item.StageScore >= bins[4]));
 
-        return result.ToList();
+        return result.ToList().OrderByDescending(x => x.Bin4).ThenByDescending(x => x.Bin3).ThenByDescending(x => x.Bin2).ThenByDescending(x => x.Bin1).ThenByDescending(x => x.Bin0);
     }
 
     private record StageSelectionQueryResult(string Username, int? StageScore, int StageNumber);
