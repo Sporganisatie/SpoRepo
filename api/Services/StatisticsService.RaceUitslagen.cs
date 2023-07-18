@@ -19,29 +19,52 @@ public partial class StatisticsService
 
     private IEnumerable<UserRank> RaceUserRankCounts(IEnumerable<RaceUitslag> uitslagen)
     {
-        var users = new Dictionary<string, int[]>();
         var uniqueUsernames = uitslagen
             .SelectMany(etappe => etappe.UsernamesAndScores)
             .Select(usernameAndScore => usernameAndScore.Username)
             .Distinct()
             .ToList();
-        foreach (var name in uniqueUsernames)
+
+        return CountRanks(uitslagen.Select(x => x.UsernamesAndScores), uniqueUsernames);
+    }
+
+    private IEnumerable<UserRank> CountRanks(IEnumerable<IEnumerable<UsernameAndScore>> uitslagen, IEnumerable<string> usernames)
+    {
+        var users = new Dictionary<string, int[]>();
+
+        foreach (var name in usernames)
         {
-            users[name] = new int[uniqueUsernames.Count];
+            users[name] = new int[usernames.Count()];
         }
 
         foreach (var uitslag in uitslagen)
         {
             var rank = 0;
-            var userscores = uitslag.UsernamesAndScores.ToList();
+            var userscores = uitslag.ToList();
+            var extraRankIncreaseAfterTie = 0;
             for (int i = 0; i < userscores.Count(); i++)
             {
                 var user = userscores[i];
-                if (rank == 0 || user.Score < userscores[i - 1].Score) rank++;
+                if (rank == 0 || user.Score < userscores[i - 1].Score)
+                {
+                    rank += 1 + extraRankIncreaseAfterTie;
+                    extraRankIncreaseAfterTie = 0;
+                }
+                else
+                {
+                    extraRankIncreaseAfterTie++;
+                }
                 users[user.Username][rank - 1]++;
             }
         }
-        return users.Select(x => new UserRank(x.Key, x.Value));
+
+        var response = users.Select(x => new UserRank(x.Key, x.Value)).OrderByDescending(x => x.Ranks[0]);
+        for (int i = 1; i < usernames.Count(); i++)
+        {
+            int index = i;
+            response = response.ThenByDescending(x => x.Ranks[index]);
+        }
+        return response;
     }
 
     private record UserRaceScoreQueryResult(string Username, int? Score, Race Race);
@@ -73,7 +96,7 @@ public partial class StatisticsService
 
     private IEnumerable<ScoreVerdeling> RaceScoreVerdeling(bool budgetParticipation)
     {
-        var bins = budgetParticipation ? new[] { 0, 500, 750, 100 } : new[] { 0, 4000, 4500, 5000 };
+        var bins = budgetParticipation ? new[] { 0, 500, 750, 1000 } : new[] { 0, 4000, 4500, 5000 };
 
         var result = from item in GetUserRaceScore(budgetParticipation)
                      group item by item.Username into userGroup

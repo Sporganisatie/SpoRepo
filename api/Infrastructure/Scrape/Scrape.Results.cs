@@ -19,7 +19,7 @@ public partial class Scrape
         UpdateDnfRiders(riderResults, stage);
         StageComplete(stage, riderResults);
 
-        if (!riderResults.Any()) return "";
+        if (!riderResults.Any(r => !r.Value.Dnf)) return "";
         return BuildResultsQuery(riderResults.Values, stage);
     }
 
@@ -44,11 +44,11 @@ public partial class Scrape
         else
         {
             var prevResult = DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stage.Stagenr - 1 && rp.Stage.RaceId == stage.RaceId);
-            var stageComplete = prevResult.Count(p => p.Stagepos != 0) == stageCount + dnfCount;
-            var gcComplete = prevResult.Count(p => p.Gcpos != 0) == gcCount + dnfCount;
-            var pointsComplete = prevResult.Count(p => p.Pointspos != 0) <= pointsCount + dnfCount;
-            var komplete = prevResult.Count(p => p.Kompos != 0) <= komCount + dnfCount;
-            var yocComplete = prevResult.Count(p => p.Yocpos != 0) <= yocCount + dnfCount;
+            var stageComplete = prevResult.Count(p => p.StagePos != 0) == stageCount + dnfCount;
+            var gcComplete = prevResult.Count(p => p.Gc.Position != 0) == gcCount + dnfCount;
+            var pointsComplete = prevResult.Count(p => p.Points.Position != 0) <= pointsCount + dnfCount;
+            var komplete = prevResult.Count(p => p.Kom.Position != 0) <= komCount + dnfCount;
+            var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
 
@@ -71,7 +71,7 @@ public partial class Scrape
                 )"));
     }
 
-    private void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, string type)
+    private void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, StageType type)
     {
         foreach (var rider in riderResults)
         {
@@ -95,7 +95,7 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(query);
     }
 
-    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, string type, ref Dictionary<string, string> teamWinners)
+    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
     {
         if (tab == "Teams") return;
         var pcsRows = ResultsDict(htmlResults);
@@ -155,7 +155,7 @@ public partial class Scrape
     private string GetString(Dictionary<string, HtmlNode> fields, string col)
         => fields.ContainsKey(col) ? fields[col].InnerText : "";
 
-    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, string type)
+    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, StageType type)
         => tab switch
         {
             "" or "Stage" => riderResult with

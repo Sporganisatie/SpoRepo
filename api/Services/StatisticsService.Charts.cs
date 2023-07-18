@@ -5,7 +5,7 @@ namespace SpoRE.Services;
 public record EtappeUitslagChart(List<UserAndTotalScore> UsernamesAndScores, int StageNumber);
 public record RaceUitslagChart(List<UserAndTotalScore> UsernamesAndScores, int Year, string Name, int StageNumber);
 
-public record UserAndTotalScore(string Username, int Score, int AccountId);
+public record UserAndTotalScore(string Username, double Score, int AccountId);
 
 public partial class StatisticsService
 {
@@ -124,6 +124,8 @@ public partial class StatisticsService
             etappeUitslagen.Add(etappeUitslag);
         }
         etappeUitslagen[0] = etappeUitslagen[0] with { UsernamesAndScores = etappeUitslagen[0].UsernamesAndScores.OrderBy(x => x.AccountId).ToList() };
-        return etappeUitslagen;
+        var startPos = etappeUitslagen.First().UsernamesAndScores.Count / 2d;
+        var start = new RaceUitslagChart(etappeUitslagen.First().UsernamesAndScores.Select(x => new UserAndTotalScore(x.Username, startPos, x.AccountId)).ToList(), 0);
+        return etappeUitslagen.Prepend(start);
     }
 }

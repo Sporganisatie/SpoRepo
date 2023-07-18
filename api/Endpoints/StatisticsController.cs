@@ -20,21 +20,25 @@ public class StatisticsController : ControllerBase
 
     [HttpGet("missedPoints")]
     [ProducesResponseType(200)]
+    [PostStart]
     public IActionResult MissedPoints(int raceId, bool budgetParticipation)
         => Ok(Service.MissedPoints(raceId, budgetParticipation));
 
     [HttpGet("uitvallers")]
     [ProducesResponseType(200)]
+    [PostStart]
     public IActionResult Uitvallers(int raceId, bool budgetParticipation)
         => Ok(Service.Uitvallers(raceId, budgetParticipation));
 
     [HttpGet("etappeUitslagen")]
     [ProducesResponseType(200)]
+    [PostStart]
     public IActionResult EtappeUitslagen(int raceId, bool budgetParticipation)
         => Ok(Service.EtappeUitslagen(raceId, budgetParticipation));
 
     [HttpGet("allRiders")]
     [ProducesResponseType(200)]
+    [PostStart]
     public IActionResult AllRiders(int raceId, bool budgetParticipation)
         => Ok(Service.AllRiders(raceId, budgetParticipation));
 }

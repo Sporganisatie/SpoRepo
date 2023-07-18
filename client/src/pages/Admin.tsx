@@ -5,7 +5,7 @@ const Admin = () => {
   document.title = "Admin";
   const [stagenr, setStagenr] = useState("");
   const [year, setYear] = useState("2023");
-  const [raceName, setRace] = useState("giro");
+  const [raceName, setRace] = useState("tour");
 
   const submit = (params: any) => {
     axios.get(`/api/Admin/stageResults`, { params })

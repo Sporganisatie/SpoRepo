@@ -19,6 +19,11 @@ export interface Classifications {
 export interface ClassificationRow {
     rider: Rider;
     team: string;
+    result: BaseResult;
+    selected: StageSelectedEnum;
+}
+
+export interface BaseResult {
     position: number;
     result: string;
     selected: StageSelectedEnum;

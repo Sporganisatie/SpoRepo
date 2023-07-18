@@ -16,30 +16,8 @@ public partial class StatisticsService
     {
         var uitslagen = SortedUitslagen(raceId, budgetParticipation);
         var scoreVerdeling = ScoreVerdeling(raceId, budgetParticipation);
-        var userRank = UserRankCounts(uitslagen);
+        var userRank = CountRanks(uitslagen.Select(x => x.UsernamesAndScores), uitslagen.First().UsernamesAndScores.Select(x => x.Username));
         return new(uitslagen, scoreVerdeling, userRank);
-    }
-
-    private IEnumerable<UserRank> UserRankCounts(IEnumerable<EtappeUitslag> uitslagen)
-    {
-        var users = new Dictionary<string, int[]>();
-        foreach (UsernameAndScore item in uitslagen.First().UsernamesAndScores)
-        {
-            users[item.Username] = new int[uitslagen.First().UsernamesAndScores.Count()];
-        }
-
-        foreach (var uitslag in uitslagen)
-        {
-            var rank = 0;
-            var userscores = uitslag.UsernamesAndScores.ToList();
-            for (int i = 0; i < userscores.Count(); i++)
-            {
-                var user = userscores[i];
-                if (rank == 0 || user.Score < userscores[i - 1].Score) rank++;
-                users[user.Username][rank - 1]++;
-            }
-        }
-        return users.Select(x => new UserRank(x.Key, x.Value));
     }
 
     public IEnumerable<EtappeUitslag> SortedUitslagen(int raceId, bool budgetParticipation)
@@ -67,7 +45,7 @@ public partial class StatisticsService
                          userGroup.Count(item => item.StageScore >= bins[3] && item.StageScore < bins[4]),
                          userGroup.Count(item => item.StageScore >= bins[4]));
 
-        return result.ToList();
+        return result.ToList().OrderByDescending(x => x.Bin4).ThenByDescending(x => x.Bin3).ThenByDescending(x => x.Bin2).ThenByDescending(x => x.Bin1).ThenByDescending(x => x.Bin0);
     }
 
     private record StageSelectionQueryResult(string Username, int? StageScore, int StageNumber);
