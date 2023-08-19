@@ -80,7 +80,7 @@ public partial class Scrape
         {
             "giro" => "Giroprijzen",
             "tour" => "Tourprijzen",
-            // "vuelta" => "Filename",
+            "vuelta" => "vueltaprijzen",
             _ => throw new ArgumentOutOfRangeException()
         };
 
