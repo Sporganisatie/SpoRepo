@@ -33,13 +33,13 @@ public class AccountService
 
     private string generateJwtToken(Account account)
     {
-        // generate token that is valid for 7 days
+        // generate token that is valid for 1 year
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] { new Claim("id", account.AccountId.ToString()), new Claim("admin", account.Admin.ToString(), ClaimValueTypes.Boolean) }),
-            Expires = DateTime.UtcNow.AddDays(30),
+            Expires = DateTime.UtcNow.AddYears(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
