@@ -601,7 +601,7 @@
 			"BirthDate": "1983-11-15T00:00:00",
 			"EventRiderId": 195185,
 			"Price": 500000.0,
-			"Status": 2,
+			"Status": 1,
 			"TeamId": 10,
 			"Type": 6,
 			"FirstName": "Imanol",
@@ -615,7 +615,7 @@
 			"BirthDate": "1992-11-04T00:00:00",
 			"EventRiderId": 195182,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 10,
 			"Type": 5,
 			"FirstName": "Carlos",
@@ -999,11 +999,11 @@
 			"Qualities": [
 				{
 					"Type": 0,
-					"Value": 3
+					"Value": 2
 				},
 				{
 					"Type": 1,
-					"Value": 4
+					"Value": 3
 				},
 				{
 					"Type": 2,
@@ -1052,8 +1052,8 @@
 			"RiderId": 6565
 		},
 		{
-			"Age": 20,
-			"BirthDate": "2003-03-30T00:00:00",
+			"Age": 23,
+			"BirthDate": "2000-03-03T00:00:00",
 			"EventRiderId": 195245,
 			"Price": 500000.0,
 			"Status": 1,
@@ -1214,16 +1214,7 @@
 			"FirstName": "Rémy",
 			"LastName": "Rochas",
 			"NameShort": "R. Rochas",
-			"Qualities": [
-				{
-					"Type": 0,
-					"Value": 1
-				},
-				{
-					"Type": 1,
-					"Value": 1
-				}
-			],
+			"Qualities": [],
 			"RiderId": 6365
 		},
 		{
@@ -1270,6 +1261,20 @@
 				}
 			],
 			"RiderId": 1097
+		},
+		{
+			"Age": 28,
+			"BirthDate": "1995-07-12T00:00:00",
+			"EventRiderId": 195347,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 14,
+			"Type": 6,
+			"FirstName": "Domen",
+			"LastName": "Novak",
+			"NameShort": "D. Novak",
+			"Qualities": [],
+			"RiderId": 1177
 		},
 		{
 			"Age": 28,
@@ -1344,7 +1349,7 @@
 			"BirthDate": "1996-09-05T00:00:00",
 			"EventRiderId": 195252,
 			"Price": 500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 14,
 			"Type": 6,
 			"FirstName": "Ivo",
@@ -2005,12 +2010,7 @@
 			"FirstName": "Damien",
 			"LastName": "Touzé",
 			"NameShort": "D. Touzé",
-			"Qualities": [
-				{
-					"Type": 3,
-					"Value": 1
-				}
-			],
+			"Qualities": [],
 			"RiderId": 6369
 		},
 		{
@@ -2112,6 +2112,10 @@
 			"LastName": "Van Gestel",
 			"NameShort": "D. Van Gestel",
 			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				},
 				{
 					"Type": 4,
 					"Value": 1
@@ -2434,7 +2438,7 @@
 			"Qualities": [
 				{
 					"Type": 0,
-					"Value": 1
+					"Value": 2
 				},
 				{
 					"Type": 1,
@@ -2486,10 +2490,6 @@
 			"LastName": "Denz",
 			"NameShort": "N. Denz",
 			"Qualities": [
-				{
-					"Type": 3,
-					"Value": 1
-				},
 				{
 					"Type": 5,
 					"Value": 1
@@ -3056,6 +3056,20 @@
 			"RiderId": 7793
 		},
 		{
+			"Age": 30,
+			"BirthDate": "1993-05-04T00:00:00",
+			"EventRiderId": 195348,
+			"Price": 500000.0,
+			"Status": 1,
+			"TeamId": 38,
+			"Type": 6,
+			"FirstName": "Simone",
+			"LastName": "Petilli",
+			"NameShort": "S. Petilli",
+			"Qualities": [],
+			"RiderId": 168
+		},
+		{
 			"Age": 36,
 			"BirthDate": "1986-10-05T00:00:00",
 			"EventRiderId": 195297,
@@ -3151,7 +3165,7 @@
 			"BirthDate": "1998-06-21T00:00:00",
 			"EventRiderId": 195167,
 			"Price": 2500000.0,
-			"Status": 1,
+			"Status": 2,
 			"TeamId": 38,
 			"Type": 4,
 			"FirstName": "Gerben",
@@ -3926,11 +3940,15 @@
 			"Price": 750000.0,
 			"Status": 1,
 			"TeamId": 51,
-			"Type": 6,
+			"Type": 4,
 			"FirstName": "Matevž",
 			"LastName": "Govekar",
 			"NameShort": "M. Govekar",
 			"Qualities": [
+				{
+					"Type": 3,
+					"Value": 1
+				},
 				{
 					"Type": 4,
 					"Value": 1
@@ -4090,10 +4108,6 @@
 			"LastName": "Planckaert",
 			"NameShort": "E. Planckaert",
 			"Qualities": [
-				{
-					"Type": 3,
-					"Value": 1
-				},
 				{
 					"Type": 4,
 					"Value": 1

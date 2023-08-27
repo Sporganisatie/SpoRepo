@@ -5,12 +5,14 @@ namespace SpoRE.Infrastructure.Scrape;
 public partial class Scrape
 {
     private int Score(int rank, string tab, StageType type)
-        => type is StageType.FinalStandings ? EindScore(rank, tab) : StageScore(rank, tab);
+        => type is StageType.FinalStandings ? EindScore(rank, tab) : StageScore(rank, tab, type);
 
-    private int StageScore(int rank, string tab)
+    private int StageScore(int rank, string tab, StageType type)
         => tab switch
-        { // Te doen iets met TTT misschien in 2024
-            "" or "Stage" => rank > 20 ? 0 : new int[] { 0, 50, 44, 40, 36, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2 }[rank],
+        {
+            "" or "Stage" => type is StageType.TTT
+                ? rank > 8 ? 0 : new int[] { 0, 40, 32, 28, 24, 20, 16, 12, 8 }[rank]
+                : rank > 20 ? 0 : new int[] { 0, 50, 44, 40, 36, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2 }[rank],
             "GC" => rank > 5 ? 0 : new int[] { 0, 10, 8, 6, 4, 2 }[rank],
             "Points" => rank > 5 ? 0 : new int[] { 0, 8, 6, 4, 2, 1 }[rank],
             "KOM" => rank > 5 ? 0 : new int[] { 0, 6, 4, 3, 2, 1 }[rank],
