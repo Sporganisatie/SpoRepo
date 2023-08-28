@@ -12,6 +12,8 @@ export type AllRiderRow = {
     klassementen: number;
     teamScore: number;
     totalScore: number;
+    totalSelected: number;
+    accounts: string[];
 };
 
 const AllRiders = () => {
@@ -23,37 +25,56 @@ const AllRiders = () => {
     const columns: TableColumn<AllRiderRow>[] = [
         {
             name: 'Naam',
+            width: '200px',
             cell: (row: AllRiderRow) => <RiderLink rider={row.riderParticipation.rider} />,
             sortable: true
         },
         {
-            name: 'Etappe',
-            selector: (row: AllRiderRow) => row.stageScore,
-            sortable: true
-        },
-        {
-            name: 'Klassementen',
-            selector: (row: AllRiderRow) => row.klassementen,
-            sortable: true
-        },
-        {
-            name: 'Team',
-            selector: (row: AllRiderRow) => row.teamScore,
-            sortable: true,
-            omit: budgetParticipation
-        },
-        {
             name: 'Totaal',
+            width: '100px',
             selector: (row: AllRiderRow) => row.totalScore,
             sortable: true
         },
         {
             name: 'Prijs',
-            selector: (row: AllRiderRow) => row.riderParticipation.price,
+            width: '100px',
+            selector: (row: AllRiderRow) => row.riderParticipation.price / 1000000,
             sortable: true
         },
         {
+            name: 'Geselecteerd',
+            width: '100px',
+            selector: (row: AllRiderRow) => row.totalSelected,
+            sortable: true
+        },
+        {
+            name: 'Users',
+            width: '300px',
+            selector: (row: AllRiderRow) => row.accounts.sort((a, b) => (a > b ? 1 : -1)).join(", "),
+            sortable: true
+        },
+        {
+            name: 'Etappe',
+            width: '100px',
+            selector: (row: AllRiderRow) => row.stageScore,
+            sortable: true
+        },
+        {
+            name: 'Klassementen',
+            width: '100px',
+            selector: (row: AllRiderRow) => row.klassementen,
+            sortable: true
+        },
+        {
+            name: 'Team',
+            width: '100px',
+            selector: (row: AllRiderRow) => row.teamScore,
+            sortable: true,
+            omit: budgetParticipation
+        },
+        {
             name: 'P/M',
+            width: '100px',
             selector: (row: AllRiderRow) => Math.round(row.totalScore / row.riderParticipation.price * 1000000),
             sortable: true
         }
