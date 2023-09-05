@@ -78,7 +78,7 @@ public partial class Scrape
         {
             foreach (var tab in tabs)
             {
-                if (tab == "Teams" || type is StageType.ITT or StageType.TTT) continue;
+                if (tab == "Teams" || (tab is "Stage" or "" && type is StageType.ITT or StageType.TTT)) continue;
                 rider.Value.Teamscore += TeamScore(rider.Value, teamWinners[tab], tab, type);
             }
             rider.Value.Totalscore += rider.Value.Teamscore;
