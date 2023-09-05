@@ -52,7 +52,7 @@ public partial class Scrape
             var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
-
+        stage.Complete = stage.Complete || stage.Type is StageType.TTT;
         stage.Finished = stageCount > 0;
         DB.SaveChanges();
     }

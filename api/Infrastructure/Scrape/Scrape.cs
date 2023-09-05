@@ -48,7 +48,12 @@ public partial class Scrape
 
         foreach (var stageSelection in stageSelections)
         {
-            var minusTeamPoints = stageSelection.AccountParticipation.BudgetParticipation ? " - teamscore" : ""; // TODO exclude TTT points
+            var minusTeamPoints = "";
+            if (stageSelection.AccountParticipation.BudgetParticipation)
+            {
+                minusTeamPoints = stage.Type is StageType.TTT ? " - teamscore - stagescore" : " - teamscore";
+            }
+
             var selectedRiders = stage.IsFinalStandings
                 ? $"(SELECT rider_participation_id FROM team_selection_rider WHERE account_participation_id = {stageSelection.AccountParticipationId})"
                 : $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
