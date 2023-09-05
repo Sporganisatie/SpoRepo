@@ -9,15 +9,13 @@ namespace SpoRE.Services;
 
 public class RaceService
 {
-    private readonly AccountClient AccountClient;
     private readonly RaceClient RaceClient;
     private readonly Userdata User;
     private readonly TeamSelectionClient TeamClient;
     private readonly DatabaseContext DB;
 
-    public RaceService(AccountClient accountClient, RaceClient raceClient, Userdata userData, TeamSelectionClient teamClient, DatabaseContext databaseContext)
+    public RaceService(RaceClient raceClient, Userdata userData, TeamSelectionClient teamClient, DatabaseContext databaseContext)
     {
-        AccountClient = accountClient;
         RaceClient = raceClient;
         User = userData;
         TeamClient = teamClient;

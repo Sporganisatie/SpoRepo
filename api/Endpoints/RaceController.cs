@@ -35,6 +35,6 @@ public class RaceController : ControllerBase
     [ProducesResponseType(typeof(List<UserSelection>), 200)]
     [PostStart]
     [ParticipationEndpoint]
-    public IActionResult StageSelections(int raceId, bool budgetParticipation)
+    public IActionResult AllTeamSelections(int raceId, bool budgetParticipation)
         => Ok(StageService.AllTeamSelections(raceId, budgetParticipation));
 }
