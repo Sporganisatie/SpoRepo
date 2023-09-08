@@ -35,7 +35,7 @@ public partial class StatisticsService
                 {
                     Id = g.Result.RiderParticipationId,
                     Stage = g.Result.StageScore,
-                    Total = (int)(user.BudgetParticipation ? g.Result.Totalscore - g.Result.Teamscore : g.Result.Totalscore)
+                    Total = (int)(user.BudgetParticipation ? (g.Result.Stage.Type == StageType.TTT ? g.Result.Totalscore - g.Result.Teamscore - g.Result.StageScore : g.Result.Totalscore - g.Result.Teamscore) : g.Result.Totalscore)
                 })
                 .OrderByDescending(g => g.Total)
                 .ToList()
@@ -50,7 +50,8 @@ public partial class StatisticsService
         {
             var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).StageScore ?? 0;
             var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
-            var optimalPoints = (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints);
+            var optimalPoints = (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints); // TODO minus stage if TTT and budget
+
             missedPoints.Add(new(riders.Stagenr.ToString(), actualScore, optimalPoints, optimalPoints - actualScore));
         }
         missedPoints.Add(new("Totaal", missedPoints.Sum(x => x.Behaald), missedPoints.Sum(x => x.Optimaal), missedPoints.Sum(x => x.Gemist)));
@@ -60,7 +61,7 @@ public partial class StatisticsService
     private int OptimalKopmanPoints(IEnumerable<PointsData> points)
     {
         var topStage = points.OrderByDescending(p => p.Stage).FirstOrDefault();
-        if (!points.Take(9).Any(p => p.Id == topStage.Id)) throw new Exception("kopman niet in top 9");
+        if (!points.Take(9).Any(p => p.Id == topStage.Id) && topStage.Stage > 0 && topStage.Total > 0) throw new Exception("kopman niet in top 9");
         return (int)(topStage.Stage * 0.5);
     }
 }

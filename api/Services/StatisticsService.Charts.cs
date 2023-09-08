@@ -30,6 +30,32 @@ public partial class StatisticsService
         return result.Prepend(start);
     }
 
+    public IEnumerable<EtappeUitslag> PerfectScoreVerloop(int raceId, bool budgetParticipation)
+    {
+        var missedPoints = MissedPoints(raceId, budgetParticipation).ToList();
+        var summed = missedPoints.Select(x => x with { Data = SumMissedPointsData(x.Data) });
+        var result = new List<EtappeUitslag>();
+        result.Add(new EtappeUitslag(summed.Select(x => new UsernameAndScore(x.Username, 0)).ToList(), 0));
+        for (int i = 0; i < summed.First().Data.Count; i++)
+        {
+            result.Add(new EtappeUitslag(summed.Select(x => new UsernameAndScore(x.Username, x.Data[i].Optimaal)).ToList(), i + 1));
+        }
+        return result.Take(result.Count() - 1).Select(x => x with { UsernamesAndScores = MinusAverage(x.UsernamesAndScores) });
+    }
+
+    public IEnumerable<UsernameAndScore> MinusAverage(IEnumerable<UsernameAndScore> input)
+        => input.Select(x => x with { Score = x.Score - (int)input.Average(y => y.Score) });
+
+    public List<MissedPointsData> SumMissedPointsData(IEnumerable<MissedPointsData> input)
+    {
+        var output = new List<MissedPointsData>();
+        for (int i = 0; i < input.Count(); i++)
+        {
+            output.Add(new MissedPointsData("0", 0, input.Take(i + 1).Sum(x => x.Optimaal), 0));
+        }
+        return output.ToList();
+    }
+
     private IEnumerable<RaceUitslagChart> StandPerEtappe(int raceId, bool budgetParticipation)
     {
         var subquery = from ss in DB.StageSelections
