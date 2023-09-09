@@ -3,15 +3,19 @@ using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
     DatabaseContext DB;
-    public Scrape(DatabaseContext databaseContext)
+    private IMemoryCache MemoryCache;
+
+    public Scrape(DatabaseContext databaseContext, IMemoryCache memoryCache)
     {
         DB = databaseContext;
+        MemoryCache = memoryCache;
     }
 
     public void Startlist(string raceName, int year)
@@ -37,9 +41,25 @@ public partial class Scrape
                     .Select(x => x.QuerySelector("table"));
         var query = ResultsQuery(classifications.Zip(tables), stage);
         if (query.Equals("")) return;
+        ClearCache(query);
         await DB.Database.ExecuteSqlRawAsync(query);
 
         CalculateUserScores(stage);
+    }
+
+    private void ClearCache(string query)
+    {
+        if (MemoryCache.TryGetValue("ResultsUpdateQuery", out string cachedResult))
+        {
+            if (cachedResult != query)
+            {
+                if (MemoryCache is MemoryCache concreteMemoryCache)
+                {
+                    concreteMemoryCache.Clear();
+                }
+            }
+        }
+        MemoryCache.Set("ResultsUpdateQuery", query, TimeSpan.FromHours(24));
     }
 
     private void CalculateUserScores(Stage stage)

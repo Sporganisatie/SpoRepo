@@ -16,7 +16,7 @@ public partial class StatisticsService
     internal IEnumerable<MissedPointsTable> MissedPoints(int raceId, bool budgetParticipation)
         => DB.AccountParticipations.Include(ss => ss.Account)
             .Where(ss => ss.RaceId == raceId && ss.BudgetParticipation == budgetParticipation).ToList()
-            .Select(MissedPointsUser);
+            .Select(MissedPointsUser).ToList();
 
     public MissedPointsTable MissedPointsUser(AccountParticipation user)
     {

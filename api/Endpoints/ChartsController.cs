@@ -7,6 +7,7 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
+[CacheResponse]
 public class ChartsController : ControllerBase
 {
     private StatisticsService Service;
