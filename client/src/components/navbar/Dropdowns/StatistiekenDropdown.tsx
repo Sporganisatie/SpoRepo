@@ -14,6 +14,7 @@ const StatistiekenDropdown = (props: { raceSelected: boolean }) => {
                 { url: "/allRiders/29", title: "Alle Renners" }, // TODO dynamic race id
                 { url: "/missedpoints/29", title: "Gemiste punten" }, // TODO dynamic race id
                 { url: "/uitvallers/29", title: "Uitvallers" }, // TODO dynamic race id
+                { url: "/klassementen/29", title: "Klassementen" }, // TODO dynamic race id
                 // { url: "/statistics/klassementen", title: "Klassementen" },
                 // { url: "/statistics/missedPointsPerRider", title: "Gemiste punten per Renner" },
                 // { url: "/statistics/teamcomparisons", title: "Selectie vergelijking" },

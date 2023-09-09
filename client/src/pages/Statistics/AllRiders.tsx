@@ -42,7 +42,7 @@ const AllRiders = () => {
             sortable: true
         },
         {
-            name: 'Geselecteerd',
+            name: 'Gekozen',
             width: '100px',
             selector: (row: AllRiderRow) => row.totalSelected,
             sortable: true
