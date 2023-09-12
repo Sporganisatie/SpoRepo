@@ -90,10 +90,17 @@ public partial class StatisticsService
             var etappeUitslag = new RaceUitslagChart(new List<UserAndTotalScore>(), uitslag.StageNumber);
             var rank = 0;
             var userscores = uitslag.UsernamesAndScores.ToList();
+            var timesTied = 0;
             for (int i = 0; i < userscores.Count(); i++)
             {
                 var user = userscores[i];
-                if (rank == 0 || user.Score < userscores[i - 1].Score) rank++;
+                if (rank == 0 || user.Score < userscores[i - 1].Score)
+                {
+                    rank++;
+                    rank += timesTied;
+                    timesTied = 0;
+                }
+                else timesTied++;
                 etappeUitslag.UsernamesAndScores.Add(new UserAndTotalScore(user.Username, rank, user.AccountId));
             }
             etappeUitslagen.Add(etappeUitslag);
