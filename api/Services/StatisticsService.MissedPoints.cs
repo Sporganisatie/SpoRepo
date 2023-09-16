@@ -31,6 +31,7 @@ public partial class StatisticsService
             .Select(groupedData => new
             {
                 Stagenr = groupedData.Key,
+                Type = groupedData.First().Stage.Type,
                 Points = groupedData.Select(g => new
                 {
                     Id = g.Result.RiderParticipationId,
@@ -50,7 +51,9 @@ public partial class StatisticsService
         {
             var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).StageScore ?? 0;
             var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
-            var optimalPoints = (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints); // TODO minus stage if TTT and budget
+            var optimalPoints = riders.Type is StageType.FinalStandings
+                ? (int)(riders.Points.Sum(r => r.Total))
+                : (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints);
 
             missedPoints.Add(new(riders.Stagenr.ToString(), actualScore, optimalPoints, optimalPoints - actualScore));
         }
