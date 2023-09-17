@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace SpoRE.Services;
@@ -72,13 +73,12 @@ public partial class StatisticsService
                  .Select(ss => new UserAndTotalScore(ss.Account.Username, ss.FinalScore - ((int)g.Average(x => x.FinalScore)) ?? 0, ss.Account.AccountId))
                  .ToList(),
                 g.Key.Year,
-                char.ToUpper(g.Key.Name[0]) + g.Key.Name.Substring(1),
+                char.ToUpper(g.Key.Name[0]) + g.Key.Name[1..],
                 g.Key.RaceId))
-            .ToList().OrderBy(x => x.Year).ThenBy(x => x.Name);
+            .ToList().OrderBy(x => x.Year).ThenBy(x => x.Name).ToList();
 
-        // var start = new EtappeUitslag(result.First().UsernamesAndScores.Select(x => new UsernameAndScore(x.Username, 0)).ToList(), 0);
-        // return result.Prepend(start);
-        return result;
+        var start = new RaceUitslagChart(result.First().UsernamesAndScores.Select(x => new UserAndTotalScore(x.Username, 0, x.AccountId)).ToList(), 0, "", 0);
+        return result.Prepend(start);
     }
 
     private IEnumerable<EtappeUitslagChart> StandPerEtappe(int raceId, bool budgetParticipation)
@@ -87,14 +87,14 @@ public partial class StatisticsService
                        where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
                        select new
                        {
-                           Username = ss.AccountParticipation.Account.Username,
-                           TotalScore = ss.TotalScore,
-                           StageNumber = ss.Stage.Stagenr,
-                           AccountId = ss.AccountParticipation.AccountId
+                           ss.AccountParticipation.Account.Username,
+                           ss.TotalScore,
+                           ss.Stage.Stagenr,
+                           ss.AccountParticipation.AccountId
                        };
 
         var result = subquery
-            .GroupBy(ss => ss.StageNumber)
+            .GroupBy(ss => ss.Stagenr)
             .Select(g => new EtappeUitslagChart(
                 g.OrderByDescending(ss => ss.TotalScore)
                  .Select(ss => new UserAndTotalScore(ss.Username, ss.TotalScore ?? 0, ss.AccountId))
@@ -125,7 +125,6 @@ public partial class StatisticsService
         }
         etappeUitslagen[0] = etappeUitslagen[0] with { UsernamesAndScores = etappeUitslagen[0].UsernamesAndScores.OrderBy(x => x.AccountId).ToList() };
         var startPos = etappeUitslagen.First().UsernamesAndScores.Count / 2d;
-        var start = new RaceUitslagChart(etappeUitslagen.First().UsernamesAndScores.Select(x => new UserAndTotalScore(x.Username, startPos, x.AccountId)).ToList(), 0);
-        return etappeUitslagen.Prepend(start);
+        return etappeUitslagen;
     }
 }
