@@ -2,7 +2,7 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } 
 import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { colors, convertData } from './ChartsHelper';
+import { colors } from './ChartsHelper';
 
 interface ChartData {
     data: any[],
@@ -17,8 +17,7 @@ const RaceScoreVerloopChart = () => {
     useEffect(() => {
         axios.get(`/api/Charts/raceScoreVerloop`, { params: { budgetParticipation } })
             .then(res => {
-                const usernames = res.data[0].usernamesAndScores.map((x: { username: string; }) => x.username);
-                setChartData({ data: convertData(res.data), usernames });
+                setChartData({ data: res.data.data, usernames: res.data.users });
             })
             .catch(error => {
             });
@@ -28,9 +27,9 @@ const RaceScoreVerloopChart = () => {
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
             <LineChart width={1560} height={600} data={chartdata.data}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis dataKey="name" >
+                <XAxis dataKey="Name" >
                     <Label
-                        value="Etappe"
+                        value="Race"
                         position="bottom"
                         dy={-15}
                     />
@@ -58,7 +57,6 @@ const RaceScoreVerloopChart = () => {
                         stroke={colors[index]}
                         strokeWidth={3}
                         dot={false}
-                        isAnimationActive={false}
                     />
                 ))}
             </LineChart>

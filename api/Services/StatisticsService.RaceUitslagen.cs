@@ -5,7 +5,7 @@ namespace SpoRE.Services;
 
 public record RaceUitslagen(IEnumerable<RaceUitslag> uitslagen, IEnumerable<ScoreVerdeling> scoreVerdeling, IEnumerable<UserRank> userRanks);
 
-public record RaceUitslag(List<UsernameAndScore> UsernamesAndScores, int Year, string Name, int StageNumber);
+public record RaceUitslag(List<UsernameScore> UsernamesAndScores, int Year, string Name, int StageNumber);
 
 public partial class StatisticsService
 {
@@ -28,7 +28,7 @@ public partial class StatisticsService
         return CountRanks(uitslagen.Select(x => x.UsernamesAndScores), uniqueUsernames);
     }
 
-    private IEnumerable<UserRank> CountRanks(IEnumerable<IEnumerable<UsernameAndScore>> uitslagen, IEnumerable<string> usernames)
+    private IEnumerable<UserRank> CountRanks(IEnumerable<IEnumerable<UsernameScore>> uitslagen, IEnumerable<string> usernames)
     {
         var users = new Dictionary<string, int[]>();
 
@@ -84,7 +84,7 @@ public partial class StatisticsService
             .GroupBy(ss => ss.Race)
             .Select(g => new RaceUitslag(
                 g.OrderByDescending(ss => ss.Score)
-                 .Select(ss => new UsernameAndScore(ss.Username, ss.Score ?? 0))
+                 .Select(ss => new UsernameScore(ss.Username, ss.Score ?? 0))
                  .ToList(),
                 g.Key.Year,
                 char.ToUpper(g.Key.Name[0]) + g.Key.Name.Substring(1),

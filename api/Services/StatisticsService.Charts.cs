@@ -1,38 +1,39 @@
 using Microsoft.EntityFrameworkCore;
+using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Services;
 
-public record LineChartData(List<UserAndTotalScore> UsernamesAndScores, string Name);
-
-public record UserAndTotalScore(string Username, double Score, int AccountId);
+public record LineChartData(IEnumerable<string> Users, IEnumerable<Dictionary<string, object>> Data);
 
 public partial class StatisticsService
 {
-    public IEnumerable<EtappeUitslag> ScoreVerloop(int raceId, bool budgetParticipation)
+    public LineChartData ScoreVerloop(int raceId, bool budgetParticipation)
     {
-        var subquery = from ss in DB.StageSelections // TODO deze query bestaat nu 3x
-                       where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
-                       select new
-                       {
-                           Account = ss.AccountParticipation.Account,
-                           TotalScore = ss.TotalScore,
-                           StageNumber = ss.Stage.Stagenr
-                       };
+        var uitslagen = (from uss in UserStageScores(raceId, budgetParticipation)
+                         group uss by uss.StageNumber into stageScores
+                         orderby stageScores.Key
+                         select new Scores(stageScores.Select(x => new UsernameScore(x.Username, x.TotalScore.Value - (int)stageScores.Average(y => y.TotalScore))).ToList(), stageScores.Key.ToString())).ToList();
 
-        var result = subquery
-            .GroupBy(ss => ss.StageNumber)
-            .Select(g => new EtappeUitslag(
-                g.OrderBy(ss => ss.Account.AccountId)
-                 .Select(ss => new UsernameAndScore(ss.Account.Username, ss.TotalScore - ((int)g.Average(x => x.TotalScore)) ?? 0))
-                 .ToList(),
-                g.Key))
-            .ToList();
+        var participants = GetParticipants(raceId, budgetParticipation);
+        var start = new Scores(participants.Select(par => new UsernameScore(par, 0)).ToList(), "");
 
-        var start = new EtappeUitslag(result.First().UsernamesAndScores.Select(x => new UsernameAndScore(x.Username, 0)).ToList(), 0);
-        return result.Prepend(start);
+        return new(participants, uitslagen.Prepend(start).Select(x => ConvertToDict(x)));
     }
 
-    public IEnumerable<LineChartData> RaceScoreVerloop(bool budgetParticipation)
+    private Dictionary<string, object> ConvertToDict(Scores scores)
+    {
+        var dict = new Dictionary<string, object>
+        {
+            {"Name", scores.StageNumber}
+        };
+        foreach (var userscore in scores.UsernamesAndScores)
+        {
+            dict.Add(userscore.Username, userscore.Score);
+        }
+        return dict;
+    }
+
+    public LineChartData RaceScoreVerloop(bool budgetParticipation)
     {
         var subquery = from ap in DB.AccountParticipations.Include(ap => ap.Race)
                        where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics" && ap.AccountId <= 5
@@ -53,7 +54,7 @@ public partial class StatisticsService
 
         var ordered = perUser.ToList().Select(x => new { Username = x.Key, Scores = x.scores.OrderBy(x => x.Race.Year).ThenBy(x => x.Race.Name) });
 
-        List<(Infrastructure.Database.Account Account, int? FinalScore, Infrastructure.Database.Race Race)> modifiedList = new List<(Infrastructure.Database.Account, int?, Infrastructure.Database.Race)>();
+        List<(Account Account, int? FinalScore, Race Race)> modifiedList = new();
         foreach (var user in ordered)
         {
             int sum = 0;
@@ -64,37 +65,43 @@ public partial class StatisticsService
             }
         }
 
-        var result = modifiedList
+        var uitslagen = modifiedList
             .GroupBy(ss => ss.Race)
-            .Select(g => new LineChartData(
+            .Select(g => new Scores(
                 g.OrderBy(ss => ss.Account.AccountId)
-                 .Select(ss => new UserAndTotalScore(ss.Account.Username, ss.FinalScore - ((int)g.Average(x => x.FinalScore)) ?? 0, ss.Account.AccountId))
+                 .Select(ss => new UsernameScore(ss.Account.Username, ss.FinalScore - ((int)g.Average(x => x.FinalScore)) ?? 0))
                  .ToList(),
                 $"{g.Key.Year} {char.ToUpper(g.Key.Name[0]) + g.Key.Name[1..]}"))
-            .ToList().OrderBy(x => x.Name).ToList();
+            .ToList().OrderBy(x => x.StageNumber).ToList();
 
-        var start = new LineChartData(result.First().UsernamesAndScores.Select(x => new UserAndTotalScore(x.Username, 0, x.AccountId)).ToList(), "");
-        return result.Prepend(start);
+        var participants = uitslagen.First().UsernamesAndScores.Select(x => x.Username);
+
+        var start = new Scores(participants.Select(x => new UsernameScore(x, 0)).ToList(), "");
+
+        return new(participants, uitslagen.Prepend(start).Select(x => ConvertToDict(x)));
     }
 
-    public IEnumerable<EtappeUitslag> PerfectScoreVerloop(int raceId, bool budgetParticipation)
+    public LineChartData PerfectScoreVerloop(int raceId, bool budgetParticipation)
     {
         var missedPoints = MissedPoints(raceId, budgetParticipation).ToList();
         var summed = missedPoints.Select(x => x with { Data = SumMissedPointsData(x.Data) });
-        var result = new List<EtappeUitslag>
+        var participants = GetParticipants(raceId, budgetParticipation);
+
+        var result = new List<Scores>
         {
-            new(summed.Select(x => new UsernameAndScore(x.Username, 0)).ToList(), 0)
+            new(participants.Select(x => new UsernameScore(x, 0)).ToList(), "0")
         };
 
         for (int i = 0; i < summed.First().Data.Count; i++)
         {
-            result.Add(new EtappeUitslag(summed.Select(x => new UsernameAndScore(x.Username, x.Data[i].Optimaal)).ToList(), i + 1));
+            result.Add(new Scores(summed.Select(x => new UsernameScore(x.Username, x.Data[i].Optimaal)).ToList(), (i + 1).ToString()));
         }
-        return result.Take(result.Count - 1).Select(x => x with { UsernamesAndScores = MinusAverage(x.UsernamesAndScores) });
+
+        return new(participants, result.Take(result.Count - 1).Select(x => ConvertToDict(x with { UsernamesAndScores = MinusAverage(x.UsernamesAndScores) })));
     }
 
-    public IEnumerable<UsernameAndScore> MinusAverage(IEnumerable<UsernameAndScore> input)
-        => input.Select(x => x with { Score = x.Score - (int)input.Average(y => y.Score) });
+    public List<UsernameScore> MinusAverage(IEnumerable<UsernameScore> input)
+        => input.Select(x => x with { Score = x.Score - (int)input.Average(y => y.Score) }).ToList();
 
     public List<MissedPointsData> SumMissedPointsData(IEnumerable<MissedPointsData> input)
     {
@@ -106,7 +113,7 @@ public partial class StatisticsService
         return output.ToList();
     }
 
-    private IEnumerable<LineChartData> StandPerEtappe(int raceId, bool budgetParticipation)
+    private IEnumerable<Scores> StandPerEtappe(int raceId, bool budgetParticipation)
     {
         var subquery = from ss in DB.StageSelections
                        where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
@@ -120,9 +127,9 @@ public partial class StatisticsService
 
         var result = subquery
             .GroupBy(ss => ss.Stagenr)
-            .Select(g => new LineChartData(
+            .Select(g => new Scores(
                 g.OrderByDescending(ss => ss.TotalScore)
-                 .Select(ss => new UserAndTotalScore(ss.Username, ss.TotalScore ?? 0, ss.AccountId))
+                 .Select(ss => new UsernameScore(ss.Username, ss.TotalScore ?? 0))
                  .ToList(),
                 $"Etappe {g.Key}"))
             .ToList();
@@ -130,18 +137,24 @@ public partial class StatisticsService
         return result;
     }
 
-    public IEnumerable<LineChartData> PositieVerloop(int raceId, bool budgetParticipation)
+    public LineChartData PositieVerloop(int raceId, bool budgetParticipation)
     {
         var uitslagen = StandPerEtappe(raceId, budgetParticipation);
 
-        var etappeUitslagen = new List<LineChartData>();
+        var participants = GetParticipants(raceId, budgetParticipation);
+        var startPos = (int)(participants.Count / -2d);
+        var etappeUitslagen = new List<Scores>
+        {
+            new(participants.Select(x => new UsernameScore(x,startPos)).ToList(), "0")
+        };
+
         foreach (var uitslag in uitslagen)
         {
-            var etappeUitslag = new LineChartData(new List<UserAndTotalScore>(), uitslag.Name);
+            var etappeUitslag = new Scores(new List<UsernameScore>(), uitslag.StageNumber);
             var rank = 0;
             var userscores = uitslag.UsernamesAndScores.ToList();
             var timesTied = 0;
-            for (int i = 0; i < userscores.Count(); i++)
+            for (int i = 0; i < userscores.Count; i++)
             {
                 var user = userscores[i];
                 if (rank == 0 || user.Score < userscores[i - 1].Score)
@@ -151,12 +164,16 @@ public partial class StatisticsService
                     timesTied = 0;
                 }
                 else timesTied++;
-                etappeUitslag.UsernamesAndScores.Add(new UserAndTotalScore(user.Username, rank, user.AccountId));
+                etappeUitslag.UsernamesAndScores.Add(new UsernameScore(user.Username, rank * -1));
             }
             etappeUitslagen.Add(etappeUitslag);
         }
-        etappeUitslagen[0] = etappeUitslagen[0] with { UsernamesAndScores = etappeUitslagen[0].UsernamesAndScores.OrderBy(x => x.AccountId).ToList() };
-        var startPos = etappeUitslagen.First().UsernamesAndScores.Count / 2d;
-        return etappeUitslagen;
+        return new(participants, etappeUitslagen.Select(x => ConvertToDict(x)));
     }
+
+    private List<string> GetParticipants(int raceId, bool budgetParticipation)
+        => DB.AccountParticipations.Include(x => x.Account)
+            .Where(x => x.RaceId == raceId && x.BudgetParticipation == budgetParticipation)
+            .OrderBy(x => x.AccountId)
+            .Select(x => x.Account.Username).ToList();
 }

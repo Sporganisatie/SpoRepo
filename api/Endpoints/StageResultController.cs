@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
 using SpoRE.Services;
 
