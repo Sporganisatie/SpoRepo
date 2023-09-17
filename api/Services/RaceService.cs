@@ -9,15 +9,13 @@ namespace SpoRE.Services;
 
 public class RaceService
 {
-    private readonly AccountClient AccountClient;
     private readonly RaceClient RaceClient;
     private readonly Userdata User;
     private readonly TeamSelectionClient TeamClient;
     private readonly DatabaseContext DB;
 
-    public RaceService(AccountClient accountClient, RaceClient raceClient, Userdata userData, TeamSelectionClient teamClient, DatabaseContext databaseContext)
+    public RaceService(RaceClient raceClient, Userdata userData, TeamSelectionClient teamClient, DatabaseContext databaseContext)
     {
-        AccountClient = accountClient;
         RaceClient = raceClient;
         User = userData;
         TeamClient = teamClient;
@@ -43,29 +41,15 @@ public class RaceService
     {
         var race = DB.Races.Single(r => r.RaceId == raceId);
         race.Finished = true;
-        var participations = DB.AccountParticipations.Where(ap => ap.RaceId == raceId).Select(ap => ap.AccountParticipationId).ToList();
-        foreach (var apId in participations)
+        var participations = DB.AccountParticipations.Where(ap => ap.RaceId == raceId).ToList();
+        foreach (var ap in participations)
         {
-            var stageSelectionId = DB.StageSelections
-                .FromSqlInterpolated($@"
-                    SELECT stage_selection_id 
-                    FROM stage_selection 
-                    INNER JOIN stage USING(stage_id)
-                    WHERE account_participation_id = {apId} AND type = 'FinalStandings'")
-                .Select(ss => ss.StageSelectionId)
-                .FirstOrDefault();
+            var finalScore = DB.StageSelections.Include(ss => ss.Stage)
+                .Single(ss => ss.Stage.Type == StageType.FinalStandings && ss.AccountParticipationId == ap.AccountParticipationId)
+                .TotalScore;
 
-            var finalScore = DB.StageSelections
-                .Where(ss => ss.StageSelectionId == stageSelectionId)
-                .Select(ss => ss.TotalScore)
-                .FirstOrDefault();
-
-            var accountParticipation = DB.AccountParticipations.Find(apId);
-            if (accountParticipation != null)
-            {
-                accountParticipation.FinalScore = finalScore;
-                DB.AccountParticipations.Update(accountParticipation);
-            }
+            ap.FinalScore = finalScore;
+            DB.AccountParticipations.Update(ap);
         }
 
         return DB.SaveChanges();

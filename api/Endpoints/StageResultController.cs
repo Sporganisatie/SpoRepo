@@ -10,6 +10,7 @@ namespace SpoRE.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ParticipationEndpoint]
+// [CacheResponse] TODO introduce way to identify user for cache key
 public class StageResultController : ControllerBase
 {
     private readonly StageResultService Service;

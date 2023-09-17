@@ -16,9 +16,10 @@ const ScoreVerloopChart = () => {
     const budgetParticipation = useBudgetContext();
     const [chartdata, setChartData] = useState<ChartData>({ data: [], usernames: [] });
     const [positieVerloop, setPositieVerloop] = useState<boolean>(false);
+    const [perfectPoints, setPerfectPoints] = useState<boolean>(false);
 
     useEffect(() => {
-        var url = positieVerloop ? "positieVerloop" : "scoreVerloop";
+        var url = positieVerloop ? "positieVerloop" : perfectPoints ? "perfectScoreVerloop" : "scoreVerloop";
         axios.get(`/api/Charts/${url}`, { params: { raceId, budgetParticipation } })
             .then(res => {
                 const usernames = res.data[0].usernamesAndScores.map((x: { username: string; }) => x.username);
@@ -26,16 +27,24 @@ const ScoreVerloopChart = () => {
             })
             .catch(error => {
             });
-    }, [raceId, budgetParticipation, positieVerloop]);
+    }, [raceId, budgetParticipation, positieVerloop, perfectPoints]);
 
     const togglePositieVerloop = () => {
         setPositieVerloop(!positieVerloop)
     }
 
+    const togglePerfectPoints = () => {
+        setPerfectPoints(!perfectPoints)
+    }
+
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
             <div style={{ cursor: 'pointer', color: 'white  ' }} onClick={togglePositieVerloop}> Positie Verloop
-                <input type="checkbox" checked={positieVerloop} onChange={() => { }} /></div>
+                <input type="checkbox" checked={positieVerloop} onChange={() => { }} />
+            </div>
+            {!positieVerloop && <div style={{ cursor: 'pointer', color: 'white  ' }} onClick={togglePerfectPoints}> Perfecte Score
+                <input type="checkbox" checked={perfectPoints} onChange={() => { }} />
+            </div>}
             <div>
                 <LineChart width={Math.min(chartdata.data.length * 70, 1540)} height={600} data={chartdata.data}>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />

@@ -7,6 +7,7 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
+[CacheResponse]
 public class ChartsController : ControllerBase
 {
     private StatisticsService Service;
@@ -22,6 +23,11 @@ public class ChartsController : ControllerBase
     [ProducesResponseType(200)]
     public IActionResult RaceScoreVerloop(bool budgetParticipation)
         => Ok(Service.RaceScoreVerloop(budgetParticipation));
+
+    [HttpGet("perfectScoreVerloop")]
+    [ProducesResponseType(200)]
+    public IActionResult perfectScoreVerloop(int raceId, bool budgetParticipation)
+        => Ok(Service.PerfectScoreVerloop(raceId, budgetParticipation));
 
     [HttpGet("positieVerloop")]
     [ProducesResponseType(200)]

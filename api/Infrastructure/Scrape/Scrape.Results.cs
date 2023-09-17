@@ -16,6 +16,7 @@ public partial class Scrape
             ProcessResults(table.Tab, table.Results, ref riderResults, stage.Type, ref teamWinners);
         }
         UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
+        if (stage.Type is StageType.TTT) AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == "").Results);
         UpdateDnfRiders(riderResults, stage);
         StageComplete(stage, riderResults);
 
@@ -51,7 +52,7 @@ public partial class Scrape
             var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
-
+        stage.Complete = stage.Complete || stage.Type is StageType.TTT;
         stage.Finished = stageCount > 0;
         DB.SaveChanges();
     }
@@ -77,7 +78,7 @@ public partial class Scrape
         {
             foreach (var tab in tabs)
             {
-                if (tab == "Teams") continue;
+                if (tab == "Teams" || (tab is "Stage" or "" && type is StageType.ITT or StageType.TTT)) continue;
                 rider.Value.Teamscore += TeamScore(rider.Value, teamWinners[tab], tab, type);
             }
             rider.Value.Totalscore += rider.Value.Teamscore;
@@ -97,7 +98,7 @@ public partial class Scrape
 
     private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
     {
-        if (tab == "Teams") return;
+        if (tab == "Teams" || (tab == "" && type is StageType.TTT)) return;
         var pcsRows = ResultsDict(htmlResults);
         teamWinners[tab] = pcsRows.FirstOrDefault()?.Team;
         foreach (var pcsRow in pcsRows)
@@ -195,6 +196,23 @@ public partial class Scrape
             },
             _ => riderResult
         };
+
+    private void AddTTTResults(ref Dictionary<string, RiderResult> riderResults, HtmlNode Results)
+    {
+        var teamOrder = Results.QuerySelectorAll(".team").Select(x => x.QuerySelectorAll("td").ElementAt(1).InnerText.Trim()).ToList();
+        // var times = new List<string>(); TODO get
+        foreach (var (key, value) in riderResults)
+        {
+            var position = teamOrder.IndexOf(value.Team) + 1;
+            riderResults[key] = value with
+            {
+                Stagepos = position,
+                Stageresult = "Todo finish time",
+                Stagescore = Score(position, "Stage", StageType.TTT),
+                Totalscore = riderResults[key].Totalscore + Score(position, "Stage", StageType.TTT)
+            };
+        }
+    }
 }
 
 internal record PcsRow

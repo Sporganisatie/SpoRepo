@@ -25,10 +25,10 @@ public partial class StatisticsService
             .Select(x => new EtappeUitslag(x.UsernamesAndScores.OrderByDescending(y => y.Score), x.StageNumber));
 
     public IEnumerable<EtappeUitslag> Uitslagen(int raceId, bool budgetParticipation)
-        => from uss in UserStageScores(raceId, budgetParticipation)
-           group uss by uss.StageNumber into stageScores
-           orderby stageScores.Key
-           select new EtappeUitslag(stageScores.Select(x => new UsernameAndScore(x.Username, x.StageScore ?? 0)).ToList(), stageScores.Key);
+        => (from uss in UserStageScores(raceId, budgetParticipation)
+            group uss by uss.StageNumber into stageScores
+            orderby stageScores.Key
+            select new EtappeUitslag(stageScores.Select(x => new UsernameAndScore(x.Username, x.StageScore ?? 0)).ToList(), stageScores.Key)).ToList();
 
     private IEnumerable<ScoreVerdeling> ScoreVerdeling(int raceId, bool budgetParticipation)
     {

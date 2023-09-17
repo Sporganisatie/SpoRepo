@@ -5,7 +5,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/race/28");
+    navigate("/race/29");
   }, [navigate]);
 
   return (
