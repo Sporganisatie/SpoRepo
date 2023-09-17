@@ -30,6 +30,9 @@ const ScoreVerloopChart = () => {
 
     const togglePositieVerloop = () => {
         setPositieVerloop(!positieVerloop)
+        if (!positieVerloop) {
+            setPerfectPoints(false)
+        }
     }
 
     const togglePerfectPoints = () => {

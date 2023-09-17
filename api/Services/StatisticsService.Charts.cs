@@ -131,7 +131,7 @@ public partial class StatisticsService
                 g.OrderByDescending(ss => ss.TotalScore)
                  .Select(ss => new UsernameScore(ss.Username, ss.TotalScore ?? 0))
                  .ToList(),
-                $"Etappe {g.Key}"))
+                $"{g.Key}"))
             .ToList();
 
         return result;
