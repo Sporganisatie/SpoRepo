@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
 
 namespace SpoRE.Services;
@@ -8,19 +9,27 @@ public partial class StageResultService
 {
     public IEnumerable<UserSelection> AllStageSelections(int raceId, bool budgetParticipation, int stagenr)
     {
+        var FinalStandings = DB.Stages.Single(s => s.RaceId == raceId && s.Stagenr == stagenr).Type == StageType.FinalStandings;
         if (DB.Stages.Single(s => s.RaceId == raceId && s.Stagenr == stagenr).Starttime > DateTime.UtcNow) return new List<UserSelection>();
 
         var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
         var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
-        var users = DB.StageSelections.Include(ss => ss.AccountParticipation.Account).Where(ss => ss.Stage.Stagenr == stagenr && ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation).Select(ss => new { ss.StageSelectionId, ss.AccountParticipation.Account.Username, ss.AccountParticipationId }).ToList();
+        var users = DB.StageSelections.Include(ss => ss.AccountParticipation.Account).Where(ss => ss.Stage.Stagenr == stagenr && ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation).Select(ss => new { SelectionId = ss.StageSelectionId, ss.AccountParticipation.Account.Username, ss.AccountParticipationId }).ToList();
         var allSelected = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipation.BudgetParticipation == budgetParticipation && ssr.StageSelection.Stage.RaceId == raceId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
+        if (FinalStandings)
+        {
+            stageSelection = teamSelection;
+            users = DB.TeamSelections.Include(ts => ts.AccountParticipation.Account).Where(ts => ts.AccountParticipation.RaceId == raceId && ts.AccountParticipation.BudgetParticipation == budgetParticipation).Select(ts => new { SelectionId = ts.AccountParticipationId, ts.AccountParticipation.Account.Username, ts.AccountParticipationId }).ToList();
+            allSelected = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipation.BudgetParticipation == budgetParticipation && ssr.StageSelection.Stage.RaceId == raceId && ssr.StageSelection.Stage.Stagenr == stagenr).Select(ssr => ssr.RiderParticipationId).ToList();
+
+        }
         var output = new List<UserSelection>();
         foreach (var user in users)
         {
             var query = from ssr in DB.StageSelectionRiders.Include(ssr => ssr.RiderParticipation.Rider)
                         join rp in DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
                         from rp in results.DefaultIfEmpty()
-                        where ssr.StageSelection.StageSelectionId == user.StageSelectionId
+                        where ssr.StageSelection.StageSelectionId == user.SelectionId
                         select new StageComparisonRider
                         {
                             Rider = ssr.RiderParticipation.Rider,
@@ -37,7 +46,7 @@ public partial class StageResultService
                               from rp in results.DefaultIfEmpty()
                               let totalScore = (budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0
                               where (ts.AccountParticipationId == user.AccountParticipationId) && (totalScore > 0 || allSelected.Contains(ts.RiderParticipationId))
-                                && !DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.StageSelectionId == user.StageSelectionId).Any(ssr => ssr.RiderParticipationId == ts.RiderParticipationId)
+                                && !DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.StageSelectionId == user.SelectionId).Any(ssr => ssr.RiderParticipationId == ts.RiderParticipationId)
                               select new StageComparisonRider
                               {
                                   Rider = ts.RiderParticipation.Rider,
