@@ -2,8 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SpoRE.Services;
 
-public record EtappeUitslagChart(List<UserAndTotalScore> UsernamesAndScores, int StageNumber);
-public record RaceUitslagChart(List<UserAndTotalScore> UsernamesAndScores, int Year, string Name, int StageNumber);
+public record LineChartData(List<UserAndTotalScore> UsernamesAndScores, string Name);
 
 public record UserAndTotalScore(string Username, double Score, int AccountId);
 
@@ -33,7 +32,7 @@ public partial class StatisticsService
         return result.Prepend(start);
     }
 
-    public IEnumerable<RaceUitslagChart> RaceScoreVerloop(bool budgetParticipation)
+    public IEnumerable<LineChartData> RaceScoreVerloop(bool budgetParticipation)
     {
         var subquery = from ap in DB.AccountParticipations.Include(ap => ap.Race)
                        where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics" && ap.AccountId <= 5
@@ -67,16 +66,14 @@ public partial class StatisticsService
 
         var result = modifiedList
             .GroupBy(ss => ss.Race)
-            .Select(g => new RaceUitslagChart(
+            .Select(g => new LineChartData(
                 g.OrderBy(ss => ss.Account.AccountId)
                  .Select(ss => new UserAndTotalScore(ss.Account.Username, ss.FinalScore - ((int)g.Average(x => x.FinalScore)) ?? 0, ss.Account.AccountId))
                  .ToList(),
-                g.Key.Year,
-                char.ToUpper(g.Key.Name[0]) + g.Key.Name[1..],
-                g.Key.RaceId))
-            .ToList().OrderBy(x => x.Year).ThenBy(x => x.Name).ToList();
+                $"{g.Key.Year} {char.ToUpper(g.Key.Name[0]) + g.Key.Name[1..]}"))
+            .ToList().OrderBy(x => x.Name).ToList();
 
-        var start = new RaceUitslagChart(result.First().UsernamesAndScores.Select(x => new UserAndTotalScore(x.Username, 0, x.AccountId)).ToList(), 0, "", 0);
+        var start = new LineChartData(result.First().UsernamesAndScores.Select(x => new UserAndTotalScore(x.Username, 0, x.AccountId)).ToList(), "");
         return result.Prepend(start);
     }
 
@@ -109,7 +106,7 @@ public partial class StatisticsService
         return output.ToList();
     }
 
-    private IEnumerable<EtappeUitslagChart> StandPerEtappe(int raceId, bool budgetParticipation)
+    private IEnumerable<LineChartData> StandPerEtappe(int raceId, bool budgetParticipation)
     {
         var subquery = from ss in DB.StageSelections
                        where ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.Finished
@@ -123,24 +120,24 @@ public partial class StatisticsService
 
         var result = subquery
             .GroupBy(ss => ss.Stagenr)
-            .Select(g => new EtappeUitslagChart(
+            .Select(g => new LineChartData(
                 g.OrderByDescending(ss => ss.TotalScore)
                  .Select(ss => new UserAndTotalScore(ss.Username, ss.TotalScore ?? 0, ss.AccountId))
                  .ToList(),
-                g.Key))
+                $"Etappe {g.Key}"))
             .ToList();
 
         return result;
     }
 
-    public IEnumerable<EtappeUitslagChart> PositieVerloop(int raceId, bool budgetParticipation)
+    public IEnumerable<LineChartData> PositieVerloop(int raceId, bool budgetParticipation)
     {
         var uitslagen = StandPerEtappe(raceId, budgetParticipation);
 
-        var etappeUitslagen = new List<EtappeUitslagChart>();
+        var etappeUitslagen = new List<LineChartData>();
         foreach (var uitslag in uitslagen)
         {
-            var etappeUitslag = new EtappeUitslagChart(new List<UserAndTotalScore>(), uitslag.StageNumber);
+            var etappeUitslag = new LineChartData(new List<UserAndTotalScore>(), uitslag.Name);
             var rank = 0;
             var userscores = uitslag.UsernamesAndScores.ToList();
             var timesTied = 0;

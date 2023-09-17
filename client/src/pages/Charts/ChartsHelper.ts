@@ -5,7 +5,7 @@ export const convertData = (data: EtappeUitslag[], invert: boolean = false): any
     const convertedData: any[] = [];
     for (let et = 0; et < data.length; et++) {
         const stageData: { [key: string]: any } = {
-            name: data[et].name + " " + data[et].year
+            name: data[et].name
         };
 
         for (let i = 0; i < data[et].usernamesAndScores.length; i++) {
