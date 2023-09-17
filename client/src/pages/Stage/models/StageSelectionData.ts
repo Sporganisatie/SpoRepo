@@ -5,7 +5,9 @@ import { StageSelectableRider } from "./StageSelectableRider"
 export interface StageSelectionData {
     team: StageSelectableRider[],
     deadline: Date | null,
-    classifications: Classifications
+    classifications: Classifications,
+    compleet: number,
+    budgetCompleet: number | null
 }
 
 export interface Classifications {

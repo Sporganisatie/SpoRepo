@@ -1,0 +1,56 @@
+div.completeContainer {
+    text-align: center;
+    height: 60px;
+    width: 150px;
+    color: lightgray;
+    border: gray 2px solid;
+    background: rgb(160, 0, 0);
+}
+
+div.completeContainerNonBudget {
+    text-align: center;
+    height: 40px;
+    width: 150px;
+    color: lightgray;
+    border: gray 2px solid;
+    background: rgb(160, 0, 0);
+}
+
+div.gewoonCompleet {
+    position: relative;
+    left: 0;
+    width: 100%
+}
+
+div.budgetCompleet {
+    position: relative;
+    top: 21px;
+    width: 100%
+}
+
+div.allCompleet {
+    background: rgb(0, 60, 0);
+}
+
+div.backgroundCompleet {
+    position: absolute;
+    background: rgb(0, 60, 0);
+    left: 0;
+    top: 0;
+    height: 21px
+}
+
+div.backgroundCompleetNewUsers {
+    position: absolute;
+    background: rgb(0, 60, 0);
+    left: 0;
+    top: 0;
+    height: 25px
+}
+
+div.textCompleet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%
+}

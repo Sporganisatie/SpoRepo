@@ -6,6 +6,8 @@ using Z.EntityFramework.Plus;
 
 namespace SpoRE.Services.StageSelection;
 
+public record StageSelectionData(IEnumerable<StageSelectableRider> Team, DateTime? Deadline, Classifications Classifications, int Compleet, int? BudgetCompleet);
+
 public class StageSelectionService
 {
     private readonly Userdata User;
@@ -25,7 +27,15 @@ public class StageSelectionService
         var stageInfo = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
         var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).FirstOrDefault(s => s.Finished && s.RaceId == raceId);
         var topClassifications = mostRecentFinished is null ? Classifications.Empty : StageResultService.GetClassifications(mostRecentFinished, top5: true, stagenr);
-        return new StageSelectionData(team, stageInfo.Starttime, topClassifications);
+        return new StageSelectionData(team, stageInfo.Starttime, topClassifications, OpstellingCompleet(raceId, stagenr, false).Value, OpstellingCompleet(raceId, stagenr, true));
+    }
+
+    private int? OpstellingCompleet(int raceId, int stagenr, bool budget)
+    {
+        if (budget && User.Id > 5) return null;
+        var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipation.AccountId == User.Id && ss.AccountParticipation.BudgetParticipation == budget && ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
+            .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { Kopman = ss.KopmanId == ssr.RiderParticipationId }).ToList();
+        return stageSelection.Count + (stageSelection.Any(r => r.Kopman) ? 1 : 0);
     }
 
     private IEnumerable<StageSelectableRider> GetTeam(int stagenr)
