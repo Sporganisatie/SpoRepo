@@ -64,6 +64,7 @@ public partial class Scrape
 
     private void CalculateUserScores(Stage stage)
     {
+        // TODO if finalstandings use teamselections
         var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stage.StageId).Include(ss => ss.AccountParticipation).ToList();
 
         foreach (var stageSelection in stageSelections)

@@ -3,7 +3,7 @@ import { useBudgetContext } from '../../components/shared/BudgetContextProvider'
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { colors, convertData } from './ChartsHelper';
+import { colors } from './ChartsHelper';
 
 interface ChartData {
     data: any[],
@@ -22,8 +22,7 @@ const ScoreVerloopChart = () => {
         var url = positieVerloop ? "positieVerloop" : perfectPoints ? "perfectScoreVerloop" : "scoreVerloop";
         axios.get(`/api/Charts/${url}`, { params: { raceId, budgetParticipation } })
             .then(res => {
-                const usernames = res.data[0].usernamesAndScores.map((x: { username: string; }) => x.username);
-                setChartData({ data: convertData(res.data, positieVerloop), usernames });
+                setChartData({ data: res.data.data, usernames: res.data.users });
             })
             .catch(error => {
             });
@@ -31,6 +30,9 @@ const ScoreVerloopChart = () => {
 
     const togglePositieVerloop = () => {
         setPositieVerloop(!positieVerloop)
+        if (!positieVerloop) {
+            setPerfectPoints(false)
+        }
     }
 
     const togglePerfectPoints = () => {
@@ -39,16 +41,22 @@ const ScoreVerloopChart = () => {
 
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
-            <div style={{ cursor: 'pointer', color: 'white  ' }} onClick={togglePositieVerloop}> Positie Verloop
-                <input type="checkbox" checked={positieVerloop} onChange={() => { }} />
+            <div>
+                <div style={{ display: 'inline-block', cursor: 'pointer', color: 'white' }} onClick={togglePositieVerloop}>
+                    Positie Verloop
+                    <input type="checkbox" checked={positieVerloop} onChange={() => { }} />
+                </div>
+                {!positieVerloop && (
+                    <div style={{ display: 'inline-block', cursor: 'pointer', color: 'white' }} onClick={togglePerfectPoints}>
+                        Perfecte Score
+                        <input type="checkbox" checked={perfectPoints} onChange={() => { }} />
+                    </div>
+                )}
             </div>
-            {!positieVerloop && <div style={{ cursor: 'pointer', color: 'white  ' }} onClick={togglePerfectPoints}> Perfecte Score
-                <input type="checkbox" checked={perfectPoints} onChange={() => { }} />
-            </div>}
             <div>
                 <LineChart width={Math.min(chartdata.data.length * 70, 1540)} height={600} data={chartdata.data}>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                    <XAxis dataKey="name" >
+                    <XAxis dataKey="Name" >
                         <Label
                             value="Etappe"
                             position="bottom"
@@ -58,9 +66,7 @@ const ScoreVerloopChart = () => {
                     {positieVerloop ? (
                         <YAxis
                             tickCount={10}
-                            // domain={['dataMin - 0.5', 'dataMax + 0.5']}
                             tickFormatter={(value) => (-value).toString()}
-                        // ticks={Array.from({ length: chartdata.usernames.length }, (_, index) => -(index + 1))}
                         >
                             <Label value="Positie" angle={-90} position="left" offset={-10} />
                         </YAxis>

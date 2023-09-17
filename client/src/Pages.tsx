@@ -17,6 +17,7 @@ import ScoreVerloopChart from "./pages/Charts/ScoreVerloopChart";
 import RaceUitslagen from "./pages/Statistics/EtappeUitslagen/RaceUitslagen";
 import RiderPage from "./pages/RiderPage";
 import ScoreVerdelingChart from "./pages/Charts/ScoreVerdelingChart";
+import RaceScoreVerloopChart from "./pages/Charts/RaceScoreVerloopChart";
 import Klassementen from "./pages/Statistics/Klassementen";
 
 const Pages: JSX.Element[] = [
@@ -40,6 +41,7 @@ const Pages: JSX.Element[] = [
     <Route key="klassementen" path="klassementen/:raceId" element={<Klassementen />} />,
     // charts
     <Route key="scoreverloop" path="charts/scoreverloop/:raceId" element={<ScoreVerloopChart />} />,
+    <Route key="racescoreverloop" path="charts/scoreverloop" element={<RaceScoreVerloopChart />} />,
     <Route key="scoreverdeling" path="charts/scoreverdeling/:raceId" element={<ScoreVerdelingChart />} />,
     // TODO zorg dat al het overige naar home gaat
 ];

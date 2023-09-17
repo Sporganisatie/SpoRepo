@@ -22,6 +22,7 @@ public partial class StageResultService
 
     private IEnumerable<RiderScore> GetRiderScores(Stage stage, bool budgetParticipation)
     {
+        // TODO if finalstandings use teamselection
         var query = from ssr in DB.StageSelectionRiders.Include(ssr => ssr.RiderParticipation.Rider)
                     join rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
                     from rp in results.DefaultIfEmpty()
