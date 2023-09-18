@@ -14,17 +14,19 @@ namespace SpoRE.Services;
 public class AccountService
 {
     private readonly AppSettings _appSettings;
-    private readonly AccountClient _accountClient;
+    private readonly DatabaseContext DB;
 
-    public AccountService(IOptions<AppSettings> appSettings, AccountClient accountClient)
+    public AccountService(IOptions<AppSettings> appSettings, DatabaseContext databaseContext)
     {
         _appSettings = appSettings.Value;
-        _accountClient = accountClient;
+        DB = databaseContext;
     }
 
-    public Task<Result<string>> AuthenticateAsync(LoginCredentials credentials)
-        => _accountClient.Get(credentials.Email)
-            .ActAsync(account => GenerateTokenForValidLogin(account, credentials));
+    public Result<string> AuthenticateAsync(LoginCredentials credentials)
+    {
+        var account = DB.Accounts.Single(x => x.Email.Equals(credentials.Email));
+        return GenerateTokenForValidLogin(account, credentials);
+    }
 
     private Result<string> GenerateTokenForValidLogin(Account account, LoginCredentials credentials)
         => BCrypt.Net.BCrypt.Verify(credentials.Password, account.Password)
