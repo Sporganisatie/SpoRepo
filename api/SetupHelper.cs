@@ -14,7 +14,6 @@ internal static class Telemetry
         services.AddScoped<TeamSelectionService, TeamSelectionService>();
         services.AddScoped<TeamSelectionClient, TeamSelectionClient>();
         services.AddScoped<StageSelectionService, StageSelectionService>();
-        services.AddScoped<RaceClient, RaceClient>();
         services.AddScoped<RaceService, RaceService>();
         services.AddScoped<StageResultService, StageResultService>();
         services.AddScoped<StatisticsService, StatisticsService>();

@@ -9,14 +9,12 @@ namespace SpoRE.Services;
 
 public class RaceService
 {
-    private readonly RaceClient RaceClient;
     private readonly Userdata User;
     private readonly TeamSelectionClient TeamClient;
     private readonly DatabaseContext DB;
 
-    public RaceService(RaceClient raceClient, Userdata userData, TeamSelectionClient teamClient, DatabaseContext databaseContext)
+    public RaceService(Userdata userData, TeamSelectionClient teamClient, DatabaseContext databaseContext)
     {
-        RaceClient = raceClient;
         User = userData;
         TeamClient = teamClient;
         DB = databaseContext;
@@ -26,7 +24,7 @@ public class RaceService
     {
         var participationCount = DB.AccountParticipations.Count(x => x.AccountId == User.Id && x.RaceId == raceId);
         // if race finished => race samenvatting pagina
-        if (RaceClient.ShowResults(raceId, 1)) return new(RaceStateEnum.Started, RaceClient.CurrentStage(raceId)?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId));
+        if (DB.ShowResults(raceId, 1)) return new(RaceStateEnum.Started, DB.CurrentStage(raceId)?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId));
 
         var stateBeforeStart = DB.AccountParticipations.Count(x => x.AccountId == User.Id && x.RaceId == raceId) > 0
                 ? RaceStateEnum.TeamSelection

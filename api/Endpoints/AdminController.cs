@@ -13,15 +13,16 @@ namespace SpoRE.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly Scrape Scraper;
-    private readonly RaceClient RaceClient;
     private readonly RaceService RaceService;
     private readonly Scheduler Scheduler;
-    public AdminController(Scrape scrape, RaceClient raceClient, RaceService raceService, Scheduler scheduler)
+    private readonly DatabaseContext DB;
+
+    public AdminController(Scrape scrape, RaceService raceService, Scheduler scheduler, DatabaseContext database)
     {
         Scraper = scrape;
         RaceService = raceService;
-        RaceClient = raceClient;
         Scheduler = scheduler;
+        DB = database;
     }
 
     [HttpGet("startlist")]
@@ -36,7 +37,7 @@ public class AdminController : ControllerBase
     {
         if (mostRecent)
         {
-            await Scraper.StageResults(RaceClient.MostRecentStartedStage());
+            await Scraper.StageResults(DB.MostRecentStartedStage());
             Scheduler.RunTimer();
         }
         else await Scraper.StageResults(raceName, year, stagenr);
