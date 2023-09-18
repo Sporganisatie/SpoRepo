@@ -12,7 +12,8 @@ namespace SpoRE.Controllers;
 [ParticipationEndpoint(Order = 2)]
 public class TeamSelectionController : ControllerBase
 {
-    private TeamSelectionService Service;
+    private readonly TeamSelectionService Service;
+
     public TeamSelectionController(TeamSelectionService service)
         => Service = service;
 
@@ -28,6 +29,6 @@ public class TeamSelectionController : ControllerBase
 
     [HttpDelete]
     [ProducesResponseType(typeof(int), 200)]
-    public IActionResult Remove(int riderParticipationId, int raceId, bool budgetParticipation)
-        => Ok(Service.RemoveRider(riderParticipationId, raceId, budgetParticipation));
+    public IActionResult Remove(int riderParticipationId)
+        => Ok(Service.RemoveRider(riderParticipationId));
 }

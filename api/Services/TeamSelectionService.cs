@@ -1,24 +1,29 @@
+using Microsoft.EntityFrameworkCore;
+using SpoRE.Helper;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
+using Z.EntityFramework.Plus;
 
 namespace SpoRE.Services;
 
 public class TeamSelectionService
 {
-    private readonly TeamSelectionClient Client;
+    private readonly DatabaseContext DB;
+    private readonly Userdata User;
 
-    public TeamSelectionService(TeamSelectionClient client)
-        => Client = client;
+    public TeamSelectionService(DatabaseContext databaseContext, Userdata userData)
+    {
+        DB = databaseContext;
+        User = userData;
+    }
 
     public TeamSelectionData GetTeamSelectionData(int raceId, bool budgetParticipation)
     {
-        var raceData = Client.GetRaceInfo(raceId);
-
-        var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
+        var budget = RaceBudget(raceId, budgetParticipation);
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
-        var team = Client.GetTeam();
-        var allRiders = Client.GetAll(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
+        var team = GetTeam();
+        var allRiders = AllRiders(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
         var allTeams = allRiders.Select(r => r.Details.Team).Distinct();
         return new(budget, budgetOver, team, allRiders, allTeams);
@@ -26,14 +31,19 @@ public class TeamSelectionService
 
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
-        var raceData = Client.GetRaceInfo(raceId);
+        var budget = RaceBudget(raceId, budgetParticipation);
+        var team = GetTeam();
+        var toAdd = DB.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId && rp.RaceId == raceId);
 
-        var budget = budgetParticipation ? 11_250_000 : raceData.Budget;
-        var team = Client.GetTeam();
-        var toAdd = Client.GetRider(riderParticipationId, raceId);
         if (Selectable(team, budget, toAdd) is SelectableEnum.Open)
         {
-            return Client.AddRider(riderParticipationId);
+            DB.TeamSelections.Add(
+                new()
+                {
+                    RiderParticipationId = riderParticipationId,
+                    AccountParticipationId = User.ParticipationId
+                });
+            return DB.SaveChanges();
         }
         return 0; // TODO error?
     }
@@ -56,12 +66,40 @@ public class TeamSelectionService
         return SelectableEnum.Open;
     }
 
-    internal object RemoveRider(int riderParticipationId, int raceId, bool budgetParticipation)
+    internal int RemoveRider(int riderParticipationId)
     {
-        var raceData = Client.GetRaceInfo(raceId);
+        var selectionRiders = DB.StageSelectionRiders
+            .Where(sr => sr.StageSelection.AccountParticipationId == User.ParticipationId && sr.RiderParticipationId == riderParticipationId);
+        DB.StageSelectionRiders.RemoveRange(selectionRiders);
 
-        return Client.RemoveRider(riderParticipationId);
+        DB.TeamSelections.Remove(new() { RiderParticipationId = riderParticipationId, AccountParticipationId = User.ParticipationId });
+
+        DB.StageSelections
+            .Where(s => s.AccountParticipationId == User.ParticipationId && s.KopmanId == riderParticipationId)
+            .Update(s => new StageSelectie { KopmanId = null });
+
+        return DB.SaveChanges();
     }
+
+    internal IEnumerable<RiderParticipation> GetTeam()
+    {
+        var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
+                    let ap = ts.AccountParticipation
+                    where ap.AccountParticipationId == User.ParticipationId
+                    orderby ts.RiderParticipation.Price descending
+                    select ts.RiderParticipation;
+        return query.ToList();
+    }
+
+    internal int RaceBudget(int raceId, bool budgetParticipation)
+       => budgetParticipation ? 11_250_000 : DB.Races.Single(r => r.RaceId == raceId).Budget;
+
+    internal List<RiderParticipation> AllRiders(int raceId, int maxPrice)
+        => DB.RiderParticipations
+            .Include(rp => rp.Rider)
+            .Where(rp => rp.RaceId == raceId && rp.Price <= maxPrice)
+            .OrderByDescending(x => x.Price)
+            .ToList();
 }
 
 public enum SelectableEnum // TODO move
