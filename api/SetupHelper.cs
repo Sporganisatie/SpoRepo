@@ -1,5 +1,4 @@
 using Microsoft.OpenApi.Models;
-using SpoRE.Infrastructure.Database;
 using SpoRE.Services;
 using SpoRE.Services.StageSelection;
 
@@ -10,11 +9,8 @@ internal static class Telemetry
     public static void AddServicesAndClients(this IServiceCollection services)
     {
         services.AddScoped<AccountService, AccountService>();
-        services.AddScoped<AccountClient, AccountClient>();
         services.AddScoped<TeamSelectionService, TeamSelectionService>();
-        services.AddScoped<TeamSelectionClient, TeamSelectionClient>();
         services.AddScoped<StageSelectionService, StageSelectionService>();
-        services.AddScoped<RaceClient, RaceClient>();
         services.AddScoped<RaceService, RaceService>();
         services.AddScoped<StageResultService, StageResultService>();
         services.AddScoped<StatisticsService, StatisticsService>();

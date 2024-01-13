@@ -7,6 +7,7 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
+[CacheResponse]
 public class StatisticsController : ControllerBase
 {
     private StatisticsService Service;
@@ -41,4 +42,10 @@ public class StatisticsController : ControllerBase
     [PostStart]
     public IActionResult AllRiders(int raceId, bool budgetParticipation)
         => Ok(Service.AllRiders(raceId, budgetParticipation));
+
+    [HttpGet("klassementen")]
+    [ProducesResponseType(200)]
+    [PostStart]
+    public IActionResult Klassementen(int raceId, bool budgetParticipation)
+        => Ok(Service.Klassementen(raceId, budgetParticipation));
 }

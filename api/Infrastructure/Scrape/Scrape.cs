@@ -3,15 +3,19 @@ using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
     DatabaseContext DB;
-    public Scrape(DatabaseContext databaseContext)
+    private IMemoryCache MemoryCache;
+
+    public Scrape(DatabaseContext databaseContext, IMemoryCache memoryCache)
     {
         DB = databaseContext;
+        MemoryCache = memoryCache;
     }
 
     public void Startlist(string raceName, int year)
@@ -37,18 +41,40 @@ public partial class Scrape
                     .Select(x => x.QuerySelector("table"));
         var query = ResultsQuery(classifications.Zip(tables), stage);
         if (query.Equals("")) return;
+        ClearCache(query);
         await DB.Database.ExecuteSqlRawAsync(query);
 
         CalculateUserScores(stage);
     }
 
+    private void ClearCache(string query)
+    {
+        if (MemoryCache.TryGetValue("ResultsUpdateQuery", out string cachedResult))
+        {
+            if (cachedResult != query)
+            {
+                if (MemoryCache is MemoryCache concreteMemoryCache)
+                {
+                    concreteMemoryCache.Clear();
+                }
+            }
+        }
+        MemoryCache.Set("ResultsUpdateQuery", query, TimeSpan.FromHours(24));
+    }
+
     private void CalculateUserScores(Stage stage)
     {
+        // TODO if finalstandings use teamselections
         var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stage.StageId).Include(ss => ss.AccountParticipation).ToList();
 
         foreach (var stageSelection in stageSelections)
         {
-            var minusTeamPoints = stageSelection.AccountParticipation.BudgetParticipation ? " - teamscore" : "";
+            var minusTeamPoints = "";
+            if (stageSelection.AccountParticipation.BudgetParticipation)
+            {
+                minusTeamPoints = stage.Type is StageType.TTT ? " - teamscore - stagescore" : " - teamscore";
+            }
+
             var selectedRiders = stage.IsFinalStandings
                 ? $"(SELECT rider_participation_id FROM team_selection_rider WHERE account_participation_id = {stageSelection.AccountParticipationId})"
                 : $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
@@ -80,7 +106,7 @@ public partial class Scrape
         {
             "giro" => "Giroprijzen",
             "tour" => "Tourprijzen",
-            // "vuelta" => "Filename",
+            "vuelta" => "vueltaprijzen",
             _ => throw new ArgumentOutOfRangeException()
         };
 

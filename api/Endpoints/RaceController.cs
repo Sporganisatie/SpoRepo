@@ -35,6 +35,7 @@ public class RaceController : ControllerBase
     [ProducesResponseType(typeof(List<UserSelection>), 200)]
     [PostStart]
     [ParticipationEndpoint]
-    public IActionResult StageSelections(int raceId, bool budgetParticipation)
+    // [CacheResponse] TODO introduce way to identify user for cache key
+    public IActionResult AllTeamSelections(int raceId, bool budgetParticipation)
         => Ok(StageService.AllTeamSelections(raceId, budgetParticipation));
 }

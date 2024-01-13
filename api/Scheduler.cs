@@ -18,10 +18,10 @@ public class Scheduler
     {
         using (var scope = serviceProvider.CreateScope())
         {
-            var raceClient = scope.ServiceProvider.GetService<RaceClient>();
+            var DB = scope.ServiceProvider.GetService<DatabaseContext>();
             // race done -> return
 
-            var stage = raceClient.CurrentStage(28);
+            var stage = DB.CurrentStage(29);
             if (stage?.Starttime is null) return;
 
             if (stage.Starttime > DateTime.UtcNow) { ScheduleAction(TimeSpan.FromMinutes(1)); return; }

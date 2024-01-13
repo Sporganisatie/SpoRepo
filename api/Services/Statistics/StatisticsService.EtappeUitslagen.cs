@@ -1,10 +1,10 @@
 namespace SpoRE.Services;
 
-public record EtappeUitslagen(IEnumerable<EtappeUitslag> uitslagen, IEnumerable<ScoreVerdeling> scoreVerdeling, IEnumerable<UserRank> userRanks);
+public record EtappeUitslagen(IEnumerable<Scores> uitslagen, IEnumerable<ScoreVerdeling> scoreVerdeling, IEnumerable<UserRank> userRanks);
 
-public record EtappeUitslag(IEnumerable<UsernameAndScore> UsernamesAndScores, int StageNumber);
+public record Scores(List<UsernameScore> UsernamesAndScores, string StageNumber);
 
-public record UsernameAndScore(string Username, int Score);
+public record UsernameScore(string Username, int Score);
 
 public record ScoreVerdeling(string Username, int Bin0, int Bin1, int Bin2, int Bin3, int Bin4);
 
@@ -20,15 +20,15 @@ public partial class StatisticsService
         return new(uitslagen, scoreVerdeling, userRank);
     }
 
-    public IEnumerable<EtappeUitslag> SortedUitslagen(int raceId, bool budgetParticipation)
+    public IEnumerable<Scores> SortedUitslagen(int raceId, bool budgetParticipation)
         => Uitslagen(raceId, budgetParticipation)
-            .Select(x => new EtappeUitslag(x.UsernamesAndScores.OrderByDescending(y => y.Score), x.StageNumber));
+            .Select(x => new Scores(x.UsernamesAndScores.OrderByDescending(y => y.Score).ToList(), x.StageNumber));
 
-    public IEnumerable<EtappeUitslag> Uitslagen(int raceId, bool budgetParticipation)
-        => from uss in UserStageScores(raceId, budgetParticipation)
-           group uss by uss.StageNumber into stageScores
-           orderby stageScores.Key
-           select new EtappeUitslag(stageScores.Select(x => new UsernameAndScore(x.Username, x.StageScore ?? 0)).ToList(), stageScores.Key);
+    public List<Scores> Uitslagen(int raceId, bool budgetParticipation)
+        => (from uss in UserStageScores(raceId, budgetParticipation)
+            group uss by uss.StageNumber into stageScores
+            orderby stageScores.Key
+            select new Scores(stageScores.Select(x => new UsernameScore(x.Username, x.StageScore ?? 0)).ToList(), stageScores.Key.ToString())).ToList();
 
     private IEnumerable<ScoreVerdeling> ScoreVerdeling(int raceId, bool budgetParticipation)
     {
@@ -48,7 +48,7 @@ public partial class StatisticsService
         return result.ToList().OrderByDescending(x => x.Bin4).ThenByDescending(x => x.Bin3).ThenByDescending(x => x.Bin2).ThenByDescending(x => x.Bin1).ThenByDescending(x => x.Bin0);
     }
 
-    private record StageSelectionQueryResult(string Username, int? StageScore, int StageNumber);
+    private record StageSelectionQueryResult(string Username, int? StageScore, int? TotalScore, int StageNumber);
 
     private IEnumerable<StageSelectionQueryResult> UserStageScores(int raceId, bool budgetParticipation)
         => (from ss in DB.StageSelections
@@ -57,5 +57,6 @@ public partial class StatisticsService
             select new StageSelectionQueryResult(
                 ss.AccountParticipation.Account.Username,
                 ss.StageScore,
+                ss.TotalScore,
                 ss.Stage.Stagenr)).AsEnumerable();
 }

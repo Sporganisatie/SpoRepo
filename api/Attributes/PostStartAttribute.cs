@@ -9,11 +9,11 @@ public class PostStartAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
     {
-        var raceClient = context.HttpContext.RequestServices.GetService<RaceClient>();
+        var DB = context.HttpContext.RequestServices.GetService<DatabaseContext>();
 
         var raceIdString = context.HttpContext.Request.Query.FirstOrDefault(x => x.Key == "raceId").Value.FirstOrDefault();
 
-        if (!raceClient.ShowResults(int.Parse(raceIdString), 1))
+        if (!DB.ShowResults(int.Parse(raceIdString), 1))
         {
             context.Result = new StatusCodeResult(StatusCodes.Status423Locked);
             return;

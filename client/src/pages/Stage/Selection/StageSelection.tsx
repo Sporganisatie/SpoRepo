@@ -1,9 +1,9 @@
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
 import ClassificationOverview from "./ClassificationOverview";
-import { StageSelectionHook, useStageSelection } from "./StageSelectionHook";
-import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
+import { useStageSelection } from "./StageSelectionHook";
 import { useStage } from "../StageHook";
+import SelectionsComplete from "./SelectionComplete";
 
 const options: Intl.DateTimeFormatOptions = {
   weekday: "long",
@@ -30,7 +30,13 @@ const StageSelection = () => {
             Deadline:{" "}
             {data.deadline?.toLocaleDateString("nl-NL", options) ?? ""}
           </div>
-          {<button onClick={() => navigate("/")}>Teamselectie</button>}
+          {stagenr === "1" && (
+            <button onClick={() => navigate("/")}>Teamselectie</button>
+          )}
+          <SelectionsComplete
+            compleet={data.compleet}
+            budgetCompleet={data.budgetCompleet}
+          />
           <div style={{ display: "flex" }}>
             <div style={{ margin: "0 5px" }}>
               <StageSelectionTeam

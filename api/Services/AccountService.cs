@@ -14,17 +14,19 @@ namespace SpoRE.Services;
 public class AccountService
 {
     private readonly AppSettings _appSettings;
-    private readonly AccountClient _accountClient;
+    private readonly DatabaseContext DB;
 
-    public AccountService(IOptions<AppSettings> appSettings, AccountClient accountClient)
+    public AccountService(IOptions<AppSettings> appSettings, DatabaseContext databaseContext)
     {
         _appSettings = appSettings.Value;
-        _accountClient = accountClient;
+        DB = databaseContext;
     }
 
-    public Task<Result<string>> AuthenticateAsync(LoginCredentials credentials)
-        => _accountClient.Get(credentials.Email)
-            .ActAsync(account => GenerateTokenForValidLogin(account, credentials));
+    public Result<string> AuthenticateAsync(LoginCredentials credentials)
+    {
+        var account = DB.Accounts.Single(x => x.Email.Equals(credentials.Email));
+        return GenerateTokenForValidLogin(account, credentials);
+    }
 
     private Result<string> GenerateTokenForValidLogin(Account account, LoginCredentials credentials)
         => BCrypt.Net.BCrypt.Verify(credentials.Password, account.Password)
@@ -33,13 +35,13 @@ public class AccountService
 
     private string generateJwtToken(Account account)
     {
-        // generate token that is valid for 7 days
+        // generate token that is valid for 1 year
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] { new Claim("id", account.AccountId.ToString()), new Claim("admin", account.Admin.ToString(), ClaimValueTypes.Boolean) }),
-            Expires = DateTime.UtcNow.AddDays(30),
+            Expires = DateTime.UtcNow.AddYears(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
-using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
 using SpoRE.Services;
 
@@ -10,6 +9,7 @@ namespace SpoRE.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ParticipationEndpoint]
+// [CacheResponse] TODO introduce way to identify user for cache key
 public class StageResultController : ControllerBase
 {
     private readonly StageResultService Service;

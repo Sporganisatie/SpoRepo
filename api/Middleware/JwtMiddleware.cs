@@ -18,17 +18,17 @@ public class JwtMiddleware
         _appSettings = appSettings.Value;
     }
 
-    public async Task Invoke(HttpContext context, AccountClient accountClient)
+    public async Task Invoke(HttpContext context, DatabaseContext DB)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault();
 
         if (!token.IsNullOrEmpty())
-            await AttachUserToContextAsync(context, accountClient, token);
+            AttachUserToContextAsync(context, DB, token);
 
         await _next(context);
     }
 
-    private async Task AttachUserToContextAsync(HttpContext context, AccountClient accountClient, string token)
+    private void AttachUserToContextAsync(HttpContext context, DatabaseContext DB, string token)
     {
         try
         {
@@ -46,12 +46,8 @@ public class JwtMiddleware
             var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation
-            await accountClient.Get(accountId)
-                .ActAsync(user =>
-                {
-                    context.Items["user"] = user;
-                    return Result.OK;
-                });
+            var user = DB.Accounts.Single(x => x.AccountId == accountId);
+            context.Items["user"] = user;
         }
         catch (Exception exception)
         {

@@ -45,5 +45,7 @@ export const stageSelectionDataSchema = z.object({
       return deadline;
     }),
   classifications: classificationsSchema,
+  compleet: z.number(),
+  budgetCompleet: z.number().nullable(),
 });
 export type StageSelectionData = z.infer<typeof stageSelectionDataSchema>;

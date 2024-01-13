@@ -15,9 +15,9 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(LoginCredentials credentials)
+    public ActionResult<string> Login(LoginCredentials credentials)
     {
-        var output = await AccountService.AuthenticateAsync(credentials);
+        var output = AccountService.AuthenticateAsync(credentials);
         return output.IsValid ? output.Value : new UnauthorizedResult();
     }
 }
