@@ -1,9 +1,12 @@
-import { RiderScore } from "../Result/TeamResultsTable";
-import { UserScore } from "../Result/UserScoreTable";
-import { Classifications } from "./StageSelectionData";
+import { z } from "zod";
+import { riderScoreSchema } from "../Result/TeamResultsTable";
+import { userScoreSchema } from "../Result/UserScoreTable";
+import { classificationsSchema } from "./StageSelectionData";
 
-export interface StageResultData {
-    userScores: UserScore[],
-    teamResult: RiderScore[],
-    classifications: Classifications
-}
+export const stageResultDataSchema = z.object({
+  userScores: z.array(userScoreSchema),
+  teamResult: z.array(riderScoreSchema),
+  classifications: classificationsSchema,
+});
+
+export type StageResultData = z.infer<typeof stageResultDataSchema>;
