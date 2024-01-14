@@ -8,11 +8,7 @@ const Home = () => {
     navigate("/race/29");
   }, [navigate]);
 
-  return (
-    <div>
-      Loading...
-    </div>
-  );
+  return <div>Loading...</div>;
 };
 
 export default Home;
