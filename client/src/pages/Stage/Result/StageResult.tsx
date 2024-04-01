@@ -9,7 +9,7 @@ import { useStage } from "../StageHook";
 const StageResults = () => {
   const { stagenr } = useStage();
   document.title = `Etappe ${stagenr} resultaten`;
-  const { data, isFetching } = useStageResult();
+  const { data } = useStageResult();
   const [showTeamComparison, setShowTeamComparison] = useState<boolean>(false);
 
   return (
