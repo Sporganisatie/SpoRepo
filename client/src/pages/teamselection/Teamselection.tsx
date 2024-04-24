@@ -22,7 +22,7 @@ const Teamselection: React.FC = () => {
         return {
             name: "",
             minPrice: 500000,
-            maxPrice: 7000000,
+            maxPrice: 8000000,
             team: "",
             skill: ""
         }
