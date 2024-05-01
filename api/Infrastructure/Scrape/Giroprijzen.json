@@ -4240,6 +4240,71 @@
             "NameShort": "M. Tarozzi",
             "Qualities": [],
             "RiderId": 7579
+        },
+        {
+            "Age": 21,
+            "BirthDate": "2002-11-08T00:00:00",
+            "EventRiderId": 199012,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 38,
+            "Type": 6,
+            "FirstName": "Dries",
+            "LastName": "De Pooter",
+            "NameShort": "D. De Pooter",
+            "Qualities": [],
+            "RiderId": 7532
+        },
+        {
+            "Age": 28,
+            "BirthDate": "1995-07-29T00:00:00",
+            "EventRiderId": 199013,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 121,
+            "Type": 6,
+            "FirstName": "Quinten",
+            "LastName": "Hermans",
+            "NameShort": "Q. Hermans",
+            "Qualities": [
+                {
+                    "Type": 4,
+                    "Value": 2
+                },
+                {
+                    "Type": 5,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 6903
+        },
+        {
+            "Age": 22,
+            "BirthDate": "2001-06-24T00:00:00",
+            "EventRiderId": 199014,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 138,
+            "Type": 6,
+            "FirstName": "Francisco",
+            "LastName": "Muñoz",
+            "NameShort": "F. Muñoz",
+            "Qualities": [],
+            "RiderId": 8104
+        },
+        {
+            "Age": 24,
+            "BirthDate": "2000-03-15T00:00:00",
+            "EventRiderId": 199015,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 30,
+            "Type": 6,
+            "FirstName": "Tim",
+            "LastName": "van Dijke",
+            "NameShort": "T. van Dijke",
+            "Qualities": [],
+            "RiderId": 7677
         }
     ]
 }
