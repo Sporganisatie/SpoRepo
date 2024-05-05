@@ -4,8 +4,8 @@ import axios from "axios";
 const Admin = () => {
   document.title = "Admin";
   const [stagenr, setStagenr] = useState("");
-  const [year, setYear] = useState("2023");
-  const [raceName, setRace] = useState("vuelta");
+  const [year, setYear] = useState("");
+  const [raceName, setRace] = useState("");
 
   const submit = (params: any) => {
     axios.get(`/api/Admin/stageResults`, { params })
