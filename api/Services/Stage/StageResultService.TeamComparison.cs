@@ -105,7 +105,7 @@ public partial class StageResultService
                 {
                     foreach (var user in selecties.Select(x => x.Username).Except(riderLine.Select(x => x.Item1)))
                     {
-                        riderLine.Add(new(user, new() { TotalScore = -1 }));
+                        riderLine.Add(new(user, new() { TotalScore = 0 }));
                     }
                     continue;
                 }
