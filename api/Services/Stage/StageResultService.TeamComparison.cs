@@ -105,7 +105,7 @@ public partial class StageResultService
                 {
                     foreach (var user in selecties.Select(x => x.Username).Except(riderLine.Select(x => x.Item1)))
                     {
-                        riderLine.Add(new(user, new() { TotalScore = 0 }));
+                        riderLine.Add(new(user, new() { TotalScore = -1 }));
                     }
                     continue;
                 }
@@ -124,7 +124,7 @@ public partial class StageResultService
         var newRiders = reorderedRiders.Select(line => line.FirstOrDefault(x => x.Item1 == user.Username).Item2);
         var totals = new StageComparisonRider
         {
-            TotalScore = newRiders.Sum(rs => rs.TotalScore)
+            TotalScore = newRiders.Where(rs => rs.TotalScore >= 0).Sum(rs => rs.TotalScore)
         };
         return new UserSelection(user.Username, newRiders.Append(totals), user.Gemist);
     }
