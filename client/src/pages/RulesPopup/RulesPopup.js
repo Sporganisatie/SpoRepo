@@ -6,15 +6,15 @@ import TeamSelectionExplanation from './TeamSelectionExplanation';
 
 const RulesPopup = (props) => {
   const [page, setPage] = useState(props.page);
-  const [showModal, setShowModal] = useState(false);
-  const cssClass = showModal ? "modal display-block" : "modal display-none";
-  const cssClass2 = showModal ? "modal-content w-full display-block" : "modal display-none";
+  // const [showModal, setShowModal] = useState(false);
+  // const cssClass = showModal ? "modal display-block" : "modal display-none";
+  // const cssClass2 = showModal ? "modal-content w-full display-block" : "modal display-none";
 
   return (
     <div className="stageprofilebutton">
       {/* <button className="button_standard blue" onClick={() => setShowModal(!showModal)}>{"Uitleg/ Regels "}</button> */}
-      <div className={cssClass}>
-        <div className={cssClass2}>
+      <div>
+        <div>
           <div className="flex">
             <div className="flex-grow ml-4 space-x-4">
               <button className="button_standard blue" onClick={() => setPage('teamSelection')}>Team Selectie</button>
