@@ -37,6 +37,7 @@ const Navbar = (props: NavbarProps) => {
       {race !== null && <Link className='navbar_link' to={props.currentStageLink}><span>Current stage</span></Link>}
       {!props.isLoading && <ChartsDropdown raceSelected={race !== null} />}
       {!props.isLoading && <StatsDropdown raceSelected={race !== null} />}
+      <Link className='navbar_link' to='/regelspunten'><span>Regels/Punten</span></Link>
       {isAdmin &&
         <Link className='navbar_link' to='/admin'>
           <FontAwesomeIcon icon={faShieldAlt} />
