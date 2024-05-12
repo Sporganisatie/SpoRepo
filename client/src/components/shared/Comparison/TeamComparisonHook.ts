@@ -3,6 +3,7 @@ import { useBudgetContext } from "../BudgetContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { UserSelection } from "../../../models/UserSelection";
+import { AllSelectedRiderRow } from "./AllSelectedRidersTable";
 
 export function useTeamComparison() {
   const budgetParticipation = useBudgetContext();
@@ -14,7 +15,7 @@ export function useTeamComparison() {
   const { data, isFetching } = useQuery({
     queryKey: ["teamComparison", raceId, budgetParticipation, stagenr],
     queryFn: () => fetchData(raceId, budgetParticipation, stagenr),
-    initialData: [],
+    initialData: { teams: [], counts: [] },
     staleTime: 10 * 60 * 1000,
   });
 
@@ -22,7 +23,7 @@ export function useTeamComparison() {
     raceId: string,
     budgetParticipation: boolean,
     stagenr?: string
-  ): Promise<UserSelection[]> {
+  ): Promise<{ teams: UserSelection[]; counts: AllSelectedRiderRow[] }> {
     if (stagenr) {
       return axios
         .get(`/api/stageresult/comparison`, {

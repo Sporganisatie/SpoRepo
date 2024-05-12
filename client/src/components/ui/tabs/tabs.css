@@ -1,0 +1,43 @@
+.tab-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  user-select: none;
+}
+
+.tab {
+  position: relative;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: black;
+  transition: color 0.1s ease;
+}
+.tab.disabled {
+  color: #475569;
+  cursor: default;
+}
+.tab:not(.disabled):hover {
+  color: #60a5fa;
+}
+.tab.selected {
+  color: #3b82f6;
+}
+
+.tab:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: black;
+  transition: color 0.3s ease;
+}
+.tab.selected:after {
+  background-color: #3b82f6;
+}
+.tab.disabled:after {
+  background-color: transparent;
+}
