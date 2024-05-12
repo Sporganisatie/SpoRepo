@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { StageSelectionData } from "../models/StageSelectionData";
 import ClassificationOverview from "./ClassificationOverview";
 import SelectionsComplete from "./SelectionComplete";
-import RulesPopup from "../../RulesPopup";
 
 const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' };
 
@@ -66,7 +65,6 @@ const StageSelection = (props: { raceId: string, stagenr: string }) => {
                     <ClassificationOverview data={data.classifications} />
                 </div>
             </div>
-            <RulesPopup page={"stageSelection"} />
         </div>
     );
 
