@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
 using SpoRE.Services;
 
@@ -10,14 +11,11 @@ namespace SpoRE.Controllers;
 [Authorize]
 public class RaceController : ControllerBase
 {
-    private RaceService Service;
-    private readonly StageResultService StageService;
+    private readonly RaceService Service;
 
-    public RaceController(RaceService service, StageResultService stageResultService)
-
+    public RaceController(RaceService service)
     {
         Service = service;
-        StageService = stageResultService;
     }
 
     [HttpGet]
@@ -32,10 +30,10 @@ public class RaceController : ControllerBase
         => Ok(Service.JoinRace(raceId));
 
     [HttpGet("comparison")]
-    [ProducesResponseType(typeof(List<UserSelection>), 200)]
+    [ProducesResponseType(typeof((IEnumerable<UserSelection>, IEnumerable<(Rider, int)>)), 200)]
     [PostStart]
     [ParticipationEndpoint]
     // [CacheResponse] TODO introduce way to identify user for cache key
     public IActionResult AllTeamSelections(int raceId, bool budgetParticipation)
-        => Ok(StageService.AllTeamSelections(raceId, budgetParticipation));
+        => Ok(Service.AllTeamSelections(raceId, budgetParticipation));
 }

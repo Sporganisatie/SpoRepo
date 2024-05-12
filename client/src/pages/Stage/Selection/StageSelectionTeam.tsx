@@ -1,8 +1,6 @@
 import DataTable, { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
 import { StageSelectableRider } from "../models/StageSelectableRider";
-import { useStageSelection } from "./StageSelectionHook";
-import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 
 export interface StageSelectionTeamProps {
   team: StageSelectableRider[];

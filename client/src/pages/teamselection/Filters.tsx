@@ -24,6 +24,7 @@ const priceOptions: SelectOption<number>[] = [
     { displayValue: '5.500.000', value: 5500000 },
     { displayValue: '6.000.000', value: 6000000 },
     { displayValue: '7.000.000', value: 7000000 },
+    { displayValue: '8.000.000', value: 8000000 },
 ];
 
 const skillOptions: SelectOption<string>[] = [

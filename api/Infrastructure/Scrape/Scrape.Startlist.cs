@@ -28,9 +28,9 @@ public partial class Scrape
 
                 // Combine with price/qualities data
                 var riderId = $"(SELECT rider_id FROM rider WHERE PCS_id = '{pcsId}')";
-                try
+                var sclist = riderQualities.Where(rq => CompareName(rq.FirstName, rq.LastName, firstname, lastname));
+                if (sclist.Count() == 1)
                 {
-                    var sclist = riderQualities.Where(rq => CompareName(rq.FirstName, rq.LastName, firstname, lastname));
                     var sc = sclist.First();
                     var q = sc.Qualities.ToDictionary(q => q.Type, q => q.Value);
 
@@ -38,7 +38,11 @@ public partial class Scrape
                     riderInserts.Add(riderInsert);
                     rpIds.Add($"(SELECT rider_participation_id FROM rider_participation WHERE rider_id = {riderId} AND race_id = {raceId})");
                 }
-                catch (System.Exception)
+                else if (sclist.Count() > 1)
+                {
+                    Console.WriteLine($"Multiple matches for rider: {String.Join(" ", names)}");
+                }
+                else
                 {
                     Console.WriteLine($"No price data for rider: {String.Join(" ", names)}");
                 }

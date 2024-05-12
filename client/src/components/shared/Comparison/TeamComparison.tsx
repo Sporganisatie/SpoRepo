@@ -1,4 +1,5 @@
 import TeamComparisonTable from "./TeamComparisonTable";
+import AllSelectedRiders from "./AllSelectedRidersTable";
 import { useTeamComparison } from "./TeamComparisonHook";
 
 const TeamComparison = () => {
@@ -8,7 +9,7 @@ const TeamComparison = () => {
     <div>
       {
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {data.map((userSelection, index) => (
+          {data.teams.map((userSelection, index) => (
             <div
               key={index}
               style={{
@@ -33,6 +34,7 @@ const TeamComparison = () => {
               </div>
             </div>
           ))}
+          <AllSelectedRiders riders={data.counts} />
         </div>
       }
     </div>

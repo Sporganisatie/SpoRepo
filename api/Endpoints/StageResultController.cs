@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SpoRE.Attributes;
+using SpoRE.Helper;
 using SpoRE.Models.Response;
 using SpoRE.Services;
 
@@ -25,7 +26,7 @@ public class StageResultController : ControllerBase
         => Ok(Service.StageResultData(raceId, budgetParticipation, stagenr));
 
     [HttpGet("comparison")]
-    [ProducesResponseType(typeof(List<UserSelection>), 200)]
+    [ProducesResponseType(typeof(TeamSelections), 200)]
     public IActionResult StageSelections(int raceId, bool budgetParticipation, int stagenr)
         => Ok(Service.AllStageSelections(raceId, budgetParticipation, stagenr));
 }

@@ -35,6 +35,6 @@ public class CacheResponseAttribute : ActionFilterAttribute
         }
     }
 
-    private string CacheKey(ActionContext context)
+    private static string CacheKey(ActionContext context)
         => $"{context.HttpContext.Request.Path + context.HttpContext.Request.QueryString}";
 }

@@ -16,6 +16,9 @@ import ScoreVerloopChart from "./pages/Charts/ScoreVerloopChart";
 import RaceUitslagen from "./pages/Statistics/EtappeUitslagen/RaceUitslagen";
 import RiderPage from "./pages/RiderPage";
 import ScoreVerdelingChart from "./pages/Charts/ScoreVerdelingChart";
+import RaceScoreVerloopChart from "./pages/Charts/RaceScoreVerloopChart";
+import Klassementen from "./pages/Statistics/Klassementen";
+import RulesPopup from "./pages/RulesPopup";
 import { Root } from "./App";
 import Home from "./components/Home";
 
@@ -64,6 +67,10 @@ const router = createBrowserRouter([
         path: "admin",
         Component: Admin,
       },
+      {
+        path: "regelspunten",
+        Component: RulesPopup,
+      },
       // statistics
       {
         path: "teamcomparison/:raceId",
@@ -89,7 +96,15 @@ const router = createBrowserRouter([
         path: "allRiders/:raceId",
         Component: AllRiders,
       },
+      {
+        path: "klassementen/:raceId",
+        Component: Klassementen,
+      },
       // charts
+      {
+        path: "charts/scoreverloop",
+        Component: RaceScoreVerloopChart,
+      },
       {
         path: "charts/scoreverloop/:raceId",
         Component: ScoreVerloopChart,
