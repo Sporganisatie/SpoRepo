@@ -4,6 +4,7 @@ using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SpoRE.Infrastructure.Scrape;
 
@@ -27,7 +28,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         var stageNr = stage.IsFinalStandings ? stage.Stagenr - 1 : stage.Stagenr;
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
-        if (!classifications.Any()) classifications = ["Stage"];
+        if (classifications.IsNullOrEmpty()) classifications = ["Stage"];
         var tables = html.QuerySelectorAll(".result-cont .subTabs")
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
                     .Select(x => x.QuerySelector("table"));
