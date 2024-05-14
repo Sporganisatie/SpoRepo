@@ -6,17 +6,8 @@ using Z.EntityFramework.Plus;
 
 namespace SpoRE.Services;
 
-public class TeamSelectionService
+public class TeamSelectionService(DatabaseContext DB, Userdata User)
 {
-    private readonly DatabaseContext DB;
-    private readonly Userdata User;
-
-    public TeamSelectionService(DatabaseContext databaseContext, Userdata userData)
-    {
-        DB = databaseContext;
-        User = userData;
-    }
-
     public TeamSelectionData GetTeamSelectionData(int raceId, bool budgetParticipation)
     {
         var budget = RaceBudget(raceId, budgetParticipation);

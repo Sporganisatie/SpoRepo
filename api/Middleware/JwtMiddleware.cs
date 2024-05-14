@@ -7,20 +7,11 @@ using System.Text;
 
 namespace SpoRE.Middleware;
 
-public class JwtMiddleware
+public class JwtMiddleware(RequestDelegate _next, IOptions<AppSettings> AppSettings)
 {
-    private readonly RequestDelegate _next;
-    private readonly AppSettings _appSettings;
-
-    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
-    {
-        _next = next;
-        _appSettings = appSettings.Value;
-    }
-
     public async Task Invoke(HttpContext context, DatabaseContext DB)
     {
-        var token = context.Request.Headers["Authorization"].FirstOrDefault();
+        var token = context.Request.Headers.Authorization.FirstOrDefault();
 
         if (!token.IsNullOrEmpty())
             AttachUserToContextAsync(context, DB, token);
@@ -33,7 +24,7 @@ public class JwtMiddleware
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
+            var key = Encoding.ASCII.GetBytes(AppSettings.Value.JwtSecret);
             tokenHandler.ValidateToken(token, new TokenValidationParameters //TODO handle expired error niet triggeren bij login endpoint
             {
                 ValidateIssuerSigningKey = true,

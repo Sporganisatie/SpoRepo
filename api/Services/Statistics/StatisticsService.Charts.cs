@@ -54,7 +54,7 @@ public partial class StatisticsService
 
         var ordered = perUser.ToList().Select(x => new { Username = x.Key, Scores = x.scores.OrderBy(x => x.Race.Year).ThenBy(x => x.Race.Name) });
 
-        List<(Account Account, int? FinalScore, Race Race)> modifiedList = new();
+        var modifiedList = new List<(Account Account, int? FinalScore, Race Race)>();
         foreach (var user in ordered)
         {
             int sum = 0;
@@ -150,7 +150,7 @@ public partial class StatisticsService
 
         foreach (var uitslag in uitslagen)
         {
-            var etappeUitslag = new Scores(new List<UsernameScore>(), uitslag.StageNumber);
+            var etappeUitslag = new Scores([], uitslag.StageNumber);
             var rank = 0;
             var userscores = uitslag.UsernamesAndScores.ToList();
             var timesTied = 0;

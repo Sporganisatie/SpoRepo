@@ -11,17 +11,8 @@ using System.Text;
 
 namespace SpoRE.Services;
 
-public class AccountService
+public class AccountService(IOptions<AppSettings> AppSettings, DatabaseContext DB)
 {
-    private readonly AppSettings _appSettings;
-    private readonly DatabaseContext DB;
-
-    public AccountService(IOptions<AppSettings> appSettings, DatabaseContext databaseContext)
-    {
-        _appSettings = appSettings.Value;
-        DB = databaseContext;
-    }
-
     public Result<string> AuthenticateAsync(LoginCredentials credentials)
     {
         var account = DB.Accounts.Single(x => x.Email.Equals(credentials.Email));
@@ -37,10 +28,10 @@ public class AccountService
     {
         // generate token that is valid for 1 year
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
+        var key = Encoding.ASCII.GetBytes(AppSettings.Value.JwtSecret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", account.AccountId.ToString()), new Claim("admin", account.Admin.ToString(), ClaimValueTypes.Boolean) }),
+            Subject = new ClaimsIdentity([new Claim("id", account.AccountId.ToString()), new Claim("admin", account.Admin.ToString(), ClaimValueTypes.Boolean)]),
             Expires = DateTime.UtcNow.AddYears(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };

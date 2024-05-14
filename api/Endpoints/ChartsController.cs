@@ -8,12 +8,8 @@ namespace SpoRE.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [CacheResponse]
-public class ChartsController : ControllerBase
+public class ChartsController(StatisticsService Service) : ControllerBase
 {
-    private StatisticsService Service;
-    public ChartsController(StatisticsService service)
-        => Service = service;
-
     [HttpGet("scoreVerloop")]
     [ProducesResponseType(200)]
     public IActionResult ScoreVerloop(int raceId, bool budgetParticipation)

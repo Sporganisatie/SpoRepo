@@ -10,21 +10,8 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Admin]
-public class AdminController : ControllerBase
+public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB) : ControllerBase
 {
-    private readonly Scrape Scraper;
-    private readonly RaceService RaceService;
-    private readonly Scheduler Scheduler;
-    private readonly DatabaseContext DB;
-
-    public AdminController(Scrape scrape, RaceService raceService, Scheduler scheduler, DatabaseContext database)
-    {
-        Scraper = scrape;
-        RaceService = raceService;
-        Scheduler = scheduler;
-        DB = database;
-    }
-
     [HttpGet("startlist")]
     public IActionResult ScrapeStartList(string raceName, int year)
     {
