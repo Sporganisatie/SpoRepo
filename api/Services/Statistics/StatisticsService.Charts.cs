@@ -20,7 +20,7 @@ public partial class StatisticsService
         return new(participants, uitslagen.Prepend(start).Select(x => ConvertToDict(x)));
     }
 
-    private Dictionary<string, object> ConvertToDict(Scores scores)
+    private static Dictionary<string, object> ConvertToDict(Scores scores)
     {
         var dict = new Dictionary<string, object>
         {

@@ -57,7 +57,7 @@ public partial class Scrape
         DB.SaveChanges();
     }
 
-    private string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)
+    private static string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)
     {
         return @$"DELETE FROM results_points WHERE stage_id = {stage.StageId}; INSERT INTO results_points(stage_id, rider_participation_id, 
                 stagepos, stagescore, stageresult, gcpos, gcscore, gcresult, gcchange,
@@ -72,7 +72,7 @@ public partial class Scrape
                 )"));
     }
 
-    private void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, StageType type)
+    private static void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, StageType type)
     {
         foreach (var rider in riderResults)
         {
@@ -96,7 +96,7 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(query);
     }
 
-    private void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
+    private static void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
     {
         if (tab == "Teams" || (tab == "" && type is StageType.TTT)) return;
         var pcsRows = ResultsDict(htmlResults);
@@ -113,7 +113,7 @@ public partial class Scrape
         return;
     }
 
-    private IEnumerable<PcsRow> ResultsDict(HtmlNode htmlResults)
+    private static IEnumerable<PcsRow> ResultsDict(HtmlNode htmlResults)
     {
         var columns = htmlResults.QuerySelectorAll("th").Select(x => x.InnerText);
         var rows = htmlResults.QuerySelectorAll("tbody tr");
@@ -121,12 +121,11 @@ public partial class Scrape
         return rows.Select(row => BuildPcsRider(columns, row));
     }
 
-    private PcsRow BuildPcsRider(IEnumerable<string> columns, HtmlNode row)
+    private static PcsRow BuildPcsRider(IEnumerable<string> columns, HtmlNode row)
     {
         var fields = columns.Zip(row.QuerySelectorAll("td"), (col, val) => new { col, val }).ToDictionary(x => x.col, x => x.val);
-        var rank = 0;
-        var pcsId = fields["Rider"].QuerySelector("a").GetAttributeValue("href", "").Substring(6);
-        if (!int.TryParse(fields["Rnk"].InnerText, out rank)) return new() { Dnf = true, PcsId = pcsId };
+        var pcsId = fields["Rider"].QuerySelector("a").GetAttributeValue("href", "")[6..];
+        if (!int.TryParse(fields["Rnk"].InnerText, out int rank)) return new() { Dnf = true, PcsId = pcsId };
 
         return new()
         {
@@ -139,24 +138,23 @@ public partial class Scrape
         };
     }
 
-    private string GetRankChange(Dictionary<string, HtmlNode> fields)
+    private static string GetRankChange(Dictionary<string, HtmlNode> fields)
     {
         var change = GetString(fields, "&#x25BC;&#x25B2;");
         var prev = GetString(fields, "Prev");
         return prev == "" ? "*" : change.Replace("&#x25BC;", "▼").Replace("&#x25B2;", "▲");
     }
 
-    private string GetTime(Dictionary<string, HtmlNode> fields)
+    private static string GetTime(Dictionary<string, HtmlNode> fields)
     {
-        if (!fields.ContainsKey("Time")) return "";
-        var timeElement = fields["Time"].SelectSingleNode(".//text()[normalize-space()]");
-        return timeElement is not null ? timeElement.InnerHtml : "";
+        if (!fields.TryGetValue("Time", out HtmlNode value)) return "";
+        return value.SelectSingleNode(".//text()[normalize-space()]")?.InnerHtml ?? "";
     }
 
-    private string GetString(Dictionary<string, HtmlNode> fields, string col)
-        => fields.ContainsKey(col) ? fields[col].InnerText : "";
+    private static string GetString(Dictionary<string, HtmlNode> fields, string col)
+        => fields.TryGetValue(col, out HtmlNode value) ? value.InnerText : "";
 
-    private RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, StageType type)
+    private static RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, StageType type)
         => tab switch
         {
             "" or "Stage" => riderResult with
@@ -197,7 +195,7 @@ public partial class Scrape
             _ => riderResult
         };
 
-    private void AddTTTResults(ref Dictionary<string, RiderResult> riderResults, HtmlNode Results)
+    private static void AddTTTResults(ref Dictionary<string, RiderResult> riderResults, HtmlNode Results)
     {
         var teamOrder = Results.QuerySelectorAll(".team").Select(x => x.QuerySelectorAll("td").ElementAt(1).InnerText.Trim()).ToList();
         // var times = new List<string>(); TODO get

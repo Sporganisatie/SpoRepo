@@ -7,17 +7,8 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace SpoRE.Infrastructure.Scrape;
 
-public partial class Scrape
+public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 {
-    DatabaseContext DB;
-    private IMemoryCache MemoryCache;
-
-    public Scrape(DatabaseContext databaseContext, IMemoryCache memoryCache)
-    {
-        DB = databaseContext;
-        MemoryCache = memoryCache;
-    }
-
     public void Startlist(string raceName, int year)
     {
         var raceId = DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId;
@@ -36,6 +27,7 @@ public partial class Scrape
         var stageNr = stage.IsFinalStandings ? stage.Stagenr - 1 : stage.Stagenr;
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
+        if (!classifications.Any()) classifications = ["Stage"];
         var tables = html.QuerySelectorAll(".result-cont .subTabs")
                     .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
                     .Select(x => x.QuerySelector("table"));
@@ -92,7 +84,7 @@ public partial class Scrape
         }
     }
 
-    private string RaceString(string raceName)
+    private static string RaceString(string raceName)
         => raceName switch
         {
             "giro" => "giro-d-italia",
@@ -101,7 +93,7 @@ public partial class Scrape
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    private string Filename(string raceName)
+    private static string Filename(string raceName)
         => raceName switch
         {
             "giro" => "Giroprijzen",
@@ -110,13 +102,13 @@ public partial class Scrape
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    internal DateTime? GetFinishTime()
-    {
-        // TODO dynamic based on race
-        var raceString = "Giro d'Italia";
-        var html = new HtmlWeb().Load($"https://www.procyclingstats.com").DocumentNode;
+    // internal DateTime? GetFinishTime()
+    // {
+    //     // TODO dynamic based on race
+    //     var raceString = "Giro d'Italia";
+    //     var html = new HtmlWeb().Load($"https://www.procyclingstats.com").DocumentNode;
 
-        var raceRow = html.QuerySelectorAll("table.next-to-finish tr").FirstOrDefault(tr => tr.InnerText.Contains(raceString));
-        return raceRow is null ? null : DateTime.Parse(raceRow.QuerySelectorAll("td").First().InnerText);
-    }
+    //     var raceRow = html.QuerySelectorAll("table.next-to-finish tr").FirstOrDefault(tr => tr.InnerText.Contains(raceString));
+    //     return raceRow is null ? null : DateTime.Parse(raceRow.QuerySelectorAll("td").First().InnerText);
+    // }
 }
