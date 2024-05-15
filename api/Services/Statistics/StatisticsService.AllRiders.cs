@@ -17,7 +17,7 @@ public partial class StatisticsService
                     select new
                     {
                         RiderParticipation = g.Key,
-                        Rider = g.Select(x => x.rider),
+                        Rider = g.Select(x => x.rider).First(),
                         StageScore = g.Sum(x => x.points.StageScore) / Math.Max(g.Select(x => x.ts.AccountParticipationId).Distinct().Count(), 1),
                         Klassementen = g.Sum(x => x.points.Gc.Score + x.points.Points.Score + x.points.Kom.Score + x.points.Youth.Score ?? 0) / Math.Max(g.Select(x => x.ts.AccountParticipationId).Distinct().Count(), 1),
                         TeamScore = g.Sum(x => x.points.Teamscore) / Math.Max(g.Select(x => x.ts.AccountParticipationId).Distinct().Count(), 1),
