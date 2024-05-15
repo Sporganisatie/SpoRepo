@@ -13,10 +13,11 @@ export function useTeamComparison() {
   }
 
   const { data, isFetching } = useQuery({
-    queryKey: ["teamComparison", raceId, budgetParticipation, stagenr],
-    queryFn: () => fetchData(raceId, budgetParticipation, stagenr),
-    initialData: { teams: [], counts: [] },
-    staleTime: 10 * 60 * 1000,
+    queryKey: ["teamComparison", raceId, budgetParticipation, stagenr] as const,
+    queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
+    staleTime: 3_600_000,
+    gcTime: 3_600_000,
+    throwOnError: true,
   });
 
   function fetchData(

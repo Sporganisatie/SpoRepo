@@ -8,14 +8,15 @@ export function useStageResult() {
   const budgetParticipation = useBudgetContext();
   const { raceId, stagenr } = useStage();
   const { data, isFetching } = useQuery({
-    queryKey: ["stageResults", raceId, stagenr, budgetParticipation],
-    queryFn: () => fetchData(raceId, stagenr, budgetParticipation),
+    queryKey: ["stageResults", raceId, stagenr, budgetParticipation] as const,
+    queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
     placeholderData: {
       userScores: [],
       teamResult: [],
       classifications: { gc: [], points: [], kom: [], youth: [] },
     },
-    staleTime: 60 * 60 * 1000,
+    staleTime: 3_600_000,
+    gcTime: 3_600_000,
   });
 
   async function fetchData(
@@ -23,14 +24,10 @@ export function useStageResult() {
     stagenr: string,
     budgetParticipation: boolean
   ) {
-    try {
-      const { data } = await axios.get(`/api/stageresult`, {
-        params: { raceId, stagenr, budgetParticipation },
-      });
-      return stageResultDataSchema.parse(data);
-    } catch (err) {
-      throw err;
-    }
+    const { data } = await axios.get(`/api/stageresult`, {
+      params: { raceId, stagenr, budgetParticipation },
+    });
+    return stageResultDataSchema.parse(data);
   }
 
   return {
