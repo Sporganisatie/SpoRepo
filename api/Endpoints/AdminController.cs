@@ -20,11 +20,16 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     }
 
     [HttpGet("stageResults")]
-    public async Task<IActionResult> GetAsync(string raceName, int year, int stagenr, bool mostRecent)
+    public async Task<IActionResult> GetAsync(string raceName, int year, int stagenr, bool mostRecentStarted, bool aankomende)
     {
-        if (mostRecent)
+        if (mostRecentStarted)
         {
             await Scraper.StageResults(DB.MostRecentStartedStage());
+            Scheduler.RunTimer();
+        }
+        else if (aankomende)
+        {
+            await Scraper.StageResults(DB.Aankomende());
             Scheduler.RunTimer();
         }
         else await Scraper.StageResults(raceName, year, stagenr);
