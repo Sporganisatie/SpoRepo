@@ -4,18 +4,11 @@ using SpoRE.Models.Settings;
 
 namespace SpoRE.Infrastructure.Database;
 
-public class DatabaseContext : DbContext
+public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
 {
-    private AppSettings _configuration;
-
-    public DatabaseContext(IOptions<AppSettings> configuration)
-    {
-        _configuration = configuration.Value;
-    }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_configuration.DbConnectionString);
+        optionsBuilder.UseNpgsql(Configuration.Value.DbConnectionString);
         optionsBuilder.EnableSensitiveDataLogging(); // TODO only when localdev
         optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information); // TODO only when localdev
     }

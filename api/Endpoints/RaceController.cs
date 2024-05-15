@@ -9,15 +9,8 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class RaceController : ControllerBase
+public class RaceController(RaceService Service) : ControllerBase
 {
-    private readonly RaceService Service;
-
-    public RaceController(RaceService service)
-    {
-        Service = service;
-    }
-
     [HttpGet]
     [ProducesResponseType(typeof(RaceState), 200)]
     public IActionResult GetAsync(int raceId)

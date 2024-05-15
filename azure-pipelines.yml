@@ -18,7 +18,7 @@ steps:
 - task: NuGetToolInstaller@1
 - task: UseDotNet@2
   inputs:
-    version: '6.0.x'
+    version: '8.0.x'
 - task: MSBuild@1
   inputs:
    msbuildVersion: "17.0"

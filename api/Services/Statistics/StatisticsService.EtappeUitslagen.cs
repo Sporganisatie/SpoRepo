@@ -32,7 +32,7 @@ public partial class StatisticsService
 
     private IEnumerable<ScoreVerdeling> ScoreVerdeling(int raceId, bool budgetParticipation)
     {
-        var bins = budgetParticipation ? new[] { 0, 10, 30, 50, 100 } : new[] { 0, 50, 100, 200, 300 };
+        var bins = budgetParticipation ? new[] { 0, 10, 30, 50, 100 } : [0, 50, 100, 200, 300];
 
         var result = from item in UserStageScores(raceId, budgetParticipation)
                      group item by item.Username into userGroup

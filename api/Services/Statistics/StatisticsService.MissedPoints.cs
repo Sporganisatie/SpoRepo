@@ -61,7 +61,7 @@ public partial class StatisticsService
         return new(user.Account.Username, missedPoints);
     }
 
-    private int OptimalKopmanPoints(IEnumerable<PointsData> points)
+    private static int OptimalKopmanPoints(IEnumerable<PointsData> points)
     {
         var topStage = points.OrderByDescending(p => p.Stage).FirstOrDefault();
         if (!points.Take(9).Any(p => p.Id == topStage.Id) && topStage.Stage > 0 && topStage.Total > 0) throw new Exception("kopman niet in top 9");

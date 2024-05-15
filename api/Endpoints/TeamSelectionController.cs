@@ -10,13 +10,8 @@ namespace SpoRE.Controllers;
 [Authorize]
 [PreStart(Order = 1)]
 [ParticipationEndpoint(Order = 2)]
-public class TeamSelectionController : ControllerBase
+public class TeamSelectionController(TeamSelectionService Service) : ControllerBase
 {
-    private readonly TeamSelectionService Service;
-
-    public TeamSelectionController(TeamSelectionService service)
-        => Service = service;
-
     [HttpGet]
     [ProducesResponseType(typeof(TeamSelectionData), 200)]
     public IActionResult Get(int raceId, bool budgetParticipation)

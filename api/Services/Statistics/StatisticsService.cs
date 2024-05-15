@@ -3,15 +3,8 @@ using SpoRE.Infrastructure.Database;
 
 namespace SpoRE.Services;
 
-public partial class StatisticsService
+public partial class StatisticsService(DatabaseContext DB)
 {
-    private readonly DatabaseContext DB;
-
-    public StatisticsService(DatabaseContext databaseContext)
-    {
-        DB = databaseContext;
-    }
-
     public record UitvallersData(string UserName, int Uitvallers, int UitvallerBudget);
 
     public IEnumerable<UitvallersData> Uitvallers(int raceId, bool budgetParticipation)
@@ -35,10 +28,10 @@ public partial class StatisticsService
                        orderby g.First().points.Gc.Position
                        select new
                        {
-                           Position = g.Key.Gc.Position,
-                           Result = g.Key.Gc.Result,
-                           Rider = g.First().points.RiderParticipation.Rider,
-                           Price = g.First().points.RiderParticipation.Price,
+                           g.Key.Gc.Position,
+                           g.Key.Gc.Result,
+                           g.First().points.RiderParticipation.Rider,
+                           g.First().points.RiderParticipation.Price,
                            Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
                        }).Take(20).ToList();
 
@@ -50,10 +43,10 @@ public partial class StatisticsService
                            orderby g.First().points.Points.Position
                            select new
                            {
-                               Position = g.Key.Points.Position,
-                               Result = g.Key.Points.Result,
-                               Rider = g.First().points.RiderParticipation.Rider,
-                               Price = g.First().points.RiderParticipation.Price,
+                               g.Key.Points.Position,
+                               g.Key.Points.Result,
+                               g.First().points.RiderParticipation.Rider,
+                               g.First().points.RiderParticipation.Price,
                                Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
                            }).Take(20).ToList();
 
@@ -65,10 +58,10 @@ public partial class StatisticsService
                         orderby g.First().points.Kom.Position
                         select new
                         {
-                            Position = g.Key.Kom.Position,
-                            Result = g.Key.Kom.Result,
-                            Rider = g.First().points.RiderParticipation.Rider,
-                            Price = g.First().points.RiderParticipation.Price,
+                            g.Key.Kom.Position,
+                            g.Key.Kom.Result,
+                            g.First().points.RiderParticipation.Rider,
+                            g.First().points.RiderParticipation.Price,
                             Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
                         }).Take(20).ToList();
 
@@ -80,10 +73,10 @@ public partial class StatisticsService
                           orderby g.First().points.Youth.Position
                           select new
                           {
-                              Position = g.Key.Youth.Position,
-                              Result = g.Key.Youth.Result,
-                              Rider = g.First().points.RiderParticipation.Rider,
-                              Price = g.First().points.RiderParticipation.Price,
+                              g.Key.Youth.Position,
+                              g.Key.Youth.Result,
+                              g.First().points.RiderParticipation.Rider,
+                              g.First().points.RiderParticipation.Price,
                               Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
                           }).Take(20).ToList();
         return new object[4] { gcQuery, PointsQuery, KomQuery, YouthQuery };

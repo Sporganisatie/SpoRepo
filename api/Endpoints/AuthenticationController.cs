@@ -6,18 +6,12 @@ namespace SpoRE.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController(AccountService Service) : ControllerBase
 {
-    private readonly AccountService AccountService;
-    public AuthenticationController(AccountService accountService)
-    {
-        AccountService = accountService;
-    }
-
     [HttpPost("login")]
     public ActionResult<string> Login(LoginCredentials credentials)
     {
-        var output = AccountService.AuthenticateAsync(credentials);
+        var output = Service.AuthenticateAsync(credentials);
         return output.IsValid ? output.Value : new UnauthorizedResult();
     }
 }

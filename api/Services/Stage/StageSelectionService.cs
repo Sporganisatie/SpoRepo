@@ -8,19 +8,8 @@ namespace SpoRE.Services.StageSelection;
 
 public record StageSelectionData(IEnumerable<StageSelectableRider> Team, DateTime? Deadline, Classifications Classifications, int Compleet, int? BudgetCompleet);
 
-public class StageSelectionService
+public class StageSelectionService(DatabaseContext DB, Userdata User, StageResultService StageResultService)
 {
-    private readonly Userdata User;
-    private readonly DatabaseContext DB;
-    private readonly StageResultService StageResultService;
-
-    public StageSelectionService(DatabaseContext databaseContext, Userdata userData, StageResultService stageResultService)
-    {
-        DB = databaseContext;
-        User = userData;
-        StageResultService = stageResultService;
-    }
-
     internal StageSelectionData GetData(int raceId, int stagenr)
     {
         var team = GetTeam(stagenr);

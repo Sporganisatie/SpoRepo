@@ -17,7 +17,7 @@ public partial class StatisticsService
         return new(uitslagen, scoreVerdeling, userRank);
     }
 
-    private IEnumerable<UserRank> RaceUserRankCounts(IEnumerable<RaceUitslag> uitslagen)
+    private static IEnumerable<UserRank> RaceUserRankCounts(IEnumerable<RaceUitslag> uitslagen)
     {
         var uniqueUsernames = uitslagen
             .SelectMany(etappe => etappe.UsernamesAndScores)
@@ -28,7 +28,7 @@ public partial class StatisticsService
         return CountRanks(uitslagen.Select(x => x.UsernamesAndScores), uniqueUsernames);
     }
 
-    private IEnumerable<UserRank> CountRanks(IEnumerable<IEnumerable<UsernameScore>> uitslagen, IEnumerable<string> usernames)
+    private static IEnumerable<UserRank> CountRanks(IEnumerable<IEnumerable<UsernameScore>> uitslagen, IEnumerable<string> usernames)
     {
         var users = new Dictionary<string, int[]>();
 
@@ -96,7 +96,7 @@ public partial class StatisticsService
 
     private IEnumerable<ScoreVerdeling> RaceScoreVerdeling(bool budgetParticipation)
     {
-        var bins = budgetParticipation ? new[] { 0, 500, 750, 1000 } : new[] { 0, 4000, 4500, 5000 };
+        var bins = budgetParticipation ? new[] { 0, 500, 750, 1000 } : [0, 4000, 4500, 5000];
 
         var result = from item in GetUserRaceScore(budgetParticipation)
                      group item by item.Username into userGroup

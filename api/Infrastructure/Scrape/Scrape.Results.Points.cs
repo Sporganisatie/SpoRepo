@@ -4,10 +4,10 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
-    private int Score(int rank, string tab, StageType type)
+    private static int Score(int rank, string tab, StageType type)
         => type is StageType.FinalStandings ? EindScore(rank, tab) : StageScore(rank, tab, type);
 
-    private int StageScore(int rank, string tab, StageType type)
+    private static int StageScore(int rank, string tab, StageType type)
         => tab switch
         {
             "" or "Stage" => type is StageType.TTT
@@ -20,7 +20,7 @@ public partial class Scrape
             _ => 0
         };
 
-    private int EindScore(int rank, string tab)
+    private static int EindScore(int rank, string tab)
         => tab switch
         {
             "GC" => rank > 20 ? 0 : new int[] { 0, 100, 80, 60, 50, 40, 36, 32, 28, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2 }[rank],
@@ -30,7 +30,7 @@ public partial class Scrape
             _ => 0
         };
 
-    private int TeamScore(RiderResult rider, string teamWinner, string classification, StageType stageType)
+    private static int TeamScore(RiderResult rider, string teamWinner, string classification, StageType stageType)
     {
         if (IsLeader(rider, classification) || rider.Team != teamWinner) return 0;
         var teampointsDict = stageType switch
@@ -43,7 +43,7 @@ public partial class Scrape
         return teampointsDict.TryGetValue(classification, out var teampoints) ? teampoints : 0;
     }
 
-    private bool IsLeader(RiderResult rider, string classification)
+    private static bool IsLeader(RiderResult rider, string classification)
         => classification switch
         {
             "" or "Stage" => rider.Stagepos == 1,

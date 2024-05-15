@@ -11,15 +11,9 @@ namespace SpoRE.Controllers;
 [Authorize]
 [ParticipationEndpoint]
 // [CacheResponse] TODO introduce way to identify user for cache key
-public class StageResultController : ControllerBase
+public class StageResultController(StageResultService service) : ControllerBase
 {
-    private readonly StageResultService Service;
-
-    public StageResultController(StageResultService service)
-    {
-        Service = service;
-    }
-
+    private readonly StageResultService Service = service;
     [HttpGet]
     [ProducesResponseType(typeof(UserScore), 200)]
     public IActionResult StageResultData(int raceId, bool budgetParticipation, int stagenr)
