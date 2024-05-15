@@ -89,11 +89,17 @@ public partial class Scrape
     {
         var dnfRiders = riderResults.Values.Where(x => x.Dnf);
         if (!dnfRiders.Any()) return;
-        var query = $"UPDATE rider_participation SET dnf = TRUE WHERE race_id = {stage.RaceId} AND rider_id IN("
+        var rpDnfQuery = $"UPDATE rider_participation SET dnf = TRUE WHERE race_id = {stage.RaceId} AND rider_id IN("
                     + string.Join(",", riderResults.Values.Where(x => x.Dnf).Select(rider => $"(SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')"))
                     + "); ";
-        // TODO remove from not yet started stage selections
-        DB.Database.ExecuteSqlRaw(query);
+
+        var dnfRpIds = $"(SELECT rider_participation_id FROM rider_participation WHERE race_id = {stage.RaceId} AND dnf)";
+        var stageNrForDeletions = stage.Starttime > DateTime.Now ? stage.Stagenr : stage.Stagenr + 1;
+        var futureSelections = $"(SELECT stage_selection_id FROM stage_selection INNER JOIN stage USING(stage_id) WHERE race_id = {stage.RaceId} AND stagenr >= {stageNrForDeletions})";
+        var removeFromStageSelectionsQuery = @$"DELETE FROM stage_selection_rider 
+                WHERE rider_participation_id IN {dnfRpIds} AND stage_selection_id IN {futureSelections}; ";
+
+        DB.Database.ExecuteSqlRaw(rpDnfQuery + removeFromStageSelectionsQuery);
     }
 
     private static void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
