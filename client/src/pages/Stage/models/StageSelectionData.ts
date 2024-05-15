@@ -5,6 +5,7 @@ import { stageSelectableRiderSchema } from "./StageSelectableRider";
 
 export const baseResultSchema = z.object({
   position: z.number(),
+  score: z.number(),
   result: z.string(),
   selected: z.nativeEnum(StageSelectedEnum).optional(),
   change: z.string().nullable(),
@@ -45,7 +46,13 @@ export const stageSelectionDataSchema = z.object({
       return deadline;
     }),
   classifications: classificationsSchema,
-  compleet: z.number(),
-  budgetCompleet: z.number().nullable(),
+  compleet: z
+    .number()
+    .optional()
+    .transform((val) => val ?? 0),
+  budgetCompleet: z
+    .number()
+    .optional()
+    .transform((val) => val ?? 0),
 });
 export type StageSelectionData = z.infer<typeof stageSelectionDataSchema>;

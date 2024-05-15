@@ -73,14 +73,14 @@ const StageSelectionTeam = ({
         return row.isKopman ? (
           <button
             style={{ width: "20px", backgroundColor: "red" }}
-            onClick={() => addKopman(row.rider.riderParticipationId)}
+            onClick={() => removeKopman(row.rider.riderParticipationId)}
           >
             -
           </button>
         ) : row.selected && !row.rider.dnf ? (
           <button
             style={{ width: "20px", backgroundColor: "green" }}
-            onClick={() => removeKopman(row.rider.riderParticipationId)}
+            onClick={() => addKopman(row.rider.riderParticipationId)}
           >
             +
           </button>

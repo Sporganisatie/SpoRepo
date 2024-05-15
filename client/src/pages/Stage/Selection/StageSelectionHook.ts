@@ -12,6 +12,9 @@ export function useStageSelection() {
   const { data, isFetching } = useQuery({
     queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
     queryFn: () => fetchData(raceId, stagenr, budgetParticipation),
+    throwOnError: true,
+    staleTime: 3_600_000,
+    gcTime: 3_600_000,
   });
 
   async function fetchData(
@@ -27,67 +30,75 @@ export function useStageSelection() {
           budgetParticipation: budgetParticipation,
         },
       });
-      return stageSelectionDataSchema.parse({
-        team: data.team,
-        deadline: data.deadline,
-        classifications: data.classifications,
-      });
+      return stageSelectionDataSchema.parse(data);
     } catch (error) {
       throw error;
     }
   }
 
   async function addRider(riderParticipationId: number) {
-    await axios.post(`/api/StageSelection/Rider`, {
-      params: {
-        riderParticipationId,
-        raceId: raceId,
-        budgetParticipation: budgetParticipation,
-        stagenr: stagenr,
-      },
-    });
+    await axios.post(
+      `/api/StageSelection/Rider?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
+      {
+        params: {
+          riderParticipationId,
+          raceId: raceId,
+          budgetParticipation: budgetParticipation,
+          stagenr: stagenr,
+        },
+      }
+    );
     queryClient.invalidateQueries({
       queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
     });
   }
 
   async function removeRider(riderParticipationId: number) {
-    await axios.delete(`/api/StageSelection/Rider`, {
-      params: {
-        riderParticipationId,
-        raceId: raceId,
-        budgetParticipation: budgetParticipation,
-        stagenr: stagenr,
-      },
-    });
+    await axios.delete(
+      `/api/StageSelection/Rider?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
+      {
+        params: {
+          riderParticipationId,
+          raceId: raceId,
+          budgetParticipation: budgetParticipation,
+          stagenr: stagenr,
+        },
+      }
+    );
     queryClient.invalidateQueries({
       queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
     });
   }
 
   async function addKopman(riderParticipationId: number) {
-    await axios.post(`/api/StageSelection/Kopman`, {
-      params: {
-        riderParticipationId,
-        raceId: raceId,
-        budgetParticipation: budgetParticipation,
-        stagenr: stagenr,
-      },
-    });
+    await axios.post(
+      `/api/StageSelection/Kopman?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
+      {
+        params: {
+          riderParticipationId,
+          raceId: raceId,
+          budgetParticipation: budgetParticipation,
+          stagenr: stagenr,
+        },
+      }
+    );
     queryClient.invalidateQueries({
       queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
     });
   }
 
   async function removeKopman(riderParticipationId: number) {
-    await axios.delete(`/api/StageSelection/Kopman`, {
-      params: {
-        riderParticipationId,
-        raceId: raceId,
-        budgetParticipation: budgetParticipation,
-        stagenr: stagenr,
-      },
-    });
+    await axios.delete(
+      `/api/StageSelection/Kopman?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
+      {
+        params: {
+          riderParticipationId,
+          raceId: raceId,
+          budgetParticipation: budgetParticipation,
+          stagenr: stagenr,
+        },
+      }
+    );
     queryClient.invalidateQueries({
       queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
     });
