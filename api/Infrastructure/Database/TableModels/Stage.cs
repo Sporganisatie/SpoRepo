@@ -32,5 +32,6 @@ public enum StageType
     ITT,
     TTT,
     REG,
-    FinalStandings
+    FinalStandings,
+    CLA
 }

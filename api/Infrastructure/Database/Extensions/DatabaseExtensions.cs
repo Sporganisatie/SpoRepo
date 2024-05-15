@@ -13,6 +13,9 @@ public static class DatabaseExtensions
     public static Stage CurrentStage(this DatabaseContext DB, int raceId)
         => DB.Stages.Include(s => s.Race).Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
 
+    internal static Stage Aankomende(this DatabaseContext DB)
+        => DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).ToList().First(s => !s.Complete);
+
     internal static Stage MostRecentStartedStage(this DatabaseContext DB)
         => DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).ToList().First(s => s.Starttime < DateTime.UtcNow);
 }
