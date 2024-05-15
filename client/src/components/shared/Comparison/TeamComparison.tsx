@@ -3,7 +3,7 @@ import AllSelectedRiders from "./AllSelectedRidersTable";
 import { useTeamComparison } from "./TeamComparisonHook";
 
 const TeamComparison = () => {
-  const { data, isFetching } = useTeamComparison();
+  const { data } = useTeamComparison();
 
   return (
     <div>
