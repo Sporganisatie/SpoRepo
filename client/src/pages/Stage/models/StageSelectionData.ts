@@ -50,9 +50,6 @@ export const stageSelectionDataSchema = z.object({
     .number()
     .optional()
     .transform((val) => val ?? 0),
-  budgetCompleet: z
-    .number()
-    .optional()
-    .transform((val) => val ?? 0),
+  budgetCompleet: z.number().nullable(),
 });
 export type StageSelectionData = z.infer<typeof stageSelectionDataSchema>;
