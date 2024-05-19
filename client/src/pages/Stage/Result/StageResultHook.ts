@@ -1,14 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { stageResultDataSchema } from "../models/StageResultData";
+import {
+  StageResultData,
+  stageResultDataSchema,
+} from "../models/StageResultData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import { useStage } from "../StageHook";
 
 export function useStageResult() {
   const budgetParticipation = useBudgetContext();
   const { raceId, stagenr } = useStage();
+  const queryClient = useQueryClient();
+  const queryKey = [
+    "stageResults",
+    raceId,
+    stagenr,
+    budgetParticipation,
+  ] as const;
   const { data, isFetching } = useQuery({
-    queryKey: ["stageResults", raceId, stagenr, budgetParticipation] as const,
+    queryKey,
     queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
     placeholderData: {
       userScores: [],
@@ -27,7 +37,21 @@ export function useStageResult() {
     const { data } = await axios.get(`/api/stageresult`, {
       params: { raceId, stagenr, budgetParticipation },
     });
-    return stageResultDataSchema.parse(data);
+    const parsedData = stageResultDataSchema.parse(data);
+    if (shouldAutoRefetch(parsedData)) {
+      setTimeout(() => queryClient.invalidateQueries({ queryKey }), 30000);
+    }
+    return parsedData;
+  }
+
+  function shouldAutoRefetch(data: StageResultData) {
+    if (!data.classifications.stage) {
+      return false;
+    }
+    return (
+      data.classifications.stage.length > 0 &&
+      data.classifications.stage.length !== data.classifications.gc.length
+    );
   }
 
   return {

@@ -17,7 +17,7 @@ const StageSelection = () => {
   const { stagenr } = useStage();
   document.title = `Etappe ${stagenr} opstelling`;
 
-  const { data, isFetching, addRider, removeRider, addKopman, removeKopman } =
+  const { data, isLoading, addRider, removeRider, addKopman, removeKopman } =
     useStageSelection();
 
   let navigate = useNavigate();
@@ -41,7 +41,7 @@ const StageSelection = () => {
             <div style={{ margin: "0 5px" }}>
               <StageSelectionTeam
                 team={data.team}
-                isFetching={isFetching}
+                isFetching={isLoading}
                 addRider={addRider}
                 removeRider={removeRider}
                 addKopman={addKopman}
