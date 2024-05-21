@@ -17,6 +17,8 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
 
     public DbSet<AccountParticipation> AccountParticipations { get; set; }
 
+    public virtual DbSet<Accpar> Accpars { get; set; }
+
     public DbSet<TeamSelection> TeamSelections { get; set; }
 
     public DbSet<AccountToken> AccountTokens { get; set; }
@@ -158,6 +160,19 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             //     .HasForeignKey(d => d.AccountId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
             //     .HasConstraintName("account_token_account_id_fkey");
+        });
+
+        modelBuilder.Entity<Accpar>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("accpar");
+
+            entity.Property(e => e.AccountId).HasColumnName("account_id");
+            entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
+            entity.Property(e => e.BudgetParticipation).HasColumnName("budgetparticipation");
+            entity.Property(e => e.Username).HasColumnName("username");
+            entity.Property(e => e.RaceId).HasColumnName("race_id");
         });
 
         modelBuilder.Entity<Race>(entity =>

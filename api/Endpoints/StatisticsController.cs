@@ -44,4 +44,10 @@ public class StatisticsController(StatisticsService Service) : ControllerBase
     [PostStart]
     public IActionResult Klassementen(int raceId, bool budgetParticipation)
         => Ok(Service.Klassementen(raceId, budgetParticipation));
+
+    [HttpGet("uniekheid")]
+    [ProducesResponseType(200)]
+    [PostStart]
+    public IActionResult Uniekheid(int raceId, bool budgetParticipation, bool includeDnf)
+        => Ok(Service.Uniekheid(raceId, budgetParticipation, includeDnf));
 }

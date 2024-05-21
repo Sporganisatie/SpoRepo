@@ -18,4 +18,7 @@ public static class DatabaseExtensions
 
     internal static Stage MostRecentStartedStage(this DatabaseContext DB)
         => DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).ToList().First(s => s.Starttime < DateTime.UtcNow);
+
+    internal static int RaceBudget(this DatabaseContext DB, int raceId, bool budgetParticipation)
+       => budgetParticipation ? 11_250_000 : DB.Races.Single(r => r.RaceId == raceId).Budget;
 }

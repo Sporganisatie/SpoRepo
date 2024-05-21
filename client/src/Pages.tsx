@@ -21,6 +21,7 @@ import Klassementen from "./pages/Statistics/Klassementen";
 import RulesPopup from "./pages/RulesPopup";
 import { Root } from "./App";
 import Home from "./components/Home";
+import TeamOverlap from "./pages/Statistics/TeamOverlap";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
       {
         path: "klassementen/:raceId",
         Component: Klassementen,
+      },
+      {
+        path: "teamoverlap/:raceId",
+        Component: TeamOverlap,
       },
       // charts
       {

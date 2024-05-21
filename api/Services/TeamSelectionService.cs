@@ -10,7 +10,7 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
 {
     public TeamSelectionData GetTeamSelectionData(int raceId, bool budgetParticipation)
     {
-        var budget = RaceBudget(raceId, budgetParticipation);
+        var budget = DB.RaceBudget(raceId, budgetParticipation);
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
         var team = GetTeam();
@@ -22,7 +22,7 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
 
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
-        var budget = RaceBudget(raceId, budgetParticipation);
+        var budget = DB.RaceBudget(raceId, budgetParticipation);
         var team = GetTeam();
         var toAdd = DB.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId && rp.RaceId == raceId);
 
@@ -81,9 +81,6 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
                     select ts.RiderParticipation;
         return query.ToList();
     }
-
-    internal int RaceBudget(int raceId, bool budgetParticipation)
-       => budgetParticipation ? 11_250_000 : DB.Races.Single(r => r.RaceId == raceId).Budget;
 
     internal List<RiderParticipation> AllRiders(int raceId, int maxPrice)
         => DB.RiderParticipations

@@ -11,7 +11,6 @@ const RaceUitslagen = () => {
     const [data, setData] = useState<{ uitslagen: any[], scoreVerdeling: any[], userRanks: any[] }>({ uitslagen: [], scoreVerdeling: [], userRanks: [] });
 
     useEffect(() => {
-
         axios
             .get(`/api/Statistics/raceUitslagen`, { params: { budgetParticipation } })
             .then(res => {
