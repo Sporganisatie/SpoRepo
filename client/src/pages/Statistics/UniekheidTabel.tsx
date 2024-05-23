@@ -5,12 +5,12 @@ const UniekheidTable = ({ userUniekheden }: { userUniekheden: UniekheidData[] })
     const columns: TableColumn<UniekheidData>[] = [
         {
             name: 'User',
-            width: '70px',
+            width: '100px',
             cell: (row: UniekheidData) => row.user,
         },
         {
             name: 'Uniekheid',
-            width: '300px',
+            width: '130px',
             cell: (row: UniekheidData) => row.uniekheid
         }
     ];
