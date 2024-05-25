@@ -5,6 +5,7 @@ import StageClassifications from "./Classifications";
 import TeamComparison from "../../../components/shared/Comparison/TeamComparison";
 import { useStageResult } from "./StageResultHook";
 import { useStage } from "../StageHook";
+import Modal from "../../../components/ui/modal/Modal";
 
 const StageResults = () => {
   const { stagenr } = useStage();
@@ -22,9 +23,12 @@ const StageResults = () => {
         >
           Alle Opstellingen
         </button>
-        <div style={{ display: showTeamComparison ? "block" : "none" }}>
-          <TeamComparison />
-        </div>
+        <Modal
+          open={showTeamComparison}
+          modalContents={<TeamComparison />}
+          closeFn={() => setShowTeamComparison(false)}
+          title="Alle opstellingen"
+        />
       </div>
       {data ? (
         <div
