@@ -12,6 +12,7 @@ import {
 } from "../shared/BudgetContextProvider";
 import { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
+import Switch from "../ui/switch/Switch";
 // import { SRELogo } from '../shared/svg/all-icons.js'
 // import BudgetSwitchButton from './budgetSwitchButton';
 // import FabFourSwitchButton from './fabFourSwitchButton';
@@ -72,14 +73,13 @@ const Navbar = (props: NavbarProps) => {
         {localStorage.getItem("authToken") &&
           jwt_decode<AuthToken>(localStorage.getItem("authToken") ?? "").id <=
             5 && (
-            <div style={{ cursor: "pointer" }} onClick={() => dispatch({})}>
-              {" "}
-              Budget
-              <input type="checkbox" checked={budget} onChange={() => {}} />
-            </div>
+            <Switch
+              value={budget}
+              handleOnChange={() => dispatch({})}
+              sliderContent="€"
+            />
           )}
       </div>
-      <div></div>
     </div>
   );
 };
