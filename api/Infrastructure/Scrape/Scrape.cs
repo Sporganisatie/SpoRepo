@@ -25,7 +25,12 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 
     public async Task StageResults(Stage stage)
     {
-        var stageNr = stage.IsFinalStandings ? stage.Stagenr - 1 : stage.Stagenr;
+        var stageNr = stage.Stagenr;
+        if (stage.IsFinalStandings)
+        {
+            stageNr = stage.Stagenr - 1;
+            await CopyTeamsToStageSelections(stage);
+        }
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
         if (classifications.IsNullOrEmpty()) classifications = ["Stage"];
@@ -38,6 +43,17 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         await DB.Database.ExecuteSqlRawAsync(query);
 
         CalculateUserScores(stage);
+    }
+
+    private async Task CopyTeamsToStageSelections(Stage stage)
+    {
+        var query = @$"INSERT INTO stage_selection_rider(stage_selection_id, rider_participation_id)
+                    SELECT stage_selection_id, rider_participation_id FROM team_selection_rider
+                    INNER JOIN stage_selection USING(account_participation_id)
+                    INNER JOIN stage USING(stage_id)
+                    WHERE race_id = {stage.RaceId} AND stagenr = {stage.Stagenr}
+                    ON CONFLICT (stage_selection_id,rider_participation_id) DO NOTHING";
+        await DB.Database.ExecuteSqlRawAsync(query);
     }
 
     private void ClearCache(string query)
@@ -57,7 +73,6 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 
     private void CalculateUserScores(Stage stage)
     {
-        // TODO if finalstandings use teamselections
         var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stage.StageId).Include(ss => ss.AccountParticipation).ToList();
 
         foreach (var stageSelection in stageSelections)
@@ -68,9 +83,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
                 minusTeamPoints = stage.Type is StageType.TTT ? " - teamscore - stagescore" : " - teamscore";
             }
 
-            var selectedRiders = stage.IsFinalStandings
-                ? $"(SELECT rider_participation_id FROM team_selection_rider WHERE account_participation_id = {stageSelection.AccountParticipationId})"
-                : $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
+            var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
 
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
             var kopmanscore = $"COALESCE((SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";

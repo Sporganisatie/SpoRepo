@@ -52,8 +52,8 @@ public partial class StatisticsService
             var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).StageScore ?? 0;
             var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
             var optimalPoints = riders.Type is StageType.FinalStandings
-                ? (int)(riders.Points.Sum(r => r.Total))
-                : (int)(riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints);
+                ? riders.Points.Sum(r => r.Total)
+                : riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints;
 
             missedPoints.Add(new(riders.Stagenr.ToString(), actualScore, optimalPoints, optimalPoints - actualScore));
         }
