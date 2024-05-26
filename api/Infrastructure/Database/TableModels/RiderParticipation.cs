@@ -24,6 +24,8 @@ public class RiderParticipation
 
     public int Gc { get; set; }
 
+    public RiderType Type { get; set; }
+
     public virtual Race Race { get; set; }
 
     // public virtual ICollection<ResultsPoint> ResultsPoints { get; } = new List<ResultsPoint>();
@@ -35,4 +37,14 @@ public class RiderParticipation
     // public virtual ICollection<TeamSelection> TeamSelections { get; } = new List<TeamSelection>();
 
     // public virtual ICollection<StageSelection> StageSelectionsNavigation { get; } = new List<StageSelection>();
+}
+
+public enum RiderType
+{
+    Klassement,
+    Klimmer,
+    Tijdrijder,
+    Sprinter,
+    Aanvaller,
+    Knecht
 }

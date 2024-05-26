@@ -337,6 +337,14 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
                 .HasColumnName("team");
             entity.Property(e => e.Tt).HasColumnName("tt");
 
+            entity.Property(e => e.Type)
+                .IsRequired()
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (RiderType)Enum.Parse(typeof(RiderType), v))
+                .HasDefaultValue(RiderType.Knecht)
+                .HasColumnName("type");
+
             // entity.HasOne(d => d.Race).WithMany(p => p.RiderParticipations)
             //     .HasForeignKey(d => d.RaceId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
