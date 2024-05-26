@@ -36,7 +36,8 @@ public static class HelperFunctions
             reorderedRiders.Add(riderLine);
         }
 
-        return new(selecties.Select(user => UpdateUser(user, reorderedRiders)), allSelectedRiders);
+        var orderedSelecties = selecties.Select(user => UpdateUser(user, reorderedRiders)).OrderByDescending(x => x.Riders.Last().TotalScore);
+        return new(orderedSelecties, allSelectedRiders);
     }
 
     public static UserSelection UpdateUser(UserSelection user, List<List<(string, StageComparisonRider)>> reorderedRiders)

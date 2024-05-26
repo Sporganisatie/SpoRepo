@@ -51,7 +51,6 @@ public partial class StageResultService
             output.Add(new UserSelection(user.Username, riderScores, gemistQuery.ToList()));
         }
 
-        var (teams, totals) = OrderSelectedRiders(output);
-        return new(teams.OrderByDescending(x => x.Riders.Last().TotalScore), totals);
+        return OrderSelectedRiders(output);
     }
 }
