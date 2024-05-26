@@ -22,6 +22,7 @@ import RulesPopup from "./pages/RulesPopup";
 import { Root } from "./App";
 import Home from "./components/Home";
 import TeamOverlap from "./pages/Statistics/TeamOverlap";
+import RaceScoreVerdelingChart from "./pages/Charts/RaceScoreVerdelingChart";
 
 const router = createBrowserRouter([
   {
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
       {
         path: "charts/scoreverloop/:raceId",
         Component: ScoreVerloopChart,
+      },
+      {
+        path: "charts/scoreverdeling",
+        Component: RaceScoreVerdelingChart,
       },
       {
         path: "charts/scoreverdeling/:raceId",

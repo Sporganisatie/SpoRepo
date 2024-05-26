@@ -1,33 +1,40 @@
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } from 'recharts';
-import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
+import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label, Bar, BarChart } from 'recharts';
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { colors } from './ChartsHelper';
+import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
+import { colors, convertData } from './ChartsHelper';
+
 
 interface ChartData {
-    data: any[],
+    data: [],
     usernames: string[]
 }
 
-const RaceScoreVerloopChart = () => {
-    document.title = "Score Verloop";
+const RaceScoreVerdelingChart = () => {
+    document.title = "Scores per Ronde";
     const budgetParticipation = useBudgetContext();
     const [chartdata, setChartData] = useState<ChartData>({ data: [], usernames: [] });
 
     useEffect(() => {
-        axios.get(`/api/Charts/raceScoreVerloop`, { params: { budgetParticipation } })
+        axios.get(`/api/statistics/raceUitslagen`, { params: { budgetParticipation } })
             .then(res => {
-                setChartData({ data: res.data.data, usernames: res.data.users });
+                const usernames = res.data.uitslagen[0].usernamesAndScores.map((x: { username: string; }) => x.username);
+                setChartData({ data: convertData(res.data.uitslagen), usernames });
             })
             .catch(error => {
             });
     }, [budgetParticipation]);
 
+    const CalcVerticalLines = (): number[] => {
+        // bereken de posities tussen de bar groepen aan de hand van chart size en aantal etappes en users
+        return []
+    }
+
     return (
         <div style={{ backgroundColor: '#222', padding: '20px' }}>
-            <LineChart width={1560} height={600} data={chartdata.data}>
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis dataKey="Name" >
+            <BarChart width={chartdata.data.length * 70} height={600} data={chartdata.data}>
+                <CartesianGrid strokeDasharray="3 3" verticalPoints={CalcVerticalLines()} vertical={false} />
+                <XAxis dataKey="name">
                     <Label
                         value="Ronde"
                         position="bottom"
@@ -36,7 +43,7 @@ const RaceScoreVerloopChart = () => {
                 </XAxis>
                 <YAxis tickCount={10}>
                     <Label
-                        value="Relatieve Punten"
+                        value="Score"
                         angle={-90}
                         position="left"
                         offset={-10}
@@ -50,18 +57,16 @@ const RaceScoreVerloopChart = () => {
                     wrapperStyle={{ marginTop: -10 }}
                 />
                 {chartdata.usernames.map((username, index) => (
-                    <Line
+                    <Bar
                         key={index}
-                        type="linear"
                         dataKey={username}
-                        stroke={colors[index]}
-                        strokeWidth={3}
-                        dot={false}
+                        fill={colors[index]}
+                        isAnimationActive={false}
                     />
                 ))}
-            </LineChart>
+            </BarChart>
         </div>
     );
 };
 
-export default RaceScoreVerloopChart;
+export default RaceScoreVerdelingChart;

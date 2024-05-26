@@ -22,7 +22,7 @@ public class ChartsController(StatisticsService Service) : ControllerBase
 
     [HttpGet("perfectScoreVerloop")]
     [ProducesResponseType(200)]
-    public IActionResult perfectScoreVerloop(int raceId, bool budgetParticipation)
+    public IActionResult PerfectScoreVerloop(int raceId, bool budgetParticipation)
         => Ok(Service.PerfectScoreVerloop(raceId, budgetParticipation));
 
     [HttpGet("positieVerloop")]
