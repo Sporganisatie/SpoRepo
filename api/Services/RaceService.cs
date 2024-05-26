@@ -98,4 +98,7 @@ public class RaceService(Userdata User, DatabaseContext DB)
         }
         return OrderSelectedRiders(output);
     }
+
+    internal int Current()
+        => DB.Races.OrderByDescending(x => x.RaceId).First(x => x.RaceId != 99).RaceId;
 }

@@ -30,9 +30,8 @@ const RaceRouter = () => {
             navigate(`/stage/${raceId}/${res.data.currentStage}`);
             return;
         }
-        // TODO wat als invalid race
       })
-      .catch(function (error) {});
+      .catch(function (error) { });
   }, [raceId, navigate]);
 
   return <div>Loading...</div>;

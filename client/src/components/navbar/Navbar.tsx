@@ -13,27 +13,23 @@ import {
 import { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
 import Switch from "../ui/switch/Switch";
+import { useRaceContext } from "../shared/RaceContextProvider";
 // import { SRELogo } from '../shared/svg/all-icons.js'
-// import BudgetSwitchButton from './budgetSwitchButton';
 // import FabFourSwitchButton from './fabFourSwitchButton';
 // import jwt_decode from "jwt-decode";
 // import { AuthToken } from '../../models/AuthToken';
 
-interface NavbarProps {
-  currentStageLink: string;
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  racename: string;
-}
+const Navbar = () => {
+  // TODO make dynamic values
+  const isLoading = false;
 
-const Navbar = (props: NavbarProps) => {
-  const race = props.racename;
+  const race = useRaceContext();
   const budget = useBudgetContext();
   const dispatch = useBudgetDispatch();
   const isAdmin =
     localStorage.getItem("authToken") &&
     jwt_decode<AuthToken>(localStorage.getItem("authToken") ?? "").admin ===
-      true;
+    true;
   return (
     <div>
       <div className="navbar">
@@ -42,13 +38,13 @@ const Navbar = (props: NavbarProps) => {
           //<SRELogo className={'h-full fill-current text-' + raceColor + " duration-300 hover:text-" + raceColorLight} />
           //</Link>
         }
-        {race !== null && (
-          <Link className="navbar_link" to={props.currentStageLink}>
+        {race > 0 && (
+          <Link className="navbar_link" to={"/"}>
             <span>Current stage</span>
           </Link>
         )}
-        {!props.isLoading && <ChartsDropdown raceSelected={race !== null} />}
-        {!props.isLoading && <StatsDropdown raceSelected={race !== null} />}
+        {!isLoading && <ChartsDropdown raceSelected={race > 0} />}
+        {!isLoading && <StatsDropdown raceSelected={race > 0} />}
         <Link className="navbar_link" to="/regelspunten">
           <span>Regels/Punten</span>
         </Link>
@@ -72,7 +68,7 @@ const Navbar = (props: NavbarProps) => {
         </Link> */}
         {localStorage.getItem("authToken") &&
           jwt_decode<AuthToken>(localStorage.getItem("authToken") ?? "").id <=
-            5 && (
+          5 && (
             <Switch
               value={budget}
               handleOnChange={() => dispatch({})}

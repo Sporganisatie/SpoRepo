@@ -1,14 +1,16 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./navbar/Navbar";
 import { BudgetStateProvider } from "./shared/BudgetContextProvider";
+import { RaceStateProvider } from "./shared/RaceContextProvider";
 
 const Layout = () => {
   return (
-    // Todo update navbar values
     <div className="content">
       <BudgetStateProvider>
-        <Navbar isLoggedIn={true} isLoading={false} racename={"tour"} currentStageLink={"/"} />
-        <div className="pageContainer">{<Outlet />}</div>
+        <RaceStateProvider>
+          <Navbar />
+          <div className="pageContainer">{<Outlet />}</div>
+        </RaceStateProvider>
       </BudgetStateProvider>
     </div >
   );

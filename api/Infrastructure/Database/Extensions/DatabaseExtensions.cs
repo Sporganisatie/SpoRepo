@@ -10,6 +10,9 @@ public static class DatabaseExtensions
         return stage.Type == StageType.FinalStandings || DateTime.UtcNow >= stage.Starttime;
     }
 
+    public static Stage CurrentStage(this DatabaseContext DB)
+        => DB.Stages.Include(s => s.Race).Where(s => s.RaceId != 99 && !s.Race.Finished && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
+
     public static Stage CurrentStage(this DatabaseContext DB, int raceId)
         => DB.Stages.Include(s => s.Race).Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
 

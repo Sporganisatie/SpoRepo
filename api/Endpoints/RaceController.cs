@@ -22,6 +22,11 @@ public class RaceController(RaceService Service) : ControllerBase
     public IActionResult JoinRace(int raceId)
         => Ok(Service.JoinRace(raceId));
 
+    [HttpGet("current")]
+    [ProducesResponseType(200)]
+    public IActionResult Current()
+        => Ok(Service.Current());
+
     [HttpGet("comparison")]
     [ProducesResponseType(typeof((IEnumerable<UserSelection>, IEnumerable<(Rider, int)>)), 200)]
     [PostStart]

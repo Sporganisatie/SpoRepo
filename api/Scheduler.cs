@@ -13,7 +13,7 @@ public class Scheduler(IServiceProvider ServiceProvider)
         var DB = scope.ServiceProvider.GetService<DatabaseContext>();
         // race done -> return
 
-        var stage = DB.CurrentStage(30);
+        var stage = DB.CurrentStage();
         if (stage?.Starttime is null) return;
 
         if (stage.Starttime > DateTime.UtcNow)

@@ -1,6 +1,9 @@
+import { useRaceContext } from "../../shared/RaceContextProvider";
 import DropdownMenu from "./base/DropdownMenu";
 
 const ChartsDropdown = (props: { raceSelected: boolean }) => {
+  const race = useRaceContext();
+
   return (
     <DropdownMenu
       {...props}
@@ -9,16 +12,8 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
         // { url: "/charts/totalscorespread", title: "Score verdeling Totaal" }
       ]}
       raceOnlyLinks={[
-        { url: "/charts/scoreverloop/30", title: "Relatief Scoreverloop" }, // TODO dynamic race id
-        { url: "/charts/scoreverdeling/30", title: "Score Verdeling" }, // TODO dynamic race id
-        // { url: "/charts/userscores", title: "Relatief Scoreverloop" },
-        // { url: "/charts/userrank", title: "Ranking" },
-        // { url: "/charts/riderpercentage", title: "Puntenaandeel Renner per Etappe" },
-        // { url: "/charts/scorespread", title: "Score verdeling" },
-        // { url: "/charts/optimalpoints", title: "Optimale punten verloop" },
-        // { url: "/charts/missedpoints", title: "Gemiste punten verloop" },
-        // { url: "/charts/missedpointsspread", title: "Gemiste punten verdeling" },
-        // { url: "/charts/missedpointsspreadrelatief", title: "Relatieve gemiste punten verdeling" }
+        { url: `/charts/scoreverloop/${race}`, title: "Relatief Scoreverloop" },
+        { url: `/charts/scoreverdeling/${race}`, title: "Score Verdeling" }
       ]}
     />
   );

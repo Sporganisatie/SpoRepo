@@ -6,7 +6,6 @@ const BudgetDispatchContext = createContext<Dispatch<any>>(BudgetReducer);
 
 function BudgetReducer(budget: boolean) {
     return !budget
-
 }
 
 export function useBudgetContext() {
