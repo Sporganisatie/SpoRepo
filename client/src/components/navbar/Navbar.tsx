@@ -38,11 +38,9 @@ const Navbar = () => {
           //<SRELogo className={'h-full fill-current text-' + raceColor + " duration-300 hover:text-" + raceColorLight} />
           //</Link>
         }
-        {race > 0 && (
-          <Link className="navbar_link" to={"/"}>
-            <span>Current stage</span>
-          </Link>
-        )}
+        <Link className="navbar_link" to={"/"}>
+          <span>Current stage</span>
+        </Link>
         {!isLoading && <ChartsDropdown raceSelected={race > 0} />}
         {!isLoading && <StatsDropdown raceSelected={race > 0} />}
         <Link className="navbar_link" to="/regelspunten">
