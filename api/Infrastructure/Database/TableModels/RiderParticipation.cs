@@ -1,4 +1,6 @@
-﻿namespace SpoRE.Infrastructure.Database;
+﻿using System.Text.Json.Serialization;
+
+namespace SpoRE.Infrastructure.Database;
 
 public class RiderParticipation
 {
@@ -24,6 +26,7 @@ public class RiderParticipation
 
     public int Gc { get; set; }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public RiderType Type { get; set; }
 
     public virtual Race Race { get; set; }
@@ -43,8 +46,8 @@ public enum RiderType
 {
     Klassement,
     Klimmer,
-    Tijdrijder,
     Sprinter,
+    Tijdrijder,
     Aanvaller,
     Knecht
 }

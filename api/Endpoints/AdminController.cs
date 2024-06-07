@@ -13,9 +13,9 @@ namespace SpoRE.Controllers;
 public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB) : ControllerBase
 {
     [HttpGet("startlist")]
-    public IActionResult ScrapeStartList(string raceName, int year)
+    public IActionResult ScrapeStartList(string raceName, int year, int raceId)
     {
-        Scraper.Startlist(raceName, year);
+        Scraper.Startlist(raceName, year, raceId);
         return Ok();
     }
 

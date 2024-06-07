@@ -10,9 +10,12 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 {
-    public void Startlist(string raceName, int year)
+    public void Startlist(string raceName, int year, int raceId)
     {
-        var raceId = DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId;
+        if (raceId is 0)
+        {
+            raceId = DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId;
+        }
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist").DocumentNode;
         var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.json");
         var json = JsonSerializer.Deserialize<PrijzenFile>(file);

@@ -10,6 +10,10 @@ const TeamSelectionTable = ({ data, loading, updateRider }: { data: RiderPartici
             cell: (row: RiderParticipation) => <RiderLink rider={row.rider} />
         },
         {
+            name: 'Type',
+            cell: (row: RiderParticipation) => row.type
+        },
+        {
             name: 'Price',
             selector: (row: RiderParticipation) => row.price,
         },

@@ -13,6 +13,7 @@ export const riderParticipationSchema = z.object({
   tt: z.number(),
   sprint: z.number(),
   gc: z.number(),
+  type: z.string(),
   rider: riderSchema,
 });
 export type RiderParticipation = z.infer<typeof riderParticipationSchema>;
