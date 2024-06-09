@@ -8,6 +8,7 @@ import TeamSelectionTable from './TeamSelectionTable';
 import { RiderParticipation } from '../../models/RiderParticipation';
 import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
 import FilterElements, { Filters } from './Filters';
+import RiderTypeTotals from './RiderTypeTotals';
 
 const Teamselection: React.FC = () => {
     document.title = "Team Selectie";
@@ -80,7 +81,10 @@ const Teamselection: React.FC = () => {
         <div style={{ display: "flex", flexDirection: "column" }}>
             <button style={{ width: 100 }} onClick={() => navigate(`/stage/${raceId}/1`)}>Etappe 1</button>
             <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>
-            <FilterElements updateFilter={updateAndFilter} resetFilter={resetFilter} filters={filters} teams={data.allTeams} />
+            <div style={{ display: "flex" }}>
+                <FilterElements updateFilter={updateAndFilter} resetFilter={resetFilter} filters={filters} teams={data.allTeams} />
+                <RiderTypeTotals team={data.team} />
+            </div>
             <div style={{ display: "flex" }}>
                 <SelectableRidersTable
                     data={filteredRiders}

@@ -47,12 +47,14 @@ function FilterElements(props: FiltersProps) {
     var teamOptions = [{ displayValue: "Alle teams", value: "" }].concat(props.teams.map(team => ({ displayValue: team, value: team })))
     return (
         <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem", margin: "1rem" }}>
-            <input
-                type="text"
-                value={props.filters.name}
-                placeholder="naam"
-                onChange={(e) => props.updateFilter({ name: e.target.value.trim() })}
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                    type="text"
+                    value={props.filters.name}
+                    placeholder="naam"
+                    onChange={(e) => props.updateFilter({ name: e.target.value.trim() })}
+                />
+            </div>
             <Select<number>
                 value={props.filters.minPrice}
                 options={priceOptions}
@@ -78,9 +80,11 @@ function FilterElements(props: FiltersProps) {
                 onChange={(selectedValue) => {
                     props.updateFilter({ team: selectedValue });
                 }} />
-            <button onClick={() => props.resetFilter()}>
-                Reset
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <button onClick={() => props.resetFilter()}>
+                    Reset
+                </button>
+            </div>
         </div>
     );
 }

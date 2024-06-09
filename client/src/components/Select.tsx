@@ -27,13 +27,15 @@ function Select<T extends string | number>(props: SelectProps<T>) {
     };
 
     return (
-        <select onChange={handleChange} value={value}>
-            {options.map((option, index) => (
-                <option key={index} value={option.value}>
-                    {option.displayValue}
-                </option>
-            ))}
-        </select>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <select onChange={handleChange} value={value}>
+                {options.map((option, index) => (
+                    <option key={index} value={option.value}>
+                        {option.displayValue}
+                    </option>
+                ))}
+            </select>
+        </div>
     );
 }
 
