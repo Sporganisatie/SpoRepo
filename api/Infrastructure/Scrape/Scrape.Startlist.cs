@@ -14,7 +14,7 @@ public partial class Scrape
         foreach (var team in html.QuerySelector("ul.startlist_v4").Children())
         {
             var teamName = team.QuerySelector("a.team").InnerText;
-            teamName = teamName.Substring(0, teamName.IndexOf('(') - 1);
+            teamName = TeamNameAlias(teamName.Substring(0, teamName.IndexOf('(') - 1));
             foreach (var rider in team.QuerySelectorAll("li"))
             {
                 // Extract PCS data

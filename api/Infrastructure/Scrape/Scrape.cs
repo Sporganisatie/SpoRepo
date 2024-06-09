@@ -12,10 +12,10 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 {
     public void Startlist(string raceName, int year, int raceId)
     {
-        if (raceId is 0)
-        {
-            raceId = DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId;
-        }
+        raceName ??= DB.Races.Single(r => r.RaceId == raceId).Name;
+        year = year == 0 ? DB.Races.Single(r => r.RaceId == raceId).Year : year;
+        raceId = raceId == 0 ? DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId : raceId;
+
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist").DocumentNode;
         var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.json");
         var json = JsonSerializer.Deserialize<PrijzenFile>(file);
