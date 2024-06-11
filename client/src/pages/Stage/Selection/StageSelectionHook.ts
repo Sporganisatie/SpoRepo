@@ -6,6 +6,7 @@ import {
 } from "../models/StageSelectionData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import { useStage } from "../StageHook";
+import { StageSelectableRider } from "../models/StageSelectableRider";
 
 export function useStageSelection() {
   const budgetParticipation = useBudgetContext();
@@ -160,13 +161,7 @@ export function useStageSelection() {
       oldData.team[riderIdx].isKopman = false;
     }
     sortTeam(oldData);
-    if (budgetParticipation && oldData.budgetCompleet) {
-      oldData.budgetCompleet = selected
-        ? oldData.budgetCompleet + 1
-        : oldData.budgetCompleet - 1;
-    } else {
-      oldData.compleet = selected ? oldData.compleet + 1 : oldData.compleet - 1;
-    }
+    setCompleet(oldData, budgetParticipation);
   }
 
   const addKopmanMutation = useMutation(
@@ -281,25 +276,39 @@ export function useStageSelection() {
     }
     oldData.team.forEach((rider) => (rider.isKopman = !selected));
     oldData.team[riderIdx].isKopman = selected;
-    sortTeam(oldData);
+    setCompleet(oldData, budgetParticipation);
+  }
+
+  function setCompleet(oldData: StageSelectionData, budgetParticipation: boolean) {
     if (budgetParticipation && oldData.budgetCompleet) {
-      oldData.budgetCompleet = selected
-        ? oldData.budgetCompleet + 1
-        : oldData.budgetCompleet - 1;
+      oldData.budgetCompleet = CompleetHeid(oldData.team);
     } else {
-      oldData.compleet = selected ? oldData.compleet + 1 : oldData.compleet - 1;
+      oldData.compleet = CompleetHeid(oldData.team);
     }
   }
+
+  function CompleetHeid(team: StageSelectableRider[]): number {
+    return team.filter(rider => rider.selected).length + (team.some((rider) => rider.isKopman) ? 1 : 0);
+  }
+
+  const riderTypeOrder = [
+    "Klassement",
+    "Klimmer",
+    "Sprinter",
+    "Tijdrijder",
+    "Aanvaller",
+    "Knecht"
+  ];
 
   function sortTeam(data: StageSelectionData) {
     data.team
       .sort(
-        (a, b) => a.rider.riderParticipationId - b.rider.riderParticipationId
+        (a, b) => Number(a.rider.dnf) - Number(b.rider.dnf)
+          || Number(b.selected) - Number(a.selected)
+          || riderTypeOrder.indexOf(a.rider.type) - riderTypeOrder.indexOf(b.rider.type)
+          || b.rider.price - a.rider.price
+          || a.rider.rider.lastname.localeCompare(b.rider.rider.lastname)
       )
-      .sort((a, b) => b.rider.price - a.rider.price)
-      .sort((a, b) => Number(a.rider.dnf) - Number(b.rider.dnf))
-      .sort((a, b) => Number(b.selected) - Number(a.selected))
-      .sort((a, b) => Number(b.isKopman) - Number(a.isKopman));
   }
 
   return {

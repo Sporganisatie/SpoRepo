@@ -12,7 +12,7 @@ public class StageSelectionService(DatabaseContext DB, Userdata User, StageResul
 {
     internal StageSelectionData GetData(int raceId, int stagenr)
     {
-        var team = GetTeam(stagenr);
+        var team = GetTeam(stagenr).OrderBy(x => x.Rider.Dnf).ThenBy(x => !x.Selected).ThenBy(x => x.Rider.Type).ThenByDescending(x => x.Rider.Price).ThenBy(x => x.Rider.Rider.Lastname);
         var stageInfo = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
         var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).FirstOrDefault(s => s.Finished && s.RaceId == raceId);
         var topClassifications = mostRecentFinished is null ? Classifications.Empty : StageResultService.GetClassifications(mostRecentFinished, top5: true, stagenr);
@@ -27,7 +27,7 @@ public class StageSelectionService(DatabaseContext DB, Userdata User, StageResul
         return stageSelection.Count + (stageSelection.Any(r => r.Kopman) ? 1 : 0);
     }
 
-    private IEnumerable<StageSelectableRider> GetTeam(int stagenr)
+    private List<StageSelectableRider> GetTeam(int stagenr)
     {
         var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr)
             .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { ssr.RiderParticipationId, Kopman = ss.KopmanId == ssr.RiderParticipationId });
@@ -37,7 +37,6 @@ public class StageSelectionService(DatabaseContext DB, Userdata User, StageResul
                    let selected = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId)
                    let isKopman = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman)
                    where ap.AccountParticipationId == User.ParticipationId
-                   orderby ts.RiderParticipation.Dnf, !isKopman, !selected, ts.RiderParticipation.Price descending, ts.RiderParticipationId
                    select new StageSelectableRider(
                     ts.RiderParticipation,
                     selected,
