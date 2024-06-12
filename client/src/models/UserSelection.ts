@@ -5,6 +5,7 @@ export interface UserSelection {
   username: string;
   riders: StageComparisonRider[];
   gemist: StageComparisonRider[];
+  hideUser: boolean;
 }
 
 export interface StageComparisonRider {

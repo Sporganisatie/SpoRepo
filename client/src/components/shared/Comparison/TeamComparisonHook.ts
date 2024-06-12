@@ -11,8 +11,7 @@ export function useTeamComparison() {
   if (!raceId) {
     throw new Error("Expected raceId to be defined");
   }
-
-  const { data, isFetching } = useQuery({
+  var { data, isFetching } = useQuery({
     queryKey: ["teamComparison", raceId, budgetParticipation, stagenr] as const,
     queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
     staleTime: 3_600_000,
@@ -50,8 +49,16 @@ export function useTeamComparison() {
     }
   }
 
+  function handleToggle(index: number): void {
+    console.log("toggle index " + index)
+    if (data) data.teams[index].hideUser = !data?.teams[index].hideUser;
+    console.log(data)
+    data = data;
+  }
+
   return {
     data,
     isFetching,
+    handleToggle
   };
 }

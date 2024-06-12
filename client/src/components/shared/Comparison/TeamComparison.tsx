@@ -1,44 +1,26 @@
-import TeamComparisonTable from "./TeamComparisonTable";
 import AllSelectedRiders from "./AllSelectedRidersTable";
 import { useTeamComparison } from "./TeamComparisonHook";
+import TeamComparisonUser from "./TeamComparisonUser";
 
 const TeamComparison = () => {
-  const { data } = useTeamComparison();
-
-  return (
-    <div>
-      {
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {data?.teams.map((userSelection, index) => (
-            <div
-              key={index}
-              style={{
-                flex: "0 0 24%",
-                marginRight: "2px",
-                marginBottom: "2px",
-              }}
-            >
-              <TeamComparisonTable
-                key={index}
-                title={userSelection.username}
-                riders={userSelection.riders}
-              />
-              <div style={{ marginTop: "2px" }}>
-                {userSelection.gemist.length > 0 && (
-                  <TeamComparisonTable
-                    key={index}
-                    title={"Niet Opgesteld"}
-                    riders={userSelection.gemist}
-                  />
-                )}
-              </div>
+    const { data, handleToggle } = useTeamComparison();
+    return (
+        <div>
+            {data?.teams.map((userSelection, index) => (
+                <div key={index} style={{ display: 'inline-block', cursor: 'pointer' }} onClick={() => handleToggle(index)}>
+                    <input type="checkbox" checked={!userSelection.hideUser} onChange={() => { }} />
+                    {userSelection.username}
+                </div>
+            ))}
+            {/* <button onClick={() => toggleAnderen}>Toggle anderen</button> */}
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+                {data?.teams.filter(x => !x.hideUser).map((userSelection, index) => (
+                    <TeamComparisonUser key={index} userSelection={userSelection} />
+                ))}
+                <AllSelectedRiders riders={data?.counts ?? []} />
             </div>
-          ))}
-          <AllSelectedRiders riders={data?.counts ?? []} />
         </div>
-      }
-    </div>
-  );
+    );
 };
 
 export default TeamComparison;
