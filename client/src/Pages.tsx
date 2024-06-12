@@ -14,7 +14,7 @@ import EtappeUitslagen from "./pages/Statistics/EtappeUitslagen/EtappeUitslagen"
 import AllRiders from "./pages/Statistics/AllRiders";
 import ScoreVerloopChart from "./pages/Charts/ScoreVerloopChart";
 import RaceUitslagen from "./pages/Statistics/EtappeUitslagen/RaceUitslagen";
-import RiderPage from "./pages/RiderPage";
+import RiderPage from "./pages/RiderPage/RiderPage";
 import ScoreVerdelingChart from "./pages/Charts/ScoreVerdelingChart";
 import RaceScoreVerloopChart from "./pages/Charts/RaceScoreVerloopChart";
 import Klassementen from "./pages/Statistics/Klassementen";

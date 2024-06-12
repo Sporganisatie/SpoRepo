@@ -8,13 +8,14 @@ internal static class Telemetry
 {
     public static void AddServicesAndClients(this IServiceCollection services)
     {
-        services.AddScoped<AccountService, AccountService>();
-        services.AddScoped<TeamSelectionService, TeamSelectionService>();
-        services.AddScoped<StageSelectionService, StageSelectionService>();
-        services.AddScoped<RaceService, RaceService>();
-        services.AddScoped<StageResultService, StageResultService>();
-        services.AddScoped<StatisticsService, StatisticsService>();
-        services.AddSingleton<Scheduler, Scheduler>();
+        services.AddScoped<AccountService>();
+        services.AddScoped<TeamSelectionService>();
+        services.AddScoped<StageSelectionService>();
+        services.AddScoped<RaceService>();
+        services.AddScoped<RiderService>();
+        services.AddScoped<StageResultService>();
+        services.AddScoped<StatisticsService>();
+        services.AddSingleton<Scheduler>();
     }
 
     public static void AddSwaggerLogin(this IServiceCollection services)
