@@ -1,58 +1,87 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
-import RiderLink from '../../components/shared/RiderLink';
-import { SelectableEnum } from '../../models/SelectableEnum';
-import { SelectableRider } from './Models/SelectableRider';
-import SelectableRiderFoldout from './SelectableRiderFoldOut';
+import DataTable, { TableColumn } from "react-data-table-component";
+import RiderLink from "../../components/shared/RiderLink";
+import { SelectableEnum } from "../../models/SelectableEnum";
+import { SelectableRider } from "./Models/SelectableRider";
+import SelectableRiderFoldout from "./SelectableRiderFoldOut";
 
 const conditionalRowStyles = [
     {
         when: (row: SelectableRider) => row.selectable !== SelectableEnum.Open,
         style: {
-            backgroundColor: 'red',
-            color: 'white',
+            backgroundColor: "#450a0a",
         },
     },
     {
-        when: (row: SelectableRider) => row.selectable === SelectableEnum.Selected,
+        when: (row: SelectableRider) =>
+            row.selectable === SelectableEnum.Selected,
         style: {
-            backgroundColor: 'yellow',
+            backgroundColor: "#475569",
         },
     },
 ];
 
-const SelectableRidersTable = ({ data, loading, updateRider }: { data: SelectableRider[], loading: boolean, updateRider: (id: number, adding: boolean) => void }) => {
+const SelectableRidersTable = ({
+    data,
+    loading,
+    addRider,
+    removeRider,
+}: {
+    data: SelectableRider[];
+    loading: boolean;
+    addRider: (id: number) => void;
+    removeRider: (id: number) => void;
+}) => {
     const columns: TableColumn<SelectableRider>[] = [
         {
-            name: 'Naam',
+            name: "Naam",
             width: "50",
-            cell: (row: SelectableRider) => <RiderLink rider={row.details.rider} />
+            cell: (row: SelectableRider) => (
+                <RiderLink rider={row.details.rider} />
+            ),
         },
         {
-            name: 'Price',
+            name: "Price",
             width: "100px",
-            selector: (row: SelectableRider) => row.details.price
+            selector: (row: SelectableRider) => row.details.price,
         },
         {
-            name: 'Team',
-            selector: (row: SelectableRider) => row.details.team
+            name: "Team",
+            selector: (row: SelectableRider) => row.details.team,
         },
         {
             cell: (row: SelectableRider) => {
                 switch (row.selectable) {
                     case SelectableEnum.Open:
-                        return <button style={{ width: "20px", backgroundColor: "green" }} onClick={() => updateRider(row.details.riderParticipationId, true)}>+</button>;
+                        return (
+                            <button
+                                className="teamselect-rider-button select"
+                                onClick={() =>
+                                    addRider(row.details.riderParticipationId)
+                                }>
+                                ➤
+                            </button>
+                        );
                     case SelectableEnum.Selected:
-                        return <button style={{ width: "20px", backgroundColor: "red" }} onClick={() => updateRider(row.details.riderParticipationId, false)}>-</button>;
+                        return (
+                            <button
+                                className="teamselect-rider-button deselect"
+                                onClick={() =>
+                                    removeRider(
+                                        row.details.riderParticipationId
+                                    )
+                                }>
+                                🞫
+                            </button>
+                        );
                     default:
                         return <></>;
                 }
-            }
-        }
+            },
+        },
     ];
 
     return (
-
-        <div style={{ width: "48%", borderStyle: "solid" }} >
+        <div className="selectable-riders-table-wrapper">
             <DataTable
                 title="Alle renners"
                 columns={columns}
@@ -67,11 +96,10 @@ const SelectableRidersTable = ({ data, loading, updateRider }: { data: Selectabl
                 highlightOnHover
                 pointerOnHover
                 dense
+                theme="dark"
             />
         </div>
     );
-}
+};
 
 export default SelectableRidersTable;
-
-
