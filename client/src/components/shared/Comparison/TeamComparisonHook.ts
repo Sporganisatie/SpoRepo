@@ -39,7 +39,7 @@ export function useTeamComparison(setToggles: React.Dispatch<React.SetStateActio
       });
   }
 
-  function handleToggle(index: number): void {
+  function toggleUser(index: number): void {
     setToggles((prevToggles) => {
       const newToggles = [...prevToggles];
       newToggles[index].showUser = !newToggles[index].showUser;
@@ -57,7 +57,7 @@ export function useTeamComparison(setToggles: React.Dispatch<React.SetStateActio
   return {
     data,
     isFetching,
-    handleToggle,
+    toggleUser,
     toggleAll
   };
 }

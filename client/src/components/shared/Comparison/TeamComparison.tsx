@@ -2,20 +2,20 @@ import { useState } from "react";
 import AllSelectedRiders from "./AllSelectedRidersTable";
 import { useTeamComparison } from "./TeamComparisonHook";
 import TeamComparisonUser from "./TeamComparisonUser";
+import SmallSwitch from "../SmallSwitch";
 
 const TeamComparison = () => {
     const [toggles, setToggles] = useState<{ username: string, showUser: boolean }[]>([]);
-    const { data, handleToggle, toggleAll } = useTeamComparison(setToggles);
+    const { data, toggleUser, toggleAll } = useTeamComparison(setToggles);
 
     return (
         <div>
             {toggles.map((user, index) => (
-                <div key={index} style={{ display: 'inline-block', cursor: 'pointer' }} onClick={() => handleToggle(index)}>
-                    <input type="checkbox" checked={user.showUser} onChange={() => { }} />
-                    {user.username}
-                </div>
+                <SmallSwitch key={index} text={user.username} selected={user.showUser} index={index} toggleUser={() => toggleUser(index)} />
             ))}
-            <button onClick={toggleAll}>Toggle alle</button>
+            <div style={{ display: 'inline-block', marginLeft: "5px", marginBottom: "5px" }}>
+                <button onClick={toggleAll}>Toggle alle</button>
+            </div>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {data?.teams.filter((_, index) => toggles[index].showUser).map((userSelection, index) => (
                     <TeamComparisonUser key={index} userSelection={userSelection} />
