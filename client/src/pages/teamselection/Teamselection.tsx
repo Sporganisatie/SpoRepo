@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SelectableRider } from "./Models/SelectableRider";
 import SelectableRidersTable from "./SelectableRidersTable";
 import TeamSelectionTable from "./TeamSelectionTable";
