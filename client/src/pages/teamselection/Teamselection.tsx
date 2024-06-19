@@ -51,9 +51,7 @@ const TeamSelection: React.FC = () => {
         <div className="teamselection-page">
             {data ? (
                 <div>
-                    <button
-                        style={{ width: 100 }}
-                        onClick={() => navigate(`/stage/${raceId}/1`)}>
+                    <button style={{ width: 100 }} onClick={() => navigate(`/stage/${raceId}/1`)}>
                         Etappe 1
                     </button>
                     <div style={{ color: "white" }}>
@@ -66,7 +64,8 @@ const TeamSelection: React.FC = () => {
                             gridTemplateColumns: "1fr 1fr",
                             columnGap: "1rem",
                             marginBottom: "1rem",
-                        }}>
+                        }}
+                    >
                         <FilterElements
                             updateFilter={updateAndFilter}
                             resetFilter={resetFilter}
@@ -80,17 +79,15 @@ const TeamSelection: React.FC = () => {
                             display: "grid",
                             gridTemplateColumns: "1fr 1fr",
                             columnGap: "1rem",
-                        }}>
+                        }}
+                    >
                         <SelectableRidersTable
                             data={filteredRiders}
                             loading={isLoading}
                             addRider={addRider}
                             removeRider={removeRider}
                         />
-                        <TeamSelectionTable
-                            data={data.team}
-                            loading={isLoading}
-                        />
+                        <TeamSelectionTable data={data.team} loading={isLoading} removeRider={removeRider} />
                     </div>
                 </div>
             ) : (
@@ -102,10 +99,7 @@ const TeamSelection: React.FC = () => {
 
 export default TeamSelection;
 
-function filterRiders(
-    filters: Filters,
-    riders: SelectableRider[]
-): SelectableRider[] {
+function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRider[] {
     for (const [filterType, value] of Object.entries(filters)) {
         if (!value) {
             continue;
@@ -113,9 +107,7 @@ function filterRiders(
         switch (filterType) {
             case "name":
                 riders = riders.filter(({ details }) =>
-                    (details.rider.firstname + details.rider.lastname)
-                        .toLowerCase()
-                        .includes(value.toLowerCase())
+                    (details.rider.firstname + details.rider.lastname).toLowerCase().includes(value.toLowerCase())
                 );
                 break;
             case "minPrice":
@@ -125,14 +117,10 @@ function filterRiders(
                 riders = riders.filter(({ details }) => details.price <= value);
                 break;
             case "team":
-                riders = riders.filter(({ details }) =>
-                    details.team.toLowerCase().includes(value.toLowerCase())
-                );
+                riders = riders.filter(({ details }) => details.team.toLowerCase().includes(value.toLowerCase()));
                 break;
             case "skill":
-                riders = riders.filter(({ details }) =>
-                    SkillFilter(details, value)
-                );
+                riders = riders.filter(({ details }) => SkillFilter(details, value));
                 riders.sort((A, B) => SkillSort(A, B, value));
         }
     }

@@ -12,10 +12,9 @@ const conditionalRowStyles = [
         },
     },
     {
-        when: (row: SelectableRider) =>
-            row.selectable === SelectableEnum.Selected,
+        when: (row: SelectableRider) => row.selectable === SelectableEnum.Selected,
         style: {
-            backgroundColor: "#475569",
+            backgroundColor: "#64748b",
         },
     },
 ];
@@ -35,9 +34,7 @@ const SelectableRidersTable = ({
         {
             name: "Naam",
             width: "50",
-            cell: (row: SelectableRider) => (
-                <RiderLink rider={row.details.rider} />
-            ),
+            cell: (row: SelectableRider) => <RiderLink rider={row.details.rider} />,
         },
         {
             name: "Price",
@@ -55,9 +52,8 @@ const SelectableRidersTable = ({
                         return (
                             <button
                                 className="teamselect-rider-button select"
-                                onClick={() =>
-                                    addRider(row.details.riderParticipationId)
-                                }>
+                                onClick={() => addRider(row.details.riderParticipationId)}
+                            >
                                 ➤
                             </button>
                         );
@@ -65,11 +61,8 @@ const SelectableRidersTable = ({
                         return (
                             <button
                                 className="teamselect-rider-button deselect"
-                                onClick={() =>
-                                    removeRider(
-                                        row.details.riderParticipationId
-                                    )
-                                }>
+                                onClick={() => removeRider(row.details.riderParticipationId)}
+                            >
                                 🞫
                             </button>
                         );

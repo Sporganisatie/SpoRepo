@@ -15,9 +15,11 @@ const conditionalRowStyles = [
 const TeamSelectionTable = ({
     data,
     loading,
+    removeRider,
 }: {
     data: RiderParticipation[];
     loading: boolean;
+    removeRider: (id: number) => void;
 }) => {
     while (data.length < 20) {
         data.push({
@@ -53,10 +55,7 @@ const TeamSelectionTable = ({
                 stickyTable.style.top = `${relTop + Math.abs(top - 50)}px`;
             }
             if (relTop > 0 && top > 50) {
-                stickyTable.style.top = `${Math.max(
-                    0,
-                    relTop - Math.abs(top - 50)
-                )}px`;
+                stickyTable.style.top = `${Math.max(0, relTop - Math.abs(top - 50))}px`;
             }
         };
 
@@ -70,6 +69,18 @@ const TeamSelectionTable = ({
     }, []);
 
     const columns: TableColumn<RiderParticipation>[] = [
+        {
+            cell: (row: RiderParticipation) => {
+                return (
+                    <button
+                        className="teamselect-rider-button deselect"
+                        onClick={() => removeRider(row.riderParticipationId)}
+                    >
+                        🞫
+                    </button>
+                );
+            },
+        },
         {
             name: "Naam",
             cell: (row: RiderParticipation) => <RiderLink rider={row.rider} />,
@@ -94,16 +105,19 @@ const TeamSelectionTable = ({
             style={{
                 width: "100%",
                 position: "relative",
-            }}>
+            }}
+        >
             <div
                 id="stickyTable"
+                className="teamselection-table-wrapper"
                 style={{
                     position: "absolute",
                     top: "0px",
                     width: "100%",
                     maxHeight: "calc(100vh - 50px)",
                     overflow: "auto",
-                }}>
+                }}
+            >
                 <DataTable
                     columns={columns}
                     data={data}

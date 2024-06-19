@@ -10,13 +10,27 @@
     width: 100%;
 }
 
-div.selectable-riders-table-wrapper
-    div.rdt_TableRow
-    div.rdt_TableCell:last-child {
+div.selectable-riders-table-wrapper div.rdt_TableRow div.rdt_TableCell:last-child {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
     padding-right: 0;
+}
+
+div.teamselection-table-wrapper div.rdt_TableHeadRow div.rdt_TableCol:first-child {
+    width: 2.7rem;
+    flex-grow: 0;
+    min-width: 2.7rem;
+    padding: 0;
+}
+
+div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
+    display: flex;
+    align-items: center;
+    width: 2.7rem;
+    flex-grow: 0;
+    min-width: 2.7rem;
+    padding: 0;
 }
 
 .teamselect-rider-button {

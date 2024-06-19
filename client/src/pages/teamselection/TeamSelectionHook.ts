@@ -42,15 +42,12 @@ export function useTeamSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<TeamSelectionData>(
-                    queryKey,
-                    (oldData?: TeamSelectionData) => {
-                        if (!oldData) {
-                            return undefined;
-                        }
-                        handleMutation(oldData, newRiderParticipationId, true);
+                queryClient.setQueryData<TeamSelectionData>(queryKey, (oldData?: TeamSelectionData) => {
+                    if (!oldData) {
+                        return undefined;
                     }
-                );
+                    handleMutation(oldData, newRiderParticipationId, true);
+                });
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -85,15 +82,12 @@ export function useTeamSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<TeamSelectionData>(
-                    queryKey,
-                    (oldData?: TeamSelectionData) => {
-                        if (!oldData) {
-                            return undefined;
-                        }
-                        handleMutation(oldData, newRiderParticipationId, false);
+                queryClient.setQueryData<TeamSelectionData>(queryKey, (oldData?: TeamSelectionData) => {
+                    if (!oldData) {
+                        return undefined;
                     }
-                );
+                    handleMutation(oldData, newRiderParticipationId, false);
+                });
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -122,15 +116,8 @@ export function useTeamSelection() {
         });
     }
 
-    function handleMutation(
-        oldData: TeamSelectionData,
-        riderParticipationId: number,
-        selected: boolean
-    ) {
-        const rider = oldData.allRiders.find(
-            ({ details }) =>
-                details.riderParticipationId === riderParticipationId
-        );
+    function handleMutation(oldData: TeamSelectionData, riderParticipationId: number, selected: boolean) {
+        const rider = oldData.allRiders.find(({ details }) => details.riderParticipationId === riderParticipationId);
         if (rider === undefined) {
             throw new Error("Rider participation ID not found.");
         }
@@ -139,38 +126,25 @@ export function useTeamSelection() {
             oldData.budgetOver -= rider.details.price;
             rider.selectable = SelectableEnum.Selected;
         } else {
-            oldData.team = oldData.team.filter(
-                (rider) => rider.riderParticipationId !== riderParticipationId
-            );
+            oldData.team = oldData.team.filter((rider) => rider.riderParticipationId !== riderParticipationId);
             oldData.budgetOver += rider.details.price;
             rider.selectable = SelectableEnum.Open;
         }
         const forbiddenTeams = oldData.team
-            .filter(
-                (rider) =>
-                    oldData.team.filter(
-                        (teamRider) => teamRider.team === rider.team
-                    ).length > 3
-            )
+            .filter((rider) => oldData.team.filter((teamRider) => teamRider.team === rider.team).length > 3)
             .map((rider) => rider.team);
-        const teamSize = oldData.team.filter(
-            (rider) => rider.riderParticipationId !== 0
-        ).length;
+        const teamSize = oldData.team.filter((rider) => rider.riderParticipationId !== 0).length;
         oldData.allRiders.forEach((r) => {
             if (
                 r.selectable === SelectableEnum.Selected ||
-                r.details.riderParticipationId ===
-                    rider.details.riderParticipationId
+                r.details.riderParticipationId === rider.details.riderParticipationId
             ) {
                 return;
             }
             if (teamSize >= 20) {
                 return (r.selectable = SelectableEnum.Max20);
             }
-            if (
-                r.details.price >
-                oldData.budgetOver - (19 - teamSize) * 500_000
-            ) {
+            if (r.details.price > oldData.budgetOver - (19 - teamSize) * 500_000) {
                 return (r.selectable = SelectableEnum.TooExpensive);
             }
             if (forbiddenTeams.includes(r.details.team)) {
@@ -185,6 +159,9 @@ export function useTeamSelection() {
         data.team
             .sort((a, b) => b.riderParticipationId - a.riderParticipationId)
             .sort((a, b) => {
+                if (!a.type || !b.type) {
+                    return 0;
+                }
                 if (a.type === b.type) {
                     return 0;
                 }
