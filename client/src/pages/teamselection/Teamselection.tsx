@@ -1,107 +1,103 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { SelectableRider } from './Models/SelectableRider';
-import { TeamSelectionData } from './Models/TeamSelectionData';
-import SelectableRidersTable from './SelectableRidersTable';
-import TeamSelectionTable from './TeamSelectionTable';
-import { RiderParticipation } from '../../models/RiderParticipation';
-import { useBudgetContext } from '../../components/shared/BudgetContextProvider';
-import FilterElements, { Filters } from './Filters';
-import RiderTypeTotals from './RiderTypeTotals';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { SelectableRider } from "./Models/SelectableRider";
+import SelectableRidersTable from "./SelectableRidersTable";
+import TeamSelectionTable from "./TeamSelectionTable";
+import { RiderParticipation } from "../../models/RiderParticipation";
+import FilterElements, { Filters } from "./Filters";
+import RiderTypeTotals from "./RiderTypeTotals";
+import "./teamSelection.css";
+import { useTeamSelection } from "./TeamSelectionHook";
+import { useRaceContext } from "../../components/shared/RaceContextProvider";
 
-const Teamselection: React.FC = () => {
+const TeamSelection: React.FC = () => {
     document.title = "Team Selectie";
     let navigate = useNavigate();
-    let { raceId } = useParams();
-    const budgetParticipation = useBudgetContext();
-    const [data, setData] = useState<TeamSelectionData>({ budget: 0, budgetOver: 0, team: [], allRiders: [], allTeams: [] });
-    const [pending, setPending] = useState(true);
+    const raceId = useRaceContext();
+    const { data, isLoading, addRider, removeRider } = useTeamSelection();
     const [filteredRiders, setFilteredRiders] = useState<SelectableRider[]>([]);
-    const [filters, setFilters] = useState(getDefaulFilterState())
+    const [filters, setFilters] = useState(getDefaulFilterState());
     function getDefaulFilterState(): Filters {
         return {
             name: "",
             minPrice: 500000,
             maxPrice: 8000000,
             team: "",
-            skill: ""
-        }
+            skill: "",
+        };
     }
     function updateAndFilter(part: Partial<Filters>) {
         const newFilter = {
             ...filters,
-            ...part
-        }
-        newFilter.minPrice = Math.min(newFilter.minPrice, newFilter.maxPrice)
-        newFilter.maxPrice = Math.max(newFilter.minPrice, newFilter.maxPrice)
-        setFilters(newFilter)
-        setFilteredRiders(filterRiders(newFilter, data.allRiders));
+            ...part,
+        };
+        newFilter.minPrice = Math.min(newFilter.minPrice, newFilter.maxPrice);
+        newFilter.maxPrice = Math.max(newFilter.minPrice, newFilter.maxPrice);
+        setFilters(newFilter);
+        setFilteredRiders(filterRiders(newFilter, data?.allRiders ?? []));
     }
 
     /* eslint-disable */
-    useEffect(() => loadData(), [raceId, budgetParticipation])
-    useEffect(() => { updateAndFilter({}); setPending(false); }, [data])
+    useEffect(() => {
+        updateAndFilter({});
+    }, [data]);
     /* eslint-enable */
-    const loadData = () => {
-        axios.get(`/api/TeamSelection`, { params: { raceId, budgetParticipation } })
-            .then(res => {
-                setData(res.data)
-            })
-            .catch(function (error) {
-                throw error
-            });
-    };
-
-    const updateRider = (riderParticipationId: number, isAdding: boolean) => {
-        setPending(true);
-        axios.request({
-            method: isAdding ? 'post' : 'delete',
-            url: '/api/TeamSelection',
-            params: {
-                riderParticipationId,
-                raceId,
-                budgetParticipation
-            }
-        })
-            .then(function (response) {
-                resetFilter()
-                loadData();
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
 
     const resetFilter = () => {
         updateAndFilter(getDefaulFilterState());
-    }
+    };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-            <button style={{ width: 100 }} onClick={() => navigate(`/stage/${raceId}/1`)}>Etappe 1</button>
-            <div>Budget Over: {data.budgetOver / 1_000_000}M/{data.budget / 1_000_000}M</div>
-            <div style={{ display: "flex" }}>
-                <FilterElements updateFilter={updateAndFilter} resetFilter={resetFilter} filters={filters} teams={data.allTeams} />
-                <RiderTypeTotals team={data.team} />
-            </div>
-            <div style={{ display: "flex" }}>
-                <SelectableRidersTable
-                    data={filteredRiders}
-                    loading={pending}
-                    updateRider={updateRider}
-                />
-                <TeamSelectionTable
-                    data={data.team}
-                    loading={pending}
-                    updateRider={updateRider}
-                />
-            </div>
+        <div className="teamselection-page">
+            {data ? (
+                <div>
+                    <button style={{ width: 100 }} onClick={() => navigate(`/stage/${raceId}/1`)}>
+                        Etappe 1
+                    </button>
+                    <div style={{ color: "white" }}>
+                        Budget Over: {data.budgetOver / 1_000_000}M/
+                        {data.budget / 1_000_000}M
+                    </div>
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            columnGap: "1rem",
+                            marginBottom: "1rem",
+                        }}
+                    >
+                        <FilterElements
+                            updateFilter={updateAndFilter}
+                            resetFilter={resetFilter}
+                            filters={filters}
+                            teams={data.allTeams}
+                        />
+                        <RiderTypeTotals team={data.team} />
+                    </div>
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            columnGap: "1rem",
+                        }}
+                    >
+                        <SelectableRidersTable
+                            data={filteredRiders}
+                            loading={isLoading}
+                            addRider={addRider}
+                            removeRider={removeRider}
+                        />
+                        <TeamSelectionTable data={data.team} loading={isLoading} removeRider={removeRider} />
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
-}
+};
 
-export default Teamselection;
+export default TeamSelection;
 
 function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRider[] {
     for (const [filterType, value] of Object.entries(filters)) {
@@ -124,8 +120,8 @@ function filterRiders(filters: Filters, riders: SelectableRider[]): SelectableRi
                 riders = riders.filter(({ details }) => details.team.toLowerCase().includes(value.toLowerCase()));
                 break;
             case "skill":
-                riders = riders.filter(({ details }) => SkillFilter(details, value))
-                riders.sort((A, B) => SkillSort(A, B, value))
+                riders = riders.filter(({ details }) => SkillFilter(details, value));
+                riders.sort((A, B) => SkillSort(A, B, value));
         }
     }
     return riders;
@@ -163,4 +159,3 @@ function SkillSort(A: SelectableRider, B: SelectableRider, value: any): number {
             return B.details.price - A.details.price;
     }
 }
-

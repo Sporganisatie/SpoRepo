@@ -14,66 +14,98 @@
 /* remember to define focus styles! */
 
 :focus {
-  outline: 0;
+    outline: 0;
 }
 
 /* tables still need 'cellspacing="0"' in the markup */
 table {
-  border-collapse: separate;
-  border-spacing: 0;
+    border: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+button {
+    background-color: #334155;
+    border: 0;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #475569;
+    transition: 200ms;
+}
+
+input {
+    background-color: #334155;
+    border: 0;
+    color: white;
+    padding: 0.5rem;
+}
+
+select {
+    background-color: #334155;
+    border: 0;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+select:hover {
+    background-color: #475569;
+    transition: 200ms;
 }
 
 a {
-  color: inherit;
-  /*text-decoration: none;*/
+    color: inherit;
+    /*text-decoration: none;*/
 }
 
 body {
-  margin: 0;
-  font-family: sans-serif;
+    margin: 0;
+    font-family: sans-serif;
 }
 
-
 .content {
-  background-color: #EFF6FF;
+    background-color: #020617; /*slate-900*/
+    /*background-color: #EFF6FF;
   /*blue-50*/
 }
 
 div.pageContainer {
-  box-sizing: border-box;
-  min-height: 100vh;
-  overflow: auto;
-  max-width: 1600px;
-  margin: auto;
-  padding-top: 70px;
+    box-sizing: border-box;
+    min-height: 100vh;
+    overflow: auto;
+    max-width: 1600px;
+    margin: auto;
+    padding-top: 70px;
 }
 
 img.loadingGif {
-  height: 20%;
-  margin-left: 0%;
-  margin-top: 5%;
-  margin-bottom: 0;
-  padding: 0;
+    height: 20%;
+    margin-left: 0%;
+    margin-top: 5%;
+    margin-bottom: 0;
+    padding: 0;
 }
 
-.notselected> :first-child {
-  border: 2px white solid;
-  background-color: rgb(200, 200, 200);
-  color: black;
-  font-weight: bold;
+.notselected > :first-child {
+    border: 2px white solid;
+    background-color: rgb(200, 200, 200);
+    color: black;
+    font-weight: bold;
 }
 
-.selected> :first-child {
-  border: 2px white solid;
-  background-color: rgb(59, 59, 59);
-  color: lightgray;
-  font-weight: bold;
+.selected > :first-child {
+    border: 2px white solid;
+    background-color: rgb(59, 59, 59);
+    color: lightgray;
+    font-weight: bold;
 }
 
 .tableLink {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 .navbar_link {
-  text-decoration: none;
+    text-decoration: none;
 }

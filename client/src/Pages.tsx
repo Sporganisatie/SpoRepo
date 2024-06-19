@@ -3,7 +3,7 @@ import DesignSandbox from "./pages/DesignSandbox";
 import Admin from "./pages/Admin";
 import UserProfile from "./pages/UserProfile";
 import Login from "./pages/Login";
-import Teamselection from "./pages/teamselection/Teamselection";
+import TeamSelection from "./pages/teamselection/TeamSelection";
 import RaceRouter from "./pages/RaceOverview/RaceRouter";
 import JoinRace from "./pages/RaceOverview/JoinRace";
 import Stage from "./pages/Stage/Stage";
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
       },
       {
         path: "teamselection/:raceId",
-        Component: Teamselection,
+        Component: TeamSelection,
       },
       {
         path: "race/:raceId",
