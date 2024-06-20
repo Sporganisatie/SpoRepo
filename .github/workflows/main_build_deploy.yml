@@ -4,10 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - '*'
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: windows-latest
@@ -21,14 +18,12 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./myapp
-
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./myapp
-
+          path: ${{env.DOTNET_ROOT}}/myapp
   deploy:
     runs-on: windows-latest
     needs: build
