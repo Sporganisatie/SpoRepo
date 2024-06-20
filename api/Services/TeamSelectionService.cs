@@ -16,7 +16,7 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
         var team = GetTeam().OrderBy(x => x.RiderParticipationId).OrderBy(x => x.Type).ThenByDescending(x => x.Price);
         var allRiders = AllRiders(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
-        var allTeams = allRiders.Select(r => r.Details.Team).Distinct();
+        var allTeams = allRiders.Select(r => r.Details.Team).Distinct().Order();
         return new(budget, budgetOver, team, allRiders, allTeams);
     }
 

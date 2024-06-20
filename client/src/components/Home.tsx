@@ -24,7 +24,7 @@ const Home = () => {
 
   // TODO toon links naar alle races (van een user) als er geen actieve race is
   // of als de user expliciet naar races_overzicht/home navigeert
-  return <div>Loading...</div>;
+  return <div style={{ color: 'white' }}>Loading...</div>;
 };
 
 export default Home;

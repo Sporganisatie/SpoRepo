@@ -3,6 +3,6 @@
     "start": "cd ./client && npm start"
   },
   "engines": {
-    "node": "16.x"
+    "node": "20.x"
   }
 }

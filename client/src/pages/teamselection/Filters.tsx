@@ -44,7 +44,7 @@ export interface FiltersProps {
 }
 
 function FilterElements(props: FiltersProps) {
-    var teamOptions = [{ displayValue: "Alle teams", value: "" }].concat(props.teams.map(team => ({ displayValue: team, value: team })))
+    var teamOptions = [{ displayValue: "Alle teams", value: "" }].concat(props.teams.map(team => ({ displayValue: team, value: team }))).sort()
     return (
         <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem", margin: "1rem" }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>

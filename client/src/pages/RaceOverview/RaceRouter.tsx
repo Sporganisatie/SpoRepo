@@ -34,7 +34,7 @@ const RaceRouter = () => {
       .catch(function (error) { });
   }, [raceId, navigate]);
 
-  return <div>Loading...</div>;
+  return <div style={{ color: 'white' }}>Loading...</div>;
 };
 
 export default RaceRouter;
