@@ -91,7 +91,7 @@ const TeamSelectionTable = ({
         },
         {
             name: "Price",
-            selector: (row: RiderParticipation) => row.price == 0 ? "" : row.price,
+            selector: (row: RiderParticipation) => row.price === 0 ? "" : row.price,
         },
         {
             name: "Team",
