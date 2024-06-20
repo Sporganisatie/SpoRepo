@@ -1,11 +1,14 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy applicatie naar Azure
+
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: windows-latest
@@ -18,6 +21,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
           include-prerelease: true
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
@@ -29,6 +33,7 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
+
   deploy:
     runs-on: windows-latest
     needs: build
@@ -49,4 +54,4 @@ jobs:
           app-name: 'SpoReDev'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F4BE917BD05D462C8CD1DBA436752F8E }}
-package: .
+          package: .
