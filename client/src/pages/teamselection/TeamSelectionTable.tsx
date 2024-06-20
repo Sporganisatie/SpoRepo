@@ -28,7 +28,7 @@ const TeamSelectionTable = ({
             riderId: 0,
             price: 0,
             dnf: false,
-            team: "Team",
+            team: "",
             punch: 0,
             climb: 0,
             tt: 0,
@@ -91,7 +91,7 @@ const TeamSelectionTable = ({
         },
         {
             name: "Price",
-            selector: (row: RiderParticipation) => row.price,
+            selector: (row: RiderParticipation) => row.price == 0 ? "" : row.price,
         },
         {
             name: "Team",
@@ -119,6 +119,7 @@ const TeamSelectionTable = ({
                 }}
             >
                 <DataTable
+                    title={`Jouw team ${data.length}/20`}
                     columns={columns}
                     data={data}
                     conditionalRowStyles={conditionalRowStyles}
