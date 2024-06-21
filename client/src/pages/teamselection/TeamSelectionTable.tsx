@@ -119,7 +119,7 @@ const TeamSelectionTable = ({
                 }}
             >
                 <DataTable
-                    title={`Jouw team ${data.length}/20`}
+                    title={`Jouw team ${data.filter(x => x.riderParticipationId !== 0).length}/20`}
                     columns={columns}
                     data={data}
                     conditionalRowStyles={conditionalRowStyles}

@@ -122,6 +122,7 @@ export function useTeamSelection() {
             throw new Error("Rider participation ID not found.");
         }
         if (selected) {
+            oldData.team.pop();
             oldData.team.push(rider.details);
             oldData.budgetOver -= rider.details.price;
             rider.selectable = SelectableEnum.Selected;
@@ -155,19 +156,15 @@ export function useTeamSelection() {
         sortTeam(oldData);
     }
 
+    const riderTypeOrder = ["Klassement", "Klimmer", "Sprinter", "Tijdrijder", "Aanvaller", "Knecht", ""];
+
     function sortTeam(data: TeamSelectionData) {
-        data.team
-            .sort((a, b) => b.riderParticipationId - a.riderParticipationId)
-            .sort((a, b) => {
-                if (!a.type || !b.type) {
-                    return 0;
-                }
-                if (a.type === b.type) {
-                    return 0;
-                }
-                return a.type < b.type ? -1 : 1;
-            })
-            .sort((a, b) => b.price - a.price);
+        data.team.sort(
+            (a, b) =>
+                riderTypeOrder.indexOf(a.type ?? "") - riderTypeOrder.indexOf(b.type ?? "") ||
+                b.price - a.price ||
+                a.rider.lastname.localeCompare(b.rider.lastname)
+        );
     }
 
     return {
