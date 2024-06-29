@@ -97,7 +97,7 @@ const StageSelectionTeam = ({
     ];
 
     return (
-        <div style={{ borderStyle: "solid" }}>
+        <div>
             <DataTable
                 title={`Jouw opstelling ${
                     team.filter((x) => x.selected).length

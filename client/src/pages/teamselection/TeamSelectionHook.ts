@@ -42,12 +42,15 @@ export function useTeamSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<TeamSelectionData>(queryKey, (oldData?: TeamSelectionData) => {
-                    if (!oldData) {
-                        return undefined;
+                queryClient.setQueryData<TeamSelectionData>(
+                    queryKey,
+                    (oldData?: TeamSelectionData) => {
+                        if (!oldData) {
+                            return undefined;
+                        }
+                        handleMutation(oldData, newRiderParticipationId, true);
                     }
-                    handleMutation(oldData, newRiderParticipationId, true);
-                });
+                );
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -55,6 +58,7 @@ export function useTeamSelection() {
             },
             onSettled: () => {
                 queryClient.invalidateQueries({ queryKey });
+                queryClient.invalidateQueries({ queryKey: ["stageSelection"] });
             },
         },
         queryClient
@@ -74,6 +78,7 @@ export function useTeamSelection() {
         queryClient.invalidateQueries({
             queryKey: ["teamSelection", raceId, budgetParticipation],
         });
+        queryClient.invalidateQueries({ queryKey: ["stageSelection"] });
     }
 
     const removeRiderMutation = useMutation(
@@ -82,12 +87,15 @@ export function useTeamSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<TeamSelectionData>(queryKey, (oldData?: TeamSelectionData) => {
-                    if (!oldData) {
-                        return undefined;
+                queryClient.setQueryData<TeamSelectionData>(
+                    queryKey,
+                    (oldData?: TeamSelectionData) => {
+                        if (!oldData) {
+                            return undefined;
+                        }
+                        handleMutation(oldData, newRiderParticipationId, false);
                     }
-                    handleMutation(oldData, newRiderParticipationId, false);
-                });
+                );
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -95,6 +103,7 @@ export function useTeamSelection() {
             },
             onSettled: () => {
                 queryClient.invalidateQueries({ queryKey });
+                queryClient.invalidateQueries({ queryKey: ["stageSelection"] });
             },
         },
         queryClient
@@ -114,10 +123,18 @@ export function useTeamSelection() {
         queryClient.invalidateQueries({
             queryKey: ["stageSelection", raceId, budgetParticipation],
         });
+        queryClient.invalidateQueries({ queryKey: ["stageSelection"] });
     }
 
-    function handleMutation(oldData: TeamSelectionData, riderParticipationId: number, selected: boolean) {
-        const rider = oldData.allRiders.find(({ details }) => details.riderParticipationId === riderParticipationId);
+    function handleMutation(
+        oldData: TeamSelectionData,
+        riderParticipationId: number,
+        selected: boolean
+    ) {
+        const rider = oldData.allRiders.find(
+            ({ details }) =>
+                details.riderParticipationId === riderParticipationId
+        );
         if (rider === undefined) {
             throw new Error("Rider participation ID not found.");
         }
@@ -127,25 +144,38 @@ export function useTeamSelection() {
             oldData.budgetOver -= rider.details.price;
             rider.selectable = SelectableEnum.Selected;
         } else {
-            oldData.team = oldData.team.filter((rider) => rider.riderParticipationId !== riderParticipationId);
+            oldData.team = oldData.team.filter(
+                (rider) => rider.riderParticipationId !== riderParticipationId
+            );
             oldData.budgetOver += rider.details.price;
             rider.selectable = SelectableEnum.Open;
         }
         const forbiddenTeams = oldData.team
-            .filter((rider) => oldData.team.filter((teamRider) => teamRider.team === rider.team).length > 3)
+            .filter(
+                (rider) =>
+                    oldData.team.filter(
+                        (teamRider) => teamRider.team === rider.team
+                    ).length > 3
+            )
             .map((rider) => rider.team);
-        const teamSize = oldData.team.filter((rider) => rider.riderParticipationId !== 0).length;
+        const teamSize = oldData.team.filter(
+            (rider) => rider.riderParticipationId !== 0
+        ).length;
         oldData.allRiders.forEach((r) => {
             if (
                 r.selectable === SelectableEnum.Selected ||
-                r.details.riderParticipationId === rider.details.riderParticipationId
+                r.details.riderParticipationId ===
+                    rider.details.riderParticipationId
             ) {
                 return;
             }
             if (teamSize >= 20) {
                 return (r.selectable = SelectableEnum.Max20);
             }
-            if (r.details.price > oldData.budgetOver - (19 - teamSize) * 500_000) {
+            if (
+                r.details.price >
+                oldData.budgetOver - (19 - teamSize) * 500_000
+            ) {
                 return (r.selectable = SelectableEnum.TooExpensive);
             }
             if (forbiddenTeams.includes(r.details.team)) {
@@ -156,12 +186,21 @@ export function useTeamSelection() {
         sortTeam(oldData);
     }
 
-    const riderTypeOrder = ["Klassement", "Klimmer", "Sprinter", "Tijdrijder", "Aanvaller", "Knecht", ""];
+    const riderTypeOrder = [
+        "Klassement",
+        "Klimmer",
+        "Sprinter",
+        "Tijdrijder",
+        "Aanvaller",
+        "Knecht",
+        "",
+    ];
 
     function sortTeam(data: TeamSelectionData) {
         data.team.sort(
             (a, b) =>
-                riderTypeOrder.indexOf(a.type ?? "") - riderTypeOrder.indexOf(b.type ?? "") ||
+                riderTypeOrder.indexOf(a.type ?? "") -
+                    riderTypeOrder.indexOf(b.type ?? "") ||
                 b.price - a.price ||
                 a.rider.lastname.localeCompare(b.rider.lastname)
         );

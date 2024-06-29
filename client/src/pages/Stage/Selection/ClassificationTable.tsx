@@ -72,7 +72,7 @@ const ClassificationTable = ({
     ];
 
     return (
-        <div style={{ borderStyle: "solid" }}>
+        <div>
             <DataTable
                 title={title}
                 columns={columns}

@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { StageSelectionData, stageSelectionDataSchema } from "../models/StageSelectionData";
+import {
+    StageSelectionData,
+    stageSelectionDataSchema,
+} from "../models/StageSelectionData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import { useStage } from "../StageHook";
 import { StageSelectableRider } from "../models/StageSelectableRider";
@@ -9,17 +12,27 @@ export function useStageSelection() {
     const budgetParticipation = useBudgetContext();
     const { raceId, stagenr } = useStage();
 
-    const queryKey = ["stageSelection", raceId, stagenr, budgetParticipation] as const;
+    const queryKey = [
+        "stageSelection",
+        raceId,
+        stagenr,
+        budgetParticipation,
+    ] as const;
     const queryClient = useQueryClient();
     const { data, isLoading } = useQuery({
         queryKey,
-        queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
+        queryFn: ({ queryKey }) =>
+            fetchData(queryKey[1], queryKey[2], queryKey[3]),
         throwOnError: true,
         staleTime: 3_600_000,
         gcTime: 3_600_000,
     });
 
-    async function fetchData(raceId: string, stagenr: string, budgetParticipation: boolean) {
+    async function fetchData(
+        raceId: string,
+        stagenr: string,
+        budgetParticipation: boolean
+    ) {
         try {
             const { data } = await axios.get(`/api/StageSelection`, {
                 params: {
@@ -40,12 +53,20 @@ export function useStageSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-                    if (!oldData) {
-                        return undefined;
+                queryClient.setQueryData<StageSelectionData>(
+                    queryKey,
+                    (oldData?: StageSelectionData) => {
+                        if (!oldData) {
+                            return undefined;
+                        }
+                        handleMutation(
+                            oldData,
+                            newRiderParticipationId,
+                            true,
+                            budgetParticipation
+                        );
                     }
-                    handleMutation(oldData, newRiderParticipationId, true, budgetParticipation);
-                });
+                );
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -81,12 +102,20 @@ export function useStageSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-                    if (!oldData) {
-                        return undefined;
+                queryClient.setQueryData<StageSelectionData>(
+                    queryKey,
+                    (oldData?: StageSelectionData) => {
+                        if (!oldData) {
+                            return undefined;
+                        }
+                        handleMutation(
+                            oldData,
+                            newRiderParticipationId,
+                            false,
+                            budgetParticipation
+                        );
                     }
-                    handleMutation(oldData, newRiderParticipationId, false, budgetParticipation);
-                });
+                );
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -122,7 +151,9 @@ export function useStageSelection() {
         selected: boolean,
         budgetParticipation: boolean
     ) {
-        const riderIdx = oldData.team.findIndex(({ rider }) => rider.riderParticipationId === riderParticipationId);
+        const riderIdx = oldData.team.findIndex(
+            ({ rider }) => rider.riderParticipationId === riderParticipationId
+        );
         if (riderIdx === -1) {
             throw new Error("Rider participation ID not found.");
         }
@@ -140,12 +171,20 @@ export function useStageSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-                    if (!oldData) {
-                        return undefined;
+                queryClient.setQueryData<StageSelectionData>(
+                    queryKey,
+                    (oldData?: StageSelectionData) => {
+                        if (!oldData) {
+                            return undefined;
+                        }
+                        handleKopmanMutation(
+                            oldData,
+                            newRiderParticipationId,
+                            true,
+                            budgetParticipation
+                        );
                     }
-                    handleKopmanMutation(oldData, newRiderParticipationId, true, budgetParticipation);
-                });
+                );
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -181,12 +220,20 @@ export function useStageSelection() {
             onMutate: async (newRiderParticipationId) => {
                 await queryClient.cancelQueries({ queryKey });
                 const previousSelection = queryClient.getQueryData(queryKey);
-                queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-                    if (!oldData) {
-                        return undefined;
+                queryClient.setQueryData<StageSelectionData>(
+                    queryKey,
+                    (oldData?: StageSelectionData) => {
+                        if (!oldData) {
+                            return undefined;
+                        }
+                        handleKopmanMutation(
+                            oldData,
+                            newRiderParticipationId,
+                            false,
+                            budgetParticipation
+                        );
                     }
-                    handleKopmanMutation(oldData, newRiderParticipationId, false, budgetParticipation);
-                });
+                );
                 return { previousSelection };
             },
             onError: (err, newRiderParticipationId, context) => {
@@ -222,7 +269,9 @@ export function useStageSelection() {
         selected: boolean,
         budgetParticipation: boolean
     ) {
-        const riderIdx = oldData.team.findIndex(({ rider }) => rider.riderParticipationId === riderParticipationId);
+        const riderIdx = oldData.team.findIndex(
+            ({ rider }) => rider.riderParticipationId === riderParticipationId
+        );
         if (riderIdx === -1) {
             throw new Error("Rider participation ID not found.");
         }
@@ -231,7 +280,10 @@ export function useStageSelection() {
         setCompleet(oldData, budgetParticipation);
     }
 
-    function setCompleet(oldData: StageSelectionData, budgetParticipation: boolean) {
+    function setCompleet(
+        oldData: StageSelectionData,
+        budgetParticipation: boolean
+    ) {
         if (budgetParticipation && oldData.budgetCompleet) {
             oldData.budgetCompleet = CompleetHeid(oldData.team);
         } else {
@@ -240,17 +292,28 @@ export function useStageSelection() {
     }
 
     function CompleetHeid(team: StageSelectableRider[]): number {
-        return team.filter((rider) => rider.selected).length + (team.some((rider) => rider.isKopman) ? 1 : 0);
+        return (
+            team.filter((rider) => rider.selected).length +
+            (team.some((rider) => rider.isKopman) ? 1 : 0)
+        );
     }
 
-    const riderTypeOrder = ["Klassement", "Klimmer", "Sprinter", "Tijdrijder", "Aanvaller", "Knecht"];
+    const riderTypeOrder = [
+        "Klassement",
+        "Klimmer",
+        "Sprinter",
+        "Tijdrijder",
+        "Aanvaller",
+        "Knecht",
+    ];
 
     function sortTeam(data: StageSelectionData) {
         data.team.sort(
             (a, b) =>
                 Number(a.rider.dnf) - Number(b.rider.dnf) ||
                 Number(b.selected) - Number(a.selected) ||
-                riderTypeOrder.indexOf(a.rider.type ?? "") - riderTypeOrder.indexOf(b.rider.type ?? "") ||
+                riderTypeOrder.indexOf(a.rider.type ?? "") -
+                    riderTypeOrder.indexOf(b.rider.type ?? "") ||
                 b.rider.price - a.rider.price ||
                 a.rider.rider.lastname.localeCompare(b.rider.rider.lastname)
         );
