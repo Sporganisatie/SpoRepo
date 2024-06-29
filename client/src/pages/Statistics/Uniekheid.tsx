@@ -30,7 +30,7 @@ const Uniekheid = () => {
     }, [raceId, budgetParticipation]);
 
     return (
-        <div style={{ gap: "10px", display: "flex", }}>
+        <div style={{ gap: "10px", display: "flex" }}>
             <UniekheidTable title="Aan de start" data={data.start} />
             <UniekheidTable title="Nu" data={data.huidig} />
         </div>

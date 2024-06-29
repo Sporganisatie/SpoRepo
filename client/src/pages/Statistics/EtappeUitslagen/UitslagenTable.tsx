@@ -1,4 +1,5 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
+import SreDataTable from '../../../components/shared/SreDataTable';
 
 export interface EtappeUitslag {
     stageNumber: string;
@@ -34,17 +35,11 @@ const UitslagenTable = ({ data, allRaces }: { data: any, allRaces: boolean }) =>
             }))
     ];
 
-    return (
-        <DataTable
-            title={(allRaces ? 'Race' : 'Etappe') + " Uitslagen"}
-            columns={columns}
-            data={data}
-            highlightOnHover
-            striped
-            conditionalRowStyles={conditionalRowStyles}
-            dense
-        />
-    );
-};
+    return <SreDataTable
+        title={(allRaces ? 'Race' : 'Etappe') + " Uitslagen"}
+        columns={columns}
+        data={data}
+        conditionalRowStyles={conditionalRowStyles} />
+}
 
 export default UitslagenTable;

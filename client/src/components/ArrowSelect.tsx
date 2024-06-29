@@ -27,7 +27,7 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
     }
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: "5px" }}>
             <button onClick={() => handleMove(-1)}>{'<'}</button>
             <Select
                 options={options}

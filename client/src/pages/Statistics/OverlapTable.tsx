@@ -1,5 +1,6 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
 import { OverlapRow } from './Overlap';
+import SreDataTable from '../../components/shared/SreDataTable';
 
 const OverlapTable = ({ overlaps, title }: { overlaps: OverlapRow[], title: string }) => {
     const columns: TableColumn<OverlapRow>[] = [
@@ -15,17 +16,15 @@ const OverlapTable = ({ overlaps, title }: { overlaps: OverlapRow[], title: stri
             columns.push(
                 {
                     name: key,
-                    width: '100px',
+                    width: '80px',
                     cell: (row: OverlapRow) => row.overlaps[key] === -1 ? "X" : row.overlaps[key],
                 })
         }
     }
 
-    return (
-        <div style={{ margin: "5px" }} >
-            <DataTable title={title} columns={columns} data={overlaps} striped dense theme="dark" />
-        </div>
-    );
+    var maxwidth = columns.length * 80 + 20;
+
+    return <SreDataTable title={title} columns={columns} data={overlaps} maxwidth={maxwidth} />
 }
 
 export default OverlapTable;

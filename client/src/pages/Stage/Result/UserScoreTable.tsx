@@ -1,5 +1,6 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import { z } from "zod";
+import SreDataTable from "../../../components/shared/SreDataTable";
 
 export const userScoreSchema = z.object({
     account: z.object({
@@ -30,11 +31,7 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => {
         },
     ];
 
-    return (
-        <div>
-            <DataTable title="Poule stand" columns={columns} data={data} striped dense theme="dark" />
-        </div>
-    );
+    return <SreDataTable title="Poule stand" columns={columns} data={data} />
 };
 
 export default UserScoreTable;

@@ -1,7 +1,8 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
 import { StageSelectedEnum } from "../../../models/UserSelection";
 import { ClassificationRow } from "../models/StageSelectionData";
+import SreDataTable from "../../../components/shared/SreDataTable";
 
 const classificationRowStyle = [
     {
@@ -71,23 +72,14 @@ const ClassificationTable = ({
         },
     ];
 
-    return (
-        <div>
-            <DataTable
-                title={title}
-                columns={columns}
-                data={rows}
-                conditionalRowStyles={classificationRowStyle}
-                striped
-                highlightOnHover
-                pointerOnHover
-                dense
-                pagination={pagination}
-                paginationPerPage={20}
-                theme="dark"
-            />
-        </div>
-    );
+    return <SreDataTable
+        title={title}
+        columns={columns}
+        data={rows}
+        conditionalRowStyles={classificationRowStyle}
+        pointerOnHover
+        pagination={pagination}
+        paginationPerPage={20} />
 };
 
 export default ClassificationTable;

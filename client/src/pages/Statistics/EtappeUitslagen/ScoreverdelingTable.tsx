@@ -1,5 +1,6 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
 import { useBudgetContext } from '../../../components/shared/BudgetContextProvider';
+import SreDataTable from '../../../components/shared/SreDataTable';
 
 interface ScoreVerdeling {
     username: string;
@@ -45,16 +46,7 @@ const ScoreverdelingTable = ({ data, allRaces }: { data: any, allRaces: boolean 
         }
     ];
 
-    return (
-        <DataTable
-            title="Score Verdeling"
-            columns={columns}
-            data={data}
-            highlightOnHover
-            striped
-            dense
-        />
-    );
+    return <SreDataTable title="Score Verdeling" columns={columns} data={data} />
 };
 
 export default ScoreverdelingTable;

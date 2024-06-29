@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import { RiderParticipation } from "../../models/RiderParticipation";
 import RiderLink from "../../components/shared/RiderLink";
+import SreDataTable from "../../components/shared/SreDataTable";
 
 export type AllRiderRow = {
     riderParticipation: RiderParticipation;
@@ -90,17 +91,7 @@ const AllRiders = () => {
             });
     }, [raceId, budgetParticipation]);
 
-    return (
-        <div>
-            <DataTable
-                title={"Alle Renners"}
-                columns={columns}
-                data={data}
-                striped
-                dense
-            />
-        </div>
-    )
+    return <SreDataTable title={"Alle Renners"} columns={columns} data={data} />
 }
 
 export default AllRiders;

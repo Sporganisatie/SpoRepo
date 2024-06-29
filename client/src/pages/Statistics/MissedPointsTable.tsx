@@ -1,5 +1,6 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
 import { MissedPointsData } from './MissedPoints';
+import SreDataTable from '../../components/shared/SreDataTable';
 
 const MissedPointsTable = ({ title, riders: missedPoints }: { title: string, riders: MissedPointsData[] }) => {
     const columns: TableColumn<MissedPointsData>[] = [
@@ -25,17 +26,7 @@ const MissedPointsTable = ({ title, riders: missedPoints }: { title: string, rid
         },
     ];
 
-    return (
-        <div style={{ border: 'solid' }} >
-            <DataTable
-                title={title}
-                columns={columns}
-                data={missedPoints}
-                striped
-                dense
-            />
-        </div>
-    );
+    return <SreDataTable title={title} columns={columns} data={missedPoints} />
 }
 
 export default MissedPointsTable;

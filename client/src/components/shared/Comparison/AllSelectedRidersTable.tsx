@@ -1,7 +1,8 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import { Rider } from "../../../models/Rider";
 import RiderLink from "../RiderLink";
 import { StageSelectedEnum } from "../../../models/UserSelection";
+import SreDataTable from "../SreDataTable";
 
 export type AllSelectedRiderRow = {
     rider: Rider;
@@ -42,18 +43,8 @@ const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => {
             sortable: true
         }
     ];
-    return (
-        <div style={{ border: 'solid', maxWidth: '570px' }} >
-            <DataTable
-                title={"Alle Geselecteerd"}
-                columns={columns}
-                data={riders}
-                conditionalRowStyles={conditionalRowStyles}
-                striped
-                dense
-            />
-        </div>
-    )
+
+    return <SreDataTable title={"Alle Geselecteerd"} columns={columns} data={riders} conditionalRowStyles={conditionalRowStyles} />
 }
 
 export default AllSelectedRiders;

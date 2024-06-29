@@ -1,4 +1,5 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
+import SreDataTable from '../../../components/shared/SreDataTable';
 
 interface UserRank {
     username: string;
@@ -32,16 +33,7 @@ const RankingTable = ({ data }: any) => {
             }))
     ];
 
-    return (
-        <DataTable
-            title="Aantal keer per positie"
-            columns={columns}
-            data={data}
-            highlightOnHover
-            striped
-            dense
-        />
-    );
+    return <SreDataTable title="Aantal keer per positie" columns={columns} data={data} />
 };
 
 export default RankingTable;

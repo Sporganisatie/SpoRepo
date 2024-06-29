@@ -1,4 +1,5 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
+import SreDataTable from "../../components/shared/SreDataTable";
 
 export type UniekheidRow = {
     user: string;
@@ -19,11 +20,7 @@ const UniekheidTable = ({ data, title }: { data: UniekheidRow[], title: string }
         }
     ];
 
-    return (
-        <div style={{ margin: "5px" }} >
-            <DataTable title={title} columns={columns} data={data} striped dense theme="dark" />
-        </div>
-    );
+    return <SreDataTable title={title} columns={columns} data={data} />
 };
 
 export default UniekheidTable;

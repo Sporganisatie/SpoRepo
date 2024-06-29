@@ -1,7 +1,8 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import RiderLink from "../../components/shared/RiderLink";
 import { RiderParticipation } from "../../models/RiderParticipation";
 import { useEffect } from "react";
+import SreDataTable from "../../components/shared/SreDataTable";
 
 const conditionalRowStyles = [
     {
@@ -118,17 +119,13 @@ const TeamSelectionTable = ({
                     overflow: "auto",
                 }}
             >
-                <DataTable
+                <SreDataTable
                     title={`Jouw team ${data.filter(x => x.riderParticipationId !== 0).length}/20`}
                     columns={columns}
                     data={data}
                     conditionalRowStyles={conditionalRowStyles}
                     progressPending={loading}
-                    striped
-                    highlightOnHover
                     pointerOnHover
-                    dense
-                    theme="dark"
                 />
             </div>
         </div>

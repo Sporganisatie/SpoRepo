@@ -1,6 +1,7 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
 import { StageSelectableRider } from "../models/StageSelectableRider";
+import SreDataTable from "../../../components/shared/SreDataTable";
 
 export interface StageSelectionTeamProps {
     team: StageSelectableRider[];
@@ -56,7 +57,7 @@ const StageSelectionTeam = ({
                         -
                     </button>
                 ) : team.filter((x) => x.selected).length < 9 &&
-                  !row.rider.dnf ? (
+                    !row.rider.dnf ? (
                     <button
                         style={{ width: "20px", backgroundColor: "green" }}
                         onClick={() =>
@@ -96,24 +97,14 @@ const StageSelectionTeam = ({
         },
     ];
 
-    return (
-        <div>
-            <DataTable
-                title={`Jouw opstelling ${
-                    team.filter((x) => x.selected).length
-                }/9`}
-                columns={columns}
-                data={team}
-                progressPending={isFetching}
-                conditionalRowStyles={conditionalRowStyles}
-                striped
-                highlightOnHover
-                pointerOnHover
-                dense
-                theme="dark"
-            />
-        </div>
-    );
+    return <SreDataTable
+        title={`Jouw opstelling ${team.filter((x) => x.selected).length}/9`}
+        columns={columns}
+        data={team}
+        progressPending={isFetching}
+        conditionalRowStyles={conditionalRowStyles}
+        pointerOnHover
+    />
 };
 
 export default StageSelectionTeam;

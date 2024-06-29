@@ -1,7 +1,8 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
 import { riderSchema } from "../../../models/Rider";
 import { z } from "zod";
+import SreDataTable from "../../../components/shared/SreDataTable";
 
 export const riderScoreSchema = z.object({
     rider: riderSchema.nullable(),
@@ -57,17 +58,7 @@ const TeamResultsTable = ({ data }: { data: RiderScore[] }) => {
         },
     ];
 
-    return (
-        <div>
-            <DataTable
-                columns={columns}
-                data={data}
-                striped
-                dense
-                theme="dark"
-            />
-        </div>
-    );
+    return <SreDataTable columns={columns} data={data} />
 };
 
 export default TeamResultsTable;

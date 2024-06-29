@@ -1,8 +1,9 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import RiderLink from "../../components/shared/RiderLink";
 import { SelectableEnum } from "../../models/SelectableEnum";
 import { SelectableRider } from "./Models/SelectableRider";
 import SelectableRiderFoldout from "./SelectableRiderFoldOut";
+import SreDataTable from "../../components/shared/SreDataTable";
 
 const conditionalRowStyles = [
     {
@@ -75,7 +76,7 @@ const SelectableRidersTable = ({
 
     return (
         <div className="selectable-riders-table-wrapper">
-            <DataTable
+            <SreDataTable
                 title="Alle renners"
                 columns={columns}
                 data={data}
@@ -85,11 +86,7 @@ const SelectableRidersTable = ({
                 expandableRowsComponent={SelectableRiderFoldout}
                 expandOnRowClicked
                 expandableRowsHideExpander
-                striped
-                highlightOnHover
                 pointerOnHover
-                dense
-                theme="dark"
             />
         </div>
     );

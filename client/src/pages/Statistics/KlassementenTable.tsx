@@ -1,6 +1,7 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
 import { InputData } from './Klassementen';
 import RiderLink from '../../components/shared/RiderLink';
+import SreDataTable from '../../components/shared/SreDataTable';
 
 const KlassementenTable = ({ title, riders, resultTitle }: { title: string, resultTitle: string, riders: InputData[] }) => {
     const columns: TableColumn<InputData>[] = [
@@ -31,17 +32,7 @@ const KlassementenTable = ({ title, riders, resultTitle }: { title: string, resu
         }
     ];
 
-    return (
-        <div style={{ border: 'solid' }} >
-            <DataTable
-                title={title}
-                columns={columns}
-                data={riders}
-                striped
-                dense
-            />
-        </div>
-    );
+    return <SreDataTable title={title} columns={columns} data={riders} />
 }
 
 export default KlassementenTable;

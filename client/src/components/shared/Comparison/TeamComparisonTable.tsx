@@ -1,9 +1,10 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 import {
     StageComparisonRider,
     StageSelectedEnum,
 } from "../../../models/UserSelection";
 import RiderLink from "../RiderLink";
+import SreDataTable from "../SreDataTable";
 
 const conditionalRowStyles = [
     {
@@ -25,13 +26,7 @@ const conditionalRowStyles = [
     },
 ];
 
-const TeamComparisonTable = ({
-    title,
-    riders,
-}: {
-    title: string;
-    riders: StageComparisonRider[];
-}) => {
+const TeamComparisonTable = ({ title, riders, }: { title: string; riders: StageComparisonRider[]; }) => {
     const columns: TableColumn<StageComparisonRider>[] = [
         {
             name: "Positie",
@@ -65,19 +60,7 @@ const TeamComparisonTable = ({
         },
     ];
 
-    return (
-        <div>
-            <DataTable
-                title={title}
-                columns={columns}
-                data={riders}
-                conditionalRowStyles={conditionalRowStyles}
-                striped
-                dense
-                theme="dark"
-            />
-        </div>
-    );
+    return <SreDataTable title={title} columns={columns} data={riders} conditionalRowStyles={conditionalRowStyles} />
 };
 
 export default TeamComparisonTable;

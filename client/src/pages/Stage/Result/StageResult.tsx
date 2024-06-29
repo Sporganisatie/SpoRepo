@@ -7,7 +7,7 @@ import { useStageResult } from "./StageResultHook";
 import { useStage } from "../StageHook";
 import Modal from "../../../components/ui/modal/Modal";
 
-const StageResults = () => {
+const StageResult = () => {
   const { stagenr } = useStage();
   document.title = `Etappe ${stagenr} resultaten`;
   const { data } = useStageResult();
@@ -56,4 +56,4 @@ const StageResults = () => {
   );
 };
 
-export default StageResults;
+export default StageResult;

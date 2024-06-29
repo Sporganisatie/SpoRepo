@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
+import SreDataTable from "../../components/shared/SreDataTable";
 
 export type UitvallersData = {
     userName: string;
@@ -47,17 +48,7 @@ const Uitvallers = () => {
             });
     }, [raceId, budgetParticipation]);
 
-    return (
-        <div style={{ border: 'solid', width: '300px' }} >
-            <DataTable
-                title={"Uitvallers"}
-                columns={columns}
-                data={data}
-                striped
-                dense
-            />
-        </div>
-    )
+    return <SreDataTable title={"Uitvallers"} columns={columns} data={data} maxwidth={300} />
 }
 
 export default Uitvallers;
