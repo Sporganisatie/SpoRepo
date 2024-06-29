@@ -11,7 +11,7 @@ export function useTeamComparison(setToggles: React.Dispatch<React.SetStateActio
   if (!raceId) {
     throw new Error("Expected raceId to be defined");
   }
-  var { data, isFetching } = useQuery({
+  const { data } = useQuery({
     queryKey: ["teamComparison", raceId, budgetParticipation, stagenr] as const,
     queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
     staleTime: 3_600_000,
@@ -56,7 +56,6 @@ export function useTeamComparison(setToggles: React.Dispatch<React.SetStateActio
 
   return {
     data,
-    isFetching,
     toggleUser,
     toggleAll
   };
