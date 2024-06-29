@@ -18,14 +18,15 @@ public partial class Scrape
         UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
         if (stage.Type is StageType.TTT) AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == "").Results);
         UpdateDnfRiders(riderResults, stage);
-        StageComplete(stage, riderResults);
+        StageComplete(stage.StageId, riderResults);
 
         if (!riderResults.Any(r => !r.Value.Dnf)) return "";
         return BuildResultsQuery(riderResults.Values, stage);
     }
 
-    private void StageComplete(Stage stage, Dictionary<string, RiderResult> riderResults)
+    private void StageComplete(int stageId, Dictionary<string, RiderResult> riderResults)
     {
+        var stage = DB.Stages.Single(x => x.StageId == stageId);
         var dnfCount = riderResults.Count(r => r.Value.Dnf);
         var stageCount = riderResults.Count(r => r.Value.Stagepos != 0);
         var gcCount = riderResults.Count(r => r.Value.Gcpos != 0);
