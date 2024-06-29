@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-builder.Services.AddScoped<DatabaseContext, DatabaseContext>();
+builder.Services.AddTransient<DatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<Userdata, Userdata>();
 builder.Services.AddScoped<Scrape, Scrape>();
 builder.Services.AddServicesAndClients();
@@ -35,6 +35,12 @@ if (app.Environment.IsDevelopment())
             };
         });
 }
+else if (app.Environment.IsProduction())
+{
+#pragma warning disable 4014 // Disable "Because this call is not awaited..." warning
+    Task.Run(() => new Scheduler(app.Services).RunTimer());
+#pragma warning restore 4014 // Restore the warning
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -48,8 +54,5 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); ;
-#pragma warning disable 4014 // Disable "Because this call is not awaited..." warning
-Task.Run(() => new Scheduler(app.Services).RunTimer());
-#pragma warning restore 4014 // Restore the warning
 
 app.Run();
