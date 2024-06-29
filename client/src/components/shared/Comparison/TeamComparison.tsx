@@ -12,7 +12,7 @@ const TeamComparison = () => {
             return;
         }
         setToggles(data.teams.map((team) => ({ username: team.username, showUser: true })))
-    }, [data?.teams])
+    }, [data, data?.teams])
 
     return (
         <div>
