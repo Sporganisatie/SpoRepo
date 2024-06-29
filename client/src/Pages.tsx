@@ -21,8 +21,9 @@ import Klassementen from "./pages/Statistics/Klassementen";
 import RulesPopup from "./pages/RulesPopup";
 import { Root } from "./App";
 import Home from "./components/Home";
-import TeamOverlap from "./pages/Statistics/TeamOverlap";
+import Uniekheid from "./pages/Statistics/Uniekheid";
 import RaceScoreVerdelingChart from "./pages/Charts/RaceScoreVerdelingChart";
+import Overlap from "./pages/Statistics/Overlap";
 
 const router = createBrowserRouter([
     {
@@ -104,7 +105,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "teamoverlap/:raceId",
-                Component: TeamOverlap,
+                Component: Overlap,
+            },
+            {
+                path: "uniekheid/:raceId",
+                Component: Uniekheid,
             },
             // charts
             {

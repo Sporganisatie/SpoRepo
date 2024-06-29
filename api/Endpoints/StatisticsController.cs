@@ -48,6 +48,12 @@ public class StatisticsController(StatisticsService Service) : ControllerBase
     [HttpGet("uniekheid")]
     [ProducesResponseType(200)]
     [PostStart]
-    public IActionResult Uniekheid(int raceId, bool budgetParticipation, bool includeDnf)
-        => Ok(Service.Uniekheid(raceId, budgetParticipation, includeDnf));
+    public IActionResult Uniekheid(int raceId, bool budgetParticipation)
+        => Ok(Service.Uniekheid(raceId, budgetParticipation));
+
+    [HttpGet("overlap")]
+    [ProducesResponseType(200)]
+    [PostStart]
+    public IActionResult Overlap(int raceId, bool budgetParticipation)
+        => Ok(Service.Overlap(raceId, budgetParticipation));
 }

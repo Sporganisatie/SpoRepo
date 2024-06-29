@@ -18,7 +18,8 @@ const StatistiekenDropdown = (props: { raceSelected: boolean }) => {
                 { url: `/missedpoints/${race}`, title: "Gemiste punten" },
                 { url: `/uitvallers/${race}`, title: "Uitvallers" },
                 { url: `/klassementen/${race}`, title: "Klassementen" },
-                { url: `/teamoverlap/${race}`, title: "Team Overlap" }
+                { url: `/teamoverlap/${race}`, title: "Team Overlap" },
+                { url: `/uniekheid/${race}`, title: "Uniekheid" }
                 // { url: "/statistics/missedPointsPerRider", title: "Gemiste punten per Renner" },
                 // { url: "/statistics/overigestats", title: "Overige Statistieken" }
             ]} />
