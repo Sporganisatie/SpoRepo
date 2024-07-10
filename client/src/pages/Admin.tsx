@@ -29,6 +29,12 @@ const Admin = () => {
       .catch(err => { console.error(err); });
   }
 
+  const etappesToevoegen = (params: any) => {
+    axios.get(`/api/Admin/AddStages`, { params })
+      .then(_ => { })
+      .catch(err => { console.error(err); });
+  }
+
   return (
     <div>
       <div>
@@ -73,7 +79,8 @@ const Admin = () => {
           onChange={e => setRaceId(e.target.value)}
           placeholder="raceId"
         />
-        <button style={{ marginRight: '345px', width: '110px' }} onClick={() => updateStartlist({ raceName2, year2, raceId })}>Update Startlist</button>
+        <button style={{ marginRight: '5px', width: '110px' }} onClick={() => updateStartlist({ raceName2, year2, raceId })}>Update Startlist</button>
+        <button style={{ marginRight: '210px', width: '130px' }} onClick={() => etappesToevoegen({ raceId })}>Etappes toevoegen</button>
         <button style={{ marginRight: '5px', width: '100px' }} onClick={() => raceFinished({ raceName2, year2, raceId })}>Race Finished</button>
       </div>
     </div>

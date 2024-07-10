@@ -48,6 +48,59 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         CalculateUserScores(stage);
     }
 
+    public async Task EtappesOphalen(int raceId)
+    {
+        var race = DB.Races.Single(r => r.RaceId == raceId);
+
+        var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/").DocumentNode;
+        var table = html.QuerySelector(".mt20 tbody");
+        var urls = table.SelectNodes("tr");
+
+        var stageCount = 0;
+        var lastStart = new DateTime();
+        var stages = new List<Stage>();
+        foreach (var row in urls)
+        {
+            var url = row.QuerySelector("a");
+            if (url == null) continue;
+            stageCount++;
+            lastStart = GetStartTime(url.GetAttributeValue("href", ""));
+
+            DB.Stages.Add(new Stage
+            {
+                RaceId = raceId,
+                Type = GetStageType(url.InnerText),
+                Starttime = lastStart,
+                Stagenr = stageCount
+            });
+        };
+        DB.Stages.Add(new()
+        {
+            RaceId = raceId,
+            Stagenr = stageCount + 1,
+            Type = StageType.FinalStandings,
+            Starttime = lastStart
+        });
+
+        await DB.SaveChangesAsync();
+    }
+
+    private static StageType GetStageType(string innerText)
+    {
+        if (innerText.Contains("ITT")) return StageType.ITT;
+        if (innerText.Contains("TTT")) return StageType.TTT;
+        return StageType.REG;
+    }
+
+    private static DateTime GetStartTime(string url)
+    {
+        var raceInfo = new HtmlWeb().Load($"https://www.procyclingstats.com/{url}")
+                .DocumentNode.QuerySelector(".w30 .infolist").Children();
+        var date = raceInfo.Where(x => x.InnerText.Contains("Date")).First().Children().ToList()[2].InnerText;
+        var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText;
+        return Convert.ToDateTime(date + " " + time);
+    }
+
     private async Task CopyTeamsToStageSelections(Stage stage)
     {
         var query = @$"INSERT INTO stage_selection_rider(stage_selection_id, rider_participation_id)
