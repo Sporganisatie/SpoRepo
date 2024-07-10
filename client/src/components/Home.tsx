@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRaceContext, useRaceDispatch } from "./shared/RaceContextProvider";
+import { useRaceContext } from "./shared/RaceContextProvider";
 import axios from "axios";
 
 const Home = () => {
