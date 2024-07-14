@@ -4,6 +4,7 @@ import ClassificationOverview from "./ClassificationOverview";
 import { useStageSelection } from "./StageSelectionHook";
 import { useStage } from "../StageHook";
 import SelectionsComplete from "./SelectionComplete";
+import "./StageSelection.css";
 
 const options: Intl.DateTimeFormatOptions = {
   weekday: "long",

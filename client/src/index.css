@@ -90,16 +90,17 @@ img.loadingGif {
 }
 
 .notselected > :first-child {
-    border: 2px white solid;
-    background-color: rgb(200, 200, 200);
-    color: black;
-    font-weight: bold;
+    background-color: #475569;
+    text-align: center;
 }
 
 .selected > :first-child {
-    border: 2px white solid;
-    background-color: rgb(59, 59, 59);
-    color: lightgray;
+    background-color: #94a3b8;
+    color: black;
+    text-align: center;
+}
+
+.selected {
     font-weight: bold;
 }
 

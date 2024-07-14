@@ -33,7 +33,14 @@ const ClassificationTable = ({
     const columns: TableColumn<ClassificationRow>[] = [
         {
             name: "",
-            maxWidth: "100px",
+            width: "30px",
+            style: {
+                paddingLeft: 0,
+                paddingRight: 0,
+                flexGrow: 0,
+                display: "flex",
+                justifyContent: "center",
+            },
             selector: (row: ClassificationRow) => row.result.position,
         },
         {
@@ -79,7 +86,9 @@ const ClassificationTable = ({
         conditionalRowStyles={classificationRowStyle}
         pointerOnHover
         pagination={pagination}
-        paginationPerPage={20} />
+        paginationPerPage={20} 
+        noTableHead
+    />
 };
 
 export default ClassificationTable;

@@ -16,8 +16,7 @@ const conditionalRowStyles = [
     {
         when: (row: StageSelectableRider) => row.rider.dnf,
         style: {
-            backgroundColor: "lightgrey",
-            color: "grey",
+            color: "#64748b",
         },
     },
 ];
@@ -40,17 +39,17 @@ const StageSelectionTeam = ({
         },
         {
             name: "Team",
-            width: "30%",
+            width: "35%",
             selector: (row: StageSelectableRider) => row.rider.team,
             sortable: true,
         },
         {
             name: "",
-            width: "5%",
+            width: "10%",
             cell: (row: StageSelectableRider) => {
                 return row.selected ? (
                     <button
-                        style={{ width: "20px", backgroundColor: "red" }}
+                        style={{ width: "26px", backgroundColor: "red" }}
                         onClick={() =>
                             removeRider(row.rider.riderParticipationId)
                         }>
@@ -59,7 +58,7 @@ const StageSelectionTeam = ({
                 ) : team.filter((x) => x.selected).length < 9 &&
                     !row.rider.dnf ? (
                     <button
-                        style={{ width: "20px", backgroundColor: "green" }}
+                        style={{ width: "26px", backgroundColor: "green" }}
                         onClick={() =>
                             addRider(row.rider.riderParticipationId)
                         }>
@@ -72,11 +71,11 @@ const StageSelectionTeam = ({
         },
         {
             name: "Kopman",
-            width: "20%",
+            width: "10%",
             cell: (row: StageSelectableRider) => {
                 return row.isKopman ? (
                     <button
-                        style={{ width: "20px", backgroundColor: "red" }}
+                        style={{ width: "26px", backgroundColor: "red" }}
                         onClick={() =>
                             removeKopman(row.rider.riderParticipationId)
                         }>
@@ -84,7 +83,7 @@ const StageSelectionTeam = ({
                     </button>
                 ) : row.selected && !row.rider.dnf ? (
                     <button
-                        style={{ width: "20px", backgroundColor: "green" }}
+                        style={{ width: "26px", backgroundColor: "green" }}
                         onClick={() =>
                             addKopman(row.rider.riderParticipationId)
                         }>
