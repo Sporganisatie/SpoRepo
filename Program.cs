@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-builder.Services.AddScoped<DatabaseContext, DatabaseContext>();
+builder.Services.AddTransient<DatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<Userdata, Userdata>();
 builder.Services.AddScoped<Scrape, Scrape>();
 builder.Services.AddServicesAndClients();
