@@ -14,6 +14,7 @@ import { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
 import Switch from "../ui/switch/Switch";
 import { useRaceContext } from "../shared/RaceContextProvider";
+import RaceDropdown from "./Dropdowns/RaceDropdown";
 // import { SRELogo } from '../shared/svg/all-icons.js'
 // import FabFourSwitchButton from './fabFourSwitchButton';
 // import jwt_decode from "jwt-decode";
@@ -29,7 +30,7 @@ const Navbar = () => {
     const isAdmin =
         localStorage.getItem("authToken") &&
         jwt_decode<AuthToken>(localStorage.getItem("authToken") ?? "").admin ===
-            true;
+        true;
     return (
         <div>
             <div className="navbar">
@@ -46,11 +47,6 @@ const Navbar = () => {
                 <Link className="navbar_link" to="/regelspunten">
                     <span>Regels/Punten</span>
                 </Link>
-                {/* {isAdmin && (
-          <Link className="navbar_link" to="/admin">
-            <FontAwesomeIcon icon={faChartSimple} />
-          </Link>
-        )} */}
                 {isAdmin && (
                     <Link className="navbar_link" to="/admin">
                         <FontAwesomeIcon icon={faShieldAlt} />
@@ -75,6 +71,7 @@ const Navbar = () => {
                             hotkey="B"
                         />
                     )}
+                <RaceDropdown />
             </div>
         </div>
     );

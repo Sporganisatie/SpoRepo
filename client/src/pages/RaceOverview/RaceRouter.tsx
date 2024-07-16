@@ -27,7 +27,7 @@ const RaceRouter = () => {
             navigate(`/teamselection/${raceId}`);
             return;
           case RaceStateEnum.Started:
-            navigate(`/stage/${raceId}/${res.data.currentStage}`);
+            navigate(`/${raceId}/stage/${res.data.currentStage}`);
             return;
         }
       })

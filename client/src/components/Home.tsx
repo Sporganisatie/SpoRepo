@@ -12,11 +12,11 @@ const Home = () => {
       axios
         .get(`/api/Race/current`)
         .then((res) => {
-          navigate(`/race/${res.data}`);
+          navigate(`/${res.data}/race`);
         })
     }
     else {
-      navigate(`/race/${race}`);
+      navigate(`/${race}/race`);
     }
   }, [navigate, race]);
 

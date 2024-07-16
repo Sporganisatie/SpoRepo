@@ -47,19 +47,19 @@ const router = createBrowserRouter([
                 Component: DesignSandbox,
             },
             {
-                path: "teamselection/:raceId",
+                path: ":raceId/teamselection",
                 Component: TeamSelection,
             },
             {
-                path: "race/:raceId",
+                path: ":raceId/race",
                 Component: RaceRouter,
             },
             {
-                path: "stage/:raceId/:stagenr",
+                path: ":raceId/stage/:stagenr",
                 Component: Stage,
             },
             {
-                path: "joinrace/:raceId",
+                path: ":raceId/joinrace",
                 Component: JoinRace,
             },
             {
@@ -76,19 +76,19 @@ const router = createBrowserRouter([
             },
             // statistics
             {
-                path: "teamcomparison/:raceId",
+                path: ":raceId/teamcomparison",
                 Component: TeamComparisonPage,
             },
             {
-                path: "missedpoints/:raceId",
+                path: ":raceId/missedpoints",
                 Component: MissedPoints,
             },
             {
-                path: "uitvallers/:raceId",
+                path: ":raceId/uitvallers",
                 Component: Uitvallers,
             },
             {
-                path: "etappeUitslagen/:raceId",
+                path: ":raceId/etappeUitslagen",
                 Component: EtappeUitslagen,
             },
             {
@@ -96,19 +96,19 @@ const router = createBrowserRouter([
                 Component: RaceUitslagen,
             },
             {
-                path: "allRiders/:raceId",
+                path: ":raceId/allRiders",
                 Component: AllRiders,
             },
             {
-                path: "klassementen/:raceId",
+                path: ":raceId/klassementen",
                 Component: Klassementen,
             },
             {
-                path: "teamoverlap/:raceId",
+                path: ":raceId/teamoverlap",
                 Component: Overlap,
             },
             {
-                path: "uniekheid/:raceId",
+                path: ":raceId/uniekheid",
                 Component: Uniekheid,
             },
             // charts
@@ -117,7 +117,7 @@ const router = createBrowserRouter([
                 Component: RaceScoreVerloopChart,
             },
             {
-                path: "charts/scoreverloop/:raceId",
+                path: ":raceId/charts/scoreverloop",
                 Component: ScoreVerloopChart,
             },
             {
@@ -125,7 +125,7 @@ const router = createBrowserRouter([
                 Component: RaceScoreVerdelingChart,
             },
             {
-                path: "charts/scoreverdeling/:raceId",
+                path: ":raceId/charts/scoreverdeling",
                 Component: ScoreVerdelingChart,
             },
         ],

@@ -17,7 +17,6 @@ const Switch = ({
             return;
         }
         function handleKeydown(e: KeyboardEvent) {
-            console.log();
             if (!hotkey || e.target instanceof HTMLInputElement) {
                 return;
             }

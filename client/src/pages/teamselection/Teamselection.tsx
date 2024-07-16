@@ -51,7 +51,7 @@ const TeamSelection: React.FC = () => {
         <div className="teamselection-page">
             {data ? (
                 <div>
-                    <button style={{ width: 100 }} onClick={() => navigate(`/stage/${raceId}/1`)}>
+                    <button style={{ width: 100 }} onClick={() => navigate(`/${raceId}/stage/1`)}>
                         Etappe 1
                     </button>
                     <div style={{ color: "white" }}>

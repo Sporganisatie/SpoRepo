@@ -101,4 +101,16 @@ public class RaceService(Userdata User, DatabaseContext DB)
 
     internal int Current()
         => DB.Races.OrderByDescending(x => x.RaceId).First(x => x.RaceId != 99).RaceId;
+
+    internal IEnumerable<RaceSelection> AllRaces()
+    {
+        var query = from s in DB.Stages.Include(x => x.Race)
+                    where s.RaceId != 99 && s.Race.Name != "classics"
+                    group s.Race by s.Race into g
+                    select g.Key;
+
+        return query.OrderByDescending(x => x.Year).ThenByDescending(x => x.Name).ToList().Select(x => new RaceSelection($"{char.ToUpper(x.Name[0]) + x.Name[1..]} \t {x.Year}", x.RaceId));
+    }
 }
+
+public record RaceSelection(string DisplayValue, int Value);

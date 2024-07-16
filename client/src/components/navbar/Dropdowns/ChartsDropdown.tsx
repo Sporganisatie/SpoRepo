@@ -12,8 +12,8 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
         // { url: "/charts/totalscorespread", title: "Score verdeling Totaal" }
       ]}
       raceOnlyLinks={[
-        { url: `/charts/scoreverloop/${race}`, title: "Relatief Scoreverloop" },
-        { url: `/charts/scoreverdeling/${race}`, title: "Score Verdeling" }
+        { url: `/${race}/charts/scoreverloop`, title: "Relatief Scoreverloop" },
+        { url: `/${race}/charts/scoreverdeling`, title: "Score Verdeling" }
       ]}
     />
   );

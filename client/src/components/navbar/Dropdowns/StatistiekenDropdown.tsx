@@ -12,14 +12,14 @@ const StatistiekenDropdown = (props: { raceSelected: boolean }) => {
                 { url: "/raceUitslagen", title: "Uitslagen per race" },
             ]}
             raceOnlyLinks={[
-                { url: `/teamcomparison/${race}`, title: "Team overzichten" },
-                { url: `/etappeUitslagen/${race}`, title: "Uitslagen per etappe" },
-                { url: `/allRiders/${race}`, title: "Alle Renners" },
-                { url: `/missedpoints/${race}`, title: "Gemiste punten" },
-                { url: `/uitvallers/${race}`, title: "Uitvallers" },
-                { url: `/klassementen/${race}`, title: "Klassementen" },
-                { url: `/teamoverlap/${race}`, title: "Team Overlap" },
-                { url: `/uniekheid/${race}`, title: "Uniekheid" }
+                { url: `/${race}/teamcomparison`, title: "Team overzichten" },
+                { url: `/${race}/etappeUitslagen`, title: "Uitslagen per etappe" },
+                { url: `/${race}/allRiders`, title: "Alle Renners" },
+                { url: `/${race}/missedpoints`, title: "Gemiste punten" },
+                { url: `/${race}/uitvallers`, title: "Uitvallers" },
+                { url: `/${race}/klassementen`, title: "Klassementen" },
+                { url: `/${race}/teamoverlap`, title: "Team Overlap" },
+                { url: `/${race}/uniekheid`, title: "Uniekheid" }
                 // { url: "/statistics/missedPointsPerRider", title: "Gemiste punten per Renner" },
                 // { url: "/statistics/overigestats", title: "Overige Statistieken" }
             ]} />

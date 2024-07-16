@@ -34,4 +34,9 @@ public class RaceController(RaceService Service) : ControllerBase
     // [CacheResponse] TODO introduce way to identify user for cache key
     public IActionResult AllTeamSelections(int raceId, bool budgetParticipation)
         => Ok(Service.AllTeamSelections(raceId, budgetParticipation));
+
+    [HttpGet("all")]
+    [ProducesResponseType(200)]
+    public IActionResult AllRaces()
+        => Ok(Service.AllRaces());
 }
