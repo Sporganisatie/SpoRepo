@@ -17,7 +17,7 @@ export function useStage() {
 
   function setStage(newStage: string) {
     stagenr = newStage;
-    navigate(`/stage/${raceId}/${newStage}`);
+    navigate(`/${raceId}/stage/${newStage}`);
   }
 
   const { data: stageState } = useQuery({
