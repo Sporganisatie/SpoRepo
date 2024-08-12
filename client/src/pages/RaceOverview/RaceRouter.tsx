@@ -21,10 +21,10 @@ const RaceRouter = () => {
       .then((res) => {
         switch (res.data.state) {
           case RaceStateEnum.NotJoined:
-            navigate(`/joinrace/${raceId}`);
+            navigate(`/${raceId}/joinrace`);
             return;
           case RaceStateEnum.TeamSelection:
-            navigate(`/teamselection/${raceId}`);
+            navigate(`/${raceId}/teamselection`);
             return;
           case RaceStateEnum.Started:
             navigate(`/${raceId}/stage/${res.data.currentStage}`);

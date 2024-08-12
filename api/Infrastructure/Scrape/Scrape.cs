@@ -57,32 +57,40 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         var urls = table.SelectNodes("tr");
 
         var stageCount = 0;
-        var lastStart = new DateTime();
+        var starttime = new DateTime();
         var stages = new List<Stage>();
         foreach (var row in urls)
         {
             var url = row.QuerySelector("a");
             if (url == null) continue;
             stageCount++;
-            lastStart = GetStartTime(url.GetAttributeValue("href", ""));
+            starttime = GetStartTime(url.GetAttributeValue("href", ""));
 
-            DB.Stages.Add(new Stage
+            stages.Add(new Stage
             {
                 RaceId = raceId,
                 Type = GetStageType(url.InnerText),
-                Starttime = lastStart,
+                Starttime = starttime,
                 Stagenr = stageCount
             });
         };
-        DB.Stages.Add(new()
+        stages.Add(new()
         {
             RaceId = raceId,
             Stagenr = stageCount + 1,
             Type = StageType.FinalStandings,
-            Starttime = lastStart
+            Starttime = starttime
         });
 
-        await DB.SaveChangesAsync();
+        await BuildExecuteStageQuery(stages);
+    }
+
+    private async Task BuildExecuteStageQuery(List<Stage> stages)
+    {
+        var query = $"INSERT INTO stage(race_id, type, starttime, stagenr) \n VALUES";
+        query += string.Join(",", stages.Select(x => $"({x.RaceId}, '{x.Type}', '{x.Starttime.Value.ToString("o")}', {x.Stagenr})"));
+        query += " ON CONFLICT (stagenr, race_id) DO UPDATE SET type = EXCLUDED.type, starttime = EXCLUDED.starttime";
+        await DB.Database.ExecuteSqlRawAsync(query);
     }
 
     private static StageType GetStageType(string innerText)
@@ -97,7 +105,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         var raceInfo = new HtmlWeb().Load($"https://www.procyclingstats.com/{url}")
                 .DocumentNode.QuerySelector(".w30 .infolist").Children();
         var date = raceInfo.Where(x => x.InnerText.Contains("Date")).First().Children().ToList()[2].InnerText;
-        var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText;
+        var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText.Split().First();
         return Convert.ToDateTime(date + " " + time);
     }
 
