@@ -88,7 +88,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     private async Task BuildExecuteStageQuery(List<Stage> stages)
     {
         var query = $"INSERT INTO stage(race_id, type, starttime, stagenr) \n VALUES";
-        query += string.Join(",", stages.Select(x => $"({x.RaceId}, '{x.Type}', '{x.Starttime.Value.ToString("o")}', {x.Stagenr})"));
+        query += string.Join(",", stages.Select(x => $"({x.RaceId}, '{x.Type}', '{x.Starttime.Value:yyyy-MM-dd HH:mm} -02:00', {x.Stagenr})"));
         query += " ON CONFLICT (stagenr, race_id) DO UPDATE SET type = EXCLUDED.type, starttime = EXCLUDED.starttime";
         await DB.Database.ExecuteSqlRawAsync(query);
     }
@@ -106,7 +106,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
                 .DocumentNode.QuerySelector(".w30 .infolist").Children();
         var date = raceInfo.Where(x => x.InnerText.Contains("Date")).First().Children().ToList()[2].InnerText;
         var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText.Split().First();
-        return Convert.ToDateTime(date + " " + time);
+        return Convert.ToDateTime(date + " " + time).AddHours(-2);
     }
 
     private async Task CopyTeamsToStageSelections(Stage stage)
