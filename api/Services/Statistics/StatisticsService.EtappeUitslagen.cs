@@ -14,6 +14,23 @@ public partial class StatisticsService
 {
     public EtappeUitslagen EtappeUitslagen(int raceId, bool budgetParticipation)
     {
+        // Meeste etappe winsten per ronde
+        // var races = DB.Races.Where(r => r.Name != "classics").OrderBy(r => r.Year).ThenBy(r => r.Name).ToList();
+        // var prints = new List<(string, int)>();
+        // foreach (var race in races)
+        // {
+        //     var uitslagen2 = SortedUitslagen(race.RaceId, budgetParticipation);
+        //     if (!uitslagen2.Any()) continue;
+        //     var userRank2 = CountRanks(uitslagen2.Select(x => x.UsernamesAndScores), uitslagen2.First().UsernamesAndScores.Select(x => x.Username));
+        //     var beste = userRank2.First();
+        //     prints.Add(($"{race.Name} {race.Year} {beste.Username} {beste.Ranks[0]}", beste.Ranks[0]));
+        // }
+        // Console.WriteLine("HIERRRRRRRRRRRRRRR");
+        // foreach (var item in prints.OrderByDescending(x => x.Item2))
+        // {
+        //     Console.WriteLine(item.Item1);
+        // }
+
         var uitslagen = SortedUitslagen(raceId, budgetParticipation);
         var scoreVerdeling = ScoreVerdeling(raceId, budgetParticipation);
         var userRank = CountRanks(uitslagen.Select(x => x.UsernamesAndScores), uitslagen.First().UsernamesAndScores.Select(x => x.Username));
