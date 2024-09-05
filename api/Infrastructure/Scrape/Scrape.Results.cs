@@ -125,12 +125,13 @@ public partial class Scrape
         var columns = htmlResults.QuerySelectorAll("th").Select(x => x.InnerText);
         var rows = htmlResults.QuerySelectorAll("tbody tr");
         var results = rows.Select(row => BuildPcsRider(columns, row));
-        return rows.Select(row => BuildPcsRider(columns, row));
+        return rows.Select(row => BuildPcsRider(columns, row)).Where(x => x.PcsId != "skip-rider");
     }
 
     private static PcsRow BuildPcsRider(IEnumerable<string> columns, HtmlNode row)
     {
         var fields = columns.Zip(row.QuerySelectorAll("td"), (col, val) => new { col, val }).ToDictionary(x => x.col, x => x.val);
+        if (!fields.ContainsKey("Rider")) return new() { PcsId = "skip-rider" };
         var pcsId = fields["Rider"].QuerySelector("a").GetAttributeValue("href", "")[6..];
         if (!int.TryParse(fields["Rnk"].InnerText, out int rank)) return new() { Dnf = true, PcsId = pcsId };
 
