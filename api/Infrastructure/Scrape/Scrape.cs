@@ -29,6 +29,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     public async Task StageResults(Stage stage)
     {
         var stageNr = stage.Stagenr;
+        // TODO check if volgende stage Finalstandings dan deze functie aan het einde nog een keer aanroepen
         if (stage.IsFinalStandings)
         {
             stageNr = stage.Stagenr - 1;
