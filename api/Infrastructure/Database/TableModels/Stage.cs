@@ -16,8 +16,6 @@ public class Stage
 
     public StageType Type { get; set; }
 
-    public int Weight { get; set; }
-
     public virtual Race Race { get; set; }
 
     public bool IsFinalStandings => Type is StageType.FinalStandings;

@@ -42,5 +42,5 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
 
     [HttpGet("AddStages")]
     public IActionResult AddStages(int raceId)
-        => Ok(Scraper.EtappesOphalen(raceId));
+        => Ok(Scraper.EtappesToevoegen(raceId));
 }

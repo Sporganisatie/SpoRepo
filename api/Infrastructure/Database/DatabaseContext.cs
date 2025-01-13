@@ -401,9 +401,6 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
                     v => (StageType)Enum.Parse(typeof(StageType), v))
                 .HasDefaultValue(StageType.REG)
                 .HasColumnName("type");
-            entity.Property(e => e.Weight)
-                .HasDefaultValueSql("1")
-                .HasColumnName("weight");
 
             // entity.HasOne(d => d.Race).WithMany(p => p.Stages)
             //     .HasForeignKey(d => d.RaceId)

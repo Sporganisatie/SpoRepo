@@ -49,49 +49,43 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         CalculateUserScores(stage);
     }
 
-    public async Task EtappesOphalen(int raceId)
+    public int EtappesToevoegen(int raceId)
     {
         var race = DB.Races.Single(r => r.RaceId == raceId);
 
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/").DocumentNode;
-        var table = html.QuerySelector(".mt20 tbody");
-        var urls = table.SelectNodes("tr");
+        var rows = html.QuerySelector(".mt20 tbody").SelectNodes("tr");
 
-        var stageCount = 0;
+        var stageNr = 1;
         var starttime = new DateTime();
-        var stages = new List<Stage>();
-        foreach (var row in urls)
+        var stages = DB.Stages.Where(s => s.RaceId == raceId).ToList();
+        foreach (var row in rows)
         {
             var url = row.QuerySelector("a");
             if (url == null) continue;
-            stageCount++;
             starttime = GetStartTime(url.GetAttributeValue("href", ""));
 
-            stages.Add(new Stage
+            var stage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
+            if (stage is null)
             {
-                RaceId = raceId,
-                Type = GetStageType(url.InnerText),
-                Starttime = starttime,
-                Stagenr = stageCount
-            });
+                stage = new Stage() { RaceId = raceId, Stagenr = stageNr };
+                DB.Stages.Add(stage);
+            }
+            stage.Starttime = starttime;
+            stage.Type = GetStageType(row.InnerText);
+            stageNr++;
         };
-        stages.Add(new()
+
+        var finalStage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
+        if (finalStage is null)
         {
-            RaceId = raceId,
-            Stagenr = stageCount + 1,
-            Type = StageType.FinalStandings,
-            Starttime = starttime
-        });
+            finalStage = new Stage() { RaceId = raceId, Stagenr = stageNr };
+            DB.Stages.Add(finalStage);
+        }
+        finalStage.Starttime = starttime;
+        finalStage.Type = StageType.ITT;
 
-        await BuildExecuteStageQuery(stages);
-    }
-
-    private async Task BuildExecuteStageQuery(List<Stage> stages)
-    {
-        var query = $"INSERT INTO stage(race_id, type, starttime, stagenr) \n VALUES";
-        query += string.Join(",", stages.Select(x => $"({x.RaceId}, '{x.Type}', '{x.Starttime.Value:yyyy-MM-dd HH:mm} -02:00', {x.Stagenr})"));
-        query += " ON CONFLICT (stagenr, race_id) DO UPDATE SET type = EXCLUDED.type, starttime = EXCLUDED.starttime";
-        await DB.Database.ExecuteSqlRawAsync(query);
+        return DB.SaveChanges();
     }
 
     private static StageType GetStageType(string innerText)
