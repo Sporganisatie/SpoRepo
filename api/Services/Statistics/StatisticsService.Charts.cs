@@ -12,7 +12,7 @@ public partial class StatisticsService
         var uitslagen = (from uss in UserStageScores(raceId, budgetParticipation)
                          group uss by uss.StageNumber into stageScores
                          orderby stageScores.Key
-                         select new Scores(stageScores.Select(x => new UsernameScore(x.Username, x.TotalScore.Value - (int)stageScores.Average(y => y.TotalScore))).ToList(), stageScores.Key.ToString())).ToList();
+                         select new Scores(stageScores.Select(x => new UsernameScore(x.Username, x.TotalScore.Value - (int)stageScores.Min(y => y.TotalScore))).ToList(), stageScores.Key.ToString())).ToList();
 
         var participants = GetParticipants(raceId, budgetParticipation);
         var start = new Scores(participants.Select(par => new UsernameScore(par, 0)).ToList(), "");

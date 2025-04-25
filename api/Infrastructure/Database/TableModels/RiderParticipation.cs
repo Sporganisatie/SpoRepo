@@ -31,7 +31,7 @@ public class RiderParticipation
 
     public virtual Race Race { get; set; }
 
-    // public virtual ICollection<ResultsPoint> ResultsPoints { get; } = new List<ResultsPoint>();
+    public virtual ICollection<ResultsPoint> ResultsPoints { get; } = null!;
 
     public virtual Rider Rider { get; set; }
 

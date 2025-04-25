@@ -47,22 +47,23 @@ public partial class StageResultService
 
     public Classifications GetClassifications(Stage stage, bool top5, int? selectingStage = null)
     {
-        var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
-        var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == (selectingStage ?? stage.Stagenr) && ssr.StageSelection.Stage.RaceId == stage.RaceId)
-                .Select(ssr => ssr.RiderParticipationId).ToList();
-        var riderResults = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider)
-            .Where(rp => rp.StageId == stage.StageId).ToList()
-            .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection)));
+        // var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
+        // var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == (selectingStage ?? stage.Stagenr) && ssr.StageSelection.Stage.RaceId == stage.RaceId)
+        //         .Select(ssr => ssr.RiderParticipationId).ToList();
+        // var riderResults = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider)
+        //     .Where(rp => rp.StageId == stage.StageId).ToList()
+        //     .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection)));
 
-        var stageResult = GetClassification(riderResults, "Stage", top5);
-        var gcStandings = GetClassification(riderResults, "Gc", top5);
-        var komStandings = GetClassification(riderResults, "Kom", top5);
-        var pointsStandings = GetClassification(riderResults, "Points", top5);
-        var youthStandings = GetClassification(riderResults, "Youth", top5);
+        // var stageResult = GetClassification(riderResults, "Stage", top5);
+        // var gcStandings = GetClassification(riderResults, "Gc", top5);
+        // var komStandings = GetClassification(riderResults, "Kom", top5);
+        // var pointsStandings = GetClassification(riderResults, "Points", top5);
+        // var youthStandings = GetClassification(riderResults, "Youth", top5);
 
-        var response = new Classifications(gcStandings, pointsStandings, komStandings, youthStandings);
+        // var response = new Classifications(gcStandings, pointsStandings, komStandings, youthStandings);
 
-        return top5 ? response : response with { Stage = stageResult.ToList() };
+        // return top5 ? response : response with { Stage = stageResult.ToList() };
+        return new Classifications([], [], [], []);
     }
 
     private static StageSelectedEnum GetStageSelectedEnum(int riderParticipationId, List<int> stageSelection, List<int> teamSelection)
@@ -72,12 +73,12 @@ public partial class StageResultService
                 ? StageSelectedEnum.InTeam
                 : StageSelectedEnum.None;
 
-    private static IEnumerable<ClassificationRow> GetClassification(IEnumerable<(ResultsPoint results, StageSelectedEnum selected)> resultsPoints, string field, bool top5)
-        => resultsPoints
-            .Where(rp => GetProperty(rp.results, field).Position > 0)
-            .OrderBy(rp => GetProperty(rp.results, field).Position)
-            .Select(rp => GetClassificationRow(rp.results, rp.selected, GetProperty(rp.results, field)))
-            .Take(top5 ? 5 : int.MaxValue);
+    // private static IEnumerable<ClassificationRow> GetClassification(IEnumerable<(ResultsPoint results, StageSelectedEnum selected)> resultsPoints, string field, bool top5)
+    //     => resultsPoints
+    //         .Where(rp => GetProperty(rp.results, field).Position > 0)
+    //         .OrderBy(rp => GetProperty(rp.results, field).Position)
+    //         .Select(rp => GetClassificationRow(rp.results, rp.selected, GetProperty(rp.results, field)))
+    //         .Take(top5 ? 5 : int.MaxValue);
 
     private static BaseResult GetProperty(ResultsPoint rp, string field)
         => field switch
@@ -95,12 +96,12 @@ public partial class StageResultService
             _ => throw new ArgumentException($"Invalid field: {field}")
         };
 
-    private static ClassificationRow GetClassificationRow(ResultsPoint rp, StageSelectedEnum selected, BaseResult result)
-        => new ClassificationRow
-        {
-            Rider = rp.RiderParticipation.Rider,
-            Team = rp.RiderParticipation.Team,
-            Result = result,
-            Selected = selected
-        };
+    // private static ClassificationRow GetClassificationRow(ResultsPoint rp, StageSelectedEnum selected, BaseResult result)
+    //     => new ClassificationRow
+    //     {
+    //         Rider = rp.RiderParticipation.Rider,
+    //         Team = rp.RiderParticipation.Team,
+    //         Result = result,
+    //         Selected = selected
+    //     };
 }

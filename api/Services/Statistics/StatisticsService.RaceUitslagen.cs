@@ -30,19 +30,14 @@ public partial class StatisticsService
 
     private static IEnumerable<UserRank> CountRanks(IEnumerable<IEnumerable<UsernameScore>> uitslagen, IEnumerable<string> usernames)
     {
-        var users = new Dictionary<string, int[]>();
-
-        foreach (var name in usernames)
-        {
-            users[name] = new int[usernames.Count()];
-        }
+        var users = usernames.ToDictionary(x => x, x => new int[usernames.Count()]);
 
         foreach (var uitslag in uitslagen)
         {
             var rank = 0;
             var userscores = uitslag.ToList();
             var extraRankIncreaseAfterTie = 0;
-            for (int i = 0; i < userscores.Count(); i++)
+            for (int i = 0; i < userscores.Count; i++)
             {
                 var user = userscores[i];
                 if (rank == 0 || user.Score < userscores[i - 1].Score)

@@ -21,6 +21,6 @@ public class ResultsPoint
     public BaseResult Youth { get; set; }
     public int? Teamscore { get; set; }
     public int? Totalscore { get; set; }
-    public virtual RiderParticipation RiderParticipation { get; set; }
+    // public virtual RiderParticipation RiderParticipation { get; set; }
     public virtual Stage Stage { get; set; }
 }
