@@ -74,7 +74,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
             stage.Starttime = starttime;
             stage.Type = GetStageType(row.InnerText);
             stageNr++;
-        };
+        }
 
         var finalStage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
         if (finalStage is null)
@@ -101,6 +101,10 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
                 .DocumentNode.QuerySelector(".w30 .infolist").Children();
         var date = raceInfo.Where(x => x.InnerText.Contains("Date")).First().Children().ToList()[2].InnerText;
         var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText.Split().First();
+        if (!TimeSpan.TryParse(time, out _))
+        {
+            time = "12:00";
+        }
         return Convert.ToDateTime(date + " " + time).AddHours(-2);
     }
 
