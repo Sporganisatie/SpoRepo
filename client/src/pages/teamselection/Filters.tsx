@@ -70,11 +70,13 @@ function FilterElements(props: FiltersProps) {
                 }}
             />
             <Select
+                value={props.filters.skill}
                 options={skillOptions}
                 onChange={(selectedValue) => {
                     props.updateFilter({ skill: selectedValue });
                 }} />
             <ArrowSelect
+                value={props.filters.team}
                 allowLooping={true}
                 options={teamOptions}
                 onChange={(selectedValue) => {

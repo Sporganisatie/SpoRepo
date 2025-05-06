@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select, { SelectProps } from './Select';
 
 export interface ArrowSelectProps<T extends string | number> extends SelectProps<T> {
@@ -10,6 +10,13 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
     const [currentIndex, setCurrentIndex] = useState<number>(
         options.findIndex(option => option.value === initialValue)
     );
+
+    useEffect(() => {
+        const newIndex = options.findIndex(option => option.value === initialValue);
+        if (newIndex !== currentIndex) {
+            setCurrentIndex(newIndex);
+        }
+    }, [initialValue, options, currentIndex]);
 
     const handleMove = (step: number) => {
         const newIndex = updateIndex(step);
