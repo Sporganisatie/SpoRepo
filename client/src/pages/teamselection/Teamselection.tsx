@@ -9,6 +9,7 @@ import RiderTypeTotals from "./RiderTypeTotals";
 import "./teamSelection.css";
 import { useTeamSelection } from "./TeamSelectionHook";
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
+import CountdownClock24H from "./CountdownClock";
 
 const TeamSelection: React.FC = () => {
     document.title = "Team Selectie";
@@ -51,6 +52,7 @@ const TeamSelection: React.FC = () => {
         <div className="teamselection-page">
             {data ? (
                 <div>
+                    <CountdownClock24H targetDate={new Date(data.raceStart)} />
                     <button style={{ width: 100 }} onClick={() => navigate(`/${raceId}/stage/1`)}>
                         Etappe 1
                     </button>

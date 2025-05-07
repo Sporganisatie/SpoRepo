@@ -17,7 +17,9 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
         var allRiders = AllRiders(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
         var allTeams = allRiders.Select(r => r.Details.Team).Distinct().Order();
-        return new(budget, budgetOver, team, allRiders, allTeams);
+        var starttime = DB.Stages.Where(s => s.RaceId == raceId && s.Stagenr == 1).Select(s => s.Starttime)
+            .FirstOrDefault() ?? DateTime.Now.AddDays(10);
+        return new(budget, budgetOver, starttime, team, allRiders, allTeams);
     }
 
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
