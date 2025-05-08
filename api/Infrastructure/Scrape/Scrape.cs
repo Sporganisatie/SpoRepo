@@ -83,7 +83,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
             DB.Stages.Add(finalStage);
         }
         finalStage.Starttime = starttime;
-        finalStage.Type = StageType.ITT;
+        finalStage.Type = StageType.FinalStandings;
 
         return DB.SaveChanges();
     }

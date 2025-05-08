@@ -4347,6 +4347,93 @@
             "NameShort": "N. Debeaumarché",
             "Qualities": [],
             "RiderId": 8010
+        },
+        {
+            "Age": 27,
+            "BirthDate": "1998-02-15T00:00:00",
+            "EventRiderId": 207903,
+            "Price": 750000.0,
+            "Status": 1,
+            "TeamId": 48,
+            "Type": 4,
+            "FirstName": "Luca",
+            "LastName": "Mozzato",
+            "NameShort": "L. Mozzato",
+            "Qualities": [
+                {
+                    "Type": 3,
+                    "Value": 2
+                },
+                {
+                    "Type": 6,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 6974
+        },
+        {
+            "Age": 21,
+            "BirthDate": "2003-07-01T00:00:00",
+            "EventRiderId": 207904,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 42,
+            "Type": 6,
+            "FirstName": "Darren",
+            "LastName": "Rafferty",
+            "NameShort": "D. Rafferty",
+            "Qualities": [],
+            "RiderId": 8017
+        },
+        {
+            "Age": 30,
+            "BirthDate": "1995-02-08T00:00:00",
+            "EventRiderId": 207905,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 42,
+            "Type": 6,
+            "FirstName": "Kasper",
+            "LastName": "Asgreen",
+            "NameShort": "K. Asgreen",
+            "Qualities": [
+                {
+                    "Type": 2,
+                    "Value": 3
+                },
+                {
+                    "Type": 4,
+                    "Value": 1
+                },
+                {
+                    "Type": 5,
+                    "Value": 2
+                },
+                {
+                    "Type": 6,
+                    "Value": 3
+                }
+            ],
+            "RiderId": 5436
+        },
+        {
+            "Age": 24,
+            "BirthDate": "2000-05-15T00:00:00",
+            "EventRiderId": 207906,
+            "Price": 500000.0,
+            "Status": 1,
+            "TeamId": 121,
+            "Type": 6,
+            "FirstName": "Jensen",
+            "LastName": "Plowright",
+            "NameShort": "J. Plowright",
+            "Qualities": [
+                {
+                    "Type": 3,
+                    "Value": 1
+                }
+            ],
+            "RiderId": 7725
         }
     ]
 }
