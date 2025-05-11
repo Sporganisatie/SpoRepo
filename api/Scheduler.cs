@@ -2,6 +2,7 @@ using SpoRE.Infrastructure.Database;
 using System.Timers;
 using Timer = System.Timers.Timer;
 using SpoRE.Infrastructure.Scrape;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpoRE.Setup;
 
@@ -13,7 +14,9 @@ public class Scheduler(IServiceProvider ServiceProvider)
         var DB = scope.ServiceProvider.GetService<DatabaseContext>();
         // race done -> return
 
-        var stage = DB.CurrentStage();
+        var stage = DB.Stages.Include(s => s.Race)
+            .Where(s => s.RaceId != 99 && !s.Race.Finished && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
+
         if (stage?.Starttime is null) return;
 
         if (stage.Starttime > DateTime.UtcNow)
@@ -27,9 +30,6 @@ public class Scheduler(IServiceProvider ServiceProvider)
         await scrape.StageResults(stage);
         ScheduleAction(TimeSpan.FromMinutes(1));
     }
-
-    private void ScheduleAction(DateTime targetDateTime)
-        => ScheduleAction(targetDateTime - DateTime.UtcNow);
 
     private void ScheduleAction(TimeSpan timespan)
     {

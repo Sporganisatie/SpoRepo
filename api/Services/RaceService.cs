@@ -12,9 +12,12 @@ public class RaceService(Userdata User, DatabaseContext DB)
 {
     internal RaceState GetRaceState(int raceId)
     {
-        var participationCount = DB.AccountParticipations.Count(x => x.AccountId == User.Id && x.RaceId == raceId);
-        // if race finished => race samenvatting pagina
-        if (DB.ShowResults(raceId, 1)) return new(RaceStateEnum.Started, DB.CurrentStage(raceId)?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId));
+        if (DB.ShowResults(raceId, 1))
+        {
+            var currentStage = DB.Stages.Where(s => s.RaceId == raceId && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
+            var currentStagenr = currentStage?.Stagenr ?? DB.Stages.Count(s => s.RaceId == raceId);
+            return new(RaceStateEnum.Started, currentStagenr);
+        }
 
         var stateBeforeStart = DB.AccountParticipations.Any(x => x.AccountId == User.Id && x.RaceId == raceId)
                 ? RaceStateEnum.TeamSelection

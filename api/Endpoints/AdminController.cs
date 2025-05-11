@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SpoRE.Attributes;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Infrastructure.Scrape;
@@ -24,12 +25,14 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     {
         if (mostRecentStarted)
         {
-            await Scraper.StageResults(DB.MostRecentStartedStage());
+            var mostRecentStartedStage = DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).ToList().First(s => s.Starttime < DateTime.UtcNow);
+            await Scraper.StageResults(mostRecentStartedStage);
             Scheduler.RunTimer();
         }
         else if (aankomende)
         {
-            await Scraper.StageResults(DB.Aankomende());
+            var aankomendeEtappe = DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).ToList().First(s => !s.Complete);
+            await Scraper.StageResults(aankomendeEtappe);
             Scheduler.RunTimer();
         }
         else await Scraper.StageResults(raceName, year, stagenr);
