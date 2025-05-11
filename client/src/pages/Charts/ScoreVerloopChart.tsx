@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { colors } from './ChartsHelper';
 import SmallSwitch from '../../components/shared/SmallSwitch';
-import { number } from 'zod';
 
 interface ChartData {
     data: any[],
@@ -17,11 +16,10 @@ const ScoreVerloopChart = () => {
     let { raceId } = useParams();
     const budgetParticipation = useBudgetContext();
     const [data, setData] = useState<ChartData>({ data: [], usernames: [] });
-    const [filtered, setFiltered] = useState<any[]>([]);
+    const [filteredData, setFilteredData] = useState<any[]>([]);
     const [positieVerloop, setPositieVerloop] = useState<boolean>(false);
     const [perfectPoints, setPerfectPoints] = useState<boolean>(false);
-    const [toggles, setToggles] = useState<{ username: string, showUser: boolean }[]>([]);
-    const [centerValue, setCenterValue] = useState<string>("Gemiddelde");
+    const [filters, setFilters] = useState<{ toggles: { username: string, showUser: boolean }[], center: string }>({ toggles: [], center: "Gemiddelde" });
 
     useEffect(() => {
         var url = positieVerloop ? "positieVerloop" : perfectPoints ? "perfectScoreVerloop" : "scoreVerloop";
@@ -29,55 +27,77 @@ const ScoreVerloopChart = () => {
             .then(res => {
                 setData({ data: res.data.data, usernames: res.data.users });
                 const toggles = res.data.users.map((username: string) => ({ username, showUser: true }));
-                setToggles(toggles);
-                setFiltered(res.data.data);
+                setFilters({ toggles, center: "Gemiddelde" });
+                setFilteredData(res.data.data);
             })
-            .catch(error => {
-            });
     }, [raceId, budgetParticipation, positieVerloop, perfectPoints]);
 
+    const setToggles = (toggles: any): void => {
+        setFilters((prevfilters) => {
+            return {
+                ...prevfilters,
+                toggles: toggles
+            };
+        })
+    }
+
+    const setCenter = (value: string): void => {
+        setFilters((prevfilters) => {
+            return {
+                ...prevfilters,
+                center: value
+            };
+        })
+    }
 
     const toggleUser = (index: number): void => {
-        setToggles((prevToggles) => {
-            const newToggles = [...prevToggles];
-            newToggles[index].showUser = !newToggles[index].showUser;
-            if (centerValue === newToggles[index].username) {
-                setCenterValue("Gemiddelde");
-            }
-            return newToggles;
-        });
+        const newToggles = filters.toggles;
+        newToggles[index].showUser = !newToggles[index].showUser;
+        if (filters.center === newToggles[index].username) {
+            setFilters({ toggles: newToggles, center: "Gemiddelde" })
+        }
+        else {
+            setToggles(newToggles)
+        }
     }
 
     const toggleAll = (): void => {
-        setToggles((prevToggles) => {
-            const newValue = prevToggles.some(toggle => !toggle.showUser);
-            const newToggles = prevToggles.map(toggle => ({ ...toggle, showUser: newValue }));
-            return newToggles;
-        });
+        const newValue = filters.toggles.some(toggle => !toggle.showUser);
+        const newToggles = filters.toggles.map(toggle => ({ ...toggle, showUser: newValue }));
+        if (!newValue) {
+            setFilters({ toggles: newToggles, center: "Gemiddelde" })
+        }
+        else {
+            setToggles(newToggles)
+        }
     }
 
     const updateFiltered = useCallback(
-        (newToggles: { username: string; showUser: boolean }[]): void => {
+        (): void => {
             const filteredData: any[] = [];
+            if (filters.toggles.every(toggle => !toggle.showUser)) {
+                setFilteredData(filteredData);
+                return;
+            }
             data.data.forEach((scores) => {
                 let total = 0;
                 let min = Number.MAX_VALUE;
                 let max = Number.MIN_VALUE;
                 let userValue = 0;
                 Object.entries(scores).forEach(([key, value], index) => {
-                    if (index > 0 && newToggles[index - 1].showUser) {
+                    if (index > 0 && filters.toggles[index - 1].showUser) {
                         const numericValue = Number.parseInt(`${value}`);
                         total += numericValue;
                         min = Math.min(min, numericValue);
                         max = Math.max(max, numericValue);
-                        if (key === centerValue) {
+                        if (key === filters.center) {
                             userValue = numericValue;
                         }
                     }
                 });
 
-                let offset = Math.floor(total / newToggles.filter((x) => x.showUser).length);
-                switch (centerValue) {
+                let offset = Math.floor(total / filters.toggles.filter((x) => x.showUser).length);
+                switch (filters.center) {
                     case 'Gemiddelde':
                         break;
                     case 'Min':
@@ -98,15 +118,14 @@ const ScoreVerloopChart = () => {
                 newValue.set("Name", scores.Name.toString());
                 filteredData.push(Object.fromEntries(newValue));
             });
-            console.log("filteredData", filteredData);
-            setFiltered(filteredData);
+            setFilteredData(filteredData);
         },
-        [data.data, centerValue, setFiltered]
+        [filters, data.data]
     );
 
     useEffect(() => {
-        updateFiltered(toggles);
-    }, [centerValue, toggles, updateFiltered]);
+        updateFiltered();
+    }, [updateFiltered]);
 
     const togglePositieVerloop = () => {
         setPositieVerloop(!positieVerloop)
@@ -117,10 +136,6 @@ const ScoreVerloopChart = () => {
 
     const togglePerfectPoints = () => {
         setPerfectPoints(!perfectPoints)
-    }
-
-    function setCenter(value: string): void {
-        setCenterValue(value);
     }
 
     return (
@@ -138,18 +153,18 @@ const ScoreVerloopChart = () => {
                 )}
             </div>
             {!positieVerloop && <div>
-                {toggles.map((user, index) => (
+                {filters.toggles.map((user, index) => (
                     <SmallSwitch key={index} text={user.username} selected={user.showUser} index={index} toggleUser={() => toggleUser(index)} />
                 ))}
                 <div style={{ display: 'inline-block', marginLeft: "5px", marginBottom: "5px" }}>
                     <button onClick={toggleAll}>Toggle alle</button>
                 </div>
                 <div style={{ display: 'inline-block', marginLeft: "5px", marginBottom: "5px" }}>
-                    <select value={centerValue} onChange={(e) => setCenter(e.target.value)}>
+                    <select value={filters.center} onChange={(e) => setCenter(e.target.value)}>
                         <option value="Gemiddelde">Gemiddelde</option>
                         <option value="Min">Min</option>
                         <option value="Max">Max</option>
-                        {toggles.filter((user) => user.showUser).map((user, index) => (
+                        {filters.toggles.filter((user) => user.showUser).map((user, index) => (
                             <option key={index} value={user.username}>{user.username}</option>
                         ))}
                     </select>
@@ -159,7 +174,7 @@ const ScoreVerloopChart = () => {
                 <LineChart
                     width={Math.min(data.data.length * 70, 1540)}
                     height={600}
-                    data={filtered}>
+                    data={filteredData}>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <XAxis dataKey="Name" >
                         <Label
@@ -193,7 +208,7 @@ const ScoreVerloopChart = () => {
                         wrapperStyle={{ marginTop: -10 }}
                     />
                     {data.usernames.map((username: string, index) => ({ username, index }))
-                        .filter((_, index) => toggles.at(index)?.showUser).map(user => (
+                        .filter((_, index) => filters.toggles.at(index)?.showUser).map(user => (
                             <Line
                                 key={user.index}
                                 type="linear"
