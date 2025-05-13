@@ -6,7 +6,7 @@ export function useRiderPage(riderId?: string) {
     throw new Error("Expected riderId");
   }
 
-  const { data: riderInfo } = useQuery({
+  const { data: rider } = useQuery({
     queryKey: ["stage", riderId],
     queryFn: () => fetchRiderInfo(riderId),
     staleTime: 10000,
@@ -27,5 +27,5 @@ export function useRiderPage(riderId?: string) {
       });
   }
 
-  return riderInfo;
+  return rider;
 }
