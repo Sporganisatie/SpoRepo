@@ -1,7 +1,7 @@
 import { RouterProvider, useParams } from "react-router-dom";
 import Layout from "./components/Layout";
 import "./index.css";
-import { StrictMode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { setupAxiosInterceptor } from "./AxiosInterceptor";
 import { useNavigate } from "react-router-dom";
 import router from "./Pages";
@@ -13,13 +13,11 @@ const queryClient = new QueryClient();
 
 export default function App() {
     return (
-        <StrictMode>
-            <RaceStateProvider>
-                <QueryClientProvider client={queryClient}>
-                    <RouterProvider router={router} />
-                </QueryClientProvider>
-            </RaceStateProvider>
-        </StrictMode>
+        <RaceStateProvider>
+            <QueryClientProvider client={queryClient}>
+                <RouterProvider router={router} />
+            </QueryClientProvider>
+        </RaceStateProvider>
     );
 }
 

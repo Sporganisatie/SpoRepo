@@ -7,23 +7,20 @@ public partial class StatisticsService
 {
     public UniekheidResponse Uniekheid(int raceId, bool budgetParticipation)
     {
-        var participants = DB.AccountParticipations.Count(x => x.RaceId == raceId && x.BudgetParticipation == budgetParticipation) - 1;
+        double participants = DB.AccountParticipations.Count(x => x.RaceId == raceId && x.BudgetParticipation == budgetParticipation);
+
+        var budget = DB.RaceBudget(raceId, budgetParticipation) / 100;
 
         var counts = from rp in DB.RiderParticipations
-                     join tsr in DB.TeamSelections on rp.RiderParticipationId equals tsr.RiderParticipationId
-                     join ap in DB.AccountParticipations on tsr.AccountParticipationId equals ap.AccountParticipationId
+                     join ts in DB.TeamSelections.Include(ts => ts.AccountParticipation.Account).Where(ts => ts.AccountParticipation.BudgetParticipation == budgetParticipation) on rp.RiderParticipationId equals ts.RiderParticipationId
                      where DB.TeamSelections.Select(x => x.RiderParticipationId).Contains(rp.RiderParticipationId)
-                         && ap.BudgetParticipation == budgetParticipation
-                     group new { rp, tsr } by rp.RiderParticipationId into grp
+                     group new { rp, ts } by rp.RiderParticipationId into grp
                      select new
                      {
                          rpId = grp.Key,
-                         Selected = grp.Count() - 1,
-                         grp.First().rp.Price,
-                         grp.First().rp.Dnf,
+                         Uniekheid = (participants - grp.Count()) * grp.First().rp.Price / budget / (participants - 1),
+                         grp.First().rp.Dnf
                      };
-
-        var budget = DB.RaceBudget(raceId, budgetParticipation) / 100;
 
         var uniekheden = (from ap in DB.Accpars.Where(ap => ap.RaceId == raceId && ap.BudgetParticipation == budgetParticipation)
                           join ts in DB.TeamSelections.Include(ts => ts.AccountParticipation.Account) on ap.AccountParticipationId equals ts.AccountParticipationId
@@ -32,14 +29,27 @@ public partial class StatisticsService
                           select new
                           {
                               User = g.Key.Username,
-                              Start = g.Sum(x => x.rider.Price * (participants - x.rider.Selected)) / budget / participants,
-                              Huidig = g.Where(x => !x.rider.Dnf).Sum(x => x.rider.Price * (participants - x.rider.Selected)) / budget / participants
+                              Start = Math.Round(g.Sum(x => x.rider.Uniekheid), 1),
+                              Huidig = Math.Round(g.Where(x => !x.rider.Dnf).Sum(x => x.rider.Uniekheid), 1),
                           }).ToList();
+
+        var renners = (from rp in DB.RiderParticipations.Include(rp => rp.Rider).Where(rp => rp.RaceId == raceId && rp.Price <= (budgetParticipation ? 750000 : int.MaxValue))
+                       join rider in DB.Riders on rp.RiderId equals rider.RiderId
+                       join ts in DB.TeamSelections.Include(ts => ts.AccountParticipation.Account).Where(ts => ts.AccountParticipation.BudgetParticipation == budgetParticipation) on rp.RiderParticipationId equals ts.RiderParticipationId
+                       group new { rp, rider, ts } by rp into g
+                       select new
+                       {
+                           RiderParticipation = g.Key,
+                           Rider = g.Select(x => x.rider).First(),
+                           Uniekheid = Math.Round((participants - g.Count()) * g.Key.Price / budget / (participants - 1), 1),
+                           Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct(),
+                           g.First().rp.Dnf
+                       }).ToList();
 
         var start = uniekheden.Select(x => new UniekheidRow(x.User, x.Start)).OrderByDescending(x => x.Uniekheid);
         var huidig = uniekheden.Select(x => new UniekheidRow(x.User, x.Huidig)).OrderByDescending(x => x.Uniekheid);
 
-        return new(start, huidig);
+        return new(start, huidig, renners.Select(x => new UniekheidRennerRow(x.RiderParticipation, x.Uniekheid, x.Accounts)).OrderByDescending(x => x.Uniekheid));
     }
 
     public OverlapResponse Overlap(int raceId, bool budgetParticipation)
@@ -78,9 +88,11 @@ public partial class StatisticsService
         public IEnumerable<RiderParticipation> Renners { get; set; }
     }
 }
-public record UniekheidRow(string User, int Uniekheid);
+public record UniekheidRow(string User, double Uniekheid);
 
-public record UniekheidResponse(IEnumerable<UniekheidRow> Start, IEnumerable<UniekheidRow> Huidig);
+public record UniekheidRennerRow(RiderParticipation RiderParticipation, double Uniekheid, IEnumerable<string> Accounts);
+
+public record UniekheidResponse(IEnumerable<UniekheidRow> Start, IEnumerable<UniekheidRow> Huidig, IEnumerable<UniekheidRennerRow> Renners);
 
 public record OverlapRow(string User, Dictionary<string, int> Overlaps);
 

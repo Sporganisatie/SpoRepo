@@ -9,8 +9,8 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(Configuration.Value.DbConnectionString);
-        // optionsBuilder.EnableSensitiveDataLogging(); // TODO only when localdev
-        // optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information); // TODO only when localdev
+        optionsBuilder.EnableSensitiveDataLogging(); // TODO only when localdev
+        optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information); // TODO only when localdev
     }
 
     public DbSet<Account> Accounts { get; set; }

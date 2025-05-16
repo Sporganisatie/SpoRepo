@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
 import UniekheidTable, { UniekheidRow } from "./UniekheidTable";
+import UniekheidRennersTable, { UniekheidRennerRow } from "./UniekheidRennersTable";
 
 export type UniekheidData = {
     start: UniekheidRow[];
     huidig: UniekheidRow[];
+    renners: UniekheidRennerRow[];
 };
 
 const Uniekheid = () => {
@@ -14,7 +16,7 @@ const Uniekheid = () => {
 
     let { raceId } = useParams();
     const budgetParticipation = useBudgetContext();
-    const [data, setData] = useState<UniekheidData>({ start: [], huidig: [] });
+    const [data, setData] = useState<UniekheidData>({ start: [], huidig: [], renners: [] });
 
     useEffect(() => {
         axios
@@ -33,6 +35,9 @@ const Uniekheid = () => {
         <div style={{ gap: "10px", display: "flex" }}>
             <UniekheidTable title="Aan de start" data={data.start} />
             <UniekheidTable title="Nu" data={data.huidig} />
+            <div style={{ marginLeft: "200px" }}>
+                <UniekheidRennersTable title="Uniekheid Renners" data={data.renners} />
+            </div>
         </div>
     )
 }
