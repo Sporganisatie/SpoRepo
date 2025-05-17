@@ -47,12 +47,12 @@ public partial class StageResultService
 
     public Classifications GetClassifications(Stage stage, bool top5, int? selectingStage = null)
     {
-        var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
+        var teamSelection = DB.AccountParticipations.Include(ap => ap.RiderParticipations).Single(ap => ap.AccountParticipationId == User.ParticipationId).RiderParticipations.ToList();
         var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == (selectingStage ?? stage.Stagenr) && ssr.StageSelection.Stage.RaceId == stage.RaceId)
                 .Select(ssr => ssr.RiderParticipationId).ToList();
         var riderResults = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider)
             .Where(rp => rp.StageId == stage.StageId).ToList()
-            .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection)));
+            .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection.Select(rp => rp.RiderParticipationId).ToList())));
 
         var stageResult = GetClassification(riderResults, "Stage", top5);
         var gcStandings = GetClassification(riderResults, "Gc", top5);

@@ -70,12 +70,13 @@ public class RaceService(Userdata User, DatabaseContext DB)
 
     public TeamSelections AllTeamSelections(int raceId, bool budgetParticipation)
     {
-        var teamSelection = DB.TeamSelections.Where(ts => ts.AccountParticipationId == User.ParticipationId).Select(ts => ts.RiderParticipationId).ToList();
+        var teamSelection = DB.AccountParticipations.Include(ap => ap.RiderParticipations).Single(ts => ts.AccountParticipationId == User.ParticipationId).RiderParticipations
+            .Select(rp => rp.RiderParticipationId).ToList();
         var users = DB.AccountParticipations.Include(ap => ap.Account).Where(ap => ap.RaceId == raceId && ap.BudgetParticipation == budgetParticipation).Select(ss => new { ss.AccountParticipationId, ss.Account.Username }).ToList();
         var output = new List<UserSelection>();
         foreach (var user in users)
-        {
-            var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider).Where(ts => ts.AccountParticipationId == user.AccountParticipationId)
+        { // TODO dit kan veel beter
+            var query = from ripa in DB.AccountParticipations.Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.Rider).AsNoTracking().Single(ts => ts.AccountParticipationId == user.AccountParticipationId).RiderParticipations
                         join rp in
                         from rp in DB.ResultsPoints.Include(rp => rp.RiderParticipation.Rider)
                         join ssr in DB.StageSelectionRiders on rp.RiderParticipationId equals ssr.RiderParticipationId
@@ -86,14 +87,14 @@ public class RaceService(Userdata User, DatabaseContext DB)
                         {
                             RiderParticipation = g.Key,
                             TotalScore = (int?)g.Sum(item => item.KopmanId == item.rp.RiderParticipationId ? item.rp.Totalscore + item.rp.StageScore * 0.5 : item.rp.Totalscore) - (budgetParticipation ? g.Sum(item => item.rp.Teamscore) : 0),
-                        } on ts.RiderParticipationId equals rp.RiderParticipation.RiderParticipationId into results
+                        } on ripa.RiderParticipationId equals rp.RiderParticipation.RiderParticipationId into results
                         from rp in results.DefaultIfEmpty()
                         select new StageComparisonRider
                         {
-                            Rider = ts.RiderParticipation.Rider,
+                            Rider = ripa.Rider,
                             TotalScore = rp == null ? 0 : (rp.TotalScore ?? 0),
-                            Selected = teamSelection.Contains(ts.RiderParticipationId) ? StageSelectedEnum.InStageSelection : StageSelectedEnum.None,
-                            Dnf = ts.RiderParticipation.Dnf
+                            Selected = teamSelection.Contains(ripa.RiderParticipationId) ? StageSelectedEnum.InStageSelection : StageSelectedEnum.None,
+                            Dnf = ripa.Dnf
                         };
 
             var riderScores = query.ToList().OrderByDescending(x => x.TotalScore);

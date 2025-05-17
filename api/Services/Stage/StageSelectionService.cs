@@ -29,20 +29,16 @@ public class StageSelectionService(DatabaseContext DB, Userdata User, StageResul
 
     private List<StageSelectableRider> GetTeam(int stagenr)
     {
-        var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr)
-            .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { ssr.RiderParticipationId, Kopman = ss.KopmanId == ssr.RiderParticipationId });
+        var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr) // Todo aanpasssen naar include virtual
+            .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { ssr.RiderParticipationId, Kopman = ss.KopmanId == ssr.RiderParticipationId }).AsNoTracking().ToList();
 
-        var team = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
-                   let ap = ts.AccountParticipation
-                   let selected = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId)
-                   let isKopman = stageSelection.Any(ss => ss.RiderParticipationId == ts.RiderParticipationId && ss.Kopman)
-                   where ap.AccountParticipationId == User.ParticipationId
-                   select new StageSelectableRider(
-                    ts.RiderParticipation,
-                    selected,
-                    isKopman);
+        return DB.AccountParticipations.Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.Rider).AsNoTracking()
+            .Single(ap => ap.AccountParticipationId == User.ParticipationId).RiderParticipations
+            .Select(rp => new StageSelectableRider(
+                    rp,
+                    stageSelection.Any(ss => ss.RiderParticipationId == rp.RiderParticipationId),
+                    stageSelection.Any(ss => ss.RiderParticipationId == rp.RiderParticipationId && ss.Kopman))).ToList();
 
-        return team.ToList();
     }
 
     internal int AddRider(int riderParticipationId, int stagenr)

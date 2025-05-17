@@ -8,7 +8,7 @@ public static class HelperFunctions
     public static TeamSelections OrderSelectedRiders(List<UserSelection> selecties)
     {
         var riders = selecties.SelectMany(selection => selection.Riders.Select(rider => (selection.Username, rider)))
-            .GroupBy(x => x.rider.Rider).Select(g => g.ToList())
+            .GroupBy(x => x.rider.Rider.RiderId).Select(g => g.ToList())
             .OrderByDescending(rider => rider.Count)
             .ThenByDescending(rider => rider.Max(u => u.rider.TotalScore)).ToList();
 
@@ -16,7 +16,7 @@ public static class HelperFunctions
 
         var reorderedRiders = new List<List<(string, StageComparisonRider)>>();
 
-        while (riders.Any())
+        while (riders.Count != 0)
         {
             var riderLine = new List<(string, StageComparisonRider)>();
             while (riderLine.Count < selecties.Count)

@@ -19,8 +19,6 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
 
     public virtual DbSet<Accpar> Accpars { get; set; }
 
-    public DbSet<TeamSelection> TeamSelections { get; set; }
-
     public DbSet<AccountToken> AccountTokens { get; set; }
 
     public DbSet<Race> Races { get; set; }
@@ -103,6 +101,26 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
                 .HasColumnName("finalscore");
             entity.Property(e => e.RaceId).HasColumnName("race_id");
 
+            entity
+                .HasMany(ap => ap.RiderParticipations)
+                .WithMany(rp => rp.AccountParticipations)
+                .UsingEntity<Dictionary<string, object>>(
+                    "team_selection_rider", // Name of the join table
+                    j => j.HasOne<RiderParticipation>()
+                          .WithMany()
+                          .HasForeignKey("rider_participation_id") // Actual column name in the database
+                          .HasConstraintName("team_selection_rider_rider_participation_id_fkey"),
+                    j => j.HasOne<AccountParticipation>()
+                          .WithMany()
+                          .HasForeignKey("account_participation_id") // Actual column name in the database
+                          .HasConstraintName("team_selection_rider_account_participation_id_fkey"),
+                    j =>
+                    {
+                        j.HasKey("account_participation_id", "rider_participation_id") // Composite primary key
+                         .HasName("team_selection_rider_pkey");
+                        j.ToTable("team_selection_rider"); // Ensure the table name matches the database
+                    });
+
             // entity.HasOne(d => d.Account).WithMany(p => p.AccountParticipations)
             //     .HasForeignKey(d => d.AccountId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -112,28 +130,6 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             //     .HasForeignKey(d => d.RaceId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
             //     .HasConstraintName("account_participation_race_id_fkey");
-        });
-
-        modelBuilder.Entity<TeamSelection>(entity =>
-        {
-            entity.HasKey(e => new { e.AccountParticipationId, e.RiderParticipationId }).HasName("team_selection_rider_pkey");
-
-            entity.ToTable("team_selection_rider");
-
-            entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
-            entity.Property(e => e.RiderParticipationId).HasColumnName("rider_participation_id");
-
-            // entity.HasOne(d => d.AccountParticipation).WithMany(p => p.TeamSelections)
-            //     .HasForeignKey(d => d.AccountParticipationId)
-            //         .OnDelete(DeleteBehavior.ClientSetNull)
-            //         .HasConstraintName("team_selection_rider_account_participation_id_fkey");
-
-
-            // entity.HasOne(d => d.RiderParticipation).WithMany(p => p.TeamSelections)
-            //     .HasForeignKey(d => d.RiderParticipationId)
-            //     .OnDelete(DeleteBehavior.ClientSetNull)
-            //     .HasConstraintName("team_selection_rider_rider_participation_id_fkey");
-            // TODO IndexerProperty investigate
         });
 
         modelBuilder.Entity<AccountToken>(entity =>

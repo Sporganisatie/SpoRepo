@@ -9,76 +9,59 @@ public partial class StatisticsService(DatabaseContext DB)
 
     public IEnumerable<UitvallersData> Uitvallers(int raceId, bool budgetParticipation)
     {
-        var query = from ts in DB.TeamSelections.Include(ts => ts.AccountParticipation.Account).Include(ts => ts.RiderParticipation)
-                    where ts.RiderParticipation.Dnf && ts.AccountParticipation.RaceId == raceId && ts.AccountParticipation.BudgetParticipation == budgetParticipation
-                    group ts by ts.AccountParticipation.Account.Username into g
-                    select new UitvallersData(g.Key, g.Count(), g.Sum(ts => ts.RiderParticipation.Price));
+        var query = DB.AccountParticipations.Include(ap => ap.Account).Include(ap => ap.RiderParticipations).AsNoTracking()
+            .Where(ap => ap.RaceId == raceId && ap.BudgetParticipation == budgetParticipation)
+            .Select(ap => new UitvallersData(
+                ap.Account.Username,
+                ap.RiderParticipations.Count(rp => rp.Dnf),
+                ap.RiderParticipations.Where(rp => rp.Dnf).Sum(rp => rp.Price)));
 
         return query.ToList().OrderByDescending(x => x.Uitvallers).ThenByDescending(x => x.UitvallerBudget);
     }
 
-    public object Klassementen(int raceId, bool budgetParticipation)
+    public List<List<KlassementData>> Klassementen(int raceId, bool budgetParticipation)
     {
         var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).FirstOrDefault(s => s.Finished && s.RaceId == raceId);
-        var gcQuery = (from points in DB.ResultsPoints.Where(points => points.StageId == mostRecentFinished.StageId)
-                       join ts in DB.TeamSelections.Where(ts => ts.AccountParticipation.BudgetParticipation == budgetParticipation) on points.RiderParticipationId equals ts.RiderParticipationId into tsGroup
-                       from ts in tsGroup.DefaultIfEmpty()
-                       where points.Gc.Position > 0
-                       group new { points, ts } by points into g
-                       orderby g.First().points.Gc.Position
-                       select new
-                       {
-                           g.Key.Gc.Position,
-                           g.Key.Gc.Result,
-                           g.First().points.RiderParticipation.Rider,
-                           g.First().points.RiderParticipation.Price,
-                           Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
-                       }).Take(20).ToList();
+        var baseQuery = DB.ResultsPoints
+            .Include(rp => rp.RiderParticipation).ThenInclude(rp => rp.Rider)
+            .Include(rp => rp.RiderParticipation).ThenInclude(rp => rp.AccountParticipations)
+            .AsNoTracking()
+            .Where(rp => rp.StageId == mostRecentFinished.StageId)
+            .Select(rp => new BaseQueryResult(
+                rp.RiderParticipation.Rider,
+                rp.Gc,
+                rp.Points,
+                rp.Kom,
+                rp.Youth,
+                rp.RiderParticipation.AccountParticipations.Where(ap => ap.BudgetParticipation == budgetParticipation).Select(x => x.Account.Username))
+            ).ToList();
 
-        var PointsQuery = (from points in DB.ResultsPoints.Where(points => points.StageId == mostRecentFinished.StageId)
-                           join ts in DB.TeamSelections.Where(ts => ts.AccountParticipation.BudgetParticipation == budgetParticipation) on points.RiderParticipationId equals ts.RiderParticipationId into tsGroup
-                           from ts in tsGroup.DefaultIfEmpty()
-                           where points.Points.Position > 0
-                           group new { points, ts } by points into g
-                           orderby g.First().points.Points.Position
-                           select new
-                           {
-                               g.Key.Points.Position,
-                               g.Key.Points.Result,
-                               g.First().points.RiderParticipation.Rider,
-                               g.First().points.RiderParticipation.Price,
-                               Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
-                           }).Take(20).ToList();
+        var gcQuery = GetKlassement(baseQuery, rp => rp.Gc);
+        var pointsQuery = GetKlassement(baseQuery, rp => rp.Points);
+        var komQuery = GetKlassement(baseQuery, rp => rp.Kom);
+        var youthQuery = GetKlassement(baseQuery, rp => rp.Youth);
 
-        var KomQuery = (from points in DB.ResultsPoints.Where(points => points.StageId == mostRecentFinished.StageId)
-                        join ts in DB.TeamSelections.Where(ts => ts.AccountParticipation.BudgetParticipation == budgetParticipation) on points.RiderParticipationId equals ts.RiderParticipationId into tsGroup
-                        from ts in tsGroup.DefaultIfEmpty()
-                        where points.Kom.Position > 0
-                        group new { points, ts } by points into g
-                        orderby g.First().points.Kom.Position
-                        select new
-                        {
-                            g.Key.Kom.Position,
-                            g.Key.Kom.Result,
-                            g.First().points.RiderParticipation.Rider,
-                            g.First().points.RiderParticipation.Price,
-                            Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
-                        }).Take(20).ToList();
-
-        var YouthQuery = (from points in DB.ResultsPoints.Where(points => points.StageId == mostRecentFinished.StageId)
-                          join ts in DB.TeamSelections.Where(ts => ts.AccountParticipation.BudgetParticipation == budgetParticipation) on points.RiderParticipationId equals ts.RiderParticipationId into tsGroup
-                          from ts in tsGroup.DefaultIfEmpty()
-                          where points.Youth.Position > 0
-                          group new { points, ts } by points into g
-                          orderby g.First().points.Youth.Position
-                          select new
-                          {
-                              g.Key.Youth.Position,
-                              g.Key.Youth.Result,
-                              g.First().points.RiderParticipation.Rider,
-                              g.First().points.RiderParticipation.Price,
-                              Accounts = g.Select(x => x.ts.AccountParticipation.Account.Username).Distinct()
-                          }).Take(20).ToList();
-        return new object[4] { gcQuery, PointsQuery, KomQuery, YouthQuery };
+        return [gcQuery, pointsQuery, komQuery, youthQuery];
     }
+
+    private static List<KlassementData> GetKlassement(List<BaseQueryResult> baseQuery, Func<BaseQueryResult, BaseResult> selector)
+    {
+        return baseQuery.Where(rp => selector(rp) is { Position: > 0 })
+            .Select(rp => new KlassementData(selector(rp).Position.Value, selector(rp).Result, rp.Rider, rp.Accounts))
+            .OrderBy(rp => rp.Position).Take(20).ToList();
+    }
+
+    private record BaseQueryResult(
+        Rider Rider,
+        BaseResult Gc,
+        BaseResult Points,
+        BaseResult Kom,
+        BaseResult Youth,
+        IEnumerable<string> Accounts);
 }
+
+public record KlassementData(
+    int Position,
+    string Result,
+    Rider Rider,
+    IEnumerable<string> Accounts);

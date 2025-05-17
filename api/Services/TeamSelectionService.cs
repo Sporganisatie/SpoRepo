@@ -13,7 +13,9 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
         var budget = DB.RaceBudget(raceId, budgetParticipation);
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
-        var team = GetTeam().OrderBy(x => x.Type).ThenByDescending(x => x.Price).ThenBy(x => x.Rider.Lastname);
+        var team = DB.AccountParticipations.Include(ap => ap.RiderParticipations).AsNoTracking()
+            .Single(ap => ap.AccountParticipationId == User.ParticipationId).RiderParticipations
+            .OrderBy(x => x.Type).ThenByDescending(x => x.Price).ThenBy(x => x.Rider.Lastname);
         var allRiders = AllRiders(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
         var budgetOver = budget - team.Sum(x => x.Price);
         var allTeams = allRiders.Select(r => r.Details.Team).Distinct().Order();
@@ -29,17 +31,13 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
     public int AddRider(int riderParticipationId, int raceId, bool budgetParticipation)
     {
         var budget = DB.RaceBudget(raceId, budgetParticipation);
-        var team = GetTeam();
-        var toAdd = DB.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId && rp.RaceId == raceId);
+        var team = DB.AccountParticipations.Include(ap => ap.RiderParticipations)
+            .Single(ap => ap.AccountParticipationId == User.ParticipationId);
+        var toAdd = DB.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId);
 
-        if (Selectable(team, budget, toAdd) is SelectableEnum.Open)
+        if (Selectable(team.RiderParticipations, budget, toAdd) is SelectableEnum.Open)
         {
-            DB.TeamSelections.Add(
-                new()
-                {
-                    RiderParticipationId = riderParticipationId,
-                    AccountParticipationId = User.ParticipationId
-                });
+            team.RiderParticipations.Add(toAdd);
             return DB.SaveChanges();
         }
         return 0; // TODO error?
@@ -69,23 +67,24 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
             .Where(sr => sr.StageSelection.AccountParticipationId == User.ParticipationId && sr.RiderParticipationId == riderParticipationId);
         DB.StageSelectionRiders.RemoveRange(selectionRiders);
 
-        DB.TeamSelections.Remove(new() { RiderParticipationId = riderParticipationId, AccountParticipationId = User.ParticipationId });
+        var team = DB.AccountParticipations.Include(ap => ap.RiderParticipations)
+            .Single(ap => ap.AccountParticipationId == User.ParticipationId);
+        var toRemove = team.RiderParticipations
+            .SingleOrDefault(rp => rp.RiderParticipationId == riderParticipationId);
+
+        if (toRemove != null)
+        {
+            team.RiderParticipations.Remove(toRemove);
+        }
+        // TODO testen of dit werkt en maar 1 query gebruikt
+        //         var team = DB.AccountParticipations.Where(ap => ap.AccountParticipationId == User.ParticipationId)
+        // .Update(ap => ap.RiderParticipations.Remove(ap.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId)));
 
         DB.StageSelections
             .Where(s => s.AccountParticipationId == User.ParticipationId && s.KopmanId == riderParticipationId)
             .Update(s => new StageSelectie { KopmanId = null });
 
         return DB.SaveChanges();
-    }
-
-    internal IEnumerable<RiderParticipation> GetTeam()
-    {
-        var query = from ts in DB.TeamSelections.Include(ts => ts.RiderParticipation.Rider)
-                    let ap = ts.AccountParticipation
-                    where ap.AccountParticipationId == User.ParticipationId
-                    orderby ts.RiderParticipation.Price descending
-                    select ts.RiderParticipation;
-        return query.ToList();
     }
 
     internal List<RiderParticipation> AllRiders(int raceId, int maxPrice)

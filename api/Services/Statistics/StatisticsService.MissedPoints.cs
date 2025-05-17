@@ -14,19 +14,15 @@ public record PointsData(int Id, int? Stage, int Total);
 public partial class StatisticsService
 {
     internal IEnumerable<MissedPointsTable> MissedPoints(int raceId, bool budgetParticipation)
-        => DB.AccountParticipations.Include(ss => ss.Account)
+        => DB.AccountParticipations.Include(ss => ss.Account).Include(ap => ap.RiderParticipations).AsNoTracking()
             .Where(ss => ss.RaceId == raceId && ss.BudgetParticipation == budgetParticipation).ToList()
             .Select(MissedPointsUser).ToList();
 
     public MissedPointsTable MissedPointsUser(AccountParticipation user)
     {
-        var teamSelection = DB.TeamSelections
-            .Where(tsr => tsr.AccountParticipationId == user.AccountParticipationId)
-            .Select(tsr => tsr.RiderParticipationId).ToList();
-
         var ridersResults = DB.ResultsPoints
             .Join(DB.Stages, rp => rp.StageId, s => s.StageId, (rp, s) => new { Result = rp, Stage = s })
-            .Where(joinedData => teamSelection.Contains(joinedData.Result.RiderParticipationId))
+            .Where(joinedData => user.RiderParticipations.Select(rp => rp.RiderParticipationId).Contains(joinedData.Result.RiderParticipationId))
             .GroupBy(joinedData => joinedData.Stage.Stagenr)
             .Select(groupedData => new
             {
