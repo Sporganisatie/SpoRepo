@@ -16,9 +16,7 @@ public class StageSelectie
 
     public virtual AccountParticipation AccountParticipation { get; set; }
 
-    public virtual RiderParticipation Kopman { get; set; }
-
     public virtual Stage Stage { get; set; }
 
-    // public virtual ICollection<StageSelectionRider> StageSelectionRiders { get; } = new List<StageSelectionRider>();
+    public virtual ICollection<RiderParticipation> RiderParticipations { get; } = [];
 }

@@ -22,22 +22,20 @@ public partial class StageResultService
 
     private IEnumerable<RiderScore> GetRiderScores(Stage stage, bool budgetParticipation)
     {
-        var query = from ssr in DB.StageSelectionRiders.Include(ssr => ssr.RiderParticipation.Rider)
-                    join rp in DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId) on ssr.RiderParticipationId equals rp.RiderParticipationId into results
-                    from rp in results.DefaultIfEmpty()
-                    where ssr.StageSelection.StageId == stage.StageId && ssr.StageSelection.AccountParticipationId == User.ParticipationId
-                    select new RiderScore
-                    {
-                        Rider = ssr.RiderParticipation.Rider,
-                        Kopman = ssr.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0),
-                        StagePos = rp.StagePos,
-                        StageScore = (rp.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0) ? (int)(rp.StageScore * 1.5) : rp.StageScore) ?? 0,
-                        ClassificationScore = rp.Gc.Score + rp.Points.Score + rp.Kom.Score + rp.Youth.Score ?? 0,
-                        TeamScore = budgetParticipation ? 0 : rp.Teamscore ?? 0,
-                        TotalScore = ((budgetParticipation ? (rp.Totalscore - rp.Teamscore) : rp.Totalscore) ?? 0) + (rp.RiderParticipationId == (ssr.StageSelection.KopmanId ?? 0) ? (int)(rp.StageScore * 0.5) : 0)
-                    };
+        var stageSelection = DB.StageSelections.Include(ap => ap.RiderParticipations)
+            .Single(ap => ap.AccountParticipationId == User.ParticipationId && ap.StageId == stage.StageId);
 
-        return query.ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
+        return DB.ResultsPoints.Where(rp => stageSelection.RiderParticipations.Contains(rp.RiderParticipation) && rp.StageId == stage.StageId)
+            .Select(rp => new RiderScore
+            {
+                Rider = rp.RiderParticipation.Rider,
+                Kopman = rp.RiderParticipationId == (stageSelection.KopmanId ?? 0),
+                StagePos = rp.StagePos,
+                StageScore = (rp.RiderParticipationId == (stageSelection.KopmanId ?? 0) ? (int)(rp.StageScore * 1.5) : rp.StageScore) ?? 0,
+                ClassificationScore = rp.Gc.Score + rp.Points.Score + rp.Kom.Score + rp.Youth.Score ?? 0,
+                TeamScore = budgetParticipation ? 0 : rp.Teamscore ?? 0,
+                TotalScore = (int)((rp.RiderParticipationId == (stageSelection.KopmanId ?? 0) ? rp.StageScore * 0.5 : 0) + rp.Totalscore - (budgetParticipation ? rp.Teamscore : 0))
+            }).ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
     }
 
     public IEnumerable<UserScore> GetUserScores(Stage stage, bool budgetParticipation)
@@ -48,8 +46,9 @@ public partial class StageResultService
     public Classifications GetClassifications(Stage stage, bool top5, int? selectingStage = null)
     {
         var teamSelection = DB.AccountParticipations.Include(ap => ap.RiderParticipations).Single(ap => ap.AccountParticipationId == User.ParticipationId).RiderParticipations.ToList();
-        var stageSelection = DB.StageSelectionRiders.Where(ssr => ssr.StageSelection.AccountParticipationId == User.ParticipationId && ssr.StageSelection.Stage.Stagenr == (selectingStage ?? stage.Stagenr) && ssr.StageSelection.Stage.RaceId == stage.RaceId)
-                .Select(ssr => ssr.RiderParticipationId).ToList();
+        var stageSelection = DB.StageSelections.Include(ap => ap.RiderParticipations)
+            .Single(ap => ap.AccountParticipationId == User.ParticipationId && ap.Stage.Stagenr == (selectingStage ?? stage.Stagenr))
+            .RiderParticipations.Select(ssr => ssr.RiderParticipationId).ToList();
         var riderResults = DB.ResultsPoints.AsNoTracking().Include(rp => rp.RiderParticipation.Rider)
             .Where(rp => rp.StageId == stage.StageId).ToList()
             .Select(rp => (rp, GetStageSelectedEnum(rp.RiderParticipationId, stageSelection, teamSelection.Select(rp => rp.RiderParticipationId).ToList())));

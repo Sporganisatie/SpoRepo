@@ -22,61 +22,52 @@ public class StageSelectionService(DatabaseContext DB, Userdata User, StageResul
     private int? OpstellingCompleet(int raceId, int stagenr, bool budget)
     {
         if (budget && User.Id > 5) return null;
-        var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipation.AccountId == User.Id && ss.AccountParticipation.BudgetParticipation == budget && ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr)
-            .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { Kopman = ss.KopmanId == ssr.RiderParticipationId }).ToList();
-        return stageSelection.Count + (stageSelection.Any(r => r.Kopman) ? 1 : 0);
+        var stageSelection = DB.StageSelections.Include(ss => ss.RiderParticipations)
+        .Single(ss => ss.AccountParticipation.AccountId == User.Id && ss.AccountParticipation.BudgetParticipation == budget && ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr);
+        return stageSelection.RiderParticipations.Count + (stageSelection.KopmanId is not null ? 1 : 0);
     }
 
     private List<StageSelectableRider> GetTeam(int stagenr)
     {
-        var stageSelection = DB.StageSelections.Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr) // Todo aanpasssen naar include virtual
-            .Join(DB.StageSelectionRiders, ss => ss.StageSelectionId, ssr => ssr.StageSelectionId, (ss, ssr) => new { ssr.RiderParticipationId, Kopman = ss.KopmanId == ssr.RiderParticipationId }).AsNoTracking().ToList();
+        var stageSelection = DB.StageSelections.Include(ss => ss.RiderParticipations).Single(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr);
 
         return DB.AccountParticipations.Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.Rider).AsNoTracking()
             .Single(ap => ap.AccountParticipationId == User.ParticipationId).RiderParticipations
             .Select(rp => new StageSelectableRider(
                     rp,
-                    stageSelection.Any(ss => ss.RiderParticipationId == rp.RiderParticipationId),
-                    stageSelection.Any(ss => ss.RiderParticipationId == rp.RiderParticipationId && ss.Kopman))).ToList();
-
+                    stageSelection.RiderParticipations.Contains(rp),
+                    stageSelection.KopmanId == rp.RiderParticipationId)).ToList();
     }
 
     internal int AddRider(int riderParticipationId, int stagenr)
     {
-        var stageSelectionId = DB.StageSelections
-            .Where(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr)
-            .Select(ss => ss.StageSelectionId)
-            .FirstOrDefault();
+        var stageSelection = DB.StageSelections.Include(ss => ss.RiderParticipations).Single(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr);
 
-        if (DB.StageSelectionRiders.Count(ssr => ssr.StageSelectionId == stageSelectionId) >= 9) return 0;
-        DB.StageSelectionRiders.Add(
-            new()
-            {
-                RiderParticipationId = riderParticipationId,
-                StageSelectionId = stageSelectionId
-            });
+        if (stageSelection.RiderParticipations.Count >= 9) return 0;
+
+        var riderToAdd = DB.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId);
+        stageSelection.RiderParticipations.Add(riderToAdd);
+
         return DB.SaveChanges();  // TODO handle errors and return Result<T>
     }
 
     internal int SetKopman(int riderParticipationId, int stagenr)
     {
-        if (DB.StageSelectionRiders.Count(ssr =>
-            ssr.StageSelection.AccountParticipationId == User.ParticipationId
-            && ssr.StageSelection.Stage.Stagenr == stagenr
-            && ssr.RiderParticipationId == riderParticipationId) != 1) return 0;
-        var stageSelection = DB.StageSelections.Single(ss => ss.Stage.Stagenr == stagenr && ss.AccountParticipationId == User.ParticipationId);
+        var stageSelection = DB.StageSelections.Include(ss => ss.RiderParticipations).Single(ss => ss.AccountParticipationId == User.ParticipationId && ss.Stage.Stagenr == stagenr);
+        if (!stageSelection.RiderParticipations.Any(x => x.RiderParticipationId == riderParticipationId)) return 0;
         stageSelection.KopmanId = riderParticipationId;
         return DB.SaveChanges();
     }
 
     internal int RemoveRider(int riderParticipationId, int stagenr)
     {
-        var riderToDelete = DB.StageSelectionRiders.Single(sr =>
-            sr.StageSelection.AccountParticipationId == User.ParticipationId
-            && sr.RiderParticipationId == riderParticipationId
-            && sr.StageSelection.Stage.Stagenr == stagenr);
+        var stageSelection = DB.StageSelections.Include(ss => ss.RiderParticipations)
+            .Single(s => s.AccountParticipationId == User.ParticipationId && s.Stage.Stagenr == stagenr);
 
-        DB.StageSelectionRiders.Remove(riderToDelete);
+        var riderParticipation = stageSelection.RiderParticipations
+            .SingleOrDefault(rp => rp.RiderParticipationId == riderParticipationId);
+
+        stageSelection.RiderParticipations.Remove(riderParticipation);
 
         DB.StageSelections
             .Where(s => s.AccountParticipationId == User.ParticipationId && s.Stage.Stagenr == stagenr && s.KopmanId == riderParticipationId)

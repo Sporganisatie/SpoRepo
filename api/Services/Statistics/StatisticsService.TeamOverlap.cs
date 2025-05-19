@@ -12,20 +12,10 @@ public partial class StatisticsService
 
         var budget = DB.RaceBudget(raceId, budgetParticipation) / 100;
 
-        var counts = DB.RiderParticipations.AsNoTrackingWithIdentityResolution()
-                  .Where(rp => rp.AccountParticipations.Any(ap => ap.BudgetParticipation == budgetParticipation))
-                  .GroupBy(rp => rp.RiderParticipationId)
-                  .Select(grp => new
-                  {
-                      rpId = grp.Key,
-                      Uniekheid = (participants - grp.Count()) * grp.First().Price / budget / (participants - 1),
-                      grp.First().Dnf
-                  });
-
         var renners = DB.RiderParticipations.Include(rp => rp.Rider).AsNoTracking()
             .Where(rp => rp.AccountParticipations.Any(ap => ap.BudgetParticipation == budgetParticipation) && rp.RaceId == raceId)
             .Select(rp => new UniekheidRennerRow(
-                rp, //TODO afronding error
+                rp, //TODO afronding error, afronden in UI
                 Math.Round((participants - rp.AccountParticipations.Count(ap => ap.BudgetParticipation == budgetParticipation)) * rp.Price / budget / (participants - 1), 1),
                 rp.AccountParticipations.Select(x => x.Account.Username))).ToList();
 
@@ -63,24 +53,10 @@ public partial class StatisticsService
     private static int CalculateOverlap(AccountParticipation other, AccountParticipation main, bool budget, int budgetAmount)
     {
         if (main.Account.Username == other.Account.Username) return -1;
-        var overlapRiders = main.RiderParticipations.Intersect(other.RiderParticipations, new RiderParticipationIdComparer());
+        var overlapRiders = main.RiderParticipations.Intersect(other.RiderParticipations);
         return budget
             ? overlapRiders.Sum(x => x.Price) / budgetAmount
             : overlapRiders.Count();
-    }
-
-    private class RiderParticipationIdComparer : IEqualityComparer<RiderParticipation>
-    {
-        public bool Equals(RiderParticipation x, RiderParticipation y)
-        {
-            if (x is null || y is null) return false;
-            return x.RiderParticipationId == y.RiderParticipationId;
-        }
-
-        public int GetHashCode(RiderParticipation obj)
-        {
-            return obj.RiderParticipationId.GetHashCode();
-        }
     }
 }
 

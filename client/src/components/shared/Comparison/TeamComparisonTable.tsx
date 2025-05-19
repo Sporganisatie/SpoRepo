@@ -33,7 +33,7 @@ const TeamComparisonTable = ({ title, riders, }: { title: string; riders: StageC
             minWidth: "10px",
             cell: (row: StageComparisonRider) =>
                 row.stagePos == null || row.stagePos === 0
-                    ? ""
+                    ? (row.dnf ? "DNF" : "")
                     : row.stagePos + "e",
         },
         {

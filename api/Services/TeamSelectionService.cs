@@ -63,26 +63,26 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
 
     internal int RemoveRider(int riderParticipationId)
     {
-        var selectionRiders = DB.StageSelectionRiders
-            .Where(sr => sr.StageSelection.AccountParticipationId == User.ParticipationId && sr.RiderParticipationId == riderParticipationId);
-        DB.StageSelectionRiders.RemoveRange(selectionRiders);
+        var stageSelections = DB.StageSelections.Include(s => s.RiderParticipations)
+            .Where(s => s.AccountParticipationId == User.ParticipationId)
+            .ToList();
 
-        var team = DB.AccountParticipations.Include(ap => ap.RiderParticipations)
-            .Single(ap => ap.AccountParticipationId == User.ParticipationId);
-        var toRemove = team.RiderParticipations
+        var riderParticipation = DB.RiderParticipations
             .SingleOrDefault(rp => rp.RiderParticipationId == riderParticipationId);
 
-        if (toRemove != null)
+        foreach (var stageSelection in stageSelections)
         {
-            team.RiderParticipations.Remove(toRemove);
+            stageSelection.RiderParticipations.Remove(riderParticipation);
         }
-        // TODO testen of dit werkt en maar 1 query gebruikt
-        //         var team = DB.AccountParticipations.Where(ap => ap.AccountParticipationId == User.ParticipationId)
-        // .Update(ap => ap.RiderParticipations.Remove(ap.RiderParticipations.Single(rp => rp.RiderParticipationId == riderParticipationId)));
 
         DB.StageSelections
             .Where(s => s.AccountParticipationId == User.ParticipationId && s.KopmanId == riderParticipationId)
             .Update(s => new StageSelectie { KopmanId = null });
+
+        var teamselection = DB.AccountParticipations.Include(ss => ss.RiderParticipations)
+            .Single(s => s.AccountParticipationId == User.ParticipationId);
+
+        teamselection.RiderParticipations.Remove(riderParticipation);
 
         return DB.SaveChanges();
     }

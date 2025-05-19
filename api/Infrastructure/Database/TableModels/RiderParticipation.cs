@@ -35,11 +35,21 @@ public class RiderParticipation
 
     public virtual Rider Rider { get; set; }
 
-    // public virtual ICollection<StageSelection> StageSelections { get; } = new List<StageSelection>();
-
     public virtual ICollection<AccountParticipation> AccountParticipations { get; } = [];
 
-    // public virtual ICollection<StageSelection> StageSelectionsNavigation { get; } = new List<StageSelection>();
+    public override bool Equals(object obj)
+    {
+        if (obj is RiderParticipation other)
+        {
+            return RiderParticipationId == other.RiderParticipationId;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return RiderParticipationId.GetHashCode();
+    }
 }
 
 public enum RiderType

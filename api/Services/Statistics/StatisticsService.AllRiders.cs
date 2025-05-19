@@ -10,6 +10,7 @@ public partial class StatisticsService
             .Include(rp => rp.Rider)
             .Include(rp => rp.ResultsPoints)
             .Include(rp => rp.AccountParticipations).ThenInclude(ap => ap.Account)
+            .AsSplitQuery()
             .AsNoTracking()
             .Where(rp => rp.RaceId == raceId && rp.Price <= (budgetParticipation ? 750000 : int.MaxValue))
             .Select(rp => new

@@ -33,8 +33,6 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
 
     public DbSet<StageSelectie> StageSelections { get; set; }
 
-    public DbSet<StageSelectionRider> StageSelectionRiders { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -346,11 +344,6 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             //     .OnDelete(DeleteBehavior.ClientSetNull)
             //     .HasConstraintName("rider_participation_race_id_fkey");
 
-            // entity.HasOne(d => d.Rider).WithMany(p => p.RiderParticipations) TODO fix recursion error
-            //     .HasForeignKey(d => d.RiderId)
-            //     .OnDelete(DeleteBehavior.ClientSetNull)
-            //     .HasConstraintName("rider_participation_rider_id_fkey");
-
             // entity.HasMany(d => d.StageSelectionsNavigation).WithMany(p => p.RiderParticipations)
             //     .UsingEntity<Dictionary<string, object>>(
             //         "StageSelectionRider", // TODO define stageselectionrider table like teamselection
@@ -423,6 +416,26 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
                 .HasDefaultValueSql("0")
                 .HasColumnName("totalscore");
 
+            entity
+                .HasMany(ap => ap.RiderParticipations)
+                .WithMany()
+                .UsingEntity<Dictionary<string, object>>(
+                    "stage_selection_rider", // Name of the join table
+                    j => j.HasOne<RiderParticipation>()
+                          .WithMany()
+                          .HasForeignKey("rider_participation_id") // Actual column name in the database
+                          .HasConstraintName("stage_selection_rider_rider_participation_id_fkey"),
+                    j => j.HasOne<StageSelectie>()
+                          .WithMany()
+                          .HasForeignKey("stage_selection_id") // Actual column name in the database
+                          .HasConstraintName("stage_selection_rider_stage_selection_id_fkey"),
+                    j =>
+                    {
+                        j.HasKey("stage_selection_id", "rider_participation_id") // Composite primary key
+                         .HasName("stage_selection_rider_pkey");
+                        j.ToTable("stage_selection_rider"); // Ensure the table name matches the database
+                    });
+
             // entity.HasOne(d => d.AccountParticipation).WithMany(p => p.StageSelections)
             //     .HasForeignKey(d => d.AccountParticipationId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -436,16 +449,6 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             //     .HasForeignKey(d => d.StageId)
             //     .OnDelete(DeleteBehavior.ClientSetNull)
             //     .HasConstraintName("stage_selection_stage_id_fkey");
-        });
-
-        modelBuilder.Entity<StageSelectionRider>(entity =>
-        {
-            entity.HasKey(e => new { e.StageSelectionId, e.RiderParticipationId }).HasName("stage_selection_rider_pkey");
-
-            entity.ToTable("stage_selection_rider");
-
-            entity.Property(e => e.StageSelectionId).HasColumnName("stage_selection_id");
-            entity.Property(e => e.RiderParticipationId).HasColumnName("rider_participation_id");
         });
     }
 }
