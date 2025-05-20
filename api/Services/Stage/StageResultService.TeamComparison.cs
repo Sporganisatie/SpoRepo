@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Helper;
+using SpoRE.Infrastructure.Database;
 using SpoRE.Models.Response;
 using static SpoRE.Helper.HelperFunctions;
 
@@ -26,30 +27,46 @@ public partial class StageResultService
         var output = new List<UserSelection>();
         foreach (var stageSelection in allStageSelections)
         {
-            var selectedRiders = stageSelection.RiderParticipations.Join(
-                results,
-                rp => rp.RiderParticipationId,
-                res => res.RiderParticipationId,
-                (rp, res) => new { RiderParticipation = rp, Result = res }
-            ).Select(rp => new StageComparisonRider
-            {
-                Rider = rp.RiderParticipation.Rider,
-                Kopman = rp.RiderParticipation.RiderParticipationId == stageSelection.KopmanId,
-                StagePos = rp.Result.StagePos,
-                TotalScore = (budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore) ?? 0,
-                Selected = userStageSelection.Contains(rp.RiderParticipation.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipation.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None,
-                // Dnf = rp.RiderParticipation.Dnf // TODO alleen gebruiken als stagePos empty, vooral ui change
-            });
+            var selectedRiders = stageSelection.RiderParticipations
+                .GroupJoin(
+                    results,
+                    rp => rp.RiderParticipationId,
+                    res => res.RiderParticipationId,
+                    (rp, resGroup) => new { RiderParticipation = rp, Result = resGroup.DefaultIfEmpty() } // Left join
+                )
+                .SelectMany(
+                    joined => joined.Result.Select(res => new StageComparisonRider
+                    {
+                        Rider = joined.RiderParticipation.Rider,
+                        Kopman = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId,
+                        StagePos = res?.StagePos, // Default value if result is null
+                        TotalScore = budgetParticipation ? ((res?.Totalscore ?? 0) - (res?.Teamscore ?? 0)) : (res?.Totalscore ?? 0),
+                        Selected = userStageSelection.Contains(joined.RiderParticipation.RiderParticipationId)
+                            ? StageSelectedEnum.InStageSelection
+                            : teamSelection.Contains(joined.RiderParticipation.RiderParticipationId)
+                                ? StageSelectedEnum.InTeam
+                                : StageSelectedEnum.None,
+                        // Dnf = joined.RiderParticipation.Dnf // TODO: Only use if StagePos is empty, mainly for UI changes
+                    })
+                );
 
             var riderScores = selectedRiders.OrderBy(r => r.StagePos).ToList();
 
             var heleTeam = DB.AccountParticipations.Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.Rider).AsNoTracking()
-                .Single(ap => ap.AccountParticipationId == stageSelection.AccountParticipationId).RiderParticipations.Join(
+                .Single(ap => ap.AccountParticipationId == stageSelection.AccountParticipationId).RiderParticipations
+                .GroupJoin(
                     results,
                     rp => rp.RiderParticipationId,
                     res => res.RiderParticipationId,
-                    (rp, res) => new { RiderParticipation = rp, Result = res }
-            );
+                    (rp, resGroup) => new { RiderParticipation = rp, Results = resGroup.DefaultIfEmpty() } // Left join
+                )
+                .SelectMany(
+                    joined => joined.Results.Select(res => new
+                    {
+                        joined.RiderParticipation,
+                        Result = res ?? new ResultsPoint { Totalscore = 0, Teamscore = 0, StagePos = null }
+                    })
+                );
 
             var gemist = heleTeam.Where(rp => !stageSelection.RiderParticipations.Contains(rp.RiderParticipation) &&
                 (allSelected.Contains(rp.RiderParticipation.RiderParticipationId) || ((budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore) ?? 0) > 0))
