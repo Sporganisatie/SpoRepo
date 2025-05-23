@@ -41,7 +41,7 @@ public partial class StageResultService
                         Kopman = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId,
                         StagePos = res?.StagePos, // Default value if result is null
                         TotalScore = (budgetParticipation ? ((res?.Totalscore ?? 0) - (res?.Teamscore ?? 0)) : (res?.Totalscore ?? 0))
-                            + (int)(joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? res?.StageScore * 0.5 : 0),
+                            + (int)(joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? (res?.StageScore ?? 0) * 0.5 : 0),
                         Selected = userStageSelection.Contains(joined.RiderParticipation.RiderParticipationId)
                             ? StageSelectedEnum.InStageSelection
                             : teamSelection.Contains(joined.RiderParticipation.RiderParticipationId)
