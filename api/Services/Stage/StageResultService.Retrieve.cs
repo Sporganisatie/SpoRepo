@@ -22,20 +22,29 @@ public partial class StageResultService
 
     private IEnumerable<RiderScore> GetRiderScores(Stage stage, bool budgetParticipation)
     {
-        var stageSelection = DB.StageSelections.Include(ap => ap.RiderParticipations)
+        var stageSelection = DB.StageSelections
+            .Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.ResultsPoints)
+            .Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.Rider)
             .Single(ap => ap.AccountParticipationId == User.ParticipationId && ap.StageId == stage.StageId);
 
-        return DB.ResultsPoints.Where(rp => stageSelection.RiderParticipations.Contains(rp.RiderParticipation) && rp.StageId == stage.StageId)
-            .Select(rp => new RiderScore
-            {
-                Rider = rp.RiderParticipation.Rider,
-                Kopman = rp.RiderParticipationId == (stageSelection.KopmanId ?? 0),
-                StagePos = rp.StagePos,
-                StageScore = (rp.RiderParticipationId == (stageSelection.KopmanId ?? 0) ? (int)(rp.StageScore * 1.5) : rp.StageScore) ?? 0,
-                ClassificationScore = rp.Gc.Score + rp.Points.Score + rp.Kom.Score + rp.Youth.Score ?? 0,
-                TeamScore = budgetParticipation ? 0 : rp.Teamscore ?? 0,
-                TotalScore = (int)((rp.RiderParticipationId == (stageSelection.KopmanId ?? 0) ? rp.StageScore * 0.5 : 0) + rp.Totalscore - (budgetParticipation ? rp.Teamscore : 0))
-            }).ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
+        return stageSelection.RiderParticipations
+             .GroupJoin(
+                DB.ResultsPoints.Where(rp => stageSelection.RiderParticipations.Contains(rp.RiderParticipation) && rp.StageId == stage.StageId),
+                rp => rp.RiderParticipationId,
+                res => res.RiderParticipationId,
+                (rp, resGroup) => new { RiderParticipation = rp, Result = resGroup.DefaultIfEmpty() } // Left join
+             )
+             .SelectMany(
+                joined => joined.Result.Select(rp => new RiderScore
+                {
+                    Rider = joined.RiderParticipation.Rider,
+                    Kopman = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId,
+                    StagePos = rp?.StagePos,
+                    StageScore = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? (int)((rp?.StageScore ?? 0) * 1.5) : rp?.StageScore ?? 0,
+                    ClassificationScore = (rp?.Gc.Score ?? 0) + (rp?.Points.Score ?? 0) + (rp?.Kom.Score ?? 0) + (rp?.Youth.Score ?? 0),
+                    TeamScore = budgetParticipation ? 0 : rp?.Teamscore ?? 0,
+                    TotalScore = (int)((joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? (rp?.StageScore ?? 0) * 0.5 : 0) + (rp?.Totalscore ?? 0) - (budgetParticipation ? rp?.Teamscore ?? 0 : 0))
+                })).ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
     }
 
     public IEnumerable<UserScore> GetUserScores(Stage stage, bool budgetParticipation)
