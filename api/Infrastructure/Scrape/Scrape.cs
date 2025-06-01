@@ -29,7 +29,6 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     public async Task StageResults(Stage stage)
     {
         var stageNr = stage.Stagenr;
-        // TODO check if volgende stage Finalstandings dan deze functie aan het einde nog een keer aanroepen
         if (stage.IsFinalStandings)
         {
             stageNr = stage.Stagenr - 1;
@@ -47,6 +46,11 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         await DB.Database.ExecuteSqlRawAsync(query);
 
         CalculateUserScores(stage);
+        var nextStage = DB.Stages.SingleOrDefault(x => x.Stagenr == stage.Stagenr + 1 && x.RaceId == stage.RaceId);
+        if (nextStage?.IsFinalStandings == true)
+        {
+            await StageResults(nextStage);
+        }
     }
 
     public int EtappesToevoegen(int raceId)
