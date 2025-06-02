@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using SpoRE.Helper;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Models;
@@ -8,7 +9,7 @@ using static SpoRE.Helper.HelperFunctions;
 
 namespace SpoRE.Services;
 
-public class RaceService(Userdata User, DatabaseContext DB)
+public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryCache)
 {
     internal RaceState GetRaceState(int raceId)
     {
@@ -40,6 +41,7 @@ public class RaceService(Userdata User, DatabaseContext DB)
             DB.AccountParticipations.Update(ap);
         }
 
+        ((MemoryCache)MemoryCache).Clear();
         return DB.SaveChanges();
     }
 

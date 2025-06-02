@@ -35,6 +35,12 @@ const Admin = () => {
       .catch(err => { console.error(err); });
   }
 
+  const resetCache = () => {
+    axios.get(`/api/Admin/resetCache`)
+      .then(_ => { })
+      .catch(err => { console.error(err); });
+  };
+
   return (
     <div>
       <div>
@@ -82,6 +88,11 @@ const Admin = () => {
         <button style={{ marginRight: '5px', width: '110px' }} onClick={() => updateStartlist({ raceName2, year2, raceId })}>Update Startlist</button>
         <button style={{ marginRight: '210px', width: '130px' }} onClick={() => etappesToevoegen({ raceId })}>Etappes toevoegen</button>
         <button style={{ marginRight: '5px', width: '100px' }} onClick={() => raceFinished({ raceName2, year2, raceId })}>Race Finished</button>
+      </div>
+      <div style={{ marginTop: '10px' }}>
+        <button style={{ marginRight: '5px', width: '150px' }} onClick={resetCache}>
+          Reset Cache
+        </button>
       </div>
     </div>
   );

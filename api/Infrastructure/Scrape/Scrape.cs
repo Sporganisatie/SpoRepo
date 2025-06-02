@@ -12,9 +12,9 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 {
     public void Startlist(string raceName, int year, int raceId)
     {
-        raceName ??= DB.Races.Single(r => r.RaceId == raceId).Name;
-        year = year == 0 ? DB.Races.Single(r => r.RaceId == raceId).Year : year;
-        raceId = raceId == 0 ? DB.Races.Single(r => r.Name == raceName && r.Year == year).RaceId : raceId;
+        raceName ??= DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Name;
+        year = year == 0 ? DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Year : year;
+        raceId = raceId == 0 ? DB.Races.AsNoTracking().Single(r => r.Name == raceName && r.Year == year).RaceId : raceId;
 
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist").DocumentNode;
         var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.json");
@@ -24,7 +24,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     }
 
     public async Task StageResults(string raceName, int year, int stagenr)
-        => await StageResults(DB.Stages.Include(s => s.Race).SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
+        => await StageResults(DB.Stages.Include(s => s.Race).AsNoTracking().SingleOrDefault(s => s.Stagenr == stagenr && s.Race.Year == year && s.Race.Name == raceName));
 
     public async Task StageResults(Stage stage)
     {
@@ -45,9 +45,10 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         ClearCache(query);
         await DB.Database.ExecuteSqlRawAsync(query);
 
-        CalculateUserScores(stage);
-        var nextStage = DB.Stages.SingleOrDefault(x => x.Stagenr == stage.Stagenr + 1 && x.RaceId == stage.RaceId);
-        if (nextStage?.IsFinalStandings == true)
+        await CalculateUserScores(stage);
+
+        var nextStage = DB.Stages.Include(s => s.Race).AsNoTracking().SingleOrDefault(x => x.Stagenr == stage.Stagenr + 1 && x.RaceId == stage.RaceId);
+        if (nextStage?.Starttime < DateTime.Now)
         {
             await StageResults(nextStage);
         }
@@ -55,7 +56,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 
     public int EtappesToevoegen(int raceId)
     {
-        var race = DB.Races.Single(r => r.RaceId == raceId);
+        var race = DB.Races.AsNoTracking().Single(r => r.RaceId == raceId);
 
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/").DocumentNode;
         var rows = html.QuerySelector(".mt20 tbody").SelectNodes("tr");
@@ -138,9 +139,9 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         MemoryCache.Set("ResultsUpdateQuery", query, TimeSpan.FromHours(24));
     }
 
-    private void CalculateUserScores(Stage stage)
+    private async Task CalculateUserScores(Stage stage)
     {
-        var stageSelections = DB.StageSelections.Where(ss => ss.Stage.StageId == stage.StageId).Include(ss => ss.AccountParticipation).ToList();
+        var stageSelections = DB.StageSelections.AsNoTracking().Where(ss => ss.Stage.StageId == stage.StageId).Include(ss => ss.AccountParticipation).ToList();
 
         foreach (var stageSelection in stageSelections)
         {
@@ -157,11 +158,11 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
             var stageScoreTotal = $"({stagescore} + {kopmanscore})";
             var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
 
-            var prevTotal = DB.StageSelections.FirstOrDefault(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1)?.TotalScore ?? 0;
+            var prevTotal = DB.StageSelections.AsNoTracking().FirstOrDefault(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1)?.TotalScore ?? 0;
             var totalscore = $"{prevTotal} + COALESCE({stageScoreTotal},0)";
             var updateTotals = $"UPDATE stage_selection SET totalscore = {totalscore} WHERE stage_selection.account_participation_id = {stageSelection.AccountParticipationId} AND stage_id IN (SELECT stage_id FROM stage WHERE stage.stagenr >= {stage.Stagenr} AND race_id = {stage.RaceId}); ";
 
-            DB.Database.ExecuteSqlRaw(query + updateTotals);
+            await DB.Database.ExecuteSqlRawAsync(query + updateTotals);
         }
     }
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using SpoRE.Attributes;
 using SpoRE.Infrastructure.Database;
 using SpoRE.Infrastructure.Scrape;
@@ -11,7 +12,7 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Admin]
-public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB) : ControllerBase
+public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB, IMemoryCache MemoryCache) : ControllerBase
 {
     [HttpGet("startlist")]
     public IActionResult ScrapeStartList(string raceName, int year, int raceId)
@@ -46,4 +47,11 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     [HttpGet("AddStages")]
     public IActionResult AddStages(int raceId)
         => Ok(Scraper.EtappesToevoegen(raceId));
+
+    [HttpGet("resetCache")]
+    public IActionResult ResetCache()
+    {
+        ((MemoryCache)MemoryCache).Clear();
+        return Ok("Cache has been reset.");
+    }
 }
