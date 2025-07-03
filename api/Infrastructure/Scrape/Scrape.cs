@@ -67,7 +67,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         foreach (var row in rows)
         {
             var url = row.QuerySelector("a");
-            if (url == null) continue;
+            if (url == null || row.InnerText.Contains("Restday")) continue;
             starttime = GetStartTime(url.GetAttributeValue("href", ""));
 
             var stage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
@@ -103,9 +103,9 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     private static DateTime GetStartTime(string url)
     {
         var raceInfo = new HtmlWeb().Load($"https://www.procyclingstats.com/{url}")
-                .DocumentNode.QuerySelector(".w30 .infolist").Children();
-        var date = raceInfo.Where(x => x.InnerText.Contains("Date")).First().Children().ToList()[2].InnerText;
-        var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText.Split().First();
+                .DocumentNode.QuerySelector(".w30 .keyvalueList").Children();
+        var date = raceInfo.First(x => x.InnerText.Contains("Date")).Children().ToList()[1].InnerText;
+        var time = raceInfo.First(x => x.InnerText.Contains("Start time")).Children().ToList()[1].InnerText.Split().First();
         if (!TimeSpan.TryParse(time, out _))
         {
             time = "12:00";
