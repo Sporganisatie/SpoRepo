@@ -79,7 +79,7 @@ public partial class Scrape
         {
             foreach (var tab in tabs)
             {
-                if (tab == "Teams" || (tab is "Stage" or "" && type is StageType.ITT or StageType.TTT)) continue;
+                if (tab == PcsTeams || (tab is PcsStage or "" && type is StageType.ITT or StageType.TTT)) continue;
                 rider.Value.Teamscore += TeamScore(rider.Value, teamWinners[tab], tab, type);
             }
             rider.Value.Totalscore += rider.Value.Teamscore;
@@ -104,7 +104,7 @@ public partial class Scrape
 
     private static void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
     {
-        if (tab == "Teams" || (tab == "" && type is StageType.TTT)) return;
+        if (tab == PcsTeams || (tab == "" && type is StageType.TTT)) return;
         var pcsRows = ResultsDict(htmlResults);
         teamWinners[tab] = pcsRows.FirstOrDefault()?.Team;
         foreach (var pcsRow in pcsRows)
@@ -141,7 +141,7 @@ public partial class Scrape
             PcsId = pcsId,
             Time = GetTime(fields),
             Team = GetString(fields, "Team"),
-            Points = GetString(fields, "Points"),
+            Points = GetString(fields, "Pnt"),
         };
     }
 
@@ -164,35 +164,35 @@ public partial class Scrape
     private static RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, StageType type)
         => tab switch
         {
-            "" or "Stage" => riderResult with
+            "" or PcsStage => riderResult with
             {
                 Stagepos = pcsRow.Rank,
                 Stageresult = pcsRow.Time,
                 Stagescore = Score(pcsRow.Rank, tab, type),
                 Dnf = pcsRow.Dnf
             },
-            "GC" => riderResult with
+            PcsGc => riderResult with
             {
                 Gcpos = pcsRow.Rank,
                 Gcresult = pcsRow.Time,
                 Gcscore = Score(pcsRow.Rank, tab, type),
                 Gcchange = pcsRow.RankChange
             },
-            "Points" => riderResult with
+            PcsPoints => riderResult with
             {
                 Pointspos = pcsRow.Rank,
                 Pointsresult = pcsRow.Points,
                 Pointsscore = Score(pcsRow.Rank, tab, type),
                 Pointschange = pcsRow.RankChange
             },
-            "KOM" => riderResult with
+            PcsKom => riderResult with
             {
                 Kompos = pcsRow.Rank,
                 Komresult = pcsRow.Points,
                 Komscore = Score(pcsRow.Rank, tab, type),
                 Komchange = pcsRow.RankChange
             },
-            "Youth" => riderResult with
+            PcsYouth => riderResult with
             {
                 Yocpos = pcsRow.Rank,
                 Yocresult = pcsRow.Time,
@@ -213,8 +213,8 @@ public partial class Scrape
             {
                 Stagepos = position,
                 Stageresult = "Todo finish time",
-                Stagescore = Score(position, "Stage", StageType.TTT),
-                Totalscore = riderResults[key].Totalscore + Score(position, "Stage", StageType.TTT)
+                Stagescore = Score(position, PcsStage, StageType.TTT),
+                Totalscore = riderResults[key].Totalscore + Score(position, PcsStage, StageType.TTT)
             };
         }
     }
