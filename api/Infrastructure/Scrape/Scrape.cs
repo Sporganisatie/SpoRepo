@@ -10,6 +10,13 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 {
+    private const string PcsStage = "STAGE";
+    private const string PcsGc = "GC";
+    private const string PcsPoints = "POINTS";
+    private const string PcsKom = "KOM";
+    private const string PcsYouth = "YOUTH";
+    private const string PcsTeams = "TEAMS";
+
     public void Startlist(string raceName, int year, int raceId)
     {
         raceName ??= DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Name;
@@ -35,10 +42,9 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
             await CopyTeamsToStageSelections(stage);
         }
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
-        var classifications = html.QuerySelectorAll(".restabs li a").Select(x => x.InnerText);
-        if (classifications.IsNullOrEmpty()) classifications = ["Stage"];
-        var tables = html.QuerySelectorAll(".result-cont .subTabs")
-                    .Where(x => x.GetAttributeValue("data-subtab", "") == "1")
+        var classifications = html.QuerySelectorAll("a.selectResultTab").Select(x => x.InnerText);
+        if (classifications.IsNullOrEmpty()) classifications = [PcsStage];
+        var tables = html.QuerySelectorAll("#resultsCont .resTab")
                     .Select(x => x.QuerySelector("table"));
         var query = ResultsQuery(classifications.Zip(tables), stage);
         if (query.Equals("")) return;
@@ -67,7 +73,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         foreach (var row in rows)
         {
             var url = row.QuerySelector("a");
-            if (url == null) continue;
+            if (url == null || row.InnerText.Contains("Restday")) continue;
             starttime = GetStartTime(url.GetAttributeValue("href", ""));
 
             var stage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
@@ -103,9 +109,9 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     private static DateTime GetStartTime(string url)
     {
         var raceInfo = new HtmlWeb().Load($"https://www.procyclingstats.com/{url}")
-                .DocumentNode.QuerySelector(".w30 .infolist").Children();
-        var date = raceInfo.Where(x => x.InnerText.Contains("Date")).First().Children().ToList()[2].InnerText;
-        var time = raceInfo.Where(x => x.InnerText.Contains("Start time")).First().Children().ToList()[2].InnerText.Split().First();
+                .DocumentNode.QuerySelector(".w30 .keyvalueList").Children();
+        var date = raceInfo.First(x => x.InnerText.Contains("Date")).Children().ToList()[1].InnerText;
+        var time = raceInfo.First(x => x.InnerText.Contains("Start time")).Children().ToList()[1].InnerText.Split().First();
         if (!TimeSpan.TryParse(time, out _))
         {
             time = "12:00";

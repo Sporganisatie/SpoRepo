@@ -13,7 +13,7 @@ public class TeamSelectionService(DatabaseContext DB, Userdata User)
         var budget = DB.RaceBudget(raceId, budgetParticipation);
         var maxRiderPrice = budgetParticipation ? 750_000 : int.MaxValue;
 
-        var team = DB.AccountParticipations.Include(ap => ap.RiderParticipations).AsNoTracking()
+        var team = DB.AccountParticipations.Include(ap => ap.RiderParticipations).ThenInclude(rp => rp.Rider).AsNoTracking()
             .Single(ap => ap.AccountParticipationId == User.ParticipationId).RiderParticipations
             .OrderBy(x => x.Type).ThenByDescending(x => x.Price).ThenBy(x => x.Rider.Lastname);
         var allRiders = AllRiders(raceId, maxRiderPrice).Select(rp => new SelectableRider(rp, Selectable(team, budget, rp)));
