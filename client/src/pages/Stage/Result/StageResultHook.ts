@@ -11,7 +11,6 @@ export function useStageResult() {
   const budgetParticipation = useBudgetContext();
   const { raceId, stagenr } = useStage();
   const queryClient = useQueryClient();
-  console.log("useStageResult");
   const queryKey = [
     "stageResults",
     raceId,
@@ -26,6 +25,7 @@ export function useStageResult() {
       teamResult: [],
       classifications: { gc: [], points: [], kom: [], youth: [] },
       virtualResult: false,
+      finalStandings: false,
     },
     staleTime: 3_600_000,
     gcTime: 3_600_000,
@@ -36,7 +36,6 @@ export function useStageResult() {
     stagenr: string,
     budgetParticipation: boolean
   ) {
-    console.log("Fetching");
     const { data } = await axios.get(`/api/stageresult`, {
       params: { raceId, stagenr, budgetParticipation },
     });

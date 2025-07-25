@@ -39,7 +39,7 @@ public partial class StageResultService
                 {
                     Rider = joined.RiderParticipation.Rider,
                     Kopman = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId,
-                    StagePos = stage.Type == StageType.FinalStandings ? rp?.Gc.Position : rp?.StagePos,
+                    StagePos = stage.IsFinalStandings ? rp?.Gc.Position : rp?.StagePos,
                     StageScore = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? (int)((rp?.StageScore ?? 0) * 1.5) : rp?.StageScore ?? 0,
                     ClassificationScore = (rp?.Gc.Score ?? 0) + (rp?.Points.Score ?? 0) + (rp?.Kom.Score ?? 0) + (rp?.Youth.Score ?? 0),
                     TeamScore = budgetParticipation ? 0 : rp?.Teamscore ?? 0,

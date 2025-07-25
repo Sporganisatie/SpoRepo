@@ -5,7 +5,7 @@ public static class DatabaseExtensions
     public static bool ShowResults(this DatabaseContext DB, int raceId, int stagenr)
     {
         var stage = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
-        return stage.Type == StageType.FinalStandings || DateTime.UtcNow >= stage.Starttime;
+        return stage.IsFinalStandings || DateTime.UtcNow >= stage.Starttime;
     }
 
     internal static int RaceBudget(this DatabaseContext DB, int raceId, bool budgetParticipation)

@@ -51,7 +51,7 @@ const StageResult = () => {
             <UserScoreTable data={data.userScores} />
           </div>
           <div>
-            <StageClassifications data={data.classifications} />
+            <StageClassifications data={data.classifications} finalStandings={data.finalStandings} />
           </div>
         </div>
       ) : (

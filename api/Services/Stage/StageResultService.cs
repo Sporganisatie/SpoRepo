@@ -8,12 +8,12 @@ public partial class StageResultService(DatabaseContext DB, Userdata User)
 {
     public StageResultData StageResultData(int raceId, bool budgetParticipation, int stagenr)
     {
-        if (!DB.ShowResults(raceId, stagenr)) return new([], [], Classifications.Empty, false);
+        if (!DB.ShowResults(raceId, stagenr)) return new([], [], Classifications.Empty, false, false);
         var stage = DB.Stages.Single(ss => ss.RaceId == raceId && ss.Stagenr == stagenr);
         var userScores = GetUserScores(stage, budgetParticipation);
         var teamResult = GetTeamResult(stage, budgetParticipation);
         var classifications = GetClassifications(stage, top5: false);
-        bool virtualResult = stage.Type == StageType.FinalStandings && !stage.Finished;
-        return new(userScores, teamResult, classifications, virtualResult);
+        bool virtualResult = stage.IsFinalStandings && !stage.Finished;
+        return new(userScores, teamResult, classifications, virtualResult, stage.IsFinalStandings);
     }
 }
