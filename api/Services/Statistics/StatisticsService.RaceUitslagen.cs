@@ -9,10 +9,10 @@ public record RaceUitslag(List<UsernameScore> UsernamesAndScores, int Year, stri
 
 public partial class StatisticsService
 {
-    public RaceUitslagen RaceUitslagenAll(bool budgetParticipation)
+    public RaceUitslagen RaceUitslagenAll(bool budgetParticipation, string? raceName = null)
     {
-        var uitslagen = RaceUitslagen(budgetParticipation);
-        var scoreVerdeling = RaceScoreVerdeling(budgetParticipation);
+        var uitslagen = RaceUitslagen(budgetParticipation, raceName);
+        var scoreVerdeling = RaceScoreVerdeling(budgetParticipation, raceName);
         var userRank = RaceUserRankCounts(uitslagen);
         return new(uitslagen, scoreVerdeling, userRank);
     }
@@ -69,18 +69,19 @@ public partial class StatisticsService
 
     private record UserRaceScoreQueryResult(string Username, int? Score, Race Race);
 
-    private IEnumerable<UserRaceScoreQueryResult> GetUserRaceScore(bool budgetParticipation)
+    private IEnumerable<UserRaceScoreQueryResult> GetUserRaceScore(bool budgetParticipation, string? raceName = null)
         => (from ap in DB.AccountParticipations.Include(ap => ap.Race)
-            where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99 && ap.Race.Name != "classics"
+            where ap.Race.Finished && ap.BudgetParticipation == budgetParticipation && ap.RaceId != 99
+                && ap.Race.Name != "classics" && (raceName == null || ap.Race.Name == raceName)
             select new UserRaceScoreQueryResult(
                 ap.Account.Username,
                 ap.FinalScore,
                 ap.Race
             )).AsEnumerable();
 
-    private IEnumerable<RaceUitslag> RaceUitslagen(bool budgetParticipation)
+    private IEnumerable<RaceUitslag> RaceUitslagen(bool budgetParticipation, string? raceName = null)
     {
-        var result = GetUserRaceScore(budgetParticipation)
+        var result = GetUserRaceScore(budgetParticipation, raceName)
             .GroupBy(ss => ss.Race)
             .Select(g => new RaceUitslag(
                 g.OrderByDescending(ss => ss.Score)
@@ -94,11 +95,11 @@ public partial class StatisticsService
         return result;
     }
 
-    private IEnumerable<ScoreVerdeling> RaceScoreVerdeling(bool budgetParticipation)
+    private IEnumerable<ScoreVerdeling> RaceScoreVerdeling(bool budgetParticipation, string? raceName = null)
     {
-        var bins = budgetParticipation ? new[] { 0, 500, 750, 1000 } : [0, 4000, 4500, 5000];
+        var bins = budgetParticipation ? new[] { 0, 500, 750, 1000 } : new[] { 0, 4000, 4500, 5000 };
 
-        var result = from item in GetUserRaceScore(budgetParticipation)
+        var result = from item in GetUserRaceScore(budgetParticipation, raceName)
                      group item by item.Username into userGroup
                      select new ScoreVerdeling
                      (

@@ -36,17 +36,20 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     public async Task StageResults(Stage stage)
     {
         var stageNr = stage.Stagenr;
+        var finishedOverride = false;
         if (stage.IsFinalStandings)
         {
-            stageNr = stage.Stagenr - 1;
+            var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).FirstOrDefault(s => s.Finished && s.RaceId == stage.RaceId && s.Type != StageType.FinalStandings);
+            if (mostRecentFinished is null) return;
+            stageNr = mostRecentFinished.Stagenr;
+            finishedOverride = stageNr != stage.Stagenr - 1;
             await CopyTeamsToStageSelections(stage);
         }
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll("a.selectResultTab").Select(x => x.InnerText);
         if (classifications.IsNullOrEmpty()) classifications = [PcsStage];
-        var tables = html.QuerySelectorAll("#resultsCont .resTab")
-                    .Select(x => x.QuerySelector("table"));
-        var query = ResultsQuery(classifications.Zip(tables), stage);
+        var tables = html.QuerySelectorAll("#resultsCont .resTab").Select(x => x.QuerySelector("table"));
+        var query = ResultsQuery(classifications.Zip(tables), stage, finishedOverride);
         if (query.Equals("")) return;
         ClearCache(query);
         await DB.Database.ExecuteSqlRawAsync(query);
@@ -54,9 +57,14 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         await CalculateUserScores(stage);
 
         var nextStage = DB.Stages.Include(s => s.Race).AsNoTracking().SingleOrDefault(x => x.Stagenr == stage.Stagenr + 1 && x.RaceId == stage.RaceId);
-        if (nextStage?.Starttime < DateTime.Now)
+        if (nextStage?.Starttime < DateTime.Now) // Nodig als er meerdere etappes herberekend moeten worden, dan gaat dit door tot de huidige/laatste etappe
         {
             await StageResults(nextStage);
+        }
+        else if (stage.Stagenr is > 18 and < 22) // fictieve eindpunten berekenen voor de laatste paar etappes
+        {
+            var finalStandings = DB.Stages.Include(s => s.Race).AsNoTracking().SingleOrDefault(x => x.Type == StageType.FinalStandings && x.RaceId == stage.RaceId);
+            await StageResults(finalStandings);
         }
     }
 

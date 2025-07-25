@@ -12,8 +12,8 @@ public class StatisticsController(StatisticsService Service) : ControllerBase
 {
     [HttpGet("raceUitslagen")]
     [ProducesResponseType(200)]
-    public IActionResult RaceUitslagen(bool budgetParticipation)
-        => Ok(Service.RaceUitslagenAll(budgetParticipation));
+    public IActionResult RaceUitslagen(bool budgetParticipation, string raceName = null)
+        => Ok(Service.RaceUitslagenAll(budgetParticipation, raceName));
 
     [HttpGet("missedPoints")]
     [ProducesResponseType(200)]

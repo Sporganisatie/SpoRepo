@@ -10,7 +10,8 @@ public partial class StageResultService
 {
     public TeamSelections AllStageSelections(int raceId, bool budgetParticipation, int stagenr)
     {
-        if (DB.Stages.Single(s => s.RaceId == raceId && s.Stagenr == stagenr).Starttime > DateTime.UtcNow) return new([], []);
+        var stage = DB.Stages.Single(s => s.RaceId == raceId && s.Stagenr == stagenr);
+        if (stage.Starttime > DateTime.UtcNow && stage.Type != StageType.FinalStandings || DB.Stages.Single(s => s.RaceId == raceId && s.Stagenr == 1).Starttime > DateTime.UtcNow) return new([], []);
 
         var teamSelection = DB.AccountParticipations.Include(ap => ap.RiderParticipations).AsNoTracking().Single(ts => ts.AccountParticipationId == User.ParticipationId).RiderParticipations
             .Select(rp => rp.RiderParticipationId).ToList();
@@ -19,9 +20,9 @@ public partial class StageResultService
             .Include(ss => ss.AccountParticipation.Account)
             .Include(ss => ss.RiderParticipations).ThenInclude(rp => rp.Rider)
             .AsNoTracking()
-            .Where(ss => ss.Stage.Stagenr == stagenr && ss.Stage.RaceId == raceId && ss.AccountParticipation.BudgetParticipation == budgetParticipation).ToList().OrderByDescending(x => x.TotalScore);
+            .Where(ss => ss.StageId == stage.StageId && ss.AccountParticipation.BudgetParticipation == budgetParticipation).ToList().OrderByDescending(x => x.TotalScore);
 
-        var results = DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stagenr && rp.Stage.RaceId == raceId).AsNoTrackingWithIdentityResolution().ToList();
+        var results = DB.ResultsPoints.Where(rp => rp.StageId == stage.StageId).AsNoTrackingWithIdentityResolution().ToList();
 
         var allSelected = DB.StageSelections.Include(ss => ss.RiderParticipations).AsNoTracking().Where(ss => ss.AccountParticipation.BudgetParticipation == budgetParticipation && ss.Stage.RaceId == raceId && ss.Stage.Stagenr == stagenr).SelectMany(ss => ss.RiderParticipations).Select(rp => rp.RiderParticipationId).ToList();
         var output = new List<UserSelection>();

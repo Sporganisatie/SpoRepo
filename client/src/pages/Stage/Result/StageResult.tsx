@@ -16,6 +16,11 @@ const StageResult = () => {
   return (
     <div>
       <div style={{ display: "grid" }}>
+        {data?.virtualResult && (
+          <div style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "10px", fontSize: "2em" }}>
+            Virtuele eindpunten o.b.v. de recentste etappe uitslag.
+          </div>
+        )}
         <button
           style={{ marginRight: "auto" }}
           className={showTeamComparison ? "active" : ""}
