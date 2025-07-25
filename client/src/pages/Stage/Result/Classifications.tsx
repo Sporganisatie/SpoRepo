@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClassificationTable from '../Selection/ClassificationTable';
 import { Classifications } from '../models/StageSelectionData';
 import './StageClassifications.css';
 
-const StageClassifications = ({ data }: { data: Classifications }) => {
+const StageClassifications = ({ data, finalStandings }: { data: Classifications, finalStandings: boolean }) => {
     const [activeButton, setActiveButton] = useState('Etappe');
+
+    useEffect(() => {
+        setActiveButton(finalStandings ? 'Algemeen' : 'Etappe');
+    }, [finalStandings]);
 
     const handleClick = (title: string) => {
         setActiveButton(title);
@@ -13,15 +17,17 @@ const StageClassifications = ({ data }: { data: Classifications }) => {
     return (
         <div>
             <div>
-                <button
-                    className={
-                        (activeButton === 'Etappe' ? 'active' : '')
-                        + ((data.stage?.length ?? 0) > 0 ? '' : 'disabled')}
-                    disabled={data.stage?.length === 0}
-                    onClick={() => handleClick('Etappe')}
-                >
-                    Etappe
-                </button>
+                {!finalStandings && (
+                    <button
+                        className={
+                            (activeButton === 'Etappe' ? 'active' : '')
+                            + ((data.stage?.length ?? 0) > 0 ? '' : 'disabled')}
+                        disabled={data.stage?.length === 0}
+                        onClick={() => handleClick('Etappe')}
+                    >
+                        Etappe
+                    </button>
+                )}
                 <button
                     className={
                         (activeButton === 'Algemeen' ? 'active' : '')

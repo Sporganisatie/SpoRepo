@@ -34,7 +34,7 @@ public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryC
         foreach (var ap in participations)
         {
             var finalScore = DB.StageSelections.Include(ss => ss.Stage)
-                .Single(ss => ss.Stage.Type == StageType.FinalStandings && ss.AccountParticipationId == ap.AccountParticipationId)
+                .Single(ss => ss.Stage.IsFinalStandings && ss.AccountParticipationId == ap.AccountParticipationId)
                 .TotalScore;
 
             ap.FinalScore = finalScore;

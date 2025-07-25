@@ -24,6 +24,8 @@ export function useStageResult() {
       userScores: [],
       teamResult: [],
       classifications: { gc: [], points: [], kom: [], youth: [] },
+      virtualResult: false,
+      finalStandings: false,
     },
     staleTime: 3_600_000,
     gcTime: 3_600_000,

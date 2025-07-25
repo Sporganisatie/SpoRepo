@@ -7,7 +7,7 @@ namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape
 {
-    private string ResultsQuery(IEnumerable<(string Tab, HtmlNode Results)> classificationTables, Stage stage)
+    private string ResultsQuery(IEnumerable<(string Tab, HtmlNode Results)> classificationTables, Stage stage, bool finishedOverride)
     {
         var riderResults = new Dictionary<string, RiderResult>();
         var teamWinners = new Dictionary<string, string>();
@@ -18,13 +18,13 @@ public partial class Scrape
         UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
         if (stage.Type is StageType.TTT) AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == "").Results);
         UpdateDnfRiders(riderResults, stage);
-        StageComplete(stage.StageId, riderResults);
+        StageComplete(stage.StageId, riderResults, finishedOverride);
 
         if (!riderResults.Any(r => !r.Value.Dnf)) return "";
         return BuildResultsQuery(riderResults.Values, stage);
     }
 
-    private void StageComplete(int stageId, Dictionary<string, RiderResult> riderResults)
+    private void StageComplete(int stageId, Dictionary<string, RiderResult> riderResults, bool finishedOverride)
     {
         var stage = DB.Stages.Single(x => x.StageId == stageId);
         var dnfCount = riderResults.Count(r => r.Value.Dnf);
@@ -54,7 +54,7 @@ public partial class Scrape
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
         stage.Complete = stage.Complete || stage.Type is StageType.TTT;
-        stage.Finished = stageCount > 0;
+        stage.Finished = stageCount > 0 && !finishedOverride;
         DB.SaveChanges();
     }
 

@@ -97,7 +97,7 @@ const router = createBrowserRouter([
                 Component: EtappeUitslagen,
             },
             {
-                path: "raceUitslagen",
+                path: "raceUitslagen/:raceName?",
                 Component: RaceUitslagen,
             },
             {
