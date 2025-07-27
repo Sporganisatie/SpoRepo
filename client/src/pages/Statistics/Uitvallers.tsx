@@ -9,6 +9,8 @@ export type UitvallersData = {
     userName: string;
     uitvallers: number;
     uitvallerBudget: number;
+    uitvallerStages: number;
+    uitvallerStagesBudget: number;
 };
 
 const columns: TableColumn<UitvallersData>[] = [
@@ -26,8 +28,20 @@ const columns: TableColumn<UitvallersData>[] = [
     },
     {
         name: 'Budget',
-        width: '90px',
+        width: '110px',
         selector: (row: UitvallersData) => row.uitvallerBudget,
+        sortable: true
+    },
+    {
+        name: 'Aantal etappes',
+        width: '130px',
+        selector: (row: UitvallersData) => row.uitvallerStages,
+        sortable: true
+    },
+    {
+        name: 'Budget x etappes',
+        width: '150px',
+        selector: (row: UitvallersData) => row.uitvallerStagesBudget / 1000000 + 'M',
         sortable: true
     }
 ];
@@ -48,7 +62,7 @@ const Uitvallers = () => {
             });
     }, [raceId, budgetParticipation]);
 
-    return <SreDataTable title={"Uitvallers"} columns={columns} data={data} maxwidth={300} />
+    return <SreDataTable title={"Uitvallers"} columns={columns} data={data} maxwidth={560} />
 }
 
 export default Uitvallers;

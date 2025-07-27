@@ -20,9 +20,16 @@ export function useMissedPoints() {
     const budgetParticipation = useBudgetContext();
 
     const {data, isFetching} = useQuery({
-        queryKey: ["missed_points", raceId, budgetParticipation] as const,
-        queryFn: (): Promise<MissedPointsTableData[]> => axios.get(`/api/Statistics/missedPoints`, { params: { raceId, budgetParticipation } })
+        queryKey: ["missed_points", budgetParticipation, raceId] as const,
+        queryFn: ({queryKey}) => fetchMissedPoints(queryKey[1], queryKey[2]),
+        staleTime: 24 * 3600,
+        gcTime: 24 * 3600,
     });
 
     return {data, isFetching}
+}
+
+async function fetchMissedPoints( budgetParticipation: boolean, raceId?: string): Promise<MissedPointsTableData[]> {
+    const res = await axios.get(`/api/Statistics/missedPoints`, { params: { raceId, budgetParticipation } });
+    return res.data;
 }

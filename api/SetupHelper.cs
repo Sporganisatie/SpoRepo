@@ -15,6 +15,7 @@ internal static class Telemetry
         services.AddScoped<RiderService>();
         services.AddScoped<StageResultService>();
         services.AddScoped<StatisticsService>();
+        services.AddScoped<RaceWrapService>();
         services.AddSingleton<Scheduler>();
     }
 
