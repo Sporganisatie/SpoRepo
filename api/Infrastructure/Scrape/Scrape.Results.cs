@@ -121,7 +121,7 @@ public partial class Scrape
 
     private static IEnumerable<PcsRow> ResultsDict(HtmlNode htmlResults)
     {
-        var columns = htmlResults.QuerySelectorAll("th").Select(x => x.InnerText);
+        var columns = htmlResults.QuerySelectorAll("th").Select(x => x.InnerText).Where(x => x != "Pnt");
         var rows = htmlResults.QuerySelectorAll("tbody tr");
         var results = rows.Select(row => BuildPcsRider(columns, row));
         return rows.Select(row => BuildPcsRider(columns, row)).Where(x => x.PcsId != "skip-rider");
