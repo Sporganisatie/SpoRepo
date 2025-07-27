@@ -129,7 +129,7 @@ public partial class StatisticsService
             .GroupBy(ss => ss.Stagenr)
             .Select(g => new Scores(
                 g.OrderByDescending(ss => ss.TotalScore)
-                 .Select(ss => new UsernameScore(ss.Username, ss.TotalScore ?? 0))
+                 .Select(ss => new UsernameScore(ss.Username, ss.TotalScore))
                  .ToList(),
                 $"{g.Key}"))
             .ToList();

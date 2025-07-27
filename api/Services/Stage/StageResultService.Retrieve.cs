@@ -49,7 +49,7 @@ public partial class StageResultService
 
     public IEnumerable<UserScore> GetUserScores(Stage stage, bool budgetParticipation)
         => (from ss in DB.StageSelections.Where(ss => ss.StageId == stage.StageId && ss.AccountParticipation.BudgetParticipation == budgetParticipation)
-            select new UserScore(ss.AccountParticipation.Account, ss.StageScore ?? 0, ss.TotalScore ?? 0))
+            select new UserScore(ss.AccountParticipation.Account, ss.StageScore, ss.TotalScore))
             .ToList().OrderByDescending(us => us.totalscore).ThenByDescending(us => us.stagescore);
 
     public Classifications GetClassifications(Stage stage, bool top5, int? selectingStage = null)
