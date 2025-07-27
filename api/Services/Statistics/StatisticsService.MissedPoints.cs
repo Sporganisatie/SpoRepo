@@ -39,8 +39,9 @@ public partial class StatisticsService
             })
             .ToList();
 
-        var actualScores = DB.StageSelections.Include(ss => ss.Stage).Where(ss => ss.AccountParticipationId == user.AccountParticipationId)
-                .ToList().Where(ss => ss.Stage.Starttime < DateTime.UtcNow);
+        var actualScores = DB.StageSelections.Include(ss => ss.Stage)
+            .Where(ss => ss.AccountParticipationId == user.AccountParticipationId && ss.Stage.Starttime < DateTimeOffset.UtcNow)
+            .OrderBy(ss => ss.Stage.Stagenr).ToList();
 
         var missedPoints = new List<MissedPointsData>();
         foreach (var actualScore in actualScores)
@@ -51,7 +52,7 @@ public partial class StatisticsService
                 ? riders.Points.Sum(r => r.Total)
                 : riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints;
 
-            missedPoints.Add(new(riders.Stagenr.ToString(), actualScore.StageScore ?? 0, optimalPoints, optimalPoints - (actualScore.StageScore ?? 0)));
+            missedPoints.Add(new(riders.Stagenr.ToString(), actualScore.StageScore, optimalPoints, optimalPoints - actualScore.StageScore));
         }
         missedPoints.Add(new("Totaal", missedPoints.Sum(x => x.Behaald), missedPoints.Sum(x => x.Optimaal), missedPoints.Sum(x => x.Gemist)));
         return new(user.Account.Username, missedPoints);
