@@ -27,7 +27,7 @@ public partial class StatisticsService
             .Select(groupedData => new
             {
                 Stagenr = groupedData.Key,
-                Type = groupedData.First().Stage.Type,
+                groupedData.First().Stage.Type,
                 Points = groupedData.Select(g => new
                 {
                     Id = g.Result.RiderParticipationId,
@@ -43,15 +43,15 @@ public partial class StatisticsService
                 .ToList().Where(ss => ss.Stage.Starttime < DateTime.UtcNow);
 
         var missedPoints = new List<MissedPointsData>();
-        foreach (var riders in ridersResults)
+        foreach (var actualScore in actualScores)
         {
-            var actualScore = actualScores.Single(a => a.Stage.Stagenr == riders.Stagenr).StageScore ?? 0;
+            var riders = ridersResults.Single(rr => rr.Stagenr == actualScore.Stage.Stagenr);
             var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
             var optimalPoints = riders.Type is StageType.FinalStandings
                 ? riders.Points.Sum(r => r.Total)
                 : riders.Points.Take(9).Sum(r => r.Total) + optimalKopmanPoints;
 
-            missedPoints.Add(new(riders.Stagenr.ToString(), actualScore, optimalPoints, optimalPoints - actualScore));
+            missedPoints.Add(new(riders.Stagenr.ToString(), actualScore.StageScore ?? 0, optimalPoints, optimalPoints - (actualScore.StageScore ?? 0)));
         }
         missedPoints.Add(new("Totaal", missedPoints.Sum(x => x.Behaald), missedPoints.Sum(x => x.Optimaal), missedPoints.Sum(x => x.Gemist)));
         return new(user.Account.Username, missedPoints);
