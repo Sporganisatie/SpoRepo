@@ -9,7 +9,6 @@ import RaceWrapStages from "./RaceWrapStages";
 import RaceWrapAward from "./RaceWrapAward";
 import axios from "axios";
 import { SelectOption } from "../../components/Select";
-import { faToiletPaper } from "@fortawesome/free-solid-svg-icons";
 
 export type MissedPointsTotalRow = ReturnType<
     typeof getMissedPointsTotal
