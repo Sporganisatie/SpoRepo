@@ -46,7 +46,9 @@ public partial class StatisticsService
         var missedPoints = new List<MissedPointsData>();
         foreach (var actualScore in actualScores)
         {
-            var riders = ridersResults.Single(rr => rr.Stagenr == actualScore.Stage.Stagenr);
+            var riders = ridersResults.SingleOrDefault(rr => rr.Stagenr == actualScore.Stage.Stagenr);
+            if (riders == null) break;
+
             var optimalKopmanPoints = OptimalKopmanPoints(riders.Points.Select(p => new PointsData(p.Id, p.Stage, p.Total)));
             var optimalPoints = riders.Type is StageType.FinalStandings
                 ? riders.Points.Sum(r => r.Total)
