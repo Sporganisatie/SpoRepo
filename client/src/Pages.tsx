@@ -24,6 +24,7 @@ import Home from "./components/Home";
 import Uniekheid from "./pages/Statistics/Uniekheid";
 import RaceScoreVerdelingChart from "./pages/Charts/RaceScoreVerdelingChart";
 import Overlap from "./pages/Statistics/Overlap";
+import RaceWrap from "./pages/RaceWrap/RaceWrap";
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
             {
                 path: ":raceId/stage/:stagenr",
                 Component: Stage,
+            },
+            {
+                path: ":raceId/racewrap",
+                Component: RaceWrap,
             },
             {
                 path: ":raceId/joinrace",

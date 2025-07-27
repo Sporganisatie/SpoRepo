@@ -1,20 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
+using Z.EntityFramework.Plus;
 
 namespace SpoRE.Services;
 
 public partial class StatisticsService(DatabaseContext DB)
 {
-    public record UitvallersData(string UserName, int Uitvallers, int UitvallerBudget);
+    public record UitvallersData(string UserName, int Uitvallers, int UitvallerBudget, int UitvallerStages, int UitvallerStagesBudget);
 
     public IEnumerable<UitvallersData> Uitvallers(int raceId, bool budgetParticipation)
     {
-        var query = DB.AccountParticipations.Include(ap => ap.Account).Include(ap => ap.RiderParticipations).AsNoTracking()
+        var query = DB.AccountParticipations.Include(ap => ap.Account).Include(ap => ap.RiderParticipations)
+            .ThenInclude(rp => rp.ResultsPoints).AsNoTracking()
             .Where(ap => ap.RaceId == raceId && ap.BudgetParticipation == budgetParticipation)
             .Select(ap => new UitvallersData(
                 ap.Account.Username,
                 ap.RiderParticipations.Count(rp => rp.Dnf),
-                ap.RiderParticipations.Where(rp => rp.Dnf).Sum(rp => rp.Price)));
+                ap.RiderParticipations.Where(rp => rp.Dnf).Sum(rp => rp.Price),
+                ap.RiderParticipations.Where(rp => rp.Dnf).Sum(rp => 22 - rp.ResultsPoints.Count),
+                ap.RiderParticipations.Where(rp => rp.Dnf).Sum(rp => (22 - rp.ResultsPoints.Count) * rp.Price)
+            ));
 
         return query.ToList().OrderByDescending(x => x.Uitvallers).ThenByDescending(x => x.UitvallerBudget);
     }
