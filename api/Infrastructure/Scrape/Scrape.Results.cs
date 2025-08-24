@@ -121,17 +121,35 @@ public partial class Scrape
 
     private static IEnumerable<PcsRow> ResultsDict(HtmlNode htmlResults)
     {
-        var columns = htmlResults.QuerySelectorAll("th").Select(x => x.InnerText).Where(x => x != "Pnt");
+        var columns = htmlResults.QuerySelectorAll("th").Select(x => x.InnerText).ToList();
+        int? colToIgnore = null;
+
+        if (columns.Count(x => x == "Pnt") > 1) // Dubbele Pnt kolommen bij eindstanden punten en berg klassementen
+        {
+            var pntIndices = columns
+                .Select((col, idx) => new { col, idx })
+                .Where(x => x.col == "Pnt")
+                .Select(x => x.idx)
+                .ToList();
+            colToIgnore = pntIndices.First(); // De eerste Pnt kolom zijn de pcs punten
+            columns.RemoveAt(colToIgnore.Value);
+        }
+
         var rows = htmlResults.QuerySelectorAll("tbody tr");
-        var results = rows.Select(row => BuildPcsRider(columns, row));
-        return rows.Select(row => BuildPcsRider(columns, row)).Where(x => x.PcsId != "skip-rider");
+        return rows.Select(row => BuildPcsRider(columns, row, colToIgnore)).Where(x => x.PcsId != "skip-rider");
     }
 
-    private static PcsRow BuildPcsRider(IEnumerable<string> columns, HtmlNode row)
+    private static PcsRow BuildPcsRider(List<string> columns, HtmlNode row, int? colToIgnore = null)
     {
-        var fields = columns.Zip(row.QuerySelectorAll("td"), (col, val) => new { col, val }).ToDictionary(x => x.col, x => x.val);
-        if (!fields.ContainsKey("Rider")) return new() { PcsId = "skip-rider" };
-        var pcsId = fields["Rider"].QuerySelector("a").GetAttributeValue("href", "")[6..];
+        var values = row.QuerySelectorAll("td").ToList();
+        if (colToIgnore.HasValue)
+        {
+            values.RemoveAt(colToIgnore.Value);
+        }
+
+        var fields = columns.Zip(values, (col, val) => new { col, val }).ToDictionary(x => x.col, x => x.val);
+        if (!fields.TryGetValue("Rider", out HtmlNode value)) return new() { PcsId = "skip-rider" };
+        var pcsId = value.QuerySelector("a").GetAttributeValue("href", "")[6..];
         if (!int.TryParse(fields["Rnk"].InnerText, out int rank)) return new() { Dnf = true, PcsId = pcsId };
 
         return new()
