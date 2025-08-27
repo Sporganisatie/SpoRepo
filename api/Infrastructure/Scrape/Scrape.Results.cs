@@ -16,7 +16,10 @@ public partial class Scrape
             ProcessResults(table.Tab, table.Results, ref riderResults, stage.Type, ref teamWinners);
         }
         UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
-        if (stage.Type is StageType.TTT) AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == "").Results);
+        if (stage.Type is StageType.TTT)
+        {
+            AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == "STAGE").Results);
+        }
         UpdateDnfRiders(riderResults, stage);
         StageComplete(stage.StageId, riderResults, finishedOverride);
 
@@ -222,8 +225,7 @@ public partial class Scrape
 
     private static void AddTTTResults(ref Dictionary<string, RiderResult> riderResults, HtmlNode Results)
     {
-        var teamOrder = Results.QuerySelectorAll(".team").Select(x => x.QuerySelectorAll("td").ElementAt(1).InnerText.Trim()).ToList();
-        // var times = new List<string>(); TODO get
+        var teamOrder = Results.ChildNodes.Skip(1).Select(li => li.QuerySelectorAll("a").First().InnerText.Trim()).ToList();
         foreach (var (key, value) in riderResults)
         {
             var position = teamOrder.IndexOf(value.Team) + 1;

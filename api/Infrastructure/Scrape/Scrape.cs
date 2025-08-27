@@ -48,7 +48,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
         var classifications = html.QuerySelectorAll("a.selectResultTab").Select(x => x.InnerText);
         if (classifications.IsNullOrEmpty()) classifications = [PcsStage];
-        var tables = html.QuerySelectorAll("#resultsCont .resTab").Select(x => x.QuerySelector("table"));
+        var tables = html.QuerySelectorAll("#resultsCont .resTab").Select(x => x.QuerySelector("ul.ttt-results") ?? x.QuerySelector("table"));
         var query = ResultsQuery(classifications.Zip(tables), stage, finishedOverride);
         if (query.Equals("")) return;
         ClearCache(query);
@@ -160,15 +160,17 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         foreach (var stageSelection in stageSelections)
         {
             var minusTeamPoints = "";
+            var kopmanpunten = "stagescore/2";
             if (stageSelection.AccountParticipation.BudgetParticipation)
             {
-                minusTeamPoints = stage.Type is StageType.TTT ? " - teamscore - stagescore" : " - teamscore";
+                minusTeamPoints = stage.Type is StageType.TTT ? " - teamscore - (stagescore/2)" : " - teamscore";
+                kopmanpunten = "stagescore/4";
             }
 
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
 
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
-            var kopmanscore = $"COALESCE((SELECT stagescore/2 FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
+            var kopmanscore = $"COALESCE((SELECT {kopmanpunten} FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
             var stageScoreTotal = $"({stagescore} + {kopmanscore})";
             var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
 
