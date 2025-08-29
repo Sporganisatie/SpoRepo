@@ -18,7 +18,7 @@ public partial class Scrape
         UpdateTeamPoints(ref riderResults, teamWinners, classificationTables.Select(c => c.Tab), stage.Type);
         if (stage.Type is StageType.TTT)
         {
-            AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == "STAGE").Results);
+            AddTTTResults(ref riderResults, classificationTables.Single(table => table.Tab == PcsStage).Results);
         }
         UpdateDnfRiders(riderResults, stage);
         StageComplete(stage.StageId, riderResults, finishedOverride);
