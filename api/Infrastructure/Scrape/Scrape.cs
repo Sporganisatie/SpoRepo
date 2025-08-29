@@ -164,7 +164,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
             if (stageSelection.AccountParticipation.BudgetParticipation)
             {
                 minusTeamPoints = stage.Type is StageType.TTT ? " - teamscore - (stagescore/2)" : " - teamscore";
-                kopmanpunten = "stagescore/4";
+                kopmanpunten = stage.Type is StageType.TTT ? "stagescore/4" : "stagescore/2";
             }
 
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
