@@ -56,7 +56,7 @@ public partial class Scrape
             var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
-        stage.Complete = stage.Complete || stage.Type is StageType.TTT;
+        stage.Complete = stage.Complete || stage.Type is StageType.TTT || stage.StageId is 965 or 966;
         stage.Finished = stageCount > 0 && !finishedOverride;
         DB.SaveChanges();
     }
@@ -109,7 +109,7 @@ public partial class Scrape
     {
         if (tab == PcsTeams || (tab == "" && type is StageType.TTT)) return;
         var pcsRows = ResultsDict(htmlResults);
-        teamWinners[tab] = pcsRows.FirstOrDefault()?.Team;
+        teamWinners[tab] = pcsRows.FirstOrDefault(x => x.Rank != 0)?.Team;
         foreach (var pcsRow in pcsRows)
         {
             riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId, pcsRow.Team));
@@ -142,7 +142,7 @@ public partial class Scrape
         return rows.Select(row => BuildPcsRider(columns, row, colToIgnore)).Where(x => x.PcsId != "skip-rider");
     }
 
-    private static PcsRow BuildPcsRider(List<string> columns, HtmlNode row, int? colToIgnore = null)
+    private static PcsRow BuildPcsRider(List<string> columns, HtmlNode row, int? colToIgnore)
     {
         var values = row.QuerySelectorAll("td").ToList();
         if (colToIgnore.HasValue)
@@ -153,7 +153,17 @@ public partial class Scrape
         var fields = columns.Zip(values, (col, val) => new { col, val }).ToDictionary(x => x.col, x => x.val);
         if (!fields.TryGetValue("Rider", out HtmlNode value)) return new() { PcsId = "skip-rider" };
         var pcsId = value.QuerySelector("a").GetAttributeValue("href", "")[6..];
-        if (!int.TryParse(fields["Rnk"].InnerText, out int rank)) return new() { Dnf = true, PcsId = pcsId };
+
+        var rnkText = GetString(fields, "Rnk");
+        int rank;
+        if (rnkText == "DF")
+        {
+            rank = 0;
+        }
+        else if (!int.TryParse(rnkText, out rank))
+        {
+            return new() { Dnf = true, PcsId = pcsId };
+        }
 
         return new()
         {
