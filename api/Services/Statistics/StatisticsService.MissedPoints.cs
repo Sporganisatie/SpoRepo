@@ -31,8 +31,8 @@ public partial class StatisticsService
                 Points = groupedData.Select(g => new
                 {
                     Id = g.Result.RiderParticipationId,
-                    Stage = g.Result.StageScore,
-                    Total = (int)(user.BudgetParticipation ? (g.Result.Stage.Type == StageType.TTT ? g.Result.Totalscore - g.Result.Teamscore - g.Result.StageScore : g.Result.Totalscore - g.Result.Teamscore) : g.Result.Totalscore)
+                    Stage = user.BudgetParticipation && g.Result.Stage.Type == StageType.TTT ? g.Result.StageScore / 2 : g.Result.StageScore,
+                    Total = (int)(user.BudgetParticipation ? (g.Result.Stage.Type == StageType.TTT ? g.Result.Totalscore - g.Result.Teamscore - g.Result.StageScore / 2 : g.Result.Totalscore - g.Result.Teamscore) : g.Result.Totalscore)
                 })
                 .OrderByDescending(g => g.Total)
                 .ToList()
