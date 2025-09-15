@@ -56,7 +56,7 @@ public partial class Scrape
             var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
-        stage.Complete = stage.Complete || stage.Type is StageType.TTT || stage.StageId is 965 or 966;
+        stage.Complete = stage.Complete || stage.Type is StageType.TTT || stage.StageId is 965 or 966 or 975;
         stage.Finished = stageCount > 0 && !finishedOverride;
         DB.SaveChanges();
     }
@@ -156,7 +156,7 @@ public partial class Scrape
 
         var rnkText = GetString(fields, "Rnk");
         int rank;
-        if (rnkText == "DF")
+        if (rnkText is "DF" or "NR")
         {
             rank = 0;
         }
