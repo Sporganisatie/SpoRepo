@@ -17,13 +17,13 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     private const string PcsYouth = "YOUTH";
     private const string PcsTeams = "TEAMS";
 
-    public void Startlist(string raceName, int year, int raceId)
+    public async void Startlist(string raceName, int year, int raceId)
     {
         raceName ??= DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Name;
         year = year == 0 ? DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Year : year;
         raceId = raceId == 0 ? DB.Races.AsNoTracking().Single(r => r.Name == raceName && r.Year == year).RaceId : raceId;
 
-        var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist").DocumentNode;
+        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(raceName)}/{year}/startlist");
         var file = File.ReadAllText($"./api/Infrastructure/Scrape/{Filename(raceName)}.json");
         var json = JsonSerializer.Deserialize<PrijzenFile>(file);
         var query = StartlistQuery(raceId, html, json.Content);
@@ -68,11 +68,12 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         }
     }
 
-    public int EtappesToevoegen(int raceId)
+    public async Task<int> EtappesToevoegen(int raceId)
     {
         var race = DB.Races.AsNoTracking().Single(r => r.RaceId == raceId);
 
-        var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/").DocumentNode;
+        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/");       
+        
         var rows = html.QuerySelector(".mt20 tbody").SelectNodes("tr");
 
         var stageNr = 1;
@@ -82,7 +83,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         {
             var url = row.QuerySelector("a");
             if (url == null || row.InnerText.Contains("Restday")) continue;
-            starttime = GetStartTime(url.GetAttributeValue("href", ""));
+            starttime = await GetStartTime(url.GetAttributeValue("href", ""));
 
             var stage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
             if (stage is null)
@@ -114,10 +115,10 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         return StageType.REG;
     }
 
-    private static DateTime GetStartTime(string url)
+    private async static Task<DateTime> GetStartTime(string url)
     {
-        var raceInfo = new HtmlWeb().Load($"https://www.procyclingstats.com/{url}")
-                .DocumentNode.QuerySelector(".w30 .keyvalueList").Children();
+        var node = await PcsClient.LoadAsync($"https://www.procyclingstats.com/{url}");
+        var raceInfo = node.QuerySelector(".w30 .keyvalueList").Children();
         var date = raceInfo.First(x => x.InnerText.Contains("Date")).Children().ToList()[1].InnerText;
         var time = raceInfo.First(x => x.InnerText.Contains("Start time")).Children().ToList()[1].InnerText.Split().First();
         if (!TimeSpan.TryParse(time, out _))

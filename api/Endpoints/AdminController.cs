@@ -45,8 +45,8 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
         => Ok(RaceService.SetFinished(raceId));
 
     [HttpGet("AddStages")]
-    public IActionResult AddStages(int raceId)
-        => Ok(Scraper.EtappesToevoegen(raceId));
+    public async Task<IActionResult> AddStages(int raceId)
+        => Ok(await Scraper.EtappesToevoegen(raceId));
 
     [HttpGet("resetCache")]
     public IActionResult ResetCache()
