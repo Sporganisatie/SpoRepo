@@ -26,15 +26,15 @@ public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryC
         return new(stateBeforeStart, 0);
     }
 
-    public int SetFinished(int raceId)
+    public async Task<int> SetFinished(int raceId)
     {
-        var race = DB.Races.Single(r => r.RaceId == raceId);
+        var race = await DB.Races.SingleAsync(r => r.RaceId == raceId);
         race.Finished = true;
-        var participations = DB.AccountParticipations.Where(ap => ap.RaceId == raceId).ToList();
+        var participations = await DB.AccountParticipations.Where(ap => ap.RaceId == raceId).ToListAsync();
         foreach (var ap in participations)
         {
-            var finalScore = DB.StageSelections.Include(ss => ss.Stage)
-                .Single(ss => ss.Stage.Type == StageType.FinalStandings && ss.AccountParticipationId == ap.AccountParticipationId)
+            var finalScore = (await DB.StageSelections.Include(ss => ss.Stage)
+                .SingleAsync(ss => ss.Stage.Type == StageType.FinalStandings && ss.AccountParticipationId == ap.AccountParticipationId))
                 .TotalScore;
 
             ap.FinalScore = finalScore;
@@ -42,7 +42,7 @@ public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryC
         }
 
         ((MemoryCache)MemoryCache).Clear();
-        return DB.SaveChanges();
+        return await DB.SaveChangesAsync();
     }
 
     public int JoinRace(int raceId)

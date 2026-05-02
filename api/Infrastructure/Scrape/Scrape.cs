@@ -17,7 +17,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     private const string PcsYouth = "YOUTH";
     private const string PcsTeams = "TEAMS";
 
-    public async void Startlist(string raceName, int year, int raceId)
+    public async Task Startlist(string raceName, int year, int raceId)
     {
         raceName ??= DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Name;
         year = year == 0 ? DB.Races.AsNoTracking().Single(r => r.RaceId == raceId).Year : year;
@@ -72,8 +72,8 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
     {
         var race = DB.Races.AsNoTracking().Single(r => r.RaceId == raceId);
 
-        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/");       
-        
+        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/");
+
         var rows = html.QuerySelector(".mt20 tbody").SelectNodes("tr");
 
         var stageNr = 1;
