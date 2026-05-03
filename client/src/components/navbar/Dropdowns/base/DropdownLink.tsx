@@ -13,4 +13,5 @@ const DropdownLink = (props: DropdownLinkProps) => {
   );
 };
 
-export { DropdownLink, DropdownLinkProps };
+export { DropdownLink };
+export type { DropdownLinkProps };
