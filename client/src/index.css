@@ -1,17 +1,4 @@
-/*CSS RESET*/
-/* html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    outline: 0;
-    font-weight: inherit;
-    font-style: inherit;
-    font-size: 100%;
-    font-family: inherit;
-    vertical-align: baseline;
-  } */
-
-/* remember to define focus styles! */
+@import "./styles/tokens.css";
 
 :focus {
   outline: 0;
@@ -25,33 +12,33 @@ table {
 }
 
 button {
-  background-color: #334155;
+  background-color: var(--bg-control);
   border: 0;
-  color: white;
-  padding: 0.5rem;
+  color: var(--fg-default);
+  padding: var(--space-2);
   cursor: pointer;
 }
 button:hover {
-  background-color: #475569;
+  background-color: var(--bg-control-hover);
   transition: 200ms;
 }
 
 input {
-  background-color: #334155;
+  background-color: var(--bg-control);
   border: 0;
-  color: white;
-  padding: 0.5rem;
+  color: var(--fg-default);
+  padding: var(--space-2);
 }
 
 select {
-  background-color: #334155;
+  background-color: var(--bg-control);
   border: 0;
-  color: white;
-  padding: 0.5rem;
+  color: var(--fg-default);
+  padding: var(--space-2);
   cursor: pointer;
 }
 select:hover {
-  background-color: #475569;
+  background-color: var(--bg-control-hover);
   transition: 200ms;
 }
 
@@ -66,10 +53,8 @@ body {
 }
 
 .content {
-  background-color: #020617; /*slate-900*/
-  color: white;
-  /*background-color: #EFF6FF;
-  /*blue-50*/
+  background-color: var(--bg-page);
+  color: var(--fg-default);
 }
 
 div.pageContainer {
@@ -90,13 +75,13 @@ img.loadingGif {
 }
 
 .notselected > :first-child {
-  background-color: #475569;
+  background-color: var(--bg-control-hover);
   text-align: center;
 }
 
 .selected > :first-child {
   background-color: #94a3b8;
-  color: black;
+  color: var(--fg-on-light);
   text-align: center;
 }
 
