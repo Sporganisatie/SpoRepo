@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRaceContext } from "./shared/RaceContextProvider";
-import axios from "axios";
+import axios from "../api/client";
 
 const Home = () => {
   const navigate = useNavigate();

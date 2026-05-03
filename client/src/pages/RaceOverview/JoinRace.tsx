@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../api/client";
 import { useNavigate, useParams } from "react-router-dom";
 
 const JoinRace = () => {

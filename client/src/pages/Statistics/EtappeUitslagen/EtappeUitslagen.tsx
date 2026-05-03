@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../../../api/client";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import UitslagenTable from "./UitslagenTable";
 import ScoreverdelingTable from "./ScoreverdelingTable";

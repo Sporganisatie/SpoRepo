@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../../api/client";
 import { useBudgetContext } from "../BudgetContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -16,8 +16,6 @@ export function useTeamComparison(
   const { data } = useQuery({
     queryKey: ["teamComparison", raceId, budgetParticipation, stagenr] as const,
     queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
-    staleTime: 3_600_000,
-    gcTime: 3_600_000,
     throwOnError: true,
   });
 

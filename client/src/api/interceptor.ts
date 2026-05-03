@@ -1,10 +1,9 @@
-import type { AxiosError } from "axios";
-import axios from "axios";
-import type { AxiosRequestConfig } from "axios";
+import type { AxiosError, AxiosRequestConfig } from "axios";
 import type { NavigateFunction } from "react-router-dom";
+import { apiClient } from "./client";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  config.headers = config.headers ?? {}; // todo niet doen bij login endpoints
+  config.headers = config.headers ?? {};
   config.headers.Authorization = localStorage.getItem("authToken") ?? "";
   return config;
 };
@@ -15,20 +14,16 @@ const onResponseError = (error: AxiosError, navigate: NavigateFunction): void =>
       navigate("/login");
       break;
     case 403:
-      navigate("/");
-      break;
     case 423:
       navigate("/");
       break;
   }
 };
 
-const setupAxiosInterceptor = (navigate: NavigateFunction) => {
-  axios.interceptors.request.use(onRequest);
-  axios.interceptors.response.use(
+export const setupAxiosInterceptor = (navigate: NavigateFunction) => {
+  apiClient.interceptors.request.use(onRequest);
+  apiClient.interceptors.response.use(
     (res) => res,
     (error) => onResponseError(error, navigate)
   );
 };
-
-export { setupAxiosInterceptor };

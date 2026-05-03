@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
-import axios from "axios";
+import axios from "../../api/client";
 import SreDataTable from "../../components/shared/SreDataTable";
 import RaceWrapAward from "./RaceWrapAward";
 

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { useMissedPoints } from "../Statistics/MissedPointsHook";
 import { useUitvallers } from "../Statistics/UitvallersHook";
-import axios from "axios";
+import axios from "../../api/client";
 
 export type RaceScoreData = {
   topScore: number;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
-import axios from "axios";
+import axios from "../../api/client";
 import MissedPointsTable from "./MissedPointsTable";
 
 export type MissedPointsData = {

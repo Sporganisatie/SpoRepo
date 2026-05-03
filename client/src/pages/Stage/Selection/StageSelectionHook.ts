@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../../../api/client";
 import type { StageSelectionData } from "../models/StageSelectionData";
 import { stageSelectionDataSchema } from "../models/StageSelectionData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
@@ -16,8 +16,6 @@ export function useStageSelection() {
     queryKey,
     queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2], queryKey[3]),
     throwOnError: true,
-    staleTime: 3_600_000,
-    gcTime: 3_600_000,
   });
 
   async function fetchData(raceId: string, stagenr: string, budgetParticipation: boolean) {

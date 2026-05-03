@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../api/client";
 import { useQuery } from "@tanstack/react-query";
 
 export function useRiderPage(riderId?: string) {

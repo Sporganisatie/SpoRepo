@@ -3,7 +3,7 @@ import type { SelectOption } from "../../Select";
 import Select from "../../Select";
 import { useRaceContext, useRaceDispatch } from "../../shared/RaceContextProvider";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../../api/client";
 
 const RaceDropdown = () => {
   const raceDispatch = useRaceDispatch();

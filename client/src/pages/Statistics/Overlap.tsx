@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import Overlaptable from "./OverlapTable";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/client";
 
 export type OverlapData = {
   overlap: OverlapRow[];

@@ -1,7 +1,7 @@
 import { CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label, Bar, BarChart } from "recharts";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/client";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { colors, convertData } from "./ChartsHelper";
 

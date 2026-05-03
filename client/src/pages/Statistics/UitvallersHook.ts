@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
-import axios from "axios";
+import axios from "../../api/client";
 import type { UitvallersData } from "./Uitvallers";
 
 export function useUitvallers() {

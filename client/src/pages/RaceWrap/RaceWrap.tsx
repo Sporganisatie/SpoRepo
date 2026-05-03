@@ -7,7 +7,7 @@ import RaceWrapMissedPoints from "./RaceWrapMissedPoints";
 import RaceWrapRaceScores from "./RaceWrapRaceScores";
 import RaceWrapStages from "./RaceWrapStages";
 import RaceWrapAward from "./RaceWrapAward";
-import axios from "axios";
+import axios from "../../api/client";
 import type { SelectOption } from "../../components/Select";
 
 export type MissedPointsTotalRow = ReturnType<typeof getMissedPointsTotal>[number];

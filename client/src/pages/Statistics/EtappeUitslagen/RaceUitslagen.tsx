@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../../api/client";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import UitslagenTable from "./UitslagenTable";
 import ScoreverdelingTable from "./ScoreverdelingTable";

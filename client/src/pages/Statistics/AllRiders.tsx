@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
-import axios from "axios";
+import axios from "../../api/client";
 import type { TableColumn } from "react-data-table-component";
 import type { RiderParticipation } from "../../models/RiderParticipation";
 import RiderLink from "../../components/shared/RiderLink";

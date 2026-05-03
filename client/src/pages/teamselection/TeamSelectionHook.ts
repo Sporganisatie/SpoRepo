@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../../api/client";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
 import type { TeamSelectionData } from "./Models/TeamSelectionData";
@@ -15,8 +15,6 @@ export function useTeamSelection() {
     queryKey,
     queryFn: ({ queryKey }) => fetchData(queryKey[1], queryKey[2]),
     throwOnError: true,
-    staleTime: 3_600_000,
-    gcTime: 3_600_000,
   });
 
   async function fetchData(raceId: number, budgetParticipation: boolean) {

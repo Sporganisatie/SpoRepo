@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../../../api/client";
 import type { StageResultData } from "../models/StageResultData";
 import { stageResultDataSchema } from "../models/StageResultData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
@@ -20,8 +20,6 @@ export function useStageResult() {
       virtualResult: false,
       finalStandings: false,
     },
-    staleTime: 3_600_000,
-    gcTime: 3_600_000,
   });
 
   async function fetchData(raceId: string, stagenr: string, budgetParticipation: boolean) {

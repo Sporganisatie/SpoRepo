@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
-import axios from "axios";
+import axios from "../../api/client";
 import type { UniekheidRow } from "./UniekheidTable";
 import UniekheidTable from "./UniekheidTable";
 import type { UniekheidRennerRow } from "./UniekheidRennersTable";

@@ -1,7 +1,7 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } from "recharts";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../../api/client";
 import { colors } from "./ChartsHelper";
 
 interface ChartData {

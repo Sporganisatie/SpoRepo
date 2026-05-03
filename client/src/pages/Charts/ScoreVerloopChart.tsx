@@ -2,7 +2,7 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Label } 
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/client";
 import { colors } from "./ChartsHelper";
 import SmallSwitch from "../../components/shared/SmallSwitch";
 
