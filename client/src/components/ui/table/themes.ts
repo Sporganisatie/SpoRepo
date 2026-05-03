@@ -1,15 +1,16 @@
 import { createTheme } from "react-data-table-component";
+import { tokens } from "../../../styles/tokens";
 
 export const overrideDarkMode = () =>
   createTheme("dark", {
     background: {
-      default: "#0f172a",
+      default: tokens.bg.surface,
     },
     divider: {
-      default: "#020617",
+      default: tokens.bg.page,
     },
     striped: {
-      default: "#1e293b",
+      default: tokens.bg.elevated,
     },
     rows: {
       fontSize: "25px",

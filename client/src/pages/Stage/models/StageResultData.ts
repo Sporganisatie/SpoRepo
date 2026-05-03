@@ -8,7 +8,7 @@ export const stageResultDataSchema = z.object({
   teamResult: z.array(riderScoreSchema),
   classifications: classificationsSchema,
   virtualResult: z.boolean(),
-  finalStandings: z.boolean()
+  finalStandings: z.boolean(),
 });
 
 export type StageResultData = z.infer<typeof stageResultDataSchema>;

@@ -9,7 +9,7 @@ const Layout = () => {
         <Navbar />
         <div className="pageContainer">{<Outlet />}</div>
       </BudgetStateProvider>
-    </div >
+    </div>
   );
 };
 

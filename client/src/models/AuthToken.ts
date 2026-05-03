@@ -1,4 +1,4 @@
 export interface AuthToken {
-  id: number,
-  admin: boolean
+  id: number;
+  admin: boolean;
 }

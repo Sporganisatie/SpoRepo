@@ -1,4 +1,4 @@
-import { TabHook } from "./TabsHook";
+import type { TabHook } from "./TabsHook";
 import "./tabs.css";
 
 const Tabs = ({
@@ -9,14 +9,13 @@ const Tabs = ({
   const tabDivs = tabs.map((tab) => {
     return (
       <div
+        key={tab}
         className={
           "tab " +
           (selectedTab === tab ? "selected " : "") +
           (disabledTabs.includes(tab) ? "disabled " : "")
         }
-        onClick={
-          disabledTabs.includes(tab) ? () => {} : () => setSelectedTab(tab)
-        }
+        onClick={disabledTabs.includes(tab) ? () => {} : () => setSelectedTab(tab)}
       >
         {tab}
       </div>

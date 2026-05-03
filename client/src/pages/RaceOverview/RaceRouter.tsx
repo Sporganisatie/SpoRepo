@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../api/client";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -13,8 +13,8 @@ enum RaceStateEnum {
 
 // TODO dit component vervangen door pure typescript
 const RaceRouter = () => {
-  let navigate = useNavigate();
-  let { raceId } = useParams();
+  const navigate = useNavigate();
+  const { raceId } = useParams();
   useEffect(() => {
     axios
       .get(`/api/Race`, { params: { raceId } })
@@ -31,10 +31,10 @@ const RaceRouter = () => {
             return;
         }
       })
-      .catch(function (error) { });
+      .catch(function (error) {});
   }, [raceId, navigate]);
 
-  return <div style={{ color: 'white' }}>Loading...</div>;
+  return <div style={{ color: "white" }}>Loading...</div>;
 };
 
 export default RaceRouter;

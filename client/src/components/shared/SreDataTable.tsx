@@ -1,15 +1,16 @@
-import DataTable, { TableProps } from "react-data-table-component";
+import type { TableProps } from "react-data-table-component";
+import DataTable from "react-data-table-component";
 
 interface SreTableProps<T> extends TableProps<T> {
-    maxwidth?: number
+  maxwidth?: number;
 }
 
 function SreDataTable<T>(props: SreTableProps<T>) {
-    return (
-        <div style={{ width: props.maxwidth }} >
-            <DataTable {...props} striped dense highlightOnHover theme="dark" />
-        </div>
-    )
+  return (
+    <div style={{ width: props.maxwidth }}>
+      <DataTable {...props} striped dense highlightOnHover theme="dark" />
+    </div>
+  );
 }
 
 export default SreDataTable;

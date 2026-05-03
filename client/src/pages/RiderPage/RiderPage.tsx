@@ -2,11 +2,10 @@ import { useParams } from "react-router-dom";
 import { useRiderPage } from "./RiderPageHook";
 
 const RiderPage = () => {
-  let { riderId } = useParams();
+  const { riderId } = useParams();
   const rider = useRiderPage(riderId);
-  var fullName = `${rider?.firstname} ${rider?.lastname}`;
+  const fullName = `${rider?.firstname} ${rider?.lastname}`;
   document.title = fullName;
-
 
   return (
     <div>

@@ -27,114 +27,114 @@ import Overlap from "./pages/Statistics/Overlap";
 import RaceWrap from "./pages/RaceWrap/RaceWrap";
 
 const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    Component: Root,
+    children: [
+      {
         path: "/",
-        Component: Root,
-        children: [
-            {
-                path: "/",
-                Component: Home,
-            },
-            {
-                path: "login",
-                Component: Login,
-            },
-            {
-                path: "profile",
-                Component: UserProfile,
-            },
-            {
-                path: "designsandbox",
-                Component: DesignSandbox,
-            },
-            {
-                path: ":raceId/teamselection",
-                Component: TeamSelection,
-            },
-            {
-                path: ":raceId/race",
-                Component: RaceRouter,
-            },
-            {
-                path: ":raceId/stage/:stagenr",
-                Component: Stage,
-            },
-            {
-                path: ":raceId/racewrap",
-                Component: RaceWrap,
-            },
-            {
-                path: ":raceId/joinrace",
-                Component: JoinRace,
-            },
-            {
-                path: "rider/:riderId",
-                Component: RiderPage,
-            },
-            {
-                path: "admin",
-                Component: Admin,
-            },
-            {
-                path: "regelspunten",
-                Component: RulesPopup,
-            },
-            // statistics
-            {
-                path: ":raceId/teamcomparison",
-                Component: TeamComparisonPage,
-            },
-            {
-                path: ":raceId/missedpoints",
-                Component: MissedPoints,
-            },
-            {
-                path: ":raceId/uitvallers",
-                Component: Uitvallers,
-            },
-            {
-                path: ":raceId/etappeUitslagen",
-                Component: EtappeUitslagen,
-            },
-            {
-                path: "raceUitslagen/:raceName?",
-                Component: RaceUitslagen,
-            },
-            {
-                path: ":raceId/allRiders",
-                Component: AllRiders,
-            },
-            {
-                path: ":raceId/klassementen",
-                Component: Klassementen,
-            },
-            {
-                path: ":raceId/teamoverlap",
-                Component: Overlap,
-            },
-            {
-                path: ":raceId/uniekheid",
-                Component: Uniekheid,
-            },
-            // charts
-            {
-                path: "charts/scoreverloop",
-                Component: RaceScoreVerloopChart,
-            },
-            {
-                path: ":raceId/charts/scoreverloop",
-                Component: ScoreVerloopChart,
-            },
-            {
-                path: "charts/scoreverdeling",
-                Component: RaceScoreVerdelingChart,
-            },
-            {
-                path: ":raceId/charts/scoreverdeling",
-                Component: ScoreVerdelingChart,
-            },
-        ],
-    },
+        Component: Home,
+      },
+      {
+        path: "login",
+        Component: Login,
+      },
+      {
+        path: "profile",
+        Component: UserProfile,
+      },
+      {
+        path: "designsandbox",
+        Component: DesignSandbox,
+      },
+      {
+        path: ":raceId/teamselection",
+        Component: TeamSelection,
+      },
+      {
+        path: ":raceId/race",
+        Component: RaceRouter,
+      },
+      {
+        path: ":raceId/stage/:stagenr",
+        Component: Stage,
+      },
+      {
+        path: ":raceId/racewrap",
+        Component: RaceWrap,
+      },
+      {
+        path: ":raceId/joinrace",
+        Component: JoinRace,
+      },
+      {
+        path: "rider/:riderId",
+        Component: RiderPage,
+      },
+      {
+        path: "admin",
+        Component: Admin,
+      },
+      {
+        path: "regelspunten",
+        Component: RulesPopup,
+      },
+      // statistics
+      {
+        path: ":raceId/teamcomparison",
+        Component: TeamComparisonPage,
+      },
+      {
+        path: ":raceId/missedpoints",
+        Component: MissedPoints,
+      },
+      {
+        path: ":raceId/uitvallers",
+        Component: Uitvallers,
+      },
+      {
+        path: ":raceId/etappeUitslagen",
+        Component: EtappeUitslagen,
+      },
+      {
+        path: "raceUitslagen/:raceName?",
+        Component: RaceUitslagen,
+      },
+      {
+        path: ":raceId/allRiders",
+        Component: AllRiders,
+      },
+      {
+        path: ":raceId/klassementen",
+        Component: Klassementen,
+      },
+      {
+        path: ":raceId/teamoverlap",
+        Component: Overlap,
+      },
+      {
+        path: ":raceId/uniekheid",
+        Component: Uniekheid,
+      },
+      // charts
+      {
+        path: "charts/scoreverloop",
+        Component: RaceScoreVerloopChart,
+      },
+      {
+        path: ":raceId/charts/scoreverloop",
+        Component: ScoreVerloopChart,
+      },
+      {
+        path: "charts/scoreverdeling",
+        Component: RaceScoreVerdelingChart,
+      },
+      {
+        path: ":raceId/charts/scoreverdeling",
+        Component: ScoreVerdelingChart,
+      },
+    ],
+  },
 ]);
 
 export default router;

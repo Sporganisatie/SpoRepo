@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../api/client";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -13,7 +13,7 @@ export function useStage() {
   if (raceId === undefined || stagenr === undefined) {
     throw new Error("Expected race and stage numbers");
   }
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   function setStage(newStage: string) {
     stagenr = newStage;
@@ -26,10 +26,7 @@ export function useStage() {
     staleTime: 10000,
   });
 
-  function fetchStage(
-    raceId?: string,
-    stagenr?: string
-  ): Promise<StageStateEnum> {
+  function fetchStage(raceId?: string, stagenr?: string): Promise<StageStateEnum> {
     if (raceId === undefined || stagenr === undefined) {
       throw new Error("Expected race and stage numbers");
     }

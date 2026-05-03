@@ -1,1 +1,1 @@
-export { default } from "./RulesPopup"
+export { default } from "./RulesPopup";

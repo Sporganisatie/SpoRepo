@@ -1,5 +1,4 @@
-import { Rider } from "./Rider";
-
+import type { Rider } from "./Rider";
 
 export interface UserSelection {
   username: string;
@@ -19,5 +18,5 @@ export interface StageComparisonRider {
 export enum StageSelectedEnum {
   None,
   InTeam,
-  InStageSelection
+  InStageSelection,
 }
