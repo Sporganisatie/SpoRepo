@@ -26,10 +26,7 @@ export function useStage() {
     staleTime: 10000,
   });
 
-  function fetchStage(
-    raceId?: string,
-    stagenr?: string
-  ): Promise<StageStateEnum> {
+  function fetchStage(raceId?: string, stagenr?: string): Promise<StageStateEnum> {
     if (raceId === undefined || stagenr === undefined) {
       throw new Error("Expected race and stage numbers");
     }

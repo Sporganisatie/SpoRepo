@@ -31,10 +31,10 @@ const RaceRouter = () => {
             return;
         }
       })
-      .catch(function (error) { });
+      .catch(function (error) {});
   }, [raceId, navigate]);
 
-  return <div style={{ color: 'white' }}>Loading...</div>;
+  return <div style={{ color: "white" }}>Loading...</div>;
 };
 
 export default RaceRouter;

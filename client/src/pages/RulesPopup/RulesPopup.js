@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import EndPoints from './EndPoints';
-import StagePoints from './StagePoints';
-import StageSelectionExplanation from './StageSelectionExplanation';
-import TeamSelectionExplanation from './TeamSelectionExplanation';
+import { useState } from "react";
+import EndPoints from "./EndPoints";
+import StagePoints from "./StagePoints";
+import StageSelectionExplanation from "./StageSelectionExplanation";
+import TeamSelectionExplanation from "./TeamSelectionExplanation";
 
 const RulesPopup = (props) => {
   const [page, setPage] = useState(props.page);
@@ -17,10 +17,18 @@ const RulesPopup = (props) => {
         <div>
           <div className="flex">
             <div className="flex-grow ml-4 space-x-4">
-              <button className="button_standard blue" onClick={() => setPage('teamSelection')}>Team Selectie</button>
-              <button className="button_standard blue" onClick={() => setPage('endPoints')}>Puntentelling</button>
-              <button className="button_standard blue" onClick={() => setPage('stageSelection')}>Etappe opstelling</button>
-              <button className="button_standard blue" onClick={() => setPage('stagePoints')}>Etappe punten</button>
+              <button className="button_standard blue" onClick={() => setPage("teamSelection")}>
+                Team Selectie
+              </button>
+              <button className="button_standard blue" onClick={() => setPage("endPoints")}>
+                Puntentelling
+              </button>
+              <button className="button_standard blue" onClick={() => setPage("stageSelection")}>
+                Etappe opstelling
+              </button>
+              <button className="button_standard blue" onClick={() => setPage("stagePoints")}>
+                Etappe punten
+              </button>
             </div>
             <div>
               {/* <button className="button_standard text" onClick={() => setShowModal(!showModal)}>X</button> */}
@@ -35,7 +43,7 @@ const RulesPopup = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RulesPopup
+export default RulesPopup;

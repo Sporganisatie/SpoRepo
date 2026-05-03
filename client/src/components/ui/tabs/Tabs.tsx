@@ -14,9 +14,7 @@ const Tabs = ({
           (selectedTab === tab ? "selected " : "") +
           (disabledTabs.includes(tab) ? "disabled " : "")
         }
-        onClick={
-          disabledTabs.includes(tab) ? () => {} : () => setSelectedTab(tab)
-        }
+        onClick={disabledTabs.includes(tab) ? () => {} : () => setSelectedTab(tab)}
       >
         {tab}
       </div>

@@ -7,7 +7,6 @@ const RiderPage = () => {
   var fullName = `${rider?.firstname} ${rider?.lastname}`;
   document.title = fullName;
 
-
   return (
     <div>
       {fullName} heeft meegedaan aan:

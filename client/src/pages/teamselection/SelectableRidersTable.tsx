@@ -6,90 +6,90 @@ import SelectableRiderFoldout from "./SelectableRiderFoldOut";
 import SreDataTable from "../../components/shared/SreDataTable";
 
 const conditionalRowStyles = [
-    {
-        when: (row: SelectableRider) => row.selectable !== SelectableEnum.Open,
-        style: {
-            backgroundColor: "#450a0a",
-        },
+  {
+    when: (row: SelectableRider) => row.selectable !== SelectableEnum.Open,
+    style: {
+      backgroundColor: "#450a0a",
     },
-    {
-        when: (row: SelectableRider) => row.selectable === SelectableEnum.Selected,
-        style: {
-            backgroundColor: "#64748b",
-        },
+  },
+  {
+    when: (row: SelectableRider) => row.selectable === SelectableEnum.Selected,
+    style: {
+      backgroundColor: "#64748b",
     },
+  },
 ];
 
 const SelectableRidersTable = ({
-    data,
-    loading,
-    addRider,
-    removeRider,
+  data,
+  loading,
+  addRider,
+  removeRider,
 }: {
-    data: SelectableRider[];
-    loading: boolean;
-    addRider: (id: number) => void;
-    removeRider: (id: number) => void;
+  data: SelectableRider[];
+  loading: boolean;
+  addRider: (id: number) => void;
+  removeRider: (id: number) => void;
 }) => {
-    const columns: TableColumn<SelectableRider>[] = [
-        {
-            name: "Naam",
-            width: "50",
-            cell: (row: SelectableRider) => <RiderLink rider={row.details.rider} />,
-        },
-        {
-            name: "Price",
-            width: "100px",
-            selector: (row: SelectableRider) => row.details.price,
-        },
-        {
-            name: "Team",
-            selector: (row: SelectableRider) => row.details.team,
-        },
-        {
-            cell: (row: SelectableRider) => {
-                switch (row.selectable) {
-                    case SelectableEnum.Open:
-                        return (
-                            <button
-                                className="teamselect-rider-button select"
-                                onClick={() => addRider(row.details.riderParticipationId)}
-                            >
-                                ➤
-                            </button>
-                        );
-                    case SelectableEnum.Selected:
-                        return (
-                            <button
-                                className="teamselect-rider-button deselect"
-                                onClick={() => removeRider(row.details.riderParticipationId)}
-                            >
-                                🞫
-                            </button>
-                        );
-                    default:
-                        return <></>;
-                }
-            },
-        },
-    ];
+  const columns: TableColumn<SelectableRider>[] = [
+    {
+      name: "Naam",
+      width: "50",
+      cell: (row: SelectableRider) => <RiderLink rider={row.details.rider} />,
+    },
+    {
+      name: "Price",
+      width: "100px",
+      selector: (row: SelectableRider) => row.details.price,
+    },
+    {
+      name: "Team",
+      selector: (row: SelectableRider) => row.details.team,
+    },
+    {
+      cell: (row: SelectableRider) => {
+        switch (row.selectable) {
+          case SelectableEnum.Open:
+            return (
+              <button
+                className="teamselect-rider-button select"
+                onClick={() => addRider(row.details.riderParticipationId)}
+              >
+                ➤
+              </button>
+            );
+          case SelectableEnum.Selected:
+            return (
+              <button
+                className="teamselect-rider-button deselect"
+                onClick={() => removeRider(row.details.riderParticipationId)}
+              >
+                🞫
+              </button>
+            );
+          default:
+            return <></>;
+        }
+      },
+    },
+  ];
 
-    return (
-        <div className="selectable-riders-table-wrapper">
-            <SreDataTable
-                title="Alle renners"
-                columns={columns}
-                data={data}
-                progressPending={loading}
-                conditionalRowStyles={conditionalRowStyles}
-                expandableRows
-                expandableRowsComponent={SelectableRiderFoldout}
-                expandOnRowClicked
-                expandableRowsHideExpander
-                pointerOnHover
-            />
-        </div>
-    );
+  return (
+    <div className="selectable-riders-table-wrapper">
+      <SreDataTable
+        title="Alle renners"
+        columns={columns}
+        data={data}
+        progressPending={loading}
+        conditionalRowStyles={conditionalRowStyles}
+        expandableRows
+        expandableRowsComponent={SelectableRiderFoldout}
+        expandOnRowClicked
+        expandableRowsHideExpander
+        pointerOnHover
+      />
+    </div>
+  );
 };
 
 export default SelectableRidersTable;

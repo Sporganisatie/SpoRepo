@@ -1,6 +1,5 @@
 import { Rider } from "./Rider";
 
-
 export interface UserSelection {
   username: string;
   riders: StageComparisonRider[];
@@ -19,5 +18,5 @@ export interface StageComparisonRider {
 export enum StageSelectedEnum {
   None,
   InTeam,
-  InStageSelection
+  InStageSelection,
 }

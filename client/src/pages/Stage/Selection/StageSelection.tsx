@@ -18,8 +18,7 @@ const StageSelection = () => {
   const { stagenr } = useStage();
   document.title = `Etappe ${stagenr} opstelling`;
 
-  const { data, isLoading, addRider, removeRider, addKopman, removeKopman } =
-    useStageSelection();
+  const { data, isLoading, addRider, removeRider, addKopman, removeKopman } = useStageSelection();
 
   let navigate = useNavigate();
 
@@ -28,16 +27,10 @@ const StageSelection = () => {
       {data ? (
         <div>
           <div style={{ margin: "10px 0" }}>
-            Deadline:{" "}
-            {data.deadline?.toLocaleDateString("nl-NL", options) ?? ""}
+            Deadline: {data.deadline?.toLocaleDateString("nl-NL", options) ?? ""}
           </div>
-          {stagenr === "1" && (
-            <button onClick={() => navigate("/")}>Teamselectie</button>
-          )}
-          <SelectionsComplete
-            compleet={data.compleet}
-            budgetCompleet={data.budgetCompleet}
-          />
+          {stagenr === "1" && <button onClick={() => navigate("/")}>Teamselectie</button>}
+          <SelectionsComplete compleet={data.compleet} budgetCompleet={data.budgetCompleet} />
           <div style={{ display: "flex" }}>
             <div style={{ margin: "0 5px" }}>
               <StageSelectionTeam

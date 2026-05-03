@@ -13,7 +13,7 @@ export function useRiderPage(riderId?: string) {
   });
 
   function fetchRiderInfo(riderId?: string): Promise<any> {
-    console.log(riderId)
+    console.log(riderId);
     if (riderId === undefined) {
       throw new Error("Expected riderId");
     }

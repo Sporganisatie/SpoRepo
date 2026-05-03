@@ -5,7 +5,9 @@ import { useParams } from "react-router-dom";
 import { UserSelection } from "../../../models/UserSelection";
 import { AllSelectedRiderRow } from "./AllSelectedRidersTable";
 
-export function useTeamComparison(setToggles: React.Dispatch<React.SetStateAction<{ username: string; showUser: boolean; }[]>>) {
+export function useTeamComparison(
+  setToggles: React.Dispatch<React.SetStateAction<{ username: string; showUser: boolean }[]>>
+) {
   const budgetParticipation = useBudgetContext();
   const { raceId, stagenr } = useParams();
   if (!raceId) {
@@ -30,7 +32,10 @@ export function useTeamComparison(setToggles: React.Dispatch<React.SetStateActio
         params: { raceId, stagenr, budgetParticipation },
       })
       .then((res) => {
-        const toggles = res.data.teams.map((team: UserSelection) => ({ username: team.username, showUser: true }));
+        const toggles = res.data.teams.map((team: UserSelection) => ({
+          username: team.username,
+          showUser: true,
+        }));
         setToggles(toggles);
         return res.data;
       })
@@ -49,14 +54,14 @@ export function useTeamComparison(setToggles: React.Dispatch<React.SetStateActio
 
   function toggleAll(): void {
     setToggles((prevToggles) => {
-      const newValue = prevToggles.some(toggle => !toggle.showUser);
-      return prevToggles.map(toggle => ({ ...toggle, showUser: newValue }));
+      const newValue = prevToggles.some((toggle) => !toggle.showUser);
+      return prevToggles.map((toggle) => ({ ...toggle, showUser: newValue }));
     });
   }
 
   return {
     data,
     toggleUser,
-    toggleAll
+    toggleAll,
   };
 }

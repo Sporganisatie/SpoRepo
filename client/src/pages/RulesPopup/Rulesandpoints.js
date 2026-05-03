@@ -3,7 +3,6 @@
 // class Rulesandpoints extends Component {
 //   render() {
 
-
 //     var dagPuntenTTT = [
 //       { Positie: 1, Daguitslag: 40 },
 //       { Positie: 2, Daguitslag: 32 },
