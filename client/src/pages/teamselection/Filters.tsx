@@ -1,6 +1,7 @@
 import ArrowSelect from "../../components/ArrowSelect";
 import type { SelectOption } from "../../components/Select";
 import Select from "../../components/Select";
+import { BUDGET_CAP_FREE, BUDGET_CAP_PAID } from "../../lib/constants";
 
 export interface Filters {
   name: string;
@@ -11,7 +12,7 @@ export interface Filters {
 }
 
 const priceOptions: SelectOption<number>[] = [
-  { displayValue: "500.000", value: 500000 },
+  { displayValue: "500.000", value: BUDGET_CAP_FREE },
   { displayValue: "750.000", value: 750000 },
   { displayValue: "1.000.000", value: 1000000 },
   { displayValue: "1.500.000", value: 1500000 },
@@ -25,7 +26,7 @@ const priceOptions: SelectOption<number>[] = [
   { displayValue: "5.500.000", value: 5500000 },
   { displayValue: "6.000.000", value: 6000000 },
   { displayValue: "7.000.000", value: 7000000 },
-  { displayValue: "8.000.000", value: 8000000 },
+  { displayValue: "8.000.000", value: BUDGET_CAP_PAID },
 ];
 
 const skillOptions: SelectOption<string>[] = [

@@ -4,6 +4,7 @@ import { useBudgetContext } from "../../components/shared/BudgetContextProvider"
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
 import type { TeamSelectionData } from "./Models/TeamSelectionData";
 import { SelectableEnum } from "../../models/SelectableEnum";
+import { BUDGET_CAP_FREE } from "../../lib/constants";
 
 export function useTeamSelection() {
   const budgetParticipation = useBudgetContext();
@@ -157,7 +158,7 @@ export function useTeamSelection() {
       if (teamSize >= 20) {
         return (r.selectable = SelectableEnum.Max20);
       }
-      if (r.details.price > oldData.budgetOver - (19 - teamSize) * 500_000) {
+      if (r.details.price > oldData.budgetOver - (19 - teamSize) * BUDGET_CAP_FREE) {
         return (r.selectable = SelectableEnum.TooExpensive);
       }
       if (forbiddenTeams.includes(r.details.team)) {

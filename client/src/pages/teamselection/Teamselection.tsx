@@ -11,6 +11,7 @@ import "./teamSelection.css";
 import { useTeamSelection } from "./TeamSelectionHook";
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
 import CountdownClock24H from "./CountdownClock";
+import { BUDGET_CAP_FREE, BUDGET_CAP_PAID } from "../../lib/constants";
 
 const TeamSelection: React.FC = () => {
   document.title = "Team Selectie";
@@ -22,8 +23,8 @@ const TeamSelection: React.FC = () => {
   function getDefaulFilterState(): Filters {
     return {
       name: "",
-      minPrice: 500000,
-      maxPrice: 8000000,
+      minPrice: BUDGET_CAP_FREE,
+      maxPrice: BUDGET_CAP_PAID,
       team: "",
       skill: "",
     };
