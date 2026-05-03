@@ -15,9 +15,9 @@ namespace SpoRE.Controllers;
 public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB, IMemoryCache MemoryCache) : ControllerBase
 {
     [HttpGet("startlist")]
-    public IActionResult ScrapeStartList(string raceName, int year, int raceId)
+    public async Task<IActionResult> ScrapeStartList(string raceName, int year, int raceId)
     {
-        Scraper.Startlist(raceName, year, raceId);
+        await Scraper.Startlist(raceName, year, raceId);
         return Ok();
     }
 
@@ -41,12 +41,12 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     }
 
     [HttpGet("RaceFinished")]
-    public IActionResult RaceFinished(int raceId)
-        => Ok(RaceService.SetFinished(raceId));
+    public async Task<IActionResult> RaceFinished(int raceId)
+        => Ok(await RaceService.SetFinished(raceId));
 
     [HttpGet("AddStages")]
-    public IActionResult AddStages(int raceId)
-        => Ok(Scraper.EtappesToevoegen(raceId));
+    public async Task<IActionResult> AddStages(int raceId)
+        => Ok(await Scraper.EtappesToevoegen(raceId));
 
     [HttpGet("resetCache")]
     public IActionResult ResetCache()
