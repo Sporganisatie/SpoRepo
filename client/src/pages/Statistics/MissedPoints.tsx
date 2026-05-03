@@ -18,7 +18,7 @@ type MissedPointsTableData = {
 
 const MissedPoints = () => {
   document.title = "Gemiste punten";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<MissedPointsTableData[]>([]);
 

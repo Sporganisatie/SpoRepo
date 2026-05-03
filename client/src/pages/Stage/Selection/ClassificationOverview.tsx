@@ -1,5 +1,5 @@
 import ClassificationTable from "./ClassificationTable";
-import { Classifications } from "../models/StageSelectionData";
+import type { Classifications } from "../models/StageSelectionData";
 
 const ClassificationOverview = ({ data }: { data: Classifications }) => {
   return (

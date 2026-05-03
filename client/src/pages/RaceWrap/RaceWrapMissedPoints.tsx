@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SreDataTable from "../../components/shared/SreDataTable";
-import { MissedPointsTotalRow } from "./RaceWrap";
+import type { MissedPointsTotalRow } from "./RaceWrap";
 
 const RaceWrapMissedPoints = ({ missedPoints }: { missedPoints: MissedPointsTotalRow[] }) => {
   const [missingPointsRanking, setMissingPointsRanking] = useState<MissedPointsTotalRow[]>([]);

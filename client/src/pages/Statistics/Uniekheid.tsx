@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
-import UniekheidTable, { UniekheidRow } from "./UniekheidTable";
-import UniekheidRennersTable, { UniekheidRennerRow } from "./UniekheidRennersTable";
+import type { UniekheidRow } from "./UniekheidTable";
+import UniekheidTable from "./UniekheidTable";
+import type { UniekheidRennerRow } from "./UniekheidRennersTable";
+import UniekheidRennersTable from "./UniekheidRennersTable";
 
 export type UniekheidData = {
   start: UniekheidRow[];
@@ -14,7 +16,7 @@ export type UniekheidData = {
 const Uniekheid = () => {
   document.title = "Uniekheid";
 
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<UniekheidData>({ start: [], huidig: [], renners: [] });
 

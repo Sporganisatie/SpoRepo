@@ -17,7 +17,7 @@ export type OverlapRow = {
 const Overlap = () => {
   document.title = "Team Overlap";
 
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<OverlapData>({ overlap: [], overlapBudget: [] });
 

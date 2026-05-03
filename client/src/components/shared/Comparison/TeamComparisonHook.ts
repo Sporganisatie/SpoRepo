@@ -2,8 +2,8 @@ import axios from "axios";
 import { useBudgetContext } from "../BudgetContextProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { UserSelection } from "../../../models/UserSelection";
-import { AllSelectedRiderRow } from "./AllSelectedRidersTable";
+import type { UserSelection } from "../../../models/UserSelection";
+import type { AllSelectedRiderRow } from "./AllSelectedRidersTable";
 
 export function useTeamComparison(
   setToggles: React.Dispatch<React.SetStateAction<{ username: string; showUser: boolean }[]>>

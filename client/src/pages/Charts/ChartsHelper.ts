@@ -1,4 +1,4 @@
-import { EtappeUitslag } from "../Statistics/EtappeUitslagen/UitslagenTable";
+import type { EtappeUitslag } from "../Statistics/EtappeUitslagen/UitslagenTable";
 export const colors = [
   "#00d60e",
   "#1C43FF",

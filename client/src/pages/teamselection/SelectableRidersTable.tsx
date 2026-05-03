@@ -1,7 +1,7 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import RiderLink from "../../components/shared/RiderLink";
 import { SelectableEnum } from "../../models/SelectableEnum";
-import { SelectableRider } from "./Models/SelectableRider";
+import type { SelectableRider } from "./Models/SelectableRider";
 import SelectableRiderFoldout from "./SelectableRiderFoldOut";
 import SreDataTable from "../../components/shared/SreDataTable";
 

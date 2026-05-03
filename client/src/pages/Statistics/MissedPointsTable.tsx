@@ -1,5 +1,5 @@
-import { TableColumn } from "react-data-table-component";
-import { MissedPointsData } from "./MissedPoints";
+import type { TableColumn } from "react-data-table-component";
+import type { MissedPointsData } from "./MissedPoints";
 import SreDataTable from "../../components/shared/SreDataTable";
 
 const MissedPointsTable = ({

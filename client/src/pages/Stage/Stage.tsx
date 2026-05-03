@@ -1,7 +1,7 @@
 import StageResult from "./Result/StageResult";
 import StageSelection from "./Selection/StageSelection";
 import ArrowSelect from "../../components/ArrowSelect";
-import { SelectOption } from "../../components/Select";
+import type { SelectOption } from "../../components/Select";
 import { StageStateEnum, useStage } from "./StageHook";
 
 const stages: SelectOption<string>[] = Array.from({ length: 22 }, (_, i) => ({

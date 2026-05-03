@@ -1,4 +1,4 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import { z } from "zod";
 import SreDataTable from "../../../components/shared/SreDataTable";
 

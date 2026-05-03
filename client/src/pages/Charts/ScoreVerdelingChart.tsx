@@ -12,7 +12,7 @@ interface ChartData {
 
 const ScoreVerdelingChart = () => {
   document.title = "Scores per Etappe";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [chartdata, setChartData] = useState<ChartData>({ data: [], usernames: [] });
 

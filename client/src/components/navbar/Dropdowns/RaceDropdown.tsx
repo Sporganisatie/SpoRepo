@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Select, { SelectOption } from "../../Select";
+import type { SelectOption } from "../../Select";
+import Select from "../../Select";
 import { useRaceContext, useRaceDispatch } from "../../shared/RaceContextProvider";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";

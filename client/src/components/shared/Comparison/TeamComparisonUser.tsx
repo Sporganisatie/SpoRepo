@@ -1,4 +1,4 @@
-import { UserSelection } from "../../../models/UserSelection";
+import type { UserSelection } from "../../../models/UserSelection";
 import TeamComparisonTable from "./TeamComparisonTable";
 
 const TeamComparisonUser = ({ userSelection }: { userSelection: UserSelection }) => {

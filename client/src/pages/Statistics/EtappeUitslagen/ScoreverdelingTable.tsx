@@ -1,4 +1,4 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import SreDataTable from "../../../components/shared/SreDataTable";
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Select, { SelectProps } from "./Select";
+import type { SelectProps } from "./Select";
+import Select from "./Select";
 
 export interface ArrowSelectProps<T extends string | number> extends SelectProps<T> {
   allowLooping: boolean;
@@ -27,7 +28,7 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
 
   const updateIndex = (step: number): number => {
     if (allowLooping) return (currentIndex + step + options.length) % options.length;
-    var newIndex = currentIndex + step;
+    const newIndex = currentIndex + step;
     if (newIndex < 0) return 0;
     if (newIndex >= options.length) return options.length - 1;
     return newIndex;

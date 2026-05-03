@@ -20,7 +20,7 @@ const StageSelection = () => {
 
   const { data, isLoading, addRider, removeRider, addKopman, removeKopman } = useStageSelection();
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div>

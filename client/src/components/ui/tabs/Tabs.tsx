@@ -1,4 +1,4 @@
-import { TabHook } from "./TabsHook";
+import type { TabHook } from "./TabsHook";
 import "./tabs.css";
 
 const Tabs = ({
@@ -9,6 +9,7 @@ const Tabs = ({
   const tabDivs = tabs.map((tab) => {
     return (
       <div
+        key={tab}
         className={
           "tab " +
           (selectedTab === tab ? "selected " : "") +

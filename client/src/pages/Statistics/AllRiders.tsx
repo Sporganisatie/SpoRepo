@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
-import { TableColumn } from "react-data-table-component";
-import { RiderParticipation } from "../../models/RiderParticipation";
+import type { TableColumn } from "react-data-table-component";
+import type { RiderParticipation } from "../../models/RiderParticipation";
 import RiderLink from "../../components/shared/RiderLink";
 import SreDataTable from "../../components/shared/SreDataTable";
 
@@ -19,7 +19,7 @@ export type AllRiderRow = {
 
 const AllRiders = () => {
   document.title = "AllRiders";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<AllRiderRow[]>([]);
 

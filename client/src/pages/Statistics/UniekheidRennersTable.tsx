@@ -1,7 +1,7 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import SreDataTable from "../../components/shared/SreDataTable";
 import RiderLink from "../../components/shared/RiderLink";
-import { RiderParticipation } from "../../models/RiderParticipation";
+import type { RiderParticipation } from "../../models/RiderParticipation";
 
 export type UniekheidRennerRow = {
   riderParticipation: RiderParticipation;

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
 import KlassementenTable from "./KlassementenTable";
-import { Rider } from "../../models/Rider";
+import type { Rider } from "../../models/Rider";
 
 export type InputData = {
   position: number;
@@ -15,7 +15,7 @@ export type InputData = {
 
 const Klassementen = () => {
   document.title = "Klassementen";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<InputData[][]>([]);
 

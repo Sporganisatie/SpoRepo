@@ -1,5 +1,5 @@
-import { TableColumn } from "react-data-table-component";
-import { Rider } from "../../../models/Rider";
+import type { TableColumn } from "react-data-table-component";
+import type { Rider } from "../../../models/Rider";
 import RiderLink from "../RiderLink";
 import { StageSelectedEnum } from "../../../models/UserSelection";
 import SreDataTable from "../SreDataTable";

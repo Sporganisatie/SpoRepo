@@ -1,4 +1,5 @@
-import { Dispatch, createContext, useContext, useReducer } from "react";
+import type { Dispatch } from "react";
+import { createContext, useContext, useReducer } from "react";
 
 const BudgetContext = createContext<boolean>(false);
 

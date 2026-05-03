@@ -1,4 +1,5 @@
-import DataTable, { TableProps } from "react-data-table-component";
+import type { TableProps } from "react-data-table-component";
+import DataTable from "react-data-table-component";
 
 interface SreTableProps<T> extends TableProps<T> {
   maxwidth?: number;

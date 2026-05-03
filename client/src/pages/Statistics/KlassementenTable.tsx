@@ -1,5 +1,5 @@
-import { TableColumn } from "react-data-table-component";
-import { InputData } from "./Klassementen";
+import type { TableColumn } from "react-data-table-component";
+import type { InputData } from "./Klassementen";
 import RiderLink from "../../components/shared/RiderLink";
 import SreDataTable from "../../components/shared/SreDataTable";
 

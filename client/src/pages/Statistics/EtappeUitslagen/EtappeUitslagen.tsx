@@ -8,7 +8,7 @@ import RankCountTable from "./RankCountTable";
 
 const EtappeUitslagen = () => {
   document.title = "Etappe uitslagen";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<{ uitslagen: any[]; scoreVerdeling: any[]; userRanks: any[] }>({
     uitslagen: [],

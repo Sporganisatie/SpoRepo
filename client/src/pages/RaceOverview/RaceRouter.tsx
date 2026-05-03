@@ -13,8 +13,8 @@ enum RaceStateEnum {
 
 // TODO dit component vervangen door pure typescript
 const RaceRouter = () => {
-  let navigate = useNavigate();
-  let { raceId } = useParams();
+  const navigate = useNavigate();
+  const { raceId } = useParams();
   useEffect(() => {
     axios
       .get(`/api/Race`, { params: { raceId } })

@@ -1,5 +1,5 @@
-import { TableColumn } from "react-data-table-component";
-import { RiderParticipation } from "../../models/RiderParticipation";
+import type { TableColumn } from "react-data-table-component";
+import type { RiderParticipation } from "../../models/RiderParticipation";
 import SreDataTable from "../../components/shared/SreDataTable";
 
 export interface RiderTypeTotalRow {
@@ -25,7 +25,7 @@ function countType(team: RiderParticipation[], typeName: string): string {
 }
 
 const RiderTypeTotals = ({ team }: { team: RiderParticipation[] }) => {
-  var totals: Array<RiderTypeTotalRow> = [
+  const totals: Array<RiderTypeTotalRow> = [
     {
       rowName: "Budget",
       klassement: sumType(team, "Klassement"),

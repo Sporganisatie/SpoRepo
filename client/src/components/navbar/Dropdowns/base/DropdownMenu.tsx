@@ -1,4 +1,5 @@
-import { DropdownLink, DropdownLinkProps } from "./DropdownLink";
+import type { DropdownLinkProps } from "./DropdownLink";
+import { DropdownLink } from "./DropdownLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -30,10 +31,10 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     }, 0);
   };
 
-  var alwaysLinks = props.alwaysLinks.map((link) => (
+  const alwaysLinks = props.alwaysLinks.map((link) => (
     <DropdownLink key={link.title} url={link.url} title={link.title} />
   ));
-  var raceOnlyLinks = props.raceOnlyLinks.map((link) => (
+  const raceOnlyLinks = props.raceOnlyLinks.map((link) => (
     <DropdownLink key={link.title} url={link.url} title={link.title} />
   ));
 

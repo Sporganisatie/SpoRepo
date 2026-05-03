@@ -1,6 +1,7 @@
-import axios, { AxiosError } from "axios";
-import { AxiosRequestConfig } from "axios";
-import { NavigateFunction } from "react-router-dom";
+import type { AxiosError } from "axios";
+import axios from "axios";
+import type { AxiosRequestConfig } from "axios";
+import type { NavigateFunction } from "react-router-dom";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   config.headers = config.headers ?? {}; // todo niet doen bij login endpoints

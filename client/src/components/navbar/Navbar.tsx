@@ -7,7 +7,7 @@ import ChartsDropdown from "./Dropdowns/ChartsDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLaptop, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import { useBudgetContext, useBudgetDispatch } from "../shared/BudgetContextProvider";
-import { AuthToken } from "../../models/AuthToken";
+import type { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
 import Switch from "../ui/switch/Switch";
 import { useRaceContext } from "../shared/RaceContextProvider";

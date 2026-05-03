@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SelectableRider } from "./Models/SelectableRider";
+import type { SelectableRider } from "./Models/SelectableRider";
 import SelectableRidersTable from "./SelectableRidersTable";
 import TeamSelectionTable from "./TeamSelectionTable";
-import { RiderParticipation } from "../../models/RiderParticipation";
-import FilterElements, { Filters } from "./Filters";
+import type { RiderParticipation } from "../../models/RiderParticipation";
+import type { Filters } from "./Filters";
+import FilterElements from "./Filters";
 import RiderTypeTotals from "./RiderTypeTotals";
 import "./teamSelection.css";
 import { useTeamSelection } from "./TeamSelectionHook";
@@ -13,7 +14,7 @@ import CountdownClock24H from "./CountdownClock";
 
 const TeamSelection: React.FC = () => {
   document.title = "Team Selectie";
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const raceId = useRaceContext();
   const { data, isLoading, addRider, removeRider } = useTeamSelection();
   const [filteredRiders, setFilteredRiders] = useState<SelectableRider[]>([]);

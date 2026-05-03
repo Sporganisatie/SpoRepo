@@ -1,5 +1,5 @@
-import { RiderParticipation } from "../../../models/RiderParticipation";
-import { SelectableRider } from "./SelectableRider";
+import type { RiderParticipation } from "../../../models/RiderParticipation";
+import type { SelectableRider } from "./SelectableRider";
 
 export interface TeamSelectionData {
   budget: number;

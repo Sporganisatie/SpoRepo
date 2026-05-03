@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ClassificationTable from "../Selection/ClassificationTable";
-import { Classifications } from "../models/StageSelectionData";
+import type { Classifications } from "../models/StageSelectionData";
 import "./StageClassifications.css";
 
 const StageClassifications = ({

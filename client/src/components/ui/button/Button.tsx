@@ -5,7 +5,7 @@ type ButtonType = "button" | "submit" | "reset";
 type ButtonClass = "";
 
 interface Buttonprops {
-  action?: () => {};
+  action?: () => void;
   buttonClass?: ButtonClass;
   disabled?: boolean;
   icon?: string;

@@ -13,7 +13,7 @@ export function useStage() {
   if (raceId === undefined || stagenr === undefined) {
     throw new Error("Expected race and stage numbers");
   }
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   function setStage(newStage: string) {
     stagenr = newStage;

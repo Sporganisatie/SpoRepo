@@ -1,6 +1,6 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
-import { StageSelectableRider } from "../models/StageSelectableRider";
+import type { StageSelectableRider } from "../models/StageSelectableRider";
 import SreDataTable from "../../../components/shared/SreDataTable";
 
 export interface StageSelectionTeamProps {

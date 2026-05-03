@@ -1,5 +1,6 @@
 import ArrowSelect from "../../components/ArrowSelect";
-import Select, { SelectOption } from "../../components/Select";
+import type { SelectOption } from "../../components/Select";
+import Select from "../../components/Select";
 
 export interface Filters {
   name: string;
@@ -44,7 +45,7 @@ export interface FiltersProps {
 }
 
 function FilterElements(props: FiltersProps) {
-  var teamOptions = [{ displayValue: "Alle teams", value: "" }]
+  const teamOptions = [{ displayValue: "Alle teams", value: "" }]
     .concat(props.teams.map((team) => ({ displayValue: team, value: team })))
     .sort();
   return (

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
-import { TeamSelectionData } from "./Models/TeamSelectionData";
+import type { TeamSelectionData } from "./Models/TeamSelectionData";
 import { SelectableEnum } from "../../models/SelectableEnum";
 
 export function useTeamSelection() {

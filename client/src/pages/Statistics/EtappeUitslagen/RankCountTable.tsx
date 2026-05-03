@@ -1,4 +1,4 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import SreDataTable from "../../../components/shared/SreDataTable";
 
 interface UserRank {

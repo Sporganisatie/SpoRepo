@@ -1,7 +1,7 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
 import { StageSelectedEnum } from "../../../models/UserSelection";
-import { ClassificationRow } from "../models/StageSelectionData";
+import type { ClassificationRow } from "../models/StageSelectionData";
 import SreDataTable from "../../../components/shared/SreDataTable";
 
 const classificationRowStyle = [

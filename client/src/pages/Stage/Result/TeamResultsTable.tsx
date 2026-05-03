@@ -1,4 +1,4 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import RiderLink from "../../../components/shared/RiderLink";
 import { riderSchema } from "../../../models/Rider";
 import { z } from "zod";

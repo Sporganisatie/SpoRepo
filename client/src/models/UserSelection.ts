@@ -1,4 +1,4 @@
-import { Rider } from "./Rider";
+import type { Rider } from "./Rider";
 
 export interface UserSelection {
   username: string;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SreDataTable from "../../components/shared/SreDataTable";
-import { RaceScoreData } from "./RaceWrapHook";
+import type { RaceScoreData } from "./RaceWrapHook";
 
 type RaceScore = RaceScoreData & { rank: number; username?: string };
 

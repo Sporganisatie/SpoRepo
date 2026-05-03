@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBudgetContext } from "../../components/shared/BudgetContextProvider";
 import axios from "axios";
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import SreDataTable from "../../components/shared/SreDataTable";
 
 export type UitvallersData = {
@@ -48,7 +48,7 @@ const columns: TableColumn<UitvallersData>[] = [
 
 const Uitvallers = () => {
   document.title = "Uitvallers";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<UitvallersData[]>([]);
 

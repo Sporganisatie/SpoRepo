@@ -1,6 +1,6 @@
-import { TableColumn } from "react-data-table-component";
+import type { TableColumn } from "react-data-table-component";
 import RiderLink from "../../components/shared/RiderLink";
-import { RiderParticipation } from "../../models/RiderParticipation";
+import type { RiderParticipation } from "../../models/RiderParticipation";
 import { useEffect } from "react";
 import SreDataTable from "../../components/shared/SreDataTable";
 

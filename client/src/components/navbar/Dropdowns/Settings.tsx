@@ -1,4 +1,5 @@
-import { Component, MouseEvent } from "react";
+import type { MouseEvent } from "react";
+import { Component } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";

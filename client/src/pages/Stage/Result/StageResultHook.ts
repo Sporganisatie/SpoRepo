@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { StageResultData, stageResultDataSchema } from "../models/StageResultData";
+import type { StageResultData } from "../models/StageResultData";
+import { stageResultDataSchema } from "../models/StageResultData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import { useStage } from "../StageHook";
 

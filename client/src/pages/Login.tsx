@@ -26,7 +26,7 @@ const Login = () => {
   return (
     <Card>
       <div className="mt-1 mb-6 font-bold text-gray-600 text-center">
-        'Log in to manage your team'
+        {"'Log in to manage your team'"}
       </div>
       <form onSubmit={submitForm}>
         <div className="ml-1 mb-1 text-sm text-gray-600">E-mail address</div>

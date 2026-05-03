@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { StageSelectionData, stageSelectionDataSchema } from "../models/StageSelectionData";
+import type { StageSelectionData } from "../models/StageSelectionData";
+import { stageSelectionDataSchema } from "../models/StageSelectionData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import { useStage } from "../StageHook";
-import { StageSelectableRider } from "../models/StageSelectableRider";
+import type { StageSelectableRider } from "../models/StageSelectableRider";
 
 export function useStageSelection() {
   const budgetParticipation = useBudgetContext();

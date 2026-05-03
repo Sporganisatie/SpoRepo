@@ -13,7 +13,7 @@ interface ChartData {
 
 const ScoreVerloopChart = () => {
   document.title = "Score Verloop";
-  let { raceId } = useParams();
+  const { raceId } = useParams();
   const budgetParticipation = useBudgetContext();
   const [data, setData] = useState<ChartData>({ data: [], usernames: [] });
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -25,7 +25,7 @@ const ScoreVerloopChart = () => {
   }>({ toggles: [], center: "Gemiddelde" });
 
   useEffect(() => {
-    var url = positieVerloop
+    const url = positieVerloop
       ? "positieVerloop"
       : perfectPoints
         ? "perfectScoreVerloop"

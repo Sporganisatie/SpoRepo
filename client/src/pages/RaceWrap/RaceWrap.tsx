@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRaceContext } from "../../components/shared/RaceContextProvider";
-import { MissedPointsTableData } from "../Statistics/MissedPointsHook";
+import type { MissedPointsTableData } from "../Statistics/MissedPointsHook";
 import Uitvallers from "../Statistics/Uitvallers";
 import { useRaceWrap } from "./RaceWrapHook";
 import RaceWrapMissedPoints from "./RaceWrapMissedPoints";
@@ -8,7 +8,7 @@ import RaceWrapRaceScores from "./RaceWrapRaceScores";
 import RaceWrapStages from "./RaceWrapStages";
 import RaceWrapAward from "./RaceWrapAward";
 import axios from "axios";
-import { SelectOption } from "../../components/Select";
+import type { SelectOption } from "../../components/Select";
 
 export type MissedPointsTotalRow = ReturnType<typeof getMissedPointsTotal>[number];
 
@@ -104,7 +104,7 @@ const RaceWrap = () => {
           </div>
           {totals.slice(3).map((total) => {
             return (
-              <div style={{ fontSize: "1.25rem" }}>
+              <div key={total.username} style={{ fontSize: "1.25rem" }}>
                 {total.username} {total.behaald}{" "}
               </div>
             );
