@@ -1,0 +1,30 @@
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.star-rating__star {
+  position: relative;
+  display: inline-block;
+  color: var(--bg-control);
+}
+
+.star-rating__star::before {
+  content: "★";
+}
+
+.star-rating__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+  color: var(--podium-gold);
+}
+
+.star-rating__fill::before {
+  content: "★";
+}

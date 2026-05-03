@@ -50,53 +50,43 @@ const TeamSelection: React.FC = () => {
     updateAndFilter(getDefaulFilterState());
   };
 
+  if (!data) {
+    return <div className="teamselection-page" />;
+  }
+
   return (
     <div className="teamselection-page">
-      {data ? (
-        <div>
-          <CountdownClock24H targetDate={new Date(data.raceStart)} />
-          <button style={{ width: 100 }} onClick={() => navigate(`/${raceId}/stage/1`)}>
-            Etappe 1
-          </button>
-          <div style={{ color: "white" }}>
-            Budget Over: {data.budgetOver / 1_000_000}M/
-            {data.budget / 1_000_000}M
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              columnGap: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
-            <FilterElements
-              updateFilter={updateAndFilter}
-              resetFilter={resetFilter}
-              filters={filters}
-              teams={data.allTeams}
-            />
-            <RiderTypeTotals team={data.team} />
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              columnGap: "1rem",
-            }}
-          >
-            <SelectableRidersTable
-              data={filteredRiders}
-              loading={isLoading}
-              addRider={addRider}
-              removeRider={removeRider}
-            />
-            <TeamSelectionTable data={data.team} loading={isLoading} removeRider={removeRider} />
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
+      <div className="ts-page-header">
+        <CountdownClock24H targetDate={new Date(data.raceStart)} />
+        <button className="ts-page-header-cta" onClick={() => navigate(`/${raceId}/stage/1`)}>
+          Naar Etappe 1 →
+        </button>
+      </div>
+      <div className="ts-controls">
+        <FilterElements
+          updateFilter={updateAndFilter}
+          resetFilter={resetFilter}
+          filters={filters}
+          teams={data.allTeams}
+        />
+        <RiderTypeTotals team={data.team} />
+      </div>
+      <div className="ts-body">
+        <SelectableRidersTable
+          data={filteredRiders}
+          loading={isLoading}
+          totalRiders={data.allRiders.length}
+          addRider={addRider}
+          removeRider={removeRider}
+        />
+        <TeamSelectionTable
+          data={data.team}
+          loading={isLoading}
+          removeRider={removeRider}
+          budget={data.budget}
+          budgetOver={data.budgetOver}
+        />
+      </div>
     </div>
   );
 };

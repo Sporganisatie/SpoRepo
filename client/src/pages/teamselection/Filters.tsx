@@ -30,7 +30,7 @@ const priceOptions: SelectOption<number>[] = [
 ];
 
 const skillOptions: SelectOption<string>[] = [
-  { displayValue: "", value: "" },
+  { displayValue: "Alle skills", value: "" },
   { displayValue: "Klassement", value: "gc" },
   { displayValue: "Sprint", value: "sprint" },
   { displayValue: "Klimmen", value: "climb" },
@@ -50,47 +50,70 @@ function FilterElements(props: FiltersProps) {
     .concat(props.teams.map((team) => ({ displayValue: team, value: team })))
     .sort();
   return (
-    <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem", margin: "1rem" }}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <input
-          type="text"
-          value={props.filters.name}
-          placeholder="naam"
-          onChange={(e) => props.updateFilter({ name: e.target.value.trim() })}
-        />
+    <div className="ts-filters">
+      <div className="ts-filter-group">
+        <label className="ts-filter-label" htmlFor="filter-name">
+          Naam
+        </label>
+        <div className="ts-filter-controls">
+          <input
+            id="filter-name"
+            type="text"
+            value={props.filters.name}
+            placeholder="Zoek op naam"
+            onChange={(e) => props.updateFilter({ name: e.target.value.trim() })}
+          />
+        </div>
       </div>
-      <Select<number>
-        value={props.filters.minPrice}
-        options={priceOptions}
-        onChange={(selectedOption: number) => {
-          props.updateFilter({ minPrice: selectedOption });
-        }}
-      />
-      <Select<number>
-        value={props.filters.maxPrice}
-        options={priceOptions}
-        onChange={(selectedOption: number) => {
-          props.updateFilter({ maxPrice: selectedOption });
-        }}
-      />
-      <Select
-        value={props.filters.skill}
-        options={skillOptions}
-        onChange={(selectedValue) => {
-          props.updateFilter({ skill: selectedValue });
-        }}
-      />
-      <ArrowSelect
-        value={props.filters.team}
-        allowLooping={true}
-        options={teamOptions}
-        onChange={(selectedValue) => {
-          props.updateFilter({ team: selectedValue });
-        }}
-      />
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <button onClick={() => props.resetFilter()}>Reset</button>
+      <div className="ts-filter-group">
+        <span className="ts-filter-label">Prijs</span>
+        <div className="ts-filter-controls">
+          <Select<number>
+            value={props.filters.minPrice}
+            options={priceOptions}
+            onChange={(selectedOption: number) => {
+              props.updateFilter({ minPrice: selectedOption });
+            }}
+          />
+          <span className="ts-filter-range-sep">–</span>
+          <Select<number>
+            value={props.filters.maxPrice}
+            options={priceOptions}
+            onChange={(selectedOption: number) => {
+              props.updateFilter({ maxPrice: selectedOption });
+            }}
+          />
+        </div>
       </div>
+      <div className="ts-filter-group">
+        <span className="ts-filter-label">Skill</span>
+        <div className="ts-filter-controls">
+          <Select
+            value={props.filters.skill}
+            options={skillOptions}
+            onChange={(selectedValue) => {
+              props.updateFilter({ skill: selectedValue });
+            }}
+          />
+        </div>
+      </div>
+      <div className="ts-filter-group">
+        <span className="ts-filter-label">Team</span>
+        <div className="ts-filter-controls">
+          <ArrowSelect
+            value={props.filters.team}
+            allowLooping={true}
+            options={teamOptions}
+            onChange={(selectedValue) => {
+              props.updateFilter({ team: selectedValue });
+            }}
+          />
+        </div>
+      </div>
+      <div className="ts-filter-spacer" />
+      <button className="ts-filter-reset" onClick={() => props.resetFilter()}>
+        Reset
+      </button>
     </div>
   );
 }

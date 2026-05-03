@@ -1,83 +1,37 @@
-import type { TableColumn } from "react-data-table-component";
 import type { RiderParticipation } from "../../models/RiderParticipation";
-import SreDataTable from "../../components/shared/SreDataTable";
 
-export interface RiderTypeTotalRow {
-  rowName: string;
-  klassement: string;
-  klimmer: string;
-  sprinter: string;
-  tijdrijder: string;
-  aanvaller: string;
-  knecht: string;
-}
+const RIDER_TYPES: { key: string; label: string; cls: string }[] = [
+  { key: "Klassement", label: "Klassement", cls: "klassement" },
+  { key: "Klimmer", label: "Klimmer", cls: "klimmer" },
+  { key: "Sprinter", label: "Sprinter", cls: "sprinter" },
+  { key: "Tijdrijder", label: "Tijdrijder", cls: "tijdrijder" },
+  { key: "Aanvaller", label: "Aanvaller", cls: "aanvaller" },
+  { key: "Knecht", label: "Knecht", cls: "knecht" },
+];
 
-function sumType(team: RiderParticipation[], typeName: string): string {
-  return (
-    team
-      .filter((r) => r.type === typeName)
-      .reduce((sum, current) => sum + current.price / 1000000, 0) + "M"
-  );
-}
-
-function countType(team: RiderParticipation[], typeName: string): string {
-  return team.filter((r) => r.type === typeName).length.toString();
+function formatM(value: number): string {
+  return `${(value / 1_000_000).toFixed(1)}M`;
 }
 
 const RiderTypeTotals = ({ team }: { team: RiderParticipation[] }) => {
-  const totals: Array<RiderTypeTotalRow> = [
-    {
-      rowName: "Budget",
-      klassement: sumType(team, "Klassement"),
-      klimmer: sumType(team, "Klimmer"),
-      sprinter: sumType(team, "Sprinter"),
-      tijdrijder: sumType(team, "Tijdrijder"),
-      aanvaller: sumType(team, "Aanvaller"),
-      knecht: sumType(team, "Knecht"),
-    },
-    {
-      rowName: "Aantal",
-      klassement: countType(team, "Klassement"),
-      klimmer: countType(team, "Klimmer"),
-      sprinter: countType(team, "Sprinter"),
-      tijdrijder: countType(team, "Tijdrijder"),
-      aanvaller: countType(team, "Aanvaller"),
-      knecht: countType(team, "Knecht"),
-    },
-  ];
-
-  const columns: TableColumn<RiderTypeTotalRow>[] = [
-    {
-      name: " ",
-      cell: (row: RiderTypeTotalRow) => row.rowName,
-    },
-    {
-      name: "Klassement",
-      cell: (row: RiderTypeTotalRow) => row.klassement,
-    },
-    {
-      name: "Klimmer",
-      cell: (row: RiderTypeTotalRow) => row.klimmer,
-    },
-    {
-      name: "Sprinter",
-      selector: (row: RiderTypeTotalRow) => row.sprinter,
-    },
-    {
-      name: "Tijdrijder",
-      selector: (row: RiderTypeTotalRow) => row.tijdrijder,
-    },
-    {
-      name: "Aanvaller",
-      selector: (row: RiderTypeTotalRow) => row.aanvaller,
-    },
-    {
-      name: "Knecht",
-      selector: (row: RiderTypeTotalRow) => row.knecht,
-    },
-  ];
-
-  return <SreDataTable title={`Totaal per type`} columns={columns} data={totals} />;
+  return (
+    <div className="rider-type-tiles">
+      {RIDER_TYPES.map(({ key, label, cls }) => {
+        const riders = team.filter((r) => r.type === key);
+        const count = riders.length;
+        const budget = riders.reduce((sum, r) => sum + r.price, 0);
+        return (
+          <div key={key} className={`rider-type-tile ${cls}`}>
+            <div className="rider-type-tile-label">{label}</div>
+            <div className="rider-type-tile-stats">
+              <span className="rider-type-tile-count">{count}</span>
+              <span className="rider-type-tile-budget">{formatM(budget)}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export default RiderTypeTotals;

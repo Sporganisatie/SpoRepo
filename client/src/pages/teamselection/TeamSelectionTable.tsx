@@ -3,6 +3,7 @@ import RiderLink from "../../components/shared/RiderLink";
 import type { RiderParticipation } from "../../models/RiderParticipation";
 import { useEffect } from "react";
 import SreDataTable from "../../components/shared/SreDataTable";
+import BudgetMeter from "./BudgetMeter";
 
 const conditionalRowStyles = [
   {
@@ -17,10 +18,14 @@ const TeamSelectionTable = ({
   data,
   loading,
   removeRider,
+  budget,
+  budgetOver,
 }: {
   data: RiderParticipation[];
   loading: boolean;
   removeRider: (id: number) => void;
+  budget: number;
+  budgetOver: number;
 }) => {
   while (data.length < 20) {
     data.push({
@@ -100,6 +105,9 @@ const TeamSelectionTable = ({
     },
   ];
 
+  const teamCount = data.filter((x) => x.riderParticipationId !== 0).length;
+  const used = budget - budgetOver;
+
   return (
     <div
       id="stickyWrapper"
@@ -110,23 +118,26 @@ const TeamSelectionTable = ({
     >
       <div
         id="stickyTable"
-        className="teamselection-table-wrapper"
+        className="teamselection-table-wrapper ts-panel"
         style={{
           position: "absolute",
           top: "0px",
           width: "100%",
-          maxHeight: "calc(100vh - 50px)",
-          overflow: "auto",
         }}
       >
-        <SreDataTable
-          title={`Jouw team ${data.filter((x) => x.riderParticipationId !== 0).length}/20`}
-          columns={columns}
-          data={data}
-          conditionalRowStyles={conditionalRowStyles}
-          progressPending={loading}
-          pointerOnHover
-        />
+        <div className="ts-panel-header">
+          <h3 className="ts-panel-title">Mijn team {teamCount}/20</h3>
+          <BudgetMeter used={used} total={budget} />
+        </div>
+        <div className="ts-team-panel-body">
+          <SreDataTable
+            columns={columns}
+            data={data}
+            conditionalRowStyles={conditionalRowStyles}
+            progressPending={loading}
+            pointerOnHover
+          />
+        </div>
       </div>
     </div>
   );
