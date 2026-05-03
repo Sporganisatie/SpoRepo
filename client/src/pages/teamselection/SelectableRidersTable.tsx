@@ -23,11 +23,13 @@ const conditionalRowStyles = [
 const SelectableRidersTable = ({
   data,
   loading,
+  totalRiders,
   addRider,
   removeRider,
 }: {
   data: SelectableRider[];
   loading: boolean;
+  totalRiders: number;
   addRider: (id: number) => void;
   removeRider: (id: number) => void;
 }) => {
@@ -75,9 +77,14 @@ const SelectableRidersTable = ({
   ];
 
   return (
-    <div className="selectable-riders-table-wrapper">
+    <div className="selectable-riders-table-wrapper ts-panel">
+      <div className="ts-panel-header">
+        <h3 className="ts-panel-title">Beschikbare renners</h3>
+        <span className="ts-panel-meta">
+          {data.length} van {totalRiders}
+        </span>
+      </div>
       <SreDataTable
-        title="Alle renners"
         columns={columns}
         data={data}
         progressPending={loading}

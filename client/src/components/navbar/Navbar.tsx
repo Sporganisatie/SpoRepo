@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./navbar.css";
 import StatsDropdown from "./Dropdowns/StatistiekenDropdown";
 import ChartsDropdown from "./Dropdowns/ChartsDropdown";
@@ -13,6 +13,7 @@ import RaceDropdown from "./Dropdowns/RaceDropdown";
 
 const Navbar = () => {
   const race = useRaceContext();
+  const onTeamSelection = useLocation().pathname.endsWith("/teamselection");
   const budget = useBudgetContext();
   const dispatch = useBudgetDispatch();
   const isAdmin =
@@ -49,6 +50,11 @@ const Navbar = () => {
             />
           )}
         <RaceDropdown />
+        {race > 0 && onTeamSelection && (
+          <Link className="navbar-stage-cta" to={`/${race}/stage/1`}>
+            Naar Etappe 1 →
+          </Link>
+        )}
       </div>
     </div>
   );

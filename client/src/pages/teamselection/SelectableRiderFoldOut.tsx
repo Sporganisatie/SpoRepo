@@ -1,14 +1,25 @@
 import type { ExpanderComponentProps } from "react-data-table-component";
 import type { SelectableRider } from "./Models/SelectableRider";
+import StarRating from "../../components/shared/StarRating";
+
+type SkillKey = "gc" | "sprint" | "climb" | "tt" | "punch";
+
+const SKILLS: { key: SkillKey; label: string }[] = [
+  { key: "gc", label: "Klassement" },
+  { key: "sprint", label: "Sprint" },
+  { key: "climb", label: "Klimmen" },
+  { key: "tt", label: "Tijdrijden" },
+  { key: "punch", label: "Punch" },
+];
 
 const SelectableRiderFoldout: React.FC<ExpanderComponentProps<SelectableRider>> = ({ data }) => (
-  <div>
-    {<div>Klassement: {data.details.gc > 0 ? "★".repeat(data.details.gc) : "-"}</div>}
-    {<div>Sprint: {data.details.sprint > 0 ? "★".repeat(data.details.sprint) : "-"}</div>}
-    {<div>Klimmen: {data.details.climb > 0 ? "★".repeat(data.details.climb) : "-"}</div>}
-    {<div>Tijdrijden: {data.details.tt > 0 ? "★".repeat(data.details.tt) : "-"}</div>}
-    {<div>Punch: {data.details.punch > 0 ? "★".repeat(data.details.punch) : "-"}</div>}
-    <br></br>
+  <div className="rider-skills">
+    {SKILLS.map(({ key, label }) => (
+      <div key={key} className={`rider-skill-tile ${key}`}>
+        <div className="rider-skill-tile__label">{label}</div>
+        <StarRating score={data.details[key]} />
+      </div>
+    ))}
   </div>
 );
 
