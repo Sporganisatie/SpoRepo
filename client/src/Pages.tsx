@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import DesignSandbox from "./pages/DesignSandbox";
 import Admin from "./pages/Admin";
 import UserProfile from "./pages/UserProfile";
 import Login from "./pages/Login";
@@ -42,10 +41,6 @@ const router = createBrowserRouter([
       {
         path: "profile",
         Component: UserProfile,
-      },
-      {
-        path: "designsandbox",
-        Component: DesignSandbox,
       },
       {
         path: ":raceId/teamselection",

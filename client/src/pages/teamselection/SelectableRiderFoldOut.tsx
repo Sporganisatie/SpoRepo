@@ -6,8 +6,8 @@ type SkillKey = "gc" | "sprint" | "climb" | "tt" | "punch";
 
 const SKILLS: { key: SkillKey; label: string }[] = [
   { key: "gc", label: "Klassement" },
-  { key: "sprint", label: "Sprint" },
   { key: "climb", label: "Klimmen" },
+  { key: "sprint", label: "Sprint" },
   { key: "tt", label: "Tijdrijden" },
   { key: "punch", label: "Punch" },
 ];

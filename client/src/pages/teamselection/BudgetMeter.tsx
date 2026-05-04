@@ -4,7 +4,7 @@ interface BudgetMeterProps {
 }
 
 function formatM(value: number): string {
-  return `${(value / 1_000_000).toFixed(1)}M`;
+  return `${(value / 1_000_000).toFixed(2)}M`;
 }
 
 const BudgetMeter = ({ used, total }: BudgetMeterProps) => {

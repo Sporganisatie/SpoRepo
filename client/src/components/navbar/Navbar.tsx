@@ -3,7 +3,7 @@ import "./navbar.css";
 import StatsDropdown from "./Dropdowns/StatistiekenDropdown";
 import ChartsDropdown from "./Dropdowns/ChartsDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLaptop, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import { faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import { useBudgetContext, useBudgetDispatch } from "../shared/BudgetContextProvider";
 import type { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
@@ -33,11 +33,6 @@ const Navbar = () => {
         {isAdmin && (
           <Link className="navbar_link" to="/admin">
             <FontAwesomeIcon icon={faShieldAlt} />
-          </Link>
-        )}
-        {isAdmin && (
-          <Link className="navbar_link" to="/designsandbox">
-            <FontAwesomeIcon icon={faLaptop} />
           </Link>
         )}
         {localStorage.getItem("authToken") &&

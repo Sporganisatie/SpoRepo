@@ -13,7 +13,7 @@ const Stage = () => {
   const { stagenr, stageState, setStage } = useStage();
 
   return (
-    <div>
+    <div style={{ paddingTop: "3.5rem" }}>
       <ArrowSelect
         value={stagenr}
         allowLooping={false}

@@ -5,13 +5,10 @@ import StageSelectionExplanation from "./StageSelectionExplanation";
 import TeamSelectionExplanation from "./TeamSelectionExplanation";
 
 const RulesPopup = (props) => {
-  const [page, setPage] = useState(props.page);
-  // const [showModal, setShowModal] = useState(false);
-  // const cssClass = showModal ? "modal display-block" : "modal display-none";
-  // const cssClass2 = showModal ? "modal-content w-full display-block" : "modal display-none";
+  const [page, setPage] = useState(props.page ?? "teamSelection");
 
   return (
-    <div className="stageprofilebutton">
+    <div className="stageprofilebutton" style={{ paddingTop: "3.5rem" }}>
       {/* <button className="button_standard blue" onClick={() => setShowModal(!showModal)}>{"Uitleg/ Regels "}</button> */}
       <div>
         <div>
