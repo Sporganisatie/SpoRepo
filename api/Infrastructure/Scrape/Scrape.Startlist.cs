@@ -1,6 +1,7 @@
 using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
 using SpoRE.Infrastructure.Database;
+using System.Globalization;
 
 namespace SpoRE.Infrastructure.Scrape;
 
@@ -19,13 +20,13 @@ public partial class Scrape
             {
                 // Extract PCS data
                 var names = rider.QuerySelector("a").InnerText.Split(" ");
-                var lastname = string.Join(" ", names.Where(n => n.ToUpperInvariant().Equals(n))).Replace("'", "''");
+                var lastname = string.Join(" ", names.Where(n => n.ToUpperInvariant().Equals(n)));
                 var firstnames = names.Where(n => !n.ToUpperInvariant().Equals(n));
                 var initials = string.Join(".", firstnames.Select(vn => vn[0]));
-                var firstname = string.Join(" ", firstnames).Replace("'", "''");
+                var firstname = string.Join(" ", firstnames);
                 var pcsId = rider.QuerySelector("a").GetAttributeValue("href", "").Substring(6);
                 var country = rider.QuerySelector("span.flag").GetAttributeValue("class", "").Split(" ")[1];
-                var riderInsert = $"('{pcsId}', '{country}', '{firstname}', '{lastname}', '{initials}')";
+                var riderInsert = $"('{pcsId}', '{country}', '{firstname.Replace("'", "''")}', '{lastname.Replace("'", "''")}', '{initials}')";
 
                 // Combine with price/qualities data
                 var riderId = $"(SELECT rider_id FROM rider WHERE PCS_id = '{pcsId}')";
@@ -89,8 +90,18 @@ public partial class Scrape
     }
 
     private static bool CompareName(string firstnameSC, string lastnameSC, string firstname, string lastname)
-        => firstname.Contains(firstnameSC, StringComparison.InvariantCultureIgnoreCase)
-            && lastname.Contains(lastnameSC, StringComparison.InvariantCultureIgnoreCase);
+    {
+        var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+        return compareInfo.IndexOf(
+            firstname,
+            firstnameSC,
+            CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace
+        ) >= 0 && compareInfo.IndexOf(
+            lastname,
+            lastnameSC,
+            CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace
+        ) >= 0;
+    }
 }
 
 internal class PrijzenFile
