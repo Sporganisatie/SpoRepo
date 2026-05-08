@@ -45,7 +45,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
             finishedOverride = stageNr != stage.Stagenr - 1;
             await CopyTeamsToStageSelections(stage);
         }
-        var html = new HtmlWeb().Load($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}").DocumentNode;
+        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(stage.Race.Name)}/{stage.Race.Year}/stage-{stageNr}");
         var classifications = html.QuerySelectorAll("a.selectResultTab").Select(x => x.InnerText);
         if (classifications.IsNullOrEmpty()) classifications = [PcsStage];
         var tables = html.QuerySelectorAll("#resultsCont .resTab").Select(x => x.QuerySelector("ul.ttt-results") ?? x.QuerySelector("table"));
