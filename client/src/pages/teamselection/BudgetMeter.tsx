@@ -1,3 +1,5 @@
+import { clamp } from "../../lib/math";
+
 interface BudgetMeterProps {
   used: number;
   total: number;
@@ -9,7 +11,7 @@ function formatM(value: number): string {
 
 const BudgetMeter = ({ used, total }: BudgetMeterProps) => {
   const remaining = total - used;
-  const pct = total > 0 ? Math.min(100, Math.max(0, (used / total) * 100)) : 0;
+  const pct = total > 0 ? clamp((used / total) * 100, 0, 100) : 0;
   const over = remaining < 0;
   const warning = !over && remaining < total * 0.1;
 
@@ -18,9 +20,9 @@ const BudgetMeter = ({ used, total }: BudgetMeterProps) => {
 
   return (
     <div className="budget-meter" aria-label="Budget">
-      <div className="budget-meter-track">
+      <div className="meter-track">
         <div
-          className={`budget-meter-fill ${fillClass}`}
+          className={`meter-fill ${fillClass}`}
           style={{ width: `${over ? 100 : pct}%` }}
         />
       </div>

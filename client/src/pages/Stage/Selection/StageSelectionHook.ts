@@ -6,12 +6,75 @@ import { useBudgetContext } from "../../../components/shared/BudgetContextProvid
 import { useStage } from "../StageHook";
 import type { StageSelectableRider } from "../models/StageSelectableRider";
 
+const RIDER_TYPE_ORDER = ["Klassement", "Klimmer", "Sprinter", "Tijdrijder", "Aanvaller", "Knecht"];
+
+function sortTeamArray(team: StageSelectableRider[]): StageSelectableRider[] {
+  return [...team].sort(
+    (a, b) =>
+      Number(a.rider.dnf) - Number(b.rider.dnf) ||
+      Number(b.selected) - Number(a.selected) ||
+      RIDER_TYPE_ORDER.indexOf(a.rider.type ?? "") - RIDER_TYPE_ORDER.indexOf(b.rider.type ?? "") ||
+      b.rider.price - a.rider.price ||
+      a.rider.rider.lastname.localeCompare(b.rider.rider.lastname)
+  );
+}
+
+function compleetheid(team: StageSelectableRider[]): number {
+  return (
+    team.filter((rider) => rider.selected).length + (team.some((rider) => rider.isKopman) ? 1 : 0)
+  );
+}
+
+function withUpdatedCount(
+  data: StageSelectionData,
+  team: StageSelectableRider[],
+  budgetParticipation: boolean
+): StageSelectionData {
+  const count = compleetheid(team);
+  const useBudgetSlot = budgetParticipation && data.budgetCompleet != null;
+  return {
+    ...data,
+    team,
+    compleet: useBudgetSlot ? data.compleet : count,
+    budgetCompleet: useBudgetSlot ? count : data.budgetCompleet,
+  };
+}
+
+function applyRiderToggle(
+  data: StageSelectionData,
+  riderParticipationId: number,
+  selected: boolean,
+  budgetParticipation: boolean
+): StageSelectionData {
+  const newTeam = sortTeamArray(
+    data.team.map((entry) =>
+      entry.rider.riderParticipationId === riderParticipationId
+        ? { ...entry, selected, isKopman: selected ? entry.isKopman : false }
+        : entry
+    )
+  );
+  return withUpdatedCount(data, newTeam, budgetParticipation);
+}
+
+function applyKopmanToggle(
+  data: StageSelectionData,
+  riderParticipationId: number,
+  selected: boolean,
+  budgetParticipation: boolean
+): StageSelectionData {
+  const newTeam = data.team.map((entry) => ({
+    ...entry,
+    isKopman: entry.rider.riderParticipationId === riderParticipationId ? selected : false,
+  }));
+  return withUpdatedCount(data, newTeam, budgetParticipation);
+}
+
 export function useStageSelection() {
   const budgetParticipation = useBudgetContext();
   const { raceId, stagenr } = useStage();
 
   const queryKey = ["stageSelection", raceId, stagenr, budgetParticipation] as const;
-  const invalidateKey = ["stageSelection", raceId, stagenr] as const;
+  const otherModeKey = ["stageSelection", raceId, stagenr, !budgetParticipation] as const;
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey,
@@ -20,239 +83,71 @@ export function useStageSelection() {
   });
 
   async function fetchData(raceId: string, stagenr: string, budgetParticipation: boolean) {
-    try {
-      const { data } = await axios.get(`/api/StageSelection`, {
-        params: {
-          raceId: raceId,
-          stagenr: stagenr,
-          budgetParticipation: budgetParticipation,
-        },
-      });
-      return stageSelectionDataSchema.parse(data);
-    } catch (error) {
-      throw error;
-    }
+    const { data } = await axios.get(`/api/StageSelection`, {
+      params: { raceId, stagenr, budgetParticipation },
+    });
+    return stageSelectionDataSchema.parse(data);
   }
 
-  const addRiderMutation = useMutation(
-    {
-      mutationFn: addRider,
-      onMutate: async (newRiderParticipationId) => {
-        await queryClient.cancelQueries({ queryKey });
-        const previousSelection = queryClient.getQueryData(queryKey);
-        queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-          if (!oldData) {
-            return undefined;
-          }
-          handleMutation(oldData, newRiderParticipationId, true, budgetParticipation);
-        });
-        return { previousSelection };
-      },
-      onError: (err, newRiderParticipationId, context) => {
-        queryClient.setQueryData(queryKey, context?.previousSelection);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries({ queryKey: invalidateKey });
-      },
-    },
-    queryClient
-  );
-
-  async function addRider(riderParticipationId: number) {
-    await axios.post(
-      `/api/StageSelection/Rider?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
-      {
-        params: {
-          riderParticipationId,
-          raceId: raceId,
-          budgetParticipation: budgetParticipation,
-          stagenr: stagenr,
-        },
-      }
-    );
-    queryClient.invalidateQueries({ queryKey: invalidateKey });
-  }
-
-  const removeRiderMutation = useMutation(
-    {
-      mutationFn: removeRider,
-      onMutate: async (newRiderParticipationId) => {
-        await queryClient.cancelQueries({ queryKey });
-        const previousSelection = queryClient.getQueryData(queryKey);
-        queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-          if (!oldData) {
-            return undefined;
-          }
-          handleMutation(oldData, newRiderParticipationId, false, budgetParticipation);
-        });
-        return { previousSelection };
-      },
-      onError: (err, newRiderParticipationId, context) => {
-        queryClient.setQueryData(queryKey, context?.previousSelection);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries({ queryKey: invalidateKey });
-      },
-    },
-    queryClient
-  );
-
-  async function removeRider(riderParticipationId: number) {
-    await axios.delete(
-      `/api/StageSelection/Rider?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
-      {
-        params: {
-          riderParticipationId,
-          raceId: raceId,
-          budgetParticipation: budgetParticipation,
-          stagenr: stagenr,
-        },
-      }
-    );
-    queryClient.invalidateQueries({ queryKey: invalidateKey });
-  }
-
-  function handleMutation(
-    oldData: StageSelectionData,
-    riderParticipationId: number,
-    selected: boolean,
-    budgetParticipation: boolean
+  function useToggleMutation(
+    mutationFn: (id: number) => Promise<void>,
+    update: (data: StageSelectionData, id: number) => StageSelectionData
   ) {
-    const riderIdx = oldData.team.findIndex(
-      ({ rider }) => rider.riderParticipationId === riderParticipationId
+    return useMutation(
+      {
+        mutationFn,
+        onMutate: async (id: number) => {
+          await queryClient.cancelQueries({ queryKey });
+          const previousSelection = queryClient.getQueryData<StageSelectionData>(queryKey);
+          if (previousSelection) {
+            queryClient.setQueryData<StageSelectionData>(queryKey, update(previousSelection, id));
+          }
+          return { previousSelection };
+        },
+        onError: (_err, _id, context) => {
+          queryClient.setQueryData(queryKey, context?.previousSelection);
+        },
+        onSettled: () => {
+          queryClient.invalidateQueries({ queryKey: otherModeKey, exact: true });
+        },
+      },
+      queryClient
     );
-    if (riderIdx === -1) {
-      throw new Error("Rider participation ID not found.");
-    }
-    oldData.team[riderIdx].selected = selected;
-    if (!selected) {
-      oldData.team[riderIdx].isKopman = false;
-    }
-    sortTeam(oldData);
-    setCompleet(oldData, budgetParticipation);
   }
 
-  const addKopmanMutation = useMutation(
-    {
-      mutationFn: addKopman,
-      onMutate: async (newRiderParticipationId) => {
-        await queryClient.cancelQueries({ queryKey });
-        const previousSelection = queryClient.getQueryData(queryKey);
-        queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-          if (!oldData) {
-            return undefined;
-          }
-          handleKopmanMutation(oldData, newRiderParticipationId, true, budgetParticipation);
-        });
-        return { previousSelection };
-      },
-      onError: (err, newRiderParticipationId, context) => {
-        queryClient.setQueryData(queryKey, context?.previousSelection);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries({ queryKey: invalidateKey });
-      },
-    },
-    queryClient
-  );
-
-  async function addKopman(riderParticipationId: number) {
+  async function addRider(id: number) {
     await axios.post(
-      `/api/StageSelection/Kopman?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
-      {
-        params: {
-          riderParticipationId,
-          raceId: raceId,
-          budgetParticipation: budgetParticipation,
-          stagenr: stagenr,
-        },
-      }
+      `/api/StageSelection/Rider?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${id}`
     );
-    queryClient.invalidateQueries({ queryKey: invalidateKey });
   }
-
-  const removeKopmanMutation = useMutation(
-    {
-      mutationFn: removeKopman,
-      onMutate: async (newRiderParticipationId) => {
-        await queryClient.cancelQueries({ queryKey });
-        const previousSelection = queryClient.getQueryData(queryKey);
-        queryClient.setQueryData<StageSelectionData>(queryKey, (oldData?: StageSelectionData) => {
-          if (!oldData) {
-            return undefined;
-          }
-          handleKopmanMutation(oldData, newRiderParticipationId, false, budgetParticipation);
-        });
-        return { previousSelection };
-      },
-      onError: (err, newRiderParticipationId, context) => {
-        queryClient.setQueryData(queryKey, context?.previousSelection);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries({ queryKey: invalidateKey });
-      },
-    },
-    queryClient
-  );
-
-  async function removeKopman(riderParticipationId: number) {
+  async function removeRider(id: number) {
     await axios.delete(
-      `/api/StageSelection/Kopman?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${riderParticipationId}`,
-      {
-        params: {
-          riderParticipationId,
-          raceId: raceId,
-          budgetParticipation: budgetParticipation,
-          stagenr: stagenr,
-        },
-      }
+      `/api/StageSelection/Rider?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${id}`
     );
-    queryClient.invalidateQueries({ queryKey: invalidateKey });
   }
-
-  function handleKopmanMutation(
-    oldData: StageSelectionData,
-    riderParticipationId: number,
-    selected: boolean,
-    budgetParticipation: boolean
-  ) {
-    const riderIdx = oldData.team.findIndex(
-      ({ rider }) => rider.riderParticipationId === riderParticipationId
+  async function addKopman(id: number) {
+    await axios.post(
+      `/api/StageSelection/Kopman?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${id}`
     );
-    if (riderIdx === -1) {
-      throw new Error("Rider participation ID not found.");
-    }
-    oldData.team.forEach((rider) => (rider.isKopman = false));
-    oldData.team[riderIdx].isKopman = selected;
-    setCompleet(oldData, budgetParticipation);
   }
-
-  function setCompleet(oldData: StageSelectionData, budgetParticipation: boolean) {
-    if (budgetParticipation && oldData.budgetCompleet) {
-      oldData.budgetCompleet = CompleetHeid(oldData.team);
-    } else {
-      oldData.compleet = CompleetHeid(oldData.team);
-    }
-  }
-
-  function CompleetHeid(team: StageSelectableRider[]): number {
-    return (
-      team.filter((rider) => rider.selected).length + (team.some((rider) => rider.isKopman) ? 1 : 0)
+  async function removeKopman(id: number) {
+    await axios.delete(
+      `/api/StageSelection/Kopman?raceId=${raceId}&stagenr=${stagenr}&budgetParticipation=${budgetParticipation}&riderParticipationId=${id}`
     );
   }
 
-  const riderTypeOrder = ["Klassement", "Klimmer", "Sprinter", "Tijdrijder", "Aanvaller", "Knecht"];
-
-  function sortTeam(data: StageSelectionData) {
-    data.team.sort(
-      (a, b) =>
-        Number(a.rider.dnf) - Number(b.rider.dnf) ||
-        Number(b.selected) - Number(a.selected) ||
-        riderTypeOrder.indexOf(a.rider.type ?? "") - riderTypeOrder.indexOf(b.rider.type ?? "") ||
-        b.rider.price - a.rider.price ||
-        a.rider.rider.lastname.localeCompare(b.rider.rider.lastname)
-    );
-  }
+  const addRiderMutation = useToggleMutation(addRider, (data, id) =>
+    applyRiderToggle(data, id, true, budgetParticipation)
+  );
+  const removeRiderMutation = useToggleMutation(removeRider, (data, id) =>
+    applyRiderToggle(data, id, false, budgetParticipation)
+  );
+  const addKopmanMutation = useToggleMutation(addKopman, (data, id) =>
+    applyKopmanToggle(data, id, true, budgetParticipation)
+  );
+  const removeKopmanMutation = useToggleMutation(removeKopman, (data, id) =>
+    applyKopmanToggle(data, id, false, budgetParticipation)
+  );
 
   return {
     data,

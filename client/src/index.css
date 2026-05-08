@@ -98,7 +98,6 @@ img.loadingGif {
   text-decoration: none;
 }
 
-/* 24-hour countdown timer. */
 .countdown-24h {
   font-family: monospace;
   font-size: 3rem;

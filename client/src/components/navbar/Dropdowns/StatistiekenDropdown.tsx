@@ -1,4 +1,4 @@
-import { faChartPie } from "@fortawesome/free-solid-svg-icons";
+import { faTable } from "@fortawesome/free-solid-svg-icons";
 import { useRaceContext } from "../../shared/RaceContextProvider";
 import DropdownMenu from "./base/DropdownMenu";
 
@@ -9,7 +9,7 @@ const StatistiekenDropdown = (props: { raceSelected: boolean }) => {
     <DropdownMenu
       {...props}
       name="Statistieken"
-      icon={faChartPie}
+      icon={faTable}
       alwaysLinks={[
         // Deze misschien in een losse dropdown of zo?
         { url: "/raceUitslagen", title: "Uitslagen per race" },

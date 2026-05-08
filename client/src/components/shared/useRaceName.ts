@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "../../api/client";
 import { useRaceContext } from "./RaceContextProvider";
@@ -14,5 +15,5 @@ export function useRaceName(): string | undefined {
     queryFn: async () => (await axios.get("/api/race/all")).data,
     staleTime: 60_000,
   });
-  return data?.find((r) => r.value === raceId)?.displayValue;
+  return useMemo(() => data?.find((r) => r.value === raceId)?.displayValue, [data, raceId]);
 }

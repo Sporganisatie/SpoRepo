@@ -64,29 +64,6 @@
   min-width: 0;
 }
 
-.budget-meter-track {
-  flex: 1;
-  height: 0.5rem;
-  background-color: var(--bg-control);
-  border-radius: 999px;
-  overflow: hidden;
-  min-width: 4rem;
-}
-
-.budget-meter-fill {
-  height: 100%;
-  background-color: var(--accent-green);
-  transition: width 200ms ease-out;
-}
-
-.budget-meter-fill.warning {
-  background-color: #f59e0b;
-}
-
-.budget-meter-fill.over {
-  background-color: var(--accent-red);
-}
-
 .budget-meter-text {
   font-size: var(--text-base);
   font-weight: 600;

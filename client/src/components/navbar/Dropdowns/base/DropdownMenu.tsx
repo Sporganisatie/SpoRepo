@@ -3,7 +3,7 @@ import { DropdownLink } from "./DropdownLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface DropdownMenuProps {
   alwaysLinks: DropdownLinkProps[];
@@ -16,22 +16,18 @@ interface DropdownMenuProps {
 const DropdownMenu = (props: DropdownMenuProps) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const openMenu = () => {
-    if (!showMenu) {
-      // Hoeft alleen iets te doen als menu gesloten
-      setShowMenu(true);
-      setTimeout(() => {
-        window.addEventListener("click", closeMenu);
-      }, 0);
-    }
-  };
-
-  const closeMenu = () => {
-    setShowMenu(false);
-    setTimeout(() => {
-      window.removeEventListener("click", closeMenu);
-    }, 0);
-  };
+  // Click-outside-to-close. Listener is only attached while open and torn
+  // down on close/unmount. Deferred a tick so the opening click doesn't
+  // immediately close the menu.
+  useEffect(() => {
+    if (!showMenu) return;
+    const close = () => setShowMenu(false);
+    const id = setTimeout(() => window.addEventListener("click", close), 0);
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("click", close);
+    };
+  }, [showMenu]);
 
   const alwaysLinks = props.alwaysLinks.map((link) => (
     <DropdownLink key={link.title} url={link.url} title={link.title} />
@@ -42,10 +38,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
   return (
     <div className="navbar_link" title={props.icon ? props.name : undefined}>
-      <span onClick={openMenu}>
-        {props.icon && (
-          <FontAwesomeIcon icon={props.icon} className="nav-on-mobile" />
-        )}
+      <span onClick={() => setShowMenu(true)}>
+        {props.icon && <FontAwesomeIcon icon={props.icon} className="nav-on-mobile" />}
         <span className={props.icon ? "nav-on-desktop" : ""}>{props.name}</span>{" "}
         <FontAwesomeIcon icon={showMenu ? faAngleUp : faAngleDown} />
       </span>

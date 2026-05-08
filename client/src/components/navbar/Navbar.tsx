@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./navbar.css";
 import StatsDropdown from "./Dropdowns/StatistiekenDropdown";
@@ -20,9 +21,12 @@ const Navbar = () => {
   const onTeamSelection = useLocation().pathname.endsWith("/teamselection");
   const budget = useBudgetContext();
   const dispatch = useBudgetDispatch();
-  const isAdmin =
-    localStorage.getItem("authToken") &&
-    jwt_decode<AuthToken>(localStorage.getItem("authToken") ?? "").admin === true;
+  const claims = useMemo<AuthToken | null>(() => {
+    const token = localStorage.getItem("authToken");
+    return token ? jwt_decode<AuthToken>(token) : null;
+  }, []);
+  const isAdmin = claims?.admin === true;
+  const showBudgetSwitch = claims != null && claims.id <= 5;
   return (
     <div>
       <div className="navbar">
@@ -37,15 +41,14 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faShieldAlt} />
           </Link>
         )}
-        {localStorage.getItem("authToken") &&
-          jwt_decode<AuthToken>(localStorage.getItem("authToken") ?? "").id <= 5 && (
-            <Switch
-              value={budget}
-              handleOnChange={() => dispatch({})}
-              sliderContent="€"
-              hotkey="B"
-            />
-          )}
+        {showBudgetSwitch && (
+          <Switch
+            value={budget}
+            handleOnChange={() => dispatch({})}
+            sliderContent="€"
+            hotkey="B"
+          />
+        )}
         <RaceDropdown />
         <Link className="navbar_link navbar_link--end" to="/regelspunten" title="Regels/Punten">
           <FontAwesomeIcon icon={faCircleInfo} />

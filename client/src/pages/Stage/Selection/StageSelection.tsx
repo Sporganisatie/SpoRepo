@@ -4,7 +4,7 @@ import ClassificationOverview from "./ClassificationOverview";
 import { useStageSelection } from "./StageSelectionHook";
 import { useStage } from "../StageHook";
 import StageNav from "../StageNav";
-import CountdownClock24H from "../../teamselection/CountdownClock";
+import CountdownClock24H, { isWithin24h } from "../../teamselection/CountdownClock";
 import "./StageSelection.css";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -26,8 +26,7 @@ const StageSelection = () => {
     return <div className="stage-selection-page" />;
   }
 
-  const within24h =
-    data.deadline != null && data.deadline.getTime() - Date.now() < 24 * 60 * 60 * 1000;
+  const within24h = data.deadline != null && isWithin24h(data.deadline);
 
   return (
     <div className="stage-selection-page">

@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShirt } from "@fortawesome/free-solid-svg-icons";
+import { clamp } from "../../../lib/math";
 
 export interface BarValue {
   selected: number;
@@ -12,15 +13,15 @@ interface SelectionCompleteProps {
 }
 
 const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string }) => {
-  const clamped = Math.max(0, Math.min(9, selected));
+  const clamped = clamp(selected, 0, 9);
   const pct = (clamped / 9) * 100;
   const complete = clamped === 9 && kopman;
 
   return (
     <div className="ss-completion-row">
-      <div className="ss-completion-track">
+      <div className="meter-track">
         <div
-          className={`ss-completion-fill ${complete ? "complete" : ""}`}
+          className={`meter-fill ${complete ? "complete" : "danger"}`}
           style={{ width: `${pct}%` }}
         />
       </div>
