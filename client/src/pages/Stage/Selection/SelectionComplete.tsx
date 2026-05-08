@@ -1,49 +1,43 @@
-import "./SelectionComplete.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShirt } from "@fortawesome/free-solid-svg-icons";
 
-const SelectionsComplete = ({
-  compleet,
-  budgetCompleet,
-}: {
-  compleet: number;
-  budgetCompleet: number | null;
-}) => {
+export interface BarValue {
+  selected: number;
+  kopman: boolean;
+}
+
+interface SelectionCompleteProps {
+  bars: BarValue[];
+  jerseyClass: string;
+}
+
+const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string }) => {
+  const clamped = Math.max(0, Math.min(9, selected));
+  const pct = (clamped / 9) * 100;
+  const complete = clamped === 9 && kopman;
+
   return (
-    <div>
-      {budgetCompleet != null ? (
+    <div className="ss-completion-row">
+      <div className="ss-completion-track">
         <div
-          className={"completeContainer " + (compleet + budgetCompleet === 20 ? "allCompleet" : "")}
-        >
-          Compleet:
-          <SelectionsCompleteRow compleet={compleet} className="gewoonCompleet" rowText="Gewoon" />
-          <SelectionsCompleteRow
-            compleet={budgetCompleet}
-            className="budgetCompleet"
-            rowText="Budget"
-          />
-        </div>
-      ) : (
-        <div className={"completeContainerNonBudget " + (compleet === 10 ? "allCompleet" : "")}>
-          Compleet:
-          <SelectionsCompleteRow compleet={compleet} className="gewoonCompleet" rowText="Team" />
-        </div>
-      )}
+          className={`ss-completion-fill ${complete ? "complete" : ""}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <FontAwesomeIcon
+        icon={faShirt}
+        className={`ss-completion-jersey ${kopman ? `active ${jerseyClass}` : ""}`}
+      />
     </div>
   );
 };
 
-const SelectionsCompleteRow = ({
-  compleet,
-  className,
-  rowText,
-}: {
-  compleet: number;
-  className: string;
-  rowText: string;
-}) => {
+const SelectionsComplete = ({ bars, jerseyClass }: SelectionCompleteProps) => {
   return (
-    <div className={className}>
-      <div style={{ width: compleet * 10 + "%" }} className={"backgroundCompleet"}></div>
-      <div className="textCompleet">{rowText} </div>
+    <div className="ss-completion">
+      {bars.map((b, i) => (
+        <Bar key={i} selected={b.selected} kopman={b.kopman} jerseyClass={jerseyClass} />
+      ))}
     </div>
   );
 };

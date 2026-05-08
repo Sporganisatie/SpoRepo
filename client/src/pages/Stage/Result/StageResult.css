@@ -1,0 +1,65 @@
+/* StageResult uses a 1:1 split rather than stage-selection's 1:2. */
+.stage-result-page .ss-body {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Left column on the result page stacks the team-result and user-score panels. */
+.sr-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Give the first column of the left-column tables some breathing room on the
+   panel's left edge. */
+.sr-left-column .rdt_TableHeadRow .rdt_TableCol:first-child,
+.sr-left-column .rdt_TableRow .rdt_TableCell:first-child {
+  padding-left: var(--space-4);
+}
+
+/* Virtual-result banner — shown above the page header on virtual stages. */
+.sr-virtual-banner {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--podium-gold);
+  flex: 1;
+}
+
+/* Tab bar in the classifications panel header.
+   The header's own vertical padding is removed so the tab buttons can keep
+   their internal padding without inflating the header height. */
+.ss-body .sr-tabs {
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.sr-tab {
+  background-color: transparent;
+  color: var(--fg-muted);
+  border: 0;
+  border-radius: 0.25rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.sr-tab:hover:not(:disabled) {
+  background-color: var(--bg-control);
+  color: var(--fg-default);
+}
+
+.sr-tab.active {
+  background-color: var(--bg-control);
+  color: var(--fg-default);
+}
+
+.sr-tab:disabled {
+  color: var(--bg-control);
+  cursor: not-allowed;
+}

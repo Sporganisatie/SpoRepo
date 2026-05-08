@@ -45,4 +45,8 @@
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
   --text-3xl: 2.5rem;
+
+  /* Layout. */
+  --navbar-height: 3.5rem;
+  --page-top-buffer: 1rem;
 }

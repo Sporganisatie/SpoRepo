@@ -3,6 +3,13 @@ import ClassificationTable from "../Selection/ClassificationTable";
 import type { Classifications } from "../models/StageSelectionData";
 import "./StageClassifications.css";
 
+type TabKey = "Etappe" | "Algemeen" | "Punten" | "Berg" | "Jongeren";
+
+interface TabConfig {
+  key: TabKey;
+  resultColName: string;
+}
+
 const StageClassifications = ({
   data,
   finalStandings,
@@ -10,116 +17,61 @@ const StageClassifications = ({
   data: Classifications;
   finalStandings: boolean;
 }) => {
-  const [activeButton, setActiveButton] = useState("Etappe");
+  const [activeTab, setActiveTab] = useState<TabKey>("Etappe");
 
   useEffect(() => {
-    setActiveButton(finalStandings ? "Algemeen" : "Etappe");
+    setActiveTab(finalStandings ? "Algemeen" : "Etappe");
   }, [finalStandings]);
 
-  const handleClick = (title: string) => {
-    setActiveButton(title);
+  const tabs: TabConfig[] = [
+    ...(finalStandings ? [] : ([{ key: "Etappe", resultColName: "Tijd" }] as TabConfig[])),
+    { key: "Algemeen", resultColName: "Tijd" },
+    { key: "Punten", resultColName: "Punten" },
+    { key: "Berg", resultColName: "Punten" },
+    { key: "Jongeren", resultColName: "Tijd" },
+  ];
+
+  const rowsForTab = (key: TabKey) => {
+    switch (key) {
+      case "Etappe":
+        return data.stage ?? [];
+      case "Algemeen":
+        return data.gc;
+      case "Punten":
+        return data.points;
+      case "Berg":
+        return data.kom;
+      case "Jongeren":
+        return data.youth;
+    }
   };
 
+  const activeRows = rowsForTab(activeTab);
+  const activeConfig = tabs.find((t) => t.key === activeTab) ?? tabs[0];
+
   return (
-    <div>
-      <div>
-        {!finalStandings && (
-          <button
-            className={
-              (activeButton === "Etappe" ? "active" : "") +
-              ((data.stage?.length ?? 0) > 0 ? "" : "disabled")
-            }
-            disabled={data.stage?.length === 0}
-            onClick={() => handleClick("Etappe")}
-          >
-            Etappe
-          </button>
-        )}
-        <button
-          className={
-            (activeButton === "Algemeen" ? "active" : "") +
-            ((data.gc?.length ?? 0) > 0 ? "" : "disabled")
-          }
-          disabled={data.gc?.length === 0}
-          onClick={() => handleClick("Algemeen")}
-        >
-          Algemeen
-        </button>
-        <button
-          className={
-            (activeButton === "Punten" ? "active" : "") +
-            ((data.points?.length ?? 0) > 0 ? "" : "disabled")
-          }
-          disabled={data.points?.length === 0}
-          onClick={() => handleClick("Punten")}
-        >
-          Punten
-        </button>
-        <button
-          className={
-            (activeButton === "Berg" ? "active" : "") +
-            ((data.kom?.length ?? 0) > 0 ? "" : "disabled")
-          }
-          disabled={data.kom?.length === 0}
-          onClick={() => handleClick("Berg")}
-        >
-          Berg
-        </button>
-        <button
-          className={
-            (activeButton === "Jongeren" ? "active" : "") +
-            ((data.youth?.length ?? 0) > 0 ? "" : "disabled")
-          }
-          disabled={data.youth?.length === 0}
-          onClick={() => handleClick("Jongeren")}
-        >
-          Jongeren
-        </button>
+    <div className="ts-panel">
+      <div className="ts-panel-header sr-tabs">
+        {tabs.map(({ key }) => {
+          const disabled = (rowsForTab(key)?.length ?? 0) === 0;
+          return (
+            <button
+              key={key}
+              className={`sr-tab ${activeTab === key ? "active" : ""}`}
+              disabled={disabled}
+              onClick={() => setActiveTab(key)}
+            >
+              {key}
+            </button>
+          );
+        })}
       </div>
-      {activeButton === "Etappe" && (
-        <ClassificationTable
-          rows={data.stage ?? []}
-          title="Etappe"
-          resultColName="Tijd"
-          pagination={true}
-        />
-      )}
-      {activeButton === "Algemeen" && (
-        <ClassificationTable
-          rows={data.gc}
-          title="Algemeen"
-          resultColName="Tijd"
-          pagination={true}
-          showRankChange={true}
-        />
-      )}
-      {activeButton === "Punten" && (
-        <ClassificationTable
-          rows={data.points}
-          title="Punten"
-          resultColName="Punten"
-          pagination={true}
-          showRankChange={true}
-        />
-      )}
-      {activeButton === "Berg" && (
-        <ClassificationTable
-          rows={data.kom}
-          title="Berg"
-          resultColName="Punten"
-          pagination={true}
-          showRankChange={true}
-        />
-      )}
-      {activeButton === "Jongeren" && (
-        <ClassificationTable
-          rows={data.youth}
-          title="Jongeren"
-          resultColName="Tijd"
-          pagination={true}
-          showRankChange={true}
-        />
-      )}
+      <ClassificationTable
+        rows={activeRows}
+        resultColName={activeConfig.resultColName}
+        pagination={true}
+        showRankChange={activeTab !== "Etappe"}
+      />
     </div>
   );
 };

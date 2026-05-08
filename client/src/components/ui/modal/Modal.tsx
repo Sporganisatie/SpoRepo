@@ -38,7 +38,7 @@ const Modal = ({
     }
   });
   return (
-    <dialog ref={dialogRef} className="content">
+    <dialog ref={dialogRef}>
       <div className="modal-header">
         <div className="modal-title">{title}</div>
         <button className="modal-close-button" onClick={closeFn}>

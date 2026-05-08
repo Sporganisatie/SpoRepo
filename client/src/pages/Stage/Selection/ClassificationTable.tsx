@@ -23,7 +23,7 @@ const ClassificationTable = ({
   showRankChange,
 }: {
   rows: ClassificationRow[];
-  title: string;
+  title?: string;
   resultColName: string;
   pagination?: boolean;
   showRankChange?: boolean;
@@ -63,13 +63,13 @@ const ClassificationTable = ({
     },
     {
       name: "Naam",
-      minWidth: "200px",
+      grow: 2,
       cell: (row: ClassificationRow) => <RiderLink rider={row.rider} />,
     },
     {
       name: "Team",
-      minWidth: "200px",
-      cell: (row: ClassificationRow) => row.team,
+      grow: 2,
+      cell: (row: ClassificationRow) => <span className="rider-team-text">{row.team}</span>,
     },
     {
       name: resultColName,

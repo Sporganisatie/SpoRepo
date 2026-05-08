@@ -1,3 +1,166 @@
+.stage-selection-page {
+  box-sizing: border-box;
+  padding: 0 var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Page header: stage nav + deadline (left) | countdown + CTA (right). */
+.ss-page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ss-page-header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ss-deadline {
+  font-size: var(--text-base);
+  color: var(--fg-default);
+}
+
+.ss-page-cta {
+  box-sizing: content-box;
+  display: inline-flex;
+  align-items: center;
+  height: 2.5rem;
+  background-color: var(--bg-elevated);
+  color: var(--fg-default);
+  border: 1px solid var(--bg-elevated);
+  border-radius: 0.375rem;
+  padding: 0 var(--space-4);
+  font-size: var(--text-base);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.ss-page-cta:hover {
+  background-color: var(--bg-control);
+}
+
+/* Two-column body: team panel | classifications grid. */
+.ss-body {
+  display: grid;
+  grid-template-columns: minmax(20rem, 1fr) 2fr;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+/* Tighten cell padding in all tables on the stage selection page. */
+.stage-selection-page .rdt_TableCol,
+.stage-selection-page .rdt_TableCell {
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+/* All panel headers on this page use the lighter "even-row" surface. */
+.stage-selection-page .ts-panel-header {
+  background-color: var(--bg-surface);
+  border-bottom-color: var(--bg-elevated);
+}
+
+.rider-team-text {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  min-width: 0;
+}
+
+.ss-classifications {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* Selection-completion bars (rendered inside the team panel header). */
+.ss-completion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.ss-completion-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ss-completion-track {
+  flex: 1;
+  height: 0.5rem;
+  background-color: var(--bg-control);
+  border-radius: 999px;
+  overflow: hidden;
+  min-width: 4rem;
+}
+
+.ss-completion-fill {
+  height: 100%;
+  background-color: var(--accent-red);
+  transition: width 200ms ease-out, background-color 200ms;
+}
+
+.ss-completion-fill.complete {
+  background-color: var(--accent-green);
+}
+
+.ss-completion-jersey {
+  font-size: var(--text-base);
+  color: var(--bg-control);
+  flex-shrink: 0;
+}
+
+.ss-completion-jersey.active        { color: var(--podium-gold); }
+.ss-completion-jersey.active.giro   { color: #f472b6; }
+.ss-completion-jersey.active.tour   { color: #fbbf24; }
+.ss-completion-jersey.active.vuelta { color: var(--accent-red); }
+
+/* Tighten the header so the bars fit comfortably. */
+.stage-selection-page .ts-panel-header {
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* Stage selection +/- and kopman buttons share the same chrome as team-selection. */
+.ss-action-cell {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .ss-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .stage-selection-page {
+    padding: 0 var(--space-2) var(--space-2);
+  }
+  .ss-classifications {
+    grid-template-columns: 1fr;
+  }
+  .ss-completion {
+    max-width: none;
+    flex: 1 1 100%;
+  }
+}
+
+/* Existing rule preserved. */
 .rdt_TableHeadRow rdt_TableCell:last-child {
   padding: 0;
 }

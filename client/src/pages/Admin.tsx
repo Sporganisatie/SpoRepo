@@ -57,7 +57,7 @@ const Admin = () => {
   };
 
   return (
-    <div style={{ paddingTop: "3.5rem" }}>
+    <div>
       <div>
         <input
           style={{ marginRight: "5px", width: "70px" }}

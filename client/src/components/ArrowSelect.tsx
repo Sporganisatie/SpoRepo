@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import type { SelectProps } from "./Select";
 import Select from "./Select";
 
@@ -35,8 +37,10 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-      <button onClick={() => handleMove(-1)}>{"<"}</button>
+    <div className="arrow-select">
+      <button className="arrow-select__btn" onClick={() => handleMove(-1)} aria-label="Vorige">
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </button>
       <Select
         options={options}
         onChange={(value) => {
@@ -45,7 +49,9 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
         }}
         value={options[currentIndex]?.value}
       />
-      <button onClick={() => handleMove(1)}>{">"}</button>
+      <button className="arrow-select__btn" onClick={() => handleMove(1)} aria-label="Volgende">
+        <FontAwesomeIcon icon={faChevronRight} />
+      </button>
     </div>
   );
 }

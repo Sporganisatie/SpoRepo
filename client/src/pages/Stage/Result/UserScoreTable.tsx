@@ -31,7 +31,7 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => {
     },
   ];
 
-  return <SreDataTable title="Poule stand" columns={columns} data={data} />;
+  return <SreDataTable columns={columns} data={data} />;
 };
 
 export default UserScoreTable;

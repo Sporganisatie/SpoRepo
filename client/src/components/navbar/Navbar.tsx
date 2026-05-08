@@ -3,7 +3,7 @@ import "./navbar.css";
 import StatsDropdown from "./Dropdowns/StatistiekenDropdown";
 import ChartsDropdown from "./Dropdowns/ChartsDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPersonBiking, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import { useBudgetContext, useBudgetDispatch } from "../shared/BudgetContextProvider";
 import type { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
@@ -22,8 +22,9 @@ const Navbar = () => {
   return (
     <div>
       <div className="navbar">
-        <Link className="navbar_link" to={"/"}>
-          <span>Current stage</span>
+        <Link className="navbar_link" to={"/"} title="Current stage">
+          <FontAwesomeIcon icon={faPersonBiking} className="nav-on-mobile" />
+          <span className="nav-on-desktop">Current stage</span>
         </Link>
         <ChartsDropdown raceSelected={race > 0} />
         <StatsDropdown raceSelected={race > 0} />

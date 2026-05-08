@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-const CountdownClock24H: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
+interface CountdownClock24HProps {
+  targetDate: Date;
+  className?: string;
+}
+
+const CountdownClock24H: React.FC<CountdownClock24HProps> = ({ targetDate, className }) => {
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
@@ -24,23 +29,11 @@ const CountdownClock24H: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  return (
-    <>
-      {targetDate.getTime() - new Date().getTime() < 24 * 60 * 60 * 1000 && (
-        <div
-          style={{
-            fontSize: "3rem",
-            color: "red",
-            textAlign: "center",
-            margin: "1rem 0",
-            fontFamily: "monospace",
-          }}
-        >
-          {timeLeft}
-        </div>
-      )}
-    </>
-  );
+  if (targetDate.getTime() - new Date().getTime() >= 24 * 60 * 60 * 1000) {
+    return null;
+  }
+
+  return <div className={`countdown-24h ${className ?? ""}`}>{timeLeft}</div>;
 };
 
 export default CountdownClock24H;

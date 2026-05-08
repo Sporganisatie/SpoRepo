@@ -8,7 +8,7 @@ const RulesPopup = (props) => {
   const [page, setPage] = useState(props.page ?? "teamSelection");
 
   return (
-    <div className="stageprofilebutton" style={{ paddingTop: "3.5rem" }}>
+    <div className="stageprofilebutton">
       {/* <button className="button_standard blue" onClick={() => setShowModal(!showModal)}>{"Uitleg/ Regels "}</button> */}
       <div>
         <div>

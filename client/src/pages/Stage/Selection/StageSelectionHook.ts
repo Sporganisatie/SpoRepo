@@ -11,6 +11,7 @@ export function useStageSelection() {
   const { raceId, stagenr } = useStage();
 
   const queryKey = ["stageSelection", raceId, stagenr, budgetParticipation] as const;
+  const invalidateKey = ["stageSelection", raceId, stagenr] as const;
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey,
@@ -51,7 +52,7 @@ export function useStageSelection() {
         queryClient.setQueryData(queryKey, context?.previousSelection);
       },
       onSettled: () => {
-        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: invalidateKey });
       },
     },
     queryClient
@@ -69,9 +70,7 @@ export function useStageSelection() {
         },
       }
     );
-    queryClient.invalidateQueries({
-      queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
-    });
+    queryClient.invalidateQueries({ queryKey: invalidateKey });
   }
 
   const removeRiderMutation = useMutation(
@@ -92,7 +91,7 @@ export function useStageSelection() {
         queryClient.setQueryData(queryKey, context?.previousSelection);
       },
       onSettled: () => {
-        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: invalidateKey });
       },
     },
     queryClient
@@ -110,9 +109,7 @@ export function useStageSelection() {
         },
       }
     );
-    queryClient.invalidateQueries({
-      queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
-    });
+    queryClient.invalidateQueries({ queryKey: invalidateKey });
   }
 
   function handleMutation(
@@ -153,7 +150,7 @@ export function useStageSelection() {
         queryClient.setQueryData(queryKey, context?.previousSelection);
       },
       onSettled: () => {
-        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: invalidateKey });
       },
     },
     queryClient
@@ -171,9 +168,7 @@ export function useStageSelection() {
         },
       }
     );
-    queryClient.invalidateQueries({
-      queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
-    });
+    queryClient.invalidateQueries({ queryKey: invalidateKey });
   }
 
   const removeKopmanMutation = useMutation(
@@ -194,7 +189,7 @@ export function useStageSelection() {
         queryClient.setQueryData(queryKey, context?.previousSelection);
       },
       onSettled: () => {
-        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: invalidateKey });
       },
     },
     queryClient
@@ -212,9 +207,7 @@ export function useStageSelection() {
         },
       }
     );
-    queryClient.invalidateQueries({
-      queryKey: ["stageSelection", raceId, stagenr, budgetParticipation],
-    });
+    queryClient.invalidateQueries({ queryKey: invalidateKey });
   }
 
   function handleKopmanMutation(
@@ -229,7 +222,7 @@ export function useStageSelection() {
     if (riderIdx === -1) {
       throw new Error("Rider participation ID not found.");
     }
-    oldData.team.forEach((rider) => (rider.isKopman = !selected));
+    oldData.team.forEach((rider) => (rider.isKopman = false));
     oldData.team[riderIdx].isKopman = selected;
     setCompleet(oldData, budgetParticipation);
   }

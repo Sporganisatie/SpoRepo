@@ -1,0 +1,58 @@
+/* Generic panel chrome — used across redesigned pages. */
+
+.ts-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--bg-elevated);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.ts-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  min-height: 3.25rem;
+  box-sizing: border-box;
+  background-color: var(--bg-elevated);
+  border-bottom: 1px solid var(--bg-elevated);
+}
+
+.ts-panel-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin: 0;
+}
+
+.ts-panel-meta {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ts-panel-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--fg-muted);
+  border: 0;
+  border-radius: 0.25rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.ts-panel-toggle:hover {
+  background-color: var(--bg-control);
+  color: var(--fg-default);
+}
+
+/* Hide SreDataTable's internal title bar inside a panel — the panel provides one. */
+.ts-panel header[role="heading"],
+.ts-panel .rdt_TableHeader {
+  display: none;
+}

@@ -15,7 +15,7 @@ public class StageSelectionService(DatabaseContext DB, Userdata User, StageResul
         var team = GetTeam(stagenr).OrderBy(x => x.Rider.Dnf).ThenBy(x => !x.Selected).ThenBy(x => x.Rider.Type).ThenByDescending(x => x.Rider.Price).ThenBy(x => x.Rider.Rider.Lastname);
         var stageInfo = DB.Stages.Single(x => x.RaceId == raceId && x.Stagenr == stagenr);
         var mostRecentFinished = DB.Stages.OrderByDescending(s => s.Stagenr).FirstOrDefault(s => s.Finished && s.RaceId == raceId);
-        var topClassifications = mostRecentFinished is null ? Classifications.Empty : StageResultService.GetClassifications(mostRecentFinished, top5: true, stagenr);
+        var topClassifications = mostRecentFinished is null ? Classifications.Empty : StageResultService.GetClassifications(mostRecentFinished, top10: true, stagenr);
         return new StageSelectionData(team, stageInfo.Starttime, topClassifications, OpstellingCompleet(raceId, stagenr, false).Value, OpstellingCompleet(raceId, stagenr, true));
     }
 

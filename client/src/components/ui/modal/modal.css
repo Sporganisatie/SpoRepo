@@ -1,18 +1,60 @@
 dialog {
-  border: 0;
-  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--fg-default);
+  border: 1px solid var(--bg-elevated);
+  border-radius: 0.5rem;
+  padding: 0;
   box-shadow:
-    0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
-  margin-top: 4rem;
-  max-height: 85vh;
-  max-width: 80vw;
+    0 20px 25px -5px rgba(0, 0, 0, 0.5),
+    0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  margin-top: 2rem;
+  max-height: 92vh;
+  max-width: 90vw;
+  min-width: min(28rem, 90vw);
   overflow: hidden;
 }
 
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--bg-elevated);
+  border-bottom: 1px solid var(--bg-elevated);
+}
+
+.modal-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.modal-close-button {
+  background: transparent;
+  border: 0;
+  color: var(--fg-muted);
+  cursor: pointer;
+  font-size: var(--text-lg);
+  line-height: 1;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 0.25rem;
+  transition: background-color 150ms, color 150ms;
+}
+
+.modal-close-button:hover {
+  background-color: var(--bg-control);
+  color: var(--fg-default);
+}
+
 .modal-content {
-  max-height: calc(85vh - 2.5rem);
+  max-height: calc(92vh - 3.5rem);
   overflow: auto;
+  padding: var(--space-4);
 }
 
 @media screen and (max-width: 768px) {
@@ -20,34 +62,11 @@ dialog {
     margin-top: 0;
     max-height: 100vh;
     max-width: 100vw;
+    min-width: 0;
+    border-radius: 0;
+    border: 0;
   }
   .modal-content {
-    max-height: calc(100vh - 2.5rem);
+    max-height: calc(100vh - 3.5rem);
   }
-}
-
-.modal-header {
-  display: flex;
-  height: 2rem;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  width: 100%;
-}
-
-.modal-title {
-  font-size: x-large;
-}
-
-.modal-close-button {
-  background: none;
-  border: 0;
-  cursor: pointer;
-  font-size: x-large;
-  transition-duration: 300ms;
-}
-
-.modal-close-button:hover {
-  color: #475569;
 }

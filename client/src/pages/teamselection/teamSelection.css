@@ -55,42 +55,6 @@
   align-items: flex-start;
 }
 
-/* Panel — dark surface with header. */
-.ts-panel {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--bg-elevated);
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-.ts-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background-color: var(--bg-elevated);
-  border-bottom: 1px solid var(--bg-elevated);
-}
-
-.ts-panel-title {
-  font-size: var(--text-base);
-  font-weight: 600;
-  margin: 0;
-}
-
-.ts-panel-meta {
-  font-size: var(--text-sm);
-  color: var(--fg-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Hide SreDataTable's own title bar inside a panel — the panel provides one. */
-.ts-panel header[role="heading"],
-.ts-panel .rdt_TableHeader {
-  display: none;
-}
-
 /* Budget meter. */
 .budget-meter {
   display: flex;

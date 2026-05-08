@@ -12,7 +12,7 @@ public partial class StageResultService(DatabaseContext DB, Userdata User)
         var stage = DB.Stages.Single(ss => ss.RaceId == raceId && ss.Stagenr == stagenr);
         var userScores = GetUserScores(stage, budgetParticipation);
         var teamResult = GetTeamResult(stage, budgetParticipation);
-        var classifications = GetClassifications(stage, top5: false);
+        var classifications = GetClassifications(stage, top10: false);
         bool virtualResult = stage.IsFinalStandings && !stage.Finished;
         return new(userScores, teamResult, classifications, virtualResult, stage.IsFinalStandings);
     }

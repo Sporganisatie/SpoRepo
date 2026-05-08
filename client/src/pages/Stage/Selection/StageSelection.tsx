@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import ClassificationOverview from "./ClassificationOverview";
 import { useStageSelection } from "./StageSelectionHook";
 import { useStage } from "../StageHook";
-import SelectionsComplete from "./SelectionComplete";
+import StageNav from "../StageNav";
+import CountdownClock24H from "../../teamselection/CountdownClock";
 import "./StageSelection.css";
 
-const options: Intl.DateTimeFormatOptions = {
+const dateOptions: Intl.DateTimeFormatOptions = {
   weekday: "long",
   day: "numeric",
   month: "long",
@@ -19,37 +20,44 @@ const StageSelection = () => {
   document.title = `Etappe ${stagenr} opstelling`;
 
   const { data, isLoading, addRider, removeRider, addKopman, removeKopman } = useStageSelection();
-
   const navigate = useNavigate();
 
+  if (!data) {
+    return <div className="stage-selection-page" />;
+  }
+
   return (
-    <div>
-      {data ? (
-        <div>
-          <div style={{ margin: "10px 0" }}>
-            Deadline: {data.deadline?.toLocaleDateString("nl-NL", options) ?? ""}
-          </div>
-          {stagenr === "1" && <button onClick={() => navigate("/")}>Teamselectie</button>}
-          <SelectionsComplete compleet={data.compleet} budgetCompleet={data.budgetCompleet} />
-          <div style={{ display: "flex" }}>
-            <div style={{ margin: "0 5px" }}>
-              <StageSelectionTeam
-                team={data.team}
-                isFetching={isLoading}
-                addRider={addRider}
-                removeRider={removeRider}
-                addKopman={addKopman}
-                removeKopman={removeKopman}
-              />
-            </div>
-            <div style={{ margin: "0 5px" }}>
-              <ClassificationOverview data={data.classifications} />
-            </div>
-          </div>
+    <div className="stage-selection-page">
+      <div className="ss-page-header">
+        <StageNav />
+        <div className="ss-deadline">
+          {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
         </div>
-      ) : (
-        <></>
-      )}
+        <div className="ss-page-header-right">
+          {data.deadline && (
+            <CountdownClock24H targetDate={data.deadline} className="compact" />
+          )}
+          {stagenr === "1" && (
+            <button className="ss-page-cta" onClick={() => navigate("/")}>
+              Teamselectie
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="ss-body">
+        <StageSelectionTeam
+          team={data.team}
+          isFetching={isLoading}
+          compleet={data.compleet}
+          budgetCompleet={data.budgetCompleet}
+          addRider={addRider}
+          removeRider={removeRider}
+          addKopman={addKopman}
+          removeKopman={removeKopman}
+        />
+        <ClassificationOverview data={data.classifications} />
+      </div>
     </div>
   );
 };
