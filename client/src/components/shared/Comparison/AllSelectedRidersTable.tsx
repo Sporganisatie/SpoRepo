@@ -50,6 +50,7 @@ const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => {
       columns={columns}
       data={riders}
       conditionalRowStyles={conditionalRowStyles}
+      noTableHead
     />
   );
 };

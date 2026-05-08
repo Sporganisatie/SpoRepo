@@ -168,3 +168,17 @@ img.loadingGif {
   padding: var(--space-2) var(--space-3);
   font-size: var(--text-base);
 }
+
+@media (max-width: 600px) {
+  .arrow-select__btn {
+    min-width: 2rem;
+    padding: 0 var(--space-2);
+  }
+  .arrow-select > div {
+    padding: 0 var(--space-2);
+  }
+  .arrow-select select {
+    min-width: 0;
+    padding-right: var(--space-1);
+  }
+}

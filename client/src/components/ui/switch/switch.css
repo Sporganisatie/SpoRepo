@@ -4,6 +4,8 @@
   display: inline-block;
   width: 2.8rem;
   height: 1.55rem;
+  flex-shrink: 0;
+  vertical-align: middle;
 }
 
 /* Hide default HTML checkbox */
@@ -73,3 +75,4 @@ input:checked ~ .slider-content {
 .slider.round:before {
   border-radius: 50%;
 }
+

@@ -15,7 +15,7 @@ const TeamComparison = () => {
   }, [data]);
 
   return (
-    <div>
+    <div className="team-comparison">
       {toggles.map((user, index) => (
         <SmallSwitch
           key={index}
@@ -28,7 +28,7 @@ const TeamComparison = () => {
       <div style={{ display: "inline-block", marginLeft: "5px", marginBottom: "5px" }}>
         <button onClick={toggleAll}>Toggle alle</button>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
         {data?.teams
           .filter((_, index) => toggles.at(index)?.showUser)
           .map((userSelection, index) => (

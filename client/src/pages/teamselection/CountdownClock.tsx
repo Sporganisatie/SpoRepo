@@ -5,27 +5,23 @@ interface CountdownClock24HProps {
   className?: string;
 }
 
+function formatTimeLeft(targetDate: Date): string {
+  const difference = targetDate.getTime() - new Date().getTime();
+  if (difference <= 0) return "00:00:00";
+  const hours = String(Math.floor((difference / (1000 * 60 * 60)) % 24)).padStart(2, "0");
+  const minutes = String(Math.floor((difference / (1000 * 60)) % 60)).padStart(2, "0");
+  const seconds = String(Math.floor((difference / 1000) % 60)).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
+
 const CountdownClock24H: React.FC<CountdownClock24HProps> = ({ targetDate, className }) => {
-  const [timeLeft, setTimeLeft] = useState("");
+  const [timeLeft, setTimeLeft] = useState(() => formatTimeLeft(targetDate));
 
   useEffect(() => {
+    setTimeLeft(formatTimeLeft(targetDate));
     const interval = setInterval(() => {
-      const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
-
-      if (difference <= 0) {
-        clearInterval(interval);
-        setTimeLeft("00:00:00");
-        return;
-      }
-
-      const hours = String(Math.floor((difference / (1000 * 60 * 60)) % 24)).padStart(2, "0");
-      const minutes = String(Math.floor((difference / (1000 * 60)) % 60)).padStart(2, "0");
-      const seconds = String(Math.floor((difference / 1000) % 60)).padStart(2, "0");
-
-      setTimeLeft(`${hours}:${minutes}:${seconds}`);
+      setTimeLeft(formatTimeLeft(targetDate));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [targetDate]);
 

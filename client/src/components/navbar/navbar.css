@@ -36,6 +36,12 @@
   white-space: nowrap;
 }
 
+/* Pushed to the right end of the navbar; everything before sits on the left. */
+.navbar_link--end {
+  margin-left: auto;
+  margin-right: 0.75rem;
+}
+
 /* The links in the navbar */
 .navbar_link:hover {
   background-color: black; /*gray-900*/

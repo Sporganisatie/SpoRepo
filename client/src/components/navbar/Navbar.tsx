@@ -3,7 +3,11 @@ import "./navbar.css";
 import StatsDropdown from "./Dropdowns/StatistiekenDropdown";
 import ChartsDropdown from "./Dropdowns/ChartsDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPersonBiking, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleInfo,
+  faPersonBiking,
+  faShieldAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { useBudgetContext, useBudgetDispatch } from "../shared/BudgetContextProvider";
 import type { AuthToken } from "../../models/AuthToken";
 import jwt_decode from "jwt-decode";
@@ -22,15 +26,12 @@ const Navbar = () => {
   return (
     <div>
       <div className="navbar">
-        <Link className="navbar_link" to={"/"} title="Current stage">
+        <Link className="navbar_link" to={"/"} title="Huidige etappe">
           <FontAwesomeIcon icon={faPersonBiking} className="nav-on-mobile" />
-          <span className="nav-on-desktop">Current stage</span>
+          <span className="nav-on-desktop">Huidige etappe</span>
         </Link>
         <ChartsDropdown raceSelected={race > 0} />
         <StatsDropdown raceSelected={race > 0} />
-        <Link className="navbar_link" to="/regelspunten">
-          <span>Regels/Punten</span>
-        </Link>
         {isAdmin && (
           <Link className="navbar_link" to="/admin">
             <FontAwesomeIcon icon={faShieldAlt} />
@@ -46,6 +47,9 @@ const Navbar = () => {
             />
           )}
         <RaceDropdown />
+        <Link className="navbar_link navbar_link--end" to="/regelspunten" title="Regels/Punten">
+          <FontAwesomeIcon icon={faCircleInfo} />
+        </Link>
         {race > 0 && onTeamSelection && (
           <Link className="navbar-stage-cta" to={`/${race}/stage/1`}>
             Naar Etappe 1 →

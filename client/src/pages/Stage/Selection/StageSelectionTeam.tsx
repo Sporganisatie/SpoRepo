@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { TableColumn } from "react-data-table-component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShirt } from "@fortawesome/free-solid-svg-icons";
@@ -64,6 +65,14 @@ const StageSelectionTeam = ({
   addKopman,
   removeKopman,
 }: StageSelectionTeamProps) => {
+  const sortedTeam = useMemo(() => {
+    const kopmanIdx = team.findIndex((r) => r.isKopman);
+    if (kopmanIdx <= 0) return team;
+    const next = [...team];
+    const [kopman] = next.splice(kopmanIdx, 1);
+    next.unshift(kopman);
+    return next;
+  }, [team]);
   const selectedCount = team.filter((x) => x.selected).length;
   const jerseyClass = jerseyClassForRace(useRaceName());
   const budgetParticipation = useBudgetContext();
@@ -175,7 +184,7 @@ const StageSelectionTeam = ({
       </div>
       <SreDataTable
         columns={columns}
-        data={team}
+        data={sortedTeam}
         progressPending={isFetching}
         conditionalRowStyles={conditionalRowStyles}
         pointerOnHover

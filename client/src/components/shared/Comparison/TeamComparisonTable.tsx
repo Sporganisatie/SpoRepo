@@ -65,6 +65,7 @@ const TeamComparisonTable = ({
       columns={columns}
       data={riders}
       conditionalRowStyles={conditionalRowStyles}
+      noTableHead
     />
   );
 };

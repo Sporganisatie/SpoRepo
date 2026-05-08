@@ -3,6 +3,14 @@
   grid-template-columns: 1fr 1fr;
 }
 
+/* Mobile / narrow: stack into a single column. The override above has higher
+   specificity than the base mobile rule, so we re-state it here. */
+@media (max-width: 1024px) {
+  .stage-result-page .ss-body {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Left column on the result page stacks the team-result and user-score panels. */
 .sr-left-column {
   display: flex;
@@ -45,8 +53,17 @@
   padding: var(--space-2) var(--space-3);
   font-size: var(--text-base);
   font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
   cursor: pointer;
   transition: background-color 150ms, color 150ms;
+}
+
+@media (max-width: 600px) {
+  .ss-body .sr-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
 }
 
 .sr-tab:hover:not(:disabled) {

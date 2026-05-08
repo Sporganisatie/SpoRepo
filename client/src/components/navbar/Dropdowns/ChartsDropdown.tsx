@@ -1,3 +1,4 @@
+import { faChartLine } from "@fortawesome/free-solid-svg-icons";
 import { useRaceContext } from "../../shared/RaceContextProvider";
 import DropdownMenu from "./base/DropdownMenu";
 
@@ -7,7 +8,8 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
   return (
     <DropdownMenu
       {...props}
-      name="Charts"
+      name="Grafieken"
+      icon={faChartLine}
       alwaysLinks={
         [
           // { url: "/charts/totalscorespread", title: "Score verdeling Totaal" }

@@ -3,9 +3,11 @@ import TeamComparisonTable from "./TeamComparisonTable";
 
 const TeamComparisonUser = ({ userSelection }: { userSelection: UserSelection }) => {
   return (
-    <div style={{ flex: "0 0 24%", marginRight: "2px", marginBottom: "2px" }}>
-      <TeamComparisonTable title={userSelection.username} riders={userSelection.riders} />
-      <div style={{ marginTop: "2px" }}>
+    <div style={{ flex: "0 0 24%" }}>
+      <div className="tc-user-name">
+        <TeamComparisonTable title={userSelection.username} riders={userSelection.riders} />
+      </div>
+      <div style={{ marginTop: "0.5rem", marginBottom: "1rem" }}>
         {userSelection.gemist.length > 0 && (
           <TeamComparisonTable title={"Niet Opgesteld"} riders={userSelection.gemist} />
         )}

@@ -1,6 +1,7 @@
 import type { DropdownLinkProps } from "./DropdownLink";
 import { DropdownLink } from "./DropdownLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
@@ -8,6 +9,7 @@ interface DropdownMenuProps {
   alwaysLinks: DropdownLinkProps[];
   raceOnlyLinks: DropdownLinkProps[];
   name: string;
+  icon?: IconDefinition;
   raceSelected: boolean;
 }
 
@@ -39,9 +41,13 @@ const DropdownMenu = (props: DropdownMenuProps) => {
   ));
 
   return (
-    <div className="navbar_link">
+    <div className="navbar_link" title={props.icon ? props.name : undefined}>
       <span onClick={openMenu}>
-        {props.name} <FontAwesomeIcon icon={showMenu ? faAngleUp : faAngleDown} />
+        {props.icon && (
+          <FontAwesomeIcon icon={props.icon} className="nav-on-mobile" />
+        )}
+        <span className={props.icon ? "nav-on-desktop" : ""}>{props.name}</span>{" "}
+        <FontAwesomeIcon icon={showMenu ? faAngleUp : faAngleDown} />
       </span>
       {showMenu ? (
         <div className="navbar_dropdown-content">

@@ -26,15 +26,20 @@ const StageSelection = () => {
     return <div className="stage-selection-page" />;
   }
 
+  const within24h =
+    data.deadline != null && data.deadline.getTime() - Date.now() < 24 * 60 * 60 * 1000;
+
   return (
     <div className="stage-selection-page">
       <div className="ss-page-header">
         <StageNav />
-        <div className="ss-deadline">
-          {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
-        </div>
+        {!within24h && (
+          <div className="ss-deadline">
+            {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
+          </div>
+        )}
         <div className="ss-page-header-right">
-          {data.deadline && (
+          {within24h && data.deadline && (
             <CountdownClock24H targetDate={data.deadline} className="compact" />
           )}
           {stagenr === "1" && (
