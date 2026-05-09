@@ -8,7 +8,7 @@ namespace SpoRE.Setup;
 
 public class Scheduler(IServiceProvider ServiceProvider)
 {
-    public async void RunTimer()
+    public async Task RunTimer()
     {
         using var scope = ServiceProvider.CreateScope();
         var DB = scope.ServiceProvider.GetService<DatabaseContext>();
@@ -34,7 +34,7 @@ public class Scheduler(IServiceProvider ServiceProvider)
     private void ScheduleAction(TimeSpan timespan)
     {
         var timer = new Timer(timespan.TotalMilliseconds);
-        timer.Elapsed += (object sender, ElapsedEventArgs e) => { RunTimer(); };
+        timer.Elapsed += async (object sender, ElapsedEventArgs e) => { await RunTimer(); };
         timer.AutoReset = false;
         timer.Start();
     }
