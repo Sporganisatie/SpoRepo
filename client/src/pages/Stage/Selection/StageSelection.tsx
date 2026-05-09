@@ -41,9 +41,6 @@ const StageSelection = () => {
         <button className="ss-page-cta" onClick={() => setShowProfiles(true)}>
           Profielen
         </button>
-        <button className="ss-page-cta" onClick={() => setShowTeamComparison(true)}>
-          Alle Opstellingen
-        </button>
         {!within24h && (
           <div className="ss-deadline">
             {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
@@ -74,12 +71,6 @@ const StageSelection = () => {
         />
         <ClassificationOverview data={data.classifications} />
       </div>
-      <Modal
-        open={showTeamComparison}
-        modalContents={<TeamComparison />}
-        closeFn={() => setShowTeamComparison(false)}
-        title="Alle opstellingen"
-      />
       <Modal
         open={showProfiles}
         modalContents={<StageProfiles raceId={raceId} stageNr={stagenr} />}

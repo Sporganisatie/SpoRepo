@@ -33,7 +33,7 @@ const StageResult = () => {
           Profielen
         </button>
         <button className="ss-page-cta" onClick={() => setShowTeamComparison(true)}>
-          Alle Opstellingen
+          Opstellingen
         </button>
         {data.virtualResult && (
           <div className="sr-virtual-banner">
@@ -74,7 +74,7 @@ const StageResult = () => {
         open={showTeamComparison}
         modalContents={<TeamComparison />}
         closeFn={() => setShowTeamComparison(false)}
-        title="Alle opstellingen"
+        title="Opstellingen"
       />
       <Modal
         open={showProfiles}
