@@ -28,13 +28,13 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
         {
             var mostRecentStartedStage = DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).ToList().First(s => s.Starttime < DateTime.UtcNow);
             await Scraper.StageResults(mostRecentStartedStage);
-            Scheduler.RunTimer();
+            await Scheduler.RunTimer();
         }
         else if (aankomende)
         {
             var aankomendeEtappe = DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).ToList().First(s => !s.Complete);
             await Scraper.StageResults(aankomendeEtappe);
-            Scheduler.RunTimer();
+            await Scheduler.RunTimer();
         }
         else await Scraper.StageResults(raceName, year, stagenr);
         return Ok();
