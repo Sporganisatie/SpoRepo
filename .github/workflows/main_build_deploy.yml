@@ -17,6 +17,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Install Playwright Browsers
+        run: |
+          dotnet tool install -g Microsoft.Playwright.CLI
+          playwright install chromium
+
       - name: dotnet publish
         run: dotnet publish -c Release -o ./myapp
       - name: Upload artifact for deployment job
