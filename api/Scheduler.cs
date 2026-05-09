@@ -10,25 +10,25 @@ public class Scheduler(IServiceProvider ServiceProvider)
 {
     public async void RunTimer()
     {
-        using var scope = ServiceProvider.CreateScope();
-        var DB = scope.ServiceProvider.GetService<DatabaseContext>();
-        // race done -> return
+        // using var scope = ServiceProvider.CreateScope();
+        // var DB = scope.ServiceProvider.GetService<DatabaseContext>();
+        // // race done -> return
 
-        var stage = DB.Stages.Include(s => s.Race)
-            .Where(s => s.RaceId != 99 && !s.Race.Finished && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
+        // var stage = DB.Stages.Include(s => s.Race)
+        //     .Where(s => s.RaceId != 99 && !s.Race.Finished && !s.Complete).OrderBy(s => s.Starttime).FirstOrDefault();
 
-        if (stage?.Starttime is null) return;
+        // if (stage?.Starttime is null) return;
 
-        if (stage.Starttime > DateTime.UtcNow)
-        {
-            ScheduleAction(TimeSpan.FromMinutes(1)); return;
-            // if done schedule tomorrow
-            // anders kijk op pcs hoelang de etappe nog duurt
-        }
+        // if (stage.Starttime > DateTime.UtcNow)
+        // {
+        //     ScheduleAction(TimeSpan.FromMinutes(1)); return;
+        //     // if done schedule tomorrow
+        //     // anders kijk op pcs hoelang de etappe nog duurt
+        // }
 
-        var scrape = scope.ServiceProvider.GetService<Scrape>();
-        await scrape.StageResults(stage);
-        ScheduleAction(TimeSpan.FromMinutes(1));
+        // var scrape = scope.ServiceProvider.GetService<Scrape>();
+        // await scrape.StageResults(stage);
+        // ScheduleAction(TimeSpan.FromMinutes(1));
     }
 
     private void ScheduleAction(TimeSpan timespan)
