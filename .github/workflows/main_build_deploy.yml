@@ -20,10 +20,12 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore
 
-      - name: Install Playwright Browsers
-        run: |
-          dotnet tool install -g Microsoft.Playwright.CLI
-          playwright install --with-deps chromium
+      - name: Build project (required for Playwright script)
+        run: dotnet build -c Release
+
+      - name: Install Playwright Chromium
+        shell: pwsh
+        run: ./bin/Release/net8.0/playwright.ps1 install chromium
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ./myapp
