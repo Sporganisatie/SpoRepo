@@ -1,0 +1,39 @@
+.stage-profiles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.stage-profiles-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+}
+
+.stage-profiles-item h3 {
+    margin: 0;
+    font-size: var(--text-lg);
+}
+
+.stage-profiles-climbs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+}
+
+.stage-profiles-item img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--bg-elevated);
+    border-radius: 0.375rem;
+    display: block;
+    align-self: flex-start;
+}
+
+.stage-profiles-status {
+    font-size: var(--text-base);
+    color: var(--fg-default);
+}

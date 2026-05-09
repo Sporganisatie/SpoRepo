@@ -6,6 +6,7 @@ import TeamComparison from "../../../components/shared/Comparison/TeamComparison
 import { useStageResult } from "./StageResultHook";
 import { useStage } from "../StageHook";
 import Modal from "../../../components/ui/modal/Modal";
+import StageProfiles from "../StageProfiles";
 import router from "../../../Pages";
 import { useRaceContext } from "../../../components/shared/RaceContextProvider";
 import StageNav from "../StageNav";
@@ -18,6 +19,7 @@ const StageResult = () => {
   document.title = `Etappe ${stagenr} resultaten`;
   const { data } = useStageResult();
   const [showTeamComparison, setShowTeamComparison] = useState<boolean>(false);
+  const [showProfiles, setShowProfiles] = useState<boolean>(false);
 
   if (!data) {
     return <div className="stage-selection-page stage-result-page" />;
@@ -27,6 +29,9 @@ const StageResult = () => {
     <div className="stage-selection-page stage-result-page">
       <div className="ss-page-header">
         <StageNav />
+        <button className="ss-page-cta" onClick={() => setShowProfiles(true)}>
+          Profielen
+        </button>
         <button className="ss-page-cta" onClick={() => setShowTeamComparison(true)}>
           Alle Opstellingen
         </button>
@@ -70,6 +75,12 @@ const StageResult = () => {
         modalContents={<TeamComparison />}
         closeFn={() => setShowTeamComparison(false)}
         title="Alle opstellingen"
+      />
+      <Modal
+        open={showProfiles}
+        modalContents={<StageProfiles raceId={raceId} stageNr={stagenr} />}
+        closeFn={() => setShowProfiles(false)}
+        title="Profielen"
       />
     </div>
   );

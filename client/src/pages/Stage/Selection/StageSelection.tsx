@@ -1,3 +1,4 @@
+import { useState } from "react";
 import StageSelectionTeam from "./StageSelectionTeam";
 import { useNavigate } from "react-router-dom";
 import ClassificationOverview from "./ClassificationOverview";
@@ -5,6 +6,9 @@ import { useStageSelection } from "./StageSelectionHook";
 import { useStage } from "../StageHook";
 import StageNav from "../StageNav";
 import CountdownClock24H, { isWithin24h } from "../../teamselection/CountdownClock";
+import TeamComparison from "../../../components/shared/Comparison/TeamComparison";
+import Modal from "../../../components/ui/modal/Modal";
+import StageProfiles from "../StageProfiles";
 import "./StageSelection.css";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -16,7 +20,9 @@ const dateOptions: Intl.DateTimeFormatOptions = {
 };
 
 const StageSelection = () => {
-  const { stagenr } = useStage();
+  const { raceId, stagenr } = useStage();
+  const [showTeamComparison, setShowTeamComparison] = useState<boolean>(false);
+  const [showProfiles, setShowProfiles] = useState<boolean>(false);
   document.title = `Etappe ${stagenr} opstelling`;
 
   const { data, isLoading, addRider, removeRider, addKopman, removeKopman } = useStageSelection();
@@ -32,6 +38,12 @@ const StageSelection = () => {
     <div className="stage-selection-page">
       <div className="ss-page-header">
         <StageNav />
+        <button className="ss-page-cta" onClick={() => setShowProfiles(true)}>
+          Profielen
+        </button>
+        <button className="ss-page-cta" onClick={() => setShowTeamComparison(true)}>
+          Alle Opstellingen
+        </button>
         {!within24h && (
           <div className="ss-deadline">
             {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
@@ -62,6 +74,18 @@ const StageSelection = () => {
         />
         <ClassificationOverview data={data.classifications} />
       </div>
+      <Modal
+        open={showTeamComparison}
+        modalContents={<TeamComparison />}
+        closeFn={() => setShowTeamComparison(false)}
+        title="Alle opstellingen"
+      />
+      <Modal
+        open={showProfiles}
+        modalContents={<StageProfiles raceId={raceId} stageNr={stagenr} />}
+        closeFn={() => setShowProfiles(false)}
+        title="Profielen"
+      />
     </div>
   );
 };

@@ -70,20 +70,14 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
 
     public async Task<int> EtappesToevoegen(int raceId)
     {
-        var race = DB.Races.AsNoTracking().Single(r => r.RaceId == raceId);
-
-        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/");
-
-        var rows = html.QuerySelector(".mt20 tbody").SelectNodes("tr");
+        var (race, stageRows) = await GetRaceAndStageRows(raceId);
 
         var stageNr = 1;
         var starttime = new DateTime();
         var stages = DB.Stages.Where(s => s.RaceId == raceId).ToList();
-        foreach (var row in rows)
+        foreach (var row in stageRows)
         {
-            var url = row.QuerySelector("a");
-            if (url == null || row.InnerText.Contains("Restday")) continue;
-            starttime = await GetStartTime(url.GetAttributeValue("href", ""));
+            starttime = await GetStartTime(row.QuerySelector("a").GetAttributeValue("href", ""));
 
             var stage = stages.SingleOrDefault(s => s.Stagenr == stageNr);
             if (stage is null)
@@ -106,6 +100,57 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
         finalStage.Type = StageType.FinalStandings;
 
         return DB.SaveChanges();
+    }
+
+    private async Task<(Race race, IEnumerable<HtmlNode> stageRows)> GetRaceAndStageRows(int raceId)
+    {
+        var race = DB.Races.AsNoTracking().Single(r => r.RaceId == raceId);
+        var html = await PcsClient.LoadAsync($"https://www.procyclingstats.com/race/{RaceString(race.Name)}/{race.Year}/");
+        var rows = html.QuerySelector(".mt20 tbody").SelectNodes("tr");
+        var stageRows = rows.Where(row => row.QuerySelector("a") != null && !row.InnerText.Contains("Restday"));
+        return (race, stageRows);
+    }
+
+    public async Task DownloadStageProfiles(int raceId, string outputPath = "./wwwroot/profiles")
+    {
+        var (race, stageRows) = await GetRaceAndStageRows(raceId);
+        using var httpClient = new HttpClient();
+
+        var stageNr = 1;
+        foreach (var row in stageRows)
+        {
+            var href = row.QuerySelector("a").GetAttributeValue("href", "");
+            var stageFolder = Path.Combine(outputPath, RaceString(race.Name), race.Year.ToString(), $"stage-{stageNr}");
+            Directory.CreateDirectory(stageFolder);
+
+            var profilesHtml = await PcsClient.LoadAsync($"https://www.procyclingstats.com/{href}/info/profiles");
+            var items = profilesHtml.QuerySelectorAll("ul.list li");
+
+            var climbNr = 1;
+            foreach (var item in items)
+            {
+                var label = item.QuerySelector(".fs14.bold")?.InnerText.Trim() ?? "";
+                var imgSrc = item.QuerySelector("img")?.GetAttributeValue("src", "");
+                if (string.IsNullOrEmpty(imgSrc)) continue;
+
+                var ext = Path.GetExtension(imgSrc);
+                string fileName = label switch
+                {
+                    "Profile" => $"profile{ext}",
+                    "Finish profile" => $"finish-profile{ext}",
+                    "Climb" => $"climb-{climbNr++}{ext}",
+                    _ => null
+                };
+
+                if (fileName is null) continue;
+
+                var imageUrl = $"https://www.procyclingstats.com/{imgSrc}";
+                var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+                await File.WriteAllBytesAsync(Path.Combine(stageFolder, fileName), imageBytes);
+            }
+
+            stageNr++;
+        }
     }
 
     private static StageType GetStageType(string innerText)

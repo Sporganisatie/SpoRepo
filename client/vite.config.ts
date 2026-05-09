@@ -13,13 +13,13 @@ export default defineConfig(({ mode }) => {
 
   const https =
     env.SSL_CRT_FILE &&
-    env.SSL_KEY_FILE &&
-    fs.existsSync(env.SSL_CRT_FILE) &&
-    fs.existsSync(env.SSL_KEY_FILE)
+      env.SSL_KEY_FILE &&
+      fs.existsSync(env.SSL_CRT_FILE) &&
+      fs.existsSync(env.SSL_KEY_FILE)
       ? {
-          cert: fs.readFileSync(env.SSL_CRT_FILE),
-          key: fs.readFileSync(env.SSL_KEY_FILE),
-        }
+        cert: fs.readFileSync(env.SSL_CRT_FILE),
+        key: fs.readFileSync(env.SSL_KEY_FILE),
+      }
       : undefined;
 
   return {
@@ -30,6 +30,12 @@ export default defineConfig(({ mode }) => {
       https,
       proxy: {
         "/api": {
+          target: apiTarget,
+          secure: false,
+          changeOrigin: true,
+          headers: { Connection: "Keep-Alive" },
+        },
+        "/profiles": {
           target: apiTarget,
           secure: false,
           changeOrigin: true,

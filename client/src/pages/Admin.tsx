@@ -14,7 +14,7 @@ const Admin = () => {
   const updateResult = (params: any) => {
     axios
       .get(`/api/Admin/stageResults`, { params })
-      .then((_) => {})
+      .then((_) => { })
       .catch((err) => {
         console.error(err);
       });
@@ -23,7 +23,7 @@ const Admin = () => {
   const updateStartlist = (params: any) => {
     axios
       .get(`/api/Admin/startlist`, { params })
-      .then((_) => {})
+      .then((_) => { })
       .catch((err) => {
         console.error(err);
       });
@@ -32,7 +32,7 @@ const Admin = () => {
   const raceFinished = (params: any) => {
     axios
       .get(`/api/Admin/RaceFinished`, { params })
-      .then((_) => {})
+      .then((_) => { })
       .catch((err) => {
         console.error(err);
       });
@@ -41,7 +41,16 @@ const Admin = () => {
   const etappesToevoegen = (params: any) => {
     axios
       .get(`/api/Admin/AddStages`, { params })
-      .then((_) => {})
+      .then((_) => { })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const downloadStageProfiles = (params: any) => {
+    axios
+      .get(`/api/Admin/DownloadStageProfiles`, { params })
+      .then((_) => { })
       .catch((err) => {
         console.error(err);
       });
@@ -50,7 +59,7 @@ const Admin = () => {
   const resetCache = () => {
     axios
       .get(`/api/Admin/resetCache`)
-      .then((_) => {})
+      .then((_) => { })
       .catch((err) => {
         console.error(err);
       });
@@ -128,10 +137,16 @@ const Admin = () => {
           Update Startlist
         </button>
         <button
-          style={{ marginRight: "210px", width: "130px" }}
+          style={{ marginRight: "5px", width: "130px" }}
           onClick={() => etappesToevoegen({ raceId })}
         >
           Etappes toevoegen
+        </button>
+        <button
+          style={{ marginRight: "5px", width: "160px" }}
+          onClick={() => downloadStageProfiles({ raceId })}
+        >
+          Download stage profiles
         </button>
         <button
           style={{ marginRight: "5px", width: "100px" }}

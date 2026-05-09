@@ -48,6 +48,13 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     public async Task<IActionResult> AddStages(int raceId)
         => Ok(await Scraper.EtappesToevoegen(raceId));
 
+    [HttpGet("DownloadStageProfiles")]
+    public async Task<IActionResult> DownloadStageProfiles(int raceId)
+    {
+        await Scraper.DownloadStageProfiles(raceId);
+        return Ok();
+    }
+
     [HttpGet("resetCache")]
     public IActionResult ResetCache()
     {
