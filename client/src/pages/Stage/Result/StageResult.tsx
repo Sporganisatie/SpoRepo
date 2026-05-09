@@ -78,7 +78,7 @@ const StageResult = () => {
       />
       <Modal
         open={showProfiles}
-        modalContents={<StageProfiles raceId={raceId} stageNr={stagenr} />}
+        modalContents={<StageProfiles raceId={raceId.toString()} stageNr={stagenr} />}
         closeFn={() => setShowProfiles(false)}
         title="Profielen"
       />

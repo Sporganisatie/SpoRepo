@@ -20,7 +20,7 @@ const StageProfiles = ({
     raceId,
     stageNr,
 }: {
-    raceId: number;
+    raceId: string;
     stageNr: string;
 }) => {
     const [data, setData] = useState<StageProfilesData>(emptyProfiles);
