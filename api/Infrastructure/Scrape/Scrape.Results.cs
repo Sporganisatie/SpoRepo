@@ -178,9 +178,14 @@ public partial class Scrape
 
     private static string GetRankChange(Dictionary<string, HtmlNode> fields)
     {
-        var change = GetString(fields, "&#x25BC;&#x25B2;");
+        var change = GetFirstNonEmpty(fields, "▼▲", "&#x25BC;&#x25B2;", "Delta", "delta");
         var prev = GetString(fields, "Prev");
-        return prev == "" ? "*" : change.Replace("&#x25BC;", "▼").Replace("&#x25B2;", "▲");
+        var normalizedChange = change
+            .Replace("&#x25BC;", "▼")
+            .Replace("&#x25B2;", "▲")
+            .Trim();
+
+        return prev == "" ? "*" : normalizedChange;
     }
 
     private static string GetTime(Dictionary<string, HtmlNode> fields)
@@ -191,6 +196,17 @@ public partial class Scrape
 
     private static string GetString(Dictionary<string, HtmlNode> fields, string col)
         => fields.TryGetValue(col, out HtmlNode value) ? value.InnerText : "";
+
+    private static string GetFirstNonEmpty(Dictionary<string, HtmlNode> fields, params string[] columns)
+    {
+        foreach (var col in columns)
+        {
+            var value = GetString(fields, col).Trim();
+            if (value != "") return value;
+        }
+
+        return "";
+    }
 
     private static RiderResult AddResults(RiderResult riderResult, PcsRow pcsRow, string tab, StageType type)
         => tab switch
