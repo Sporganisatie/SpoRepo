@@ -20,15 +20,15 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore
 
-      - name: Build project (required for Playwright script)
-        run: dotnet build -c Release
-
-      - name: Install Playwright Chromium
-        shell: pwsh
-        run: ./bin/Release/net8.0/playwright.ps1 install chromium
-
       - name: dotnet publish
         run: dotnet publish -c Release -o ./myapp
+
+      - name: Install Playwright Chromium into publish folder
+        shell: pwsh
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/myapp/.playwright-browsers
+        run: ./myapp/playwright.ps1 install chromium
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
