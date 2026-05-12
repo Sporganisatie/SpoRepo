@@ -33,12 +33,6 @@ jobs:
           if (-not (Test-Path $src)) { throw ".playwright driver folder not found at $src after build" }
           Copy-Item -Recurse -Force $src ./myapp/.playwright
 
-      - name: Install Playwright Chromium into publish folder
-        shell: pwsh
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/myapp/.playwright-browsers
-        run: ./myapp/playwright.ps1 install chromium
-
       - name: Zip publish folder
         shell: pwsh
         run: |

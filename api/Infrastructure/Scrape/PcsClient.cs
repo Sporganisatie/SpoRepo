@@ -18,6 +18,7 @@ internal static class PcsClient
         {
             if (_browser != null) return _browser;
             ConfigurePlaywrightPaths();
+            EnsureChromiumInstalled();
             _pw = await Playwright.CreateAsync();
             _browser = await _pw.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
             return _browser;
@@ -49,6 +50,17 @@ internal static class PcsClient
             }
         }
 
+        var azureHome = Environment.GetEnvironmentVariable("HOME");
+        var onAzure = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID"))
+                      && !string.IsNullOrEmpty(azureHome);
+        if (onAzure)
+        {
+            var browsers = Path.Combine(azureHome!, "data", "playwright-browsers");
+            Directory.CreateDirectory(browsers);
+            Environment.SetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH", browsers);
+            return;
+        }
+
         foreach (var dir in candidates)
         {
             if (string.IsNullOrEmpty(dir)) continue;
@@ -60,6 +72,22 @@ internal static class PcsClient
                 break;
             }
         }
+    }
+
+    private static void EnsureChromiumInstalled()
+    {
+        var browsersPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH");
+        if (string.IsNullOrEmpty(browsersPath)) return;
+
+        if (Directory.Exists(browsersPath) &&
+            Directory.EnumerateDirectories(browsersPath, "chromium*").Any())
+        {
+            return;
+        }
+
+        var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "chromium" });
+        if (exitCode != 0)
+            throw new InvalidOperationException($"playwright install chromium failed with exit code {exitCode}");
     }
 
     public static async Task<HtmlNode> LoadAsync(string url)
