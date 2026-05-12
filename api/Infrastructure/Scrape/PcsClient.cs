@@ -80,14 +80,14 @@ internal static class PcsClient
         if (string.IsNullOrEmpty(browsersPath)) return;
 
         if (Directory.Exists(browsersPath) &&
-            Directory.EnumerateDirectories(browsersPath, "chromium*").Any())
+            Directory.EnumerateDirectories(browsersPath, "chromium_headless_shell-*").Any())
         {
             return;
         }
 
-        var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "chromium" });
+        var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "chromium-headless-shell" });
         if (exitCode != 0)
-            throw new InvalidOperationException($"playwright install chromium failed with exit code {exitCode}");
+            throw new InvalidOperationException($"playwright install chromium-headless-shell failed with exit code {exitCode}");
     }
 
     public static async Task<HtmlNode> LoadAsync(string url)
