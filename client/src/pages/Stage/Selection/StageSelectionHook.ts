@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "../../../api/client";
-import type { StageSelectionData } from "../models/StageSelectionData";
+import type {
+  ClassificationRow,
+  Classifications,
+  StageSelectionData,
+} from "../models/StageSelectionData";
 import { stageSelectionDataSchema } from "../models/StageSelectionData";
 import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
 import { useStage } from "../StageHook";
 import type { StageSelectableRider } from "../models/StageSelectableRider";
+import { StageSelectedEnum } from "../../../models/UserSelection";
 
 const RIDER_TYPE_ORDER = ["Klassement", "Klimmer", "Sprinter", "Tijdrijder", "Aanvaller", "Knecht"];
 
@@ -40,12 +45,41 @@ function withUpdatedCount(
   };
 }
 
+function updateClassificationRow(
+  row: ClassificationRow,
+  riderId: number,
+  selected: boolean
+): ClassificationRow {
+  if (row.rider.riderId !== riderId) return row;
+  return {
+    ...row,
+    selected: selected ? StageSelectedEnum.InStageSelection : StageSelectedEnum.InTeam,
+  };
+}
+
+function applyClassificationSelection(
+  classifications: Classifications,
+  riderId: number,
+  selected: boolean
+): Classifications {
+  const map = (rows: ClassificationRow[]) =>
+    rows.map((r) => updateClassificationRow(r, riderId, selected));
+  return {
+    gc: map(classifications.gc),
+    points: map(classifications.points),
+    kom: map(classifications.kom),
+    youth: map(classifications.youth),
+    stage: classifications.stage ? map(classifications.stage) : classifications.stage,
+  };
+}
+
 function applyRiderToggle(
   data: StageSelectionData,
   riderParticipationId: number,
   selected: boolean,
   budgetParticipation: boolean
 ): StageSelectionData {
+  const toggled = data.team.find((e) => e.rider.riderParticipationId === riderParticipationId);
   const newTeam = sortTeamArray(
     data.team.map((entry) =>
       entry.rider.riderParticipationId === riderParticipationId
@@ -53,7 +87,16 @@ function applyRiderToggle(
         : entry
     )
   );
-  return withUpdatedCount(data, newTeam, budgetParticipation);
+  const next = withUpdatedCount(data, newTeam, budgetParticipation);
+  if (!toggled) return next;
+  return {
+    ...next,
+    classifications: applyClassificationSelection(
+      next.classifications,
+      toggled.rider.riderId,
+      selected
+    ),
+  };
 }
 
 function applyKopmanToggle(
@@ -74,7 +117,7 @@ export function useStageSelection() {
   const { raceId, stagenr } = useStage();
 
   const queryKey = ["stageSelection", raceId, stagenr, budgetParticipation] as const;
-  const otherModeKey = ["stageSelection", raceId, stagenr, !budgetParticipation] as const;
+  const invalidateKey = ["stageSelection", raceId, stagenr] as const;
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryKey,
@@ -108,7 +151,7 @@ export function useStageSelection() {
           queryClient.setQueryData(queryKey, context?.previousSelection);
         },
         onSettled: () => {
-          queryClient.invalidateQueries({ queryKey: otherModeKey, exact: true });
+          queryClient.invalidateQueries({ queryKey: invalidateKey });
         },
       },
       queryClient

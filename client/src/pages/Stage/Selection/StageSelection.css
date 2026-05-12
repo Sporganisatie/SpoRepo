@@ -95,6 +95,27 @@
   gap: var(--space-3);
 }
 
+/* Segmented variant: rendered as SVG so segment positions are computed in
+ * floating-point viewBox units, avoiding the subpixel rounding that flexbox
+ * and grid distributions suffer from at certain container widths. */
+.meter-svg.segmented {
+  flex: 1;
+  display: block;
+  width: 100%;
+  height: 0.5rem;
+  min-width: 4rem;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.meter-svg .meter-segment {
+  fill: var(--bg-control);
+  transition: fill 200ms;
+}
+
+.meter-svg .meter-segment.filled.complete { fill: var(--accent-green); }
+.meter-svg .meter-segment.filled.danger   { fill: var(--accent-red); }
+
 .ss-completion-jersey {
   font-size: var(--text-base);
   color: var(--bg-control);
