@@ -20,8 +20,18 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore
 
+      - name: dotnet build (produces .playwright driver folder)
+        run: dotnet build -c Release
+
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./myapp
+        run: dotnet publish -c Release -o ./myapp --no-restore
+
+      - name: Copy Playwright driver into publish folder
+        shell: pwsh
+        run: |
+          $src = "./bin/Release/net8.0/.playwright"
+          if (-not (Test-Path $src)) { throw ".playwright driver folder not found at $src after build" }
+          Copy-Item -Recurse -Force $src ./myapp/.playwright
 
       - name: Install Playwright Chromium into publish folder
         shell: pwsh
@@ -34,6 +44,7 @@ jobs:
         with:
           name: .net-app
           path: ./myapp
+          include-hidden-files: true
 
   deploy:
     runs-on: windows-latest
