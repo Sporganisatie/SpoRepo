@@ -41,7 +41,16 @@ jobs:
 
       - name: Zip publish folder
         shell: pwsh
-        run: Compress-Archive -Path ./myapp/* -DestinationPath ./app.zip -Force
+        run: |
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          if (Test-Path ./app.zip) { Remove-Item ./app.zip -Force }
+          [System.IO.Compression.ZipFile]::CreateFromDirectory(
+            (Resolve-Path ./myapp).Path,
+            (Join-Path (Get-Location) 'app.zip'),
+            [System.IO.Compression.CompressionLevel]::Optimal,
+            $false)
+          $size = (Get-Item ./app.zip).Length
+          Write-Host "app.zip size: $([math]::Round($size/1MB,1)) MB ($size bytes)"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -65,7 +74,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'SpoReDev'
           slot-name: 'Production'
