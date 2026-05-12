@@ -39,11 +39,15 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/myapp/.playwright-browsers
         run: ./myapp/playwright.ps1 install chromium
 
+      - name: Zip publish folder
+        shell: pwsh
+        run: Compress-Archive -Path ./myapp/* -DestinationPath ./app.zip -Force
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./myapp
+          path: ./app.zip
           include-hidden-files: true
 
   deploy:
@@ -66,4 +70,4 @@ jobs:
           app-name: 'SpoReDev'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F4BE917BD05D462C8CD1DBA436752F8E }}
-          package: .
+          package: ./app.zip
