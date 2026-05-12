@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using SpoRE.Attributes;
@@ -9,9 +10,27 @@ using SpoRE.Setup;
 
 namespace SpoRE.Controllers;
 
+public class AdminExceptionFilterAttribute : ExceptionFilterAttribute
+{
+    public override void OnException(ExceptionContext context)
+    {
+        var ex = context.Exception;
+        context.Result = new ObjectResult(new
+        {
+            message = ex.Message,
+            type = ex.GetType().FullName,
+            stackTrace = ex.StackTrace,
+            inner = ex.InnerException?.ToString()
+        })
+        { StatusCode = 500 };
+        context.ExceptionHandled = true;
+    }
+}
+
 [ApiController]
 [Route("api/[controller]")]
 [Admin]
+[AdminExceptionFilter]
 public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB, IMemoryCache MemoryCache) : ControllerBase
 {
     [HttpGet("startlist")]

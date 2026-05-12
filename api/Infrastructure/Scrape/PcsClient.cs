@@ -17,9 +17,9 @@ internal static class PcsClient
         try
         {
             if (_browser != null) return _browser;
-            Environment.SetEnvironmentVariable(
-                "PLAYWRIGHT_BROWSERS_PATH",
-                Path.Combine(AppContext.BaseDirectory, ".playwright-browsers"));
+            var bundled = Path.Combine(AppContext.BaseDirectory, ".playwright-browsers");
+            if (Directory.Exists(bundled))
+                Environment.SetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH", bundled);
             _pw = await Playwright.CreateAsync();
             _browser = await _pw.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
             return _browser;

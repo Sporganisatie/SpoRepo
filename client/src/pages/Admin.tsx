@@ -1,6 +1,13 @@
 import { useState } from "react";
 import axios from "../api/client";
 
+type AdminError = {
+  message?: string;
+  type?: string;
+  stackTrace?: string;
+  inner?: string;
+};
+
 const Admin = () => {
   document.title = "Admin";
   const [stagenr, setStagenr] = useState("");
@@ -11,59 +18,27 @@ const Admin = () => {
   const [year2, setYear2] = useState("");
   const [raceName2, setRace2] = useState("");
 
-  const updateResult = (params: any) => {
-    axios
-      .get(`/api/Admin/stageResults`, { params })
-      .then((_) => { })
-      .catch((err) => {
-        console.error(err);
-      });
+  const [error, setError] = useState<AdminError | string | null>(null);
+
+  const handleError = (err: any) => {
+    console.error(err);
+    setError(err?.response?.data ?? err?.message ?? "Unknown error");
   };
 
-  const updateStartlist = (params: any) => {
+  const call = (url: string, params?: any) => {
+    setError(null);
     axios
-      .get(`/api/Admin/startlist`, { params })
+      .get(url, { params })
       .then((_) => { })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(handleError);
   };
 
-  const raceFinished = (params: any) => {
-    axios
-      .get(`/api/Admin/RaceFinished`, { params })
-      .then((_) => { })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const etappesToevoegen = (params: any) => {
-    axios
-      .get(`/api/Admin/AddStages`, { params })
-      .then((_) => { })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const downloadStageProfiles = (params: any) => {
-    axios
-      .get(`/api/Admin/DownloadStageProfiles`, { params })
-      .then((_) => { })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const resetCache = () => {
-    axios
-      .get(`/api/Admin/resetCache`)
-      .then((_) => { })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  const updateResult = (params: any) => call(`/api/Admin/stageResults`, params);
+  const updateStartlist = (params: any) => call(`/api/Admin/startlist`, params);
+  const raceFinished = (params: any) => call(`/api/Admin/RaceFinished`, params);
+  const etappesToevoegen = (params: any) => call(`/api/Admin/AddStages`, params);
+  const downloadStageProfiles = (params: any) => call(`/api/Admin/DownloadStageProfiles`, params);
+  const resetCache = () => call(`/api/Admin/resetCache`);
 
   return (
     <div>
@@ -160,6 +135,30 @@ const Admin = () => {
           Reset Cache
         </button>
       </div>
+      {error && (
+        <div
+          style={{
+            marginTop: "15px",
+            padding: "10px",
+            border: "1px solid #c00",
+            background: "#fee",
+            color: "#900",
+            fontFamily: "monospace",
+            whiteSpace: "pre-wrap",
+            fontSize: "12px",
+          }}
+        >
+          {typeof error === "string" ? (
+            error
+          ) : (
+            <>
+              <div><strong>{error.type}</strong>: {error.message}</div>
+              {error.inner && <div style={{ marginTop: "8px" }}>Inner: {error.inner}</div>}
+              {error.stackTrace && <div style={{ marginTop: "8px" }}>{error.stackTrace}</div>}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
