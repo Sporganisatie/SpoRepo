@@ -40,6 +40,16 @@ const Admin = () => {
   const downloadStageProfiles = (params: any) => call(`/api/Admin/DownloadStageProfiles`, params);
   const resetCache = () => call(`/api/Admin/resetCache`);
 
+  const [diag, setDiag] = useState<any>(null);
+  const playwrightDiag = () => {
+    setError(null);
+    setDiag(null);
+    axios
+      .get(`/api/Admin/playwrightDiag`)
+      .then((r) => setDiag(r.data))
+      .catch(handleError);
+  };
+
   return (
     <div>
       <div>
@@ -134,7 +144,24 @@ const Admin = () => {
         <button style={{ marginRight: "5px", width: "150px" }} onClick={resetCache}>
           Reset Cache
         </button>
+        <button style={{ marginRight: "5px", width: "150px" }} onClick={playwrightDiag}>
+          Playwright Diag
+        </button>
       </div>
+      {diag && (
+        <pre
+          style={{
+            marginTop: "15px",
+            padding: "10px",
+            border: "1px solid #888",
+            background: "#f4f4f4",
+            fontSize: "12px",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {JSON.stringify(diag, null, 2)}
+        </pre>
+      )}
       {error && (
         <div
           style={{

@@ -17,9 +17,7 @@ internal static class PcsClient
         try
         {
             if (_browser != null) return _browser;
-            var bundled = Path.Combine(AppContext.BaseDirectory, ".playwright-browsers");
-            if (Directory.Exists(bundled))
-                Environment.SetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH", bundled);
+            ConfigurePlaywrightPaths();
             _pw = await Playwright.CreateAsync();
             _browser = await _pw.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
             return _browser;
@@ -27,6 +25,40 @@ internal static class PcsClient
         finally
         {
             _initLock.Release();
+        }
+    }
+
+    private static void ConfigurePlaywrightPaths()
+    {
+        var candidates = new[]
+        {
+            Path.GetDirectoryName(typeof(PcsClient).Assembly.Location),
+            AppContext.BaseDirectory,
+            Path.GetDirectoryName(Environment.ProcessPath),
+        };
+
+        foreach (var dir in candidates)
+        {
+            if (string.IsNullOrEmpty(dir)) continue;
+
+            var driver = Path.Combine(dir, ".playwright", "node", "win32_x64", "node.exe");
+            if (File.Exists(driver))
+            {
+                Environment.SetEnvironmentVariable("PLAYWRIGHT_DRIVER_PATH", driver);
+                break;
+            }
+        }
+
+        foreach (var dir in candidates)
+        {
+            if (string.IsNullOrEmpty(dir)) continue;
+
+            var browsers = Path.Combine(dir, ".playwright-browsers");
+            if (Directory.Exists(browsers))
+            {
+                Environment.SetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH", browsers);
+                break;
+            }
         }
     }
 
