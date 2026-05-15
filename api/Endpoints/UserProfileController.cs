@@ -7,14 +7,16 @@ namespace SpoRE.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class UserProfileController(UserProfileService Service) : ControllerBase
+public class UserProfileController(UserProfileService Service, RaceService RaceService) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(UserProfileData), 200)]
     [ProducesResponseType(404)]
-    public IActionResult Get(string username, bool budgetParticipation)
+    public IActionResult Get(string username, bool budgetParticipation, int raceId)
     {
-        var data = Service.GetProfile(username, budgetParticipation);
+        var selectedRaceId = raceId == 0 ? RaceService.Current() : raceId;
+
+        var data = Service.GetProfile(username, budgetParticipation, selectedRaceId);
         if (data is null)
         {
             return NotFound();
