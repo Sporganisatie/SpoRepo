@@ -26,6 +26,12 @@
   padding-left: var(--space-4);
 }
 
+/* Position and point cells are short numerics and shouldn't wrap, even on
+ * narrow viewports where percentage column widths get tight. */
+.sr-left-column .rdt_TableCell {
+  white-space: nowrap;
+}
+
 /* Virtual-result banner — shown above the page header on virtual stages. */
 .sr-virtual-banner {
   font-size: var(--text-base);

@@ -20,20 +20,38 @@ jobs:
       - name: Restore NuGet packages
         run: dotnet restore
 
-      - name: Build project (required for Playwright script)
+      - name: dotnet build (produces .playwright driver folder)
         run: dotnet build -c Release
 
-      - name: Install Playwright Chromium
-        shell: pwsh
-        run: ./bin/Release/net8.0/playwright.ps1 install chromium
-
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./myapp
+        run: dotnet publish -c Release -o ./myapp --no-restore
+
+      - name: Copy Playwright driver into publish folder
+        shell: pwsh
+        run: |
+          $src = "./bin/Release/net8.0/.playwright"
+          if (-not (Test-Path $src)) { throw ".playwright driver folder not found at $src after build" }
+          Copy-Item -Recurse -Force $src ./myapp/.playwright
+
+      - name: Zip publish folder
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          if (Test-Path ./app.zip) { Remove-Item ./app.zip -Force }
+          [System.IO.Compression.ZipFile]::CreateFromDirectory(
+            (Resolve-Path ./myapp).Path,
+            (Join-Path (Get-Location) 'app.zip'),
+            [System.IO.Compression.CompressionLevel]::Optimal,
+            $false)
+          $size = (Get-Item ./app.zip).Length
+          Write-Host "app.zip size: $([math]::Round($size/1MB,1)) MB ($size bytes)"
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./myapp
+          path: ./app.zip
+          include-hidden-files: true
 
   deploy:
     runs-on: windows-latest
@@ -50,9 +68,9 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'SpoReDev'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F4BE917BD05D462C8CD1DBA436752F8E }}
-          package: .
+          package: ./app.zip

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using SpoRE.Attributes;
@@ -9,9 +10,27 @@ using SpoRE.Setup;
 
 namespace SpoRE.Controllers;
 
+public class AdminExceptionFilterAttribute : ExceptionFilterAttribute
+{
+    public override void OnException(ExceptionContext context)
+    {
+        var ex = context.Exception;
+        context.Result = new ObjectResult(new
+        {
+            message = ex.Message,
+            type = ex.GetType().FullName,
+            stackTrace = ex.StackTrace,
+            inner = ex.InnerException?.ToString()
+        })
+        { StatusCode = 500 };
+        context.ExceptionHandled = true;
+    }
+}
+
 [ApiController]
 [Route("api/[controller]")]
 [Admin]
+[AdminExceptionFilter]
 public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB, IMemoryCache MemoryCache) : ControllerBase
 {
     [HttpGet("startlist")]
@@ -60,5 +79,40 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     {
         ((MemoryCache)MemoryCache).Clear();
         return Ok("Cache has been reset.");
+    }
+
+    [HttpGet("playwrightDiag")]
+    public IActionResult PlaywrightDiag()
+    {
+        string? Listing(string? dir)
+        {
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return null;
+            try { return string.Join("\n", Directory.EnumerateFileSystemEntries(dir).Take(50)); }
+            catch (Exception e) { return $"<error: {e.Message}>"; }
+        }
+
+        var asmDir = Path.GetDirectoryName(typeof(AdminController).Assembly.Location);
+        var baseDir = AppContext.BaseDirectory;
+        var procDir = Path.GetDirectoryName(Environment.ProcessPath);
+        var cwd = Environment.CurrentDirectory;
+
+        return Ok(new
+        {
+            assemblyLocation = typeof(AdminController).Assembly.Location,
+            assemblyDir = asmDir,
+            appContextBaseDir = baseDir,
+            processPath = Environment.ProcessPath,
+            processDir = procDir,
+            currentDirectory = cwd,
+            home = Environment.GetEnvironmentVariable("HOME"),
+            playwrightDriverPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_PATH"),
+            playwrightBrowsersPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_BROWSERS_PATH"),
+            assemblyDirListing = Listing(asmDir),
+            baseDirListing = Listing(baseDir),
+            procDirListing = Listing(procDir),
+            cwdListing = Listing(cwd),
+            playwrightInAssembly = asmDir != null && Directory.Exists(Path.Combine(asmDir, ".playwright")),
+            playwrightInBase = Directory.Exists(Path.Combine(baseDir, ".playwright")),
+        });
     }
 }

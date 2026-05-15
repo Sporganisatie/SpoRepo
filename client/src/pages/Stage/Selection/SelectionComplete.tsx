@@ -12,19 +12,39 @@ interface SelectionCompleteProps {
   jerseyClass: string;
 }
 
+const SEGMENTS = 9;
+const SVG_WIDTH = 200;
+const SVG_HEIGHT = 8;
+const SVG_GAP = 1;
+const SEG_W = (SVG_WIDTH - SVG_GAP * (SEGMENTS - 1)) / SEGMENTS;
+
 const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string }) => {
-  const clamped = clamp(selected, 0, 9);
-  const pct = (clamped / 9) * 100;
-  const complete = clamped === 9 && kopman;
+  const clamped = clamp(selected, 0, SEGMENTS);
+  const complete = clamped === SEGMENTS && kopman;
+  const fillClass = complete ? "complete" : "danger";
 
   return (
     <div className="ss-completion-row">
-      <div className="meter-track">
-        <div
-          className={`meter-fill ${complete ? "complete" : "danger"}`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
+      <svg
+        className="meter-svg segmented"
+        viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        {Array.from({ length: SEGMENTS }, (_, i) => {
+          const filled = i < clamped;
+          return (
+            <rect
+              key={i}
+              className={`meter-segment ${filled ? `filled ${fillClass}` : ""}`}
+              x={i * (SEG_W + SVG_GAP)}
+              y={0}
+              width={SEG_W}
+              height={SVG_HEIGHT}
+            />
+          );
+        })}
+      </svg>
       <FontAwesomeIcon
         icon={faShirt}
         className={`ss-completion-jersey ${kopman ? `active ${jerseyClass}` : ""}`}
