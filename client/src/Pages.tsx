@@ -43,6 +43,10 @@ const router = createBrowserRouter([
         Component: UserProfile,
       },
       {
+        path: "profile/:username",
+        Component: UserProfile,
+      },
+      {
         path: ":raceId/teamselection",
         Component: TeamSelection,
       },

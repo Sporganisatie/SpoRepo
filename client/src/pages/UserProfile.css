@@ -1,0 +1,41 @@
+.user-profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0 var(--space-3) var(--space-4);
+}
+
+.user-profile-header {
+  flex-wrap: wrap;
+}
+
+.user-profile-nav {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--bg-elevated);
+}
+
+.user-profile-tab {
+  background-color: transparent;
+  color: var(--fg-muted);
+  border-radius: 0.25rem;
+  font-size: var(--text-base);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+}
+
+.user-profile-tab:hover {
+  background-color: var(--bg-control);
+  color: var(--fg-default);
+}
+
+.user-profile-tab.active {
+  background-color: var(--bg-control);
+  color: var(--fg-default);
+}
+
+.user-profile-text {
+  padding: var(--space-4);
+  font-size: var(--text-base);
+}

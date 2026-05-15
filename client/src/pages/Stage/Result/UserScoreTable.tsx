@@ -1,4 +1,5 @@
 import type { TableColumn } from "react-data-table-component";
+import UserLink from "../../../components/shared/UserLink";
 import { z } from "zod";
 import SreDataTable from "../../../components/shared/SreDataTable";
 
@@ -16,7 +17,7 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => {
   const columns: TableColumn<UserScore>[] = [
     {
       name: "Naam",
-      selector: (row: UserScore) => row.account.username,
+      cell: (row: UserScore) => <UserLink username={row.account.username} />,
       sortable: true,
     },
     {
