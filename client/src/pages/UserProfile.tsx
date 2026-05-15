@@ -31,7 +31,11 @@ type CombinedSelectedRider = {
 
 type HuidigeRaceTeams = {
   bothSelected: CombinedSelectedRider[];
-  uniquePaired: CombinedSelectedRider[];
+  bothSelectedDnf: CombinedSelectedRider[];
+  targetUnique: StageComparisonRider[];
+  targetUniqueDnf: StageComparisonRider[];
+  viewerUnique: StageComparisonRider[];
+  viewerUniqueDnf: StageComparisonRider[];
 };
 
 type UserProfileData = {
@@ -89,12 +93,13 @@ const UserProfile = () => {
       {
         name: "Rider",
         width: "200px",
-        cell: (row) =>
-          row.targetRider.rider === null ? (
-            "Totaal"
-          ) : (
-            <RiderLink rider={row.targetRider.rider} />
-          ),
+        cell: (row) => {
+          const targetRider = row.targetRider.rider;
+          if (targetRider === null) {
+            return "Totaal";
+          }
+          return <RiderLink rider={targetRider} />;
+        },
       },
       {
         name: data?.username || "Target",
@@ -112,42 +117,26 @@ const UserProfile = () => {
     [data?.username, data?.viewerUsername]
   );
 
-  const uniquePairedColumns = useMemo<TableColumn<CombinedSelectedRider>[]>(
+  const uniqueRidersColumns = useMemo<TableColumn<StageComparisonRider>[]>(
     () => [
       {
-        name: data?.username || "Target",
-        width: "180px",
-        cell: (row) =>
-          row.targetRider.rider === null ? (
-            "Totaal"
-          ) : (
-            <RiderLink rider={row.targetRider.rider} />
-          ),
+        name: "Rider",
+        width: "200px",
+        cell: (row) => {
+          if (row.rider === null) {
+            return row.totalScore === -1 ? "" : "Totaal";
+          }
+          return <RiderLink rider={row.rider} />;
+        },
       },
       {
         name: "Punten",
-        width: "90px",
+        width: "140px",
         center: true,
-        cell: (row) => row.targetRider.totalScore,
-      },
-      {
-        name: data?.viewerUsername,
-        width: "180px",
-        cell: (row) =>
-          row.viewerRider.rider === null ? (
-            "Totaal"
-          ) : (
-            <RiderLink rider={row.viewerRider.rider} />
-          ),
-      },
-      {
-        name: "Punten",
-        width: "90px",
-        center: true,
-        cell: (row) => row.viewerRider.totalScore,
+        cell: (row) => (row.totalScore === -1 ? "" : row.totalScore),
       },
     ],
-    [data?.username, data?.viewerUsername]
+    []
   );
 
 
@@ -159,8 +148,8 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile-page">
-      <div className="ts-panel">
-        <div className="ts-panel-header user-profile-header">
+      <div className="user-profile-section">
+        <div className="user-profile-header">
           <h3 className="ts-panel-title">Profiel: {data.username}</h3>
         </div>
         <div className="user-profile-nav">
@@ -191,52 +180,101 @@ const UserProfile = () => {
       </div>
 
       {page === "currentRace" && data.huidigeRaceTeams && (
-        <div className="ts-panel">
-          <div className="ts-panel-header">
-            <h3 className="ts-panel-title">Huidige race</h3>
-          </div>
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-            <div style={{ maxWidth: "450px" }}>
-              <SreDataTable
-                columns={bothSelectedColumns}
-                data={data.huidigeRaceTeams.bothSelected}
-                conditionalRowStyles={[
-                  {
-                    when: (row) => row.targetRider.dnf || row.viewerRider.dnf,
-                    style: {
-                      textDecoration: "line-through",
-                      color: "grey",
-                    },
-                  },
-                ]}
-              />
-            </div>
-            {data.huidigeRaceTeams.uniquePaired.length > 0 && (
-              <div style={{ maxWidth: "550px" }}>
+        <div className="user-profile-section">
+          <div className="user-profile-columns user-profile-columns-current-race">
+            <div className="user-profile-column user-profile-both-column">
+              <div className="user-profile-column-title">Beide gekozen</div>
+              <div className="user-profile-table-container">
                 <SreDataTable
-                  columns={uniquePairedColumns}
-                  data={data.huidigeRaceTeams.uniquePaired}
-                  conditionalRowStyles={[
-                    {
-                      when: (row) => row.targetRider.dnf || row.viewerRider.dnf,
-                      style: {
-                        textDecoration: "line-through",
-                        color: "grey",
-                      },
-                    },
-                  ]}
+                  columns={bothSelectedColumns}
+                  data={data.huidigeRaceTeams.bothSelected}
                 />
               </div>
-            )}
+              {data.huidigeRaceTeams.bothSelectedDnf.length > 0 && (
+                <div className="user-profile-dnf-section">
+                  <h4 className="user-profile-dnf-title">DNF</h4>
+                  <div className="user-profile-table-container">
+                    <SreDataTable
+                      columns={bothSelectedColumns}
+                      data={data.huidigeRaceTeams.bothSelectedDnf}
+                      conditionalRowStyles={[
+                        {
+                          when: () => true,
+                          style: {
+                            textDecoration: "line-through",
+                            color: "var(--fg-muted)",
+                          },
+                        },
+                      ]}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="user-profile-unique-grid">
+              <div className="user-profile-column-title">{data.username}</div>
+              <div className="user-profile-column-title user-profile-unique-viewer-title">
+                {data.viewerUsername}
+              </div>
+
+              <div className="user-profile-table-container">
+                <SreDataTable
+                  columns={uniqueRidersColumns}
+                  data={data.huidigeRaceTeams.targetUnique}
+                />
+              </div>
+              <div className="user-profile-table-container user-profile-unique-viewer-column">
+                <SreDataTable
+                  columns={uniqueRidersColumns}
+                  data={data.huidigeRaceTeams.viewerUnique}
+                />
+              </div>
+
+              <div className="user-profile-dnf-section user-profile-unique-dnf-section">
+                <h4 className="user-profile-dnf-title">DNF</h4>
+                <div className="user-profile-table-container">
+                  <SreDataTable
+                    columns={uniqueRidersColumns}
+                    data={data.huidigeRaceTeams.targetUniqueDnf}
+                    conditionalRowStyles={[
+                      {
+                        when: () => true,
+                        style: {
+                          textDecoration: "line-through",
+                          color: "var(--fg-muted)",
+                        },
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="user-profile-dnf-section user-profile-unique-dnf-section user-profile-unique-viewer-column">
+                <h4 className="user-profile-dnf-title">DNF</h4>
+                <div className="user-profile-table-container">
+                  <SreDataTable
+                    columns={uniqueRidersColumns}
+                    data={data.huidigeRaceTeams.viewerUniqueDnf}
+                    conditionalRowStyles={[
+                      {
+                        when: () => true,
+                        style: {
+                          textDecoration: "line-through",
+                          color: "var(--fg-muted)",
+                        },
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {page === "overview" && (
-        <div className="ts-panel">
-          <div className="ts-panel-header">
-            <h3 className="ts-panel-title">Alle deelnames</h3>
-          </div>
+        <div className="user-profile-section">
+          <h3 className="user-profile-section-title">Alle deelnames</h3>
           <SreDataTable columns={overviewColumns} data={data.overview} />
         </div>
       )}
