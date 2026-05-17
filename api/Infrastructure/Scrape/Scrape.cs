@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using SpoRE.Infrastructure.Database;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
+using SpoRE.Services;
 
 namespace SpoRE.Infrastructure.Scrape;
 
-public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache)
+public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, RaceStatsService RaceStats)
 {
     private const string PcsStage = "STAGE";
     private const string PcsGc = "GC";

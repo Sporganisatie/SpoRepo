@@ -59,6 +59,11 @@ public partial class Scrape
         stage.Complete = stage.Complete || stage.Type is StageType.TTT || stage.StageId is 965 or 966 or 975;
         stage.Finished = stageCount > 0 && !finishedOverride;
         DB.SaveChanges();
+
+        if (stage.Finished)
+        {
+            RaceStats.InvalidateStage(stage.RaceId);
+        }
     }
 
     private static string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)
