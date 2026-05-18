@@ -9,7 +9,7 @@ using static SpoRE.Helper.HelperFunctions;
 
 namespace SpoRE.Services;
 
-public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryCache, RaceStatsService RaceStats)
+public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryCache)
 {
     internal RaceState GetRaceState(int raceId)
     {
@@ -42,7 +42,6 @@ public class RaceService(Userdata User, DatabaseContext DB, IMemoryCache MemoryC
         }
 
         ((MemoryCache)MemoryCache).Clear();
-        RaceStats.InvalidateRace(raceId);
         return await DB.SaveChangesAsync();
     }
 

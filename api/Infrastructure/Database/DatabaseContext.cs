@@ -33,9 +33,7 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
 
     public DbSet<StageSelectie> StageSelections { get; set; }
 
-    public DbSet<RaceStats> RaceStats { get; set; }
-
-    public DbSet<StageStats> StageStats { get; set; }
+    public DbSet<StageSelectionStats> StageSelectionStats { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -455,30 +453,22 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             //     .HasConstraintName("stage_selection_stage_id_fkey");
         });
 
-        modelBuilder.Entity<RaceStats>(entity =>
+        modelBuilder.Entity<StageSelectionStats>(entity =>
         {
-            entity.HasKey(e => new { e.RaceId, e.BudgetParticipation }).HasName("race_stats_pkey");
-            entity.ToTable("race_stats");
-            entity.Property(e => e.RaceId).HasColumnName("race_id");
-            entity.Property(e => e.BudgetParticipation).HasColumnName("budget_participation");
-            entity.Property(e => e.Payload).HasColumnType("jsonb").HasColumnName("payload");
-            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
-        });
+            entity.HasKey(e => e.StageSelectionId).HasName("stage_selection_stats_pkey");
+            entity.ToTable("stage_selection_stats");
 
-        modelBuilder.Entity<StageStats>(entity =>
-        {
-            entity.HasKey(e => new { e.RaceId, e.Stagenr, e.Username, e.BudgetParticipation }).HasName("stage_stats_pkey");
-            entity.ToTable("stage_stats");
-            entity.Property(e => e.RaceId).HasColumnName("race_id");
-            entity.Property(e => e.Stagenr).HasColumnName("stagenr");
-            entity.Property(e => e.Username).HasColumnName("username");
-            entity.Property(e => e.BudgetParticipation).HasColumnName("budget_participation");
-            entity.Property(e => e.StageScore).HasColumnName("stage_score");
-            entity.Property(e => e.CumulativeScore).HasColumnName("cumulative_score");
-            entity.Property(e => e.MissedPoints).HasColumnName("missed_points");
+            entity.Property(e => e.StageSelectionId).HasColumnName("stage_selection_id");
+            entity.Property(e => e.Optimaal).HasColumnName("optimaal");
+            entity.Property(e => e.Gemist).HasColumnName("gemist");
             entity.Property(e => e.DnfCount).HasColumnName("dnf_count");
             entity.Property(e => e.DnfBudget).HasColumnName("dnf_budget");
-            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+            entity.Property(e => e.Positie).HasColumnName("positie");
+            entity.Property(e => e.Laatste).HasColumnName("laatste");
+
+            entity.HasOne(e => e.StageSelection)
+                .WithOne(e => e.StageSelectionStats)
+                .HasForeignKey<StageSelectionStats>(e => e.StageSelectionId);
         });
     }
 }

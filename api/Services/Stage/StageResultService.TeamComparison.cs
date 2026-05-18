@@ -66,17 +66,17 @@ public partial class StageResultService
                     joined => joined.Results.Select(res => new
                     {
                         joined.RiderParticipation,
-                        Result = res ?? new ResultsPoint { Totalscore = 0, Teamscore = 0, StagePos = null }
+                        Result = res ?? new ResultsPoint { Totalscore = 0, Teamscore = 0, StagePos = 0 }
                     })
                 );
 
             var gemist = heleTeam.Where(rp => !stageSelection.RiderParticipations.Contains(rp.RiderParticipation) &&
-                (allSelected.Contains(rp.RiderParticipation.RiderParticipationId) || ((budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore) ?? 0) > 0))
+                (allSelected.Contains(rp.RiderParticipation.RiderParticipationId) || (budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore) > 0))
                     .Select(rp => new StageComparisonRider
                     {
                         Rider = rp.RiderParticipation.Rider,
                         StagePos = rp.Result.StagePos,
-                        TotalScore = (budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore) ?? 0,
+                        TotalScore = budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore,
                         Selected = userStageSelection.Contains(rp.RiderParticipation.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipation.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None,
                         // Dnf = rp.RiderParticipation.Dnf // TODO alleen gebruiken als stagePos empty, vooral ui change
                     }).ToList();

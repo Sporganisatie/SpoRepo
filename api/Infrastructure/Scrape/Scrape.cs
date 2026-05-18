@@ -9,7 +9,7 @@ using SpoRE.Services;
 
 namespace SpoRE.Infrastructure.Scrape;
 
-public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, RaceStatsService RaceStats)
+public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, StageSelectionStatsService StageSelectionStatsService)
 {
     private const string PcsStage = "STAGE";
     private const string PcsGc = "GC";
@@ -50,12 +50,16 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, RaceSt
         var classifications = html.QuerySelectorAll("a.selectResultTab").Select(x => x.InnerText);
         if (classifications.IsNullOrEmpty()) classifications = [PcsStage];
         var tables = html.QuerySelectorAll("#resultsCont .resTab").Select(x => x.QuerySelector("ul.ttt-results") ?? x.QuerySelector("table"));
-        var query = ResultsQuery(classifications.Zip(tables), stage, finishedOverride);
+
+        var (query, complete) = ResultsQuery(classifications.Zip(tables), stage, finishedOverride);
         if (query.Equals("")) return;
         ClearCache(query);
-        await DB.Database.ExecuteSqlRawAsync(query);
-
-        await CalculateUserScores(stage);
+        await using (var transaction = await DB.Database.BeginTransactionAsync())
+        {
+            await DB.Database.ExecuteSqlRawAsync(query);
+            await CalculateUserScores(stage);
+            await transaction.CommitAsync();
+        }
 
         var nextStage = DB.Stages.Include(s => s.Race).AsNoTracking().SingleOrDefault(x => x.Stagenr == stage.Stagenr + 1 && x.RaceId == stage.RaceId);
         if (nextStage?.Starttime < DateTime.Now) // Nodig als er meerdere etappes herberekend moeten worden, dan gaat dit door tot de huidige/laatste etappe
@@ -217,12 +221,12 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, RaceSt
             var selectedRiders = $"(SELECT rider_participation_id FROM stage_selection_rider WHERE stage_selection_id = {stageSelection.StageSelectionId})";
 
             var stagescore = $"(SELECT SUM(totalscore {minusTeamPoints}) FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id IN {selectedRiders})";
-            var kopmanscore = $"COALESCE((SELECT {kopmanpunten} FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId})),0)";
-            var stageScoreTotal = $"({stagescore} + {kopmanscore})";
+            var kopmanscore = $"(SELECT {kopmanpunten} FROM results_points WHERE stage_id = {stage.StageId} AND rider_participation_id = (SELECT kopman_id FROM stage_selection WHERE stage_selection_id = {stageSelection.StageSelectionId}))";
+            var stageScoreTotal = $"COALESCE(({stagescore} + {kopmanscore}),0)";
             var query = $"UPDATE stage_selection SET stagescore = {stageScoreTotal} WHERE stage_selection_id = {stageSelection.StageSelectionId}; ";
 
             var prevTotal = DB.StageSelections.AsNoTracking().FirstOrDefault(ss => ss.AccountParticipationId == stageSelection.AccountParticipationId && ss.Stage.Stagenr == stage.Stagenr - 1)?.TotalScore ?? 0;
-            var totalscore = $"{prevTotal} + COALESCE({stageScoreTotal},0)";
+            var totalscore = $"{prevTotal} + {stageScoreTotal}";
             var updateTotals = $"UPDATE stage_selection SET totalscore = {totalscore} WHERE stage_selection.account_participation_id = {stageSelection.AccountParticipationId} AND stage_id IN (SELECT stage_id FROM stage WHERE stage.stagenr >= {stage.Stagenr} AND race_id = {stage.RaceId}); ";
 
             await DB.Database.ExecuteSqlRawAsync(query + updateTotals);

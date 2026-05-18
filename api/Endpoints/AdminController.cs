@@ -31,7 +31,13 @@ public class AdminExceptionFilterAttribute : ExceptionFilterAttribute
 [Route("api/[controller]")]
 [Admin]
 [AdminExceptionFilter]
-public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler Scheduler, DatabaseContext DB, IMemoryCache MemoryCache) : ControllerBase
+public class AdminController(
+    Scrape Scraper,
+    RaceService RaceService,
+    Scheduler Scheduler,
+    DatabaseContext DB,
+    IMemoryCache MemoryCache,
+    StageSelectionStatsService StageSelectionStatsService) : ControllerBase
 {
     [HttpGet("startlist")]
     public async Task<IActionResult> ScrapeStartList(string raceName, int year, int raceId)
@@ -72,6 +78,44 @@ public class AdminController(Scrape Scraper, RaceService RaceService, Scheduler 
     {
         await Scraper.DownloadStageProfiles(raceId);
         return Ok();
+    }
+
+    [HttpGet("CalculateStageSelectionStats")]
+    public async Task<IActionResult> CalculateStageSelectionStats(int raceId, int? stagenr)
+    {
+        if (stagenr.HasValue)
+        {
+            var stage = await DB.Stages
+                .AsNoTracking()
+                .SingleOrDefaultAsync(s => s.RaceId == raceId && s.Stagenr == stagenr.Value);
+
+            if (stage == null)
+            {
+                return NotFound($"No stage found for raceId={raceId} and stagenr={stagenr.Value}");
+            }
+
+            await StageSelectionStatsService.Calculate(stage.StageId);
+            return Ok(new { raceId, stage.Stagenr, calculated = 1 });
+        }
+
+        var finishedStages = await DB.Stages
+            .AsNoTracking()
+            .Where(s => s.RaceId == raceId && s.Finished)
+            .OrderBy(s => s.Stagenr)
+            .Select(s => new { s.StageId, s.Stagenr })
+            .ToListAsync();
+
+        foreach (var stage in finishedStages)
+        {
+            await StageSelectionStatsService.Calculate(stage.StageId);
+        }
+
+        return Ok(new
+        {
+            raceId,
+            calculated = finishedStages.Count,
+            finishedStages = finishedStages.Select(s => s.Stagenr).ToList()
+        });
     }
 
     [HttpGet("resetCache")]

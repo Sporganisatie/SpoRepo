@@ -17,6 +17,8 @@ const Admin = () => {
   const [raceId, setRaceId] = useState("");
   const [year2, setYear2] = useState("");
   const [raceName2, setRace2] = useState("");
+  const [statsRaceId, setStatsRaceId] = useState("");
+  const [statsStageNr, setStatsStageNr] = useState("");
 
   const [error, setError] = useState<AdminError | string | null>(null);
 
@@ -38,6 +40,7 @@ const Admin = () => {
   const raceFinished = (params: any) => call(`/api/Admin/RaceFinished`, params);
   const etappesToevoegen = (params: any) => call(`/api/Admin/AddStages`, params);
   const downloadStageProfiles = (params: any) => call(`/api/Admin/DownloadStageProfiles`, params);
+  const calculateStageSelectionStats = (params: any) => call(`/api/Admin/CalculateStageSelectionStats`, params);
   const resetCache = () => call(`/api/Admin/resetCache`);
 
   const [diag, setDiag] = useState<any>(null);
@@ -138,6 +141,33 @@ const Admin = () => {
           onClick={() => raceFinished({ raceName2, year2, raceId })}
         >
           Race Finished
+        </button>
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <input
+          style={{ marginRight: "5px", width: "70px" }}
+          type="text"
+          value={statsRaceId}
+          onChange={(e) => setStatsRaceId(e.target.value)}
+          placeholder="raceId"
+        />
+        <input
+          style={{ marginRight: "5px", width: "70px" }}
+          type="text"
+          value={statsStageNr}
+          onChange={(e) => setStatsStageNr(e.target.value)}
+          placeholder="stage?"
+        />
+        <button
+          style={{ marginRight: "5px", width: "220px" }}
+          onClick={() =>
+            calculateStageSelectionStats({
+              raceId: statsRaceId,
+              ...(statsStageNr.trim() !== "" ? { stagenr: statsStageNr } : {}),
+            })
+          }
+        >
+          Calculate StageSelection stats
         </button>
       </div>
       <div style={{ marginTop: "10px" }}>

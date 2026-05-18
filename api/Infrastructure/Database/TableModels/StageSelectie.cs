@@ -18,5 +18,7 @@ public class StageSelectie
 
     public virtual Stage Stage { get; set; }
 
+    public virtual StageSelectionStats StageSelectionStats { get; set; }
+
     public virtual ICollection<RiderParticipation> RiderParticipations { get; } = [];
 }
