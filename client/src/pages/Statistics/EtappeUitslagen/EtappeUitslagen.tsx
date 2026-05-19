@@ -26,14 +26,12 @@ const EtappeUitslagen = () => {
   }, [raceId, budgetParticipation]);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ flex: "1" }}>
+    <div className="h-stack">
+      <div style={{ flex: 1 }}>
         <UitslagenTable data={data.uitslagen} allRaces={false} />
       </div>
-      <div style={{ marginLeft: "10px" }}>
-        <div style={{ marginBottom: "10px" }}>
-          <ScoreverdelingTable data={data.scoreVerdeling} allRaces={false} />
-        </div>
+      <div className="v-stack">
+        <ScoreverdelingTable data={data.scoreVerdeling} allRaces={false} />
         <RankCountTable data={data.userRanks} />
       </div>
     </div>

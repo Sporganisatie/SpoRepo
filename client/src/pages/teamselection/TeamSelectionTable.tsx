@@ -118,7 +118,7 @@ const TeamSelectionTable = ({
     >
       <div
         id="stickyTable"
-        className="teamselection-table-wrapper panel"
+        className="panel rdt-action-col-first"
         style={{
           position: "absolute",
           top: "0px",

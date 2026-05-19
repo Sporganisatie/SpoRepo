@@ -24,7 +24,7 @@ const RaceScoreVerloopChart = () => {
   }, [budgetParticipation]);
 
   return (
-    <div style={{ backgroundColor: "#222", padding: "20px" }}>
+    <div className="chart-frame">
       <LineChart width={1560} height={600} data={chartdata.data}>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis dataKey="Name">

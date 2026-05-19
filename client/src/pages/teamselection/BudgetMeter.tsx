@@ -26,7 +26,7 @@ const BudgetMeter = ({ used, total }: BudgetMeterProps) => {
           style={{ width: `${over ? 100 : pct}%` }}
         />
       </div>
-      <div className={`budget-meter-text ${textClass}`}>
+      <div className={`budget-meter-text tabular ${textClass}`}>
         {formatM(used)} / {formatM(total)}
       </div>
     </div>

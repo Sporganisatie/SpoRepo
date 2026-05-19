@@ -76,7 +76,6 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => {
       pagination
       paginationPerPage={20}
       conditionalRowStyles={userScoreRowStyle}
-      className="user-score-table" // Add specific class to override global styles
     />
   );
 };

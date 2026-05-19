@@ -51,55 +51,22 @@ const RaceWrap = () => {
   }, [uitvallers]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        marginBottom: "4rem",
-      }}
-    >
+    <div className="center-stack" style={{ marginBottom: "4rem" }}>
       {totals.length === 0 ? (
         <></>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.5rem",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "2.5rem",
-            }}
-          >
+        <div className="center-stack" style={{ gap: "0.5rem" }}>
+          <div style={{ fontSize: "2.5rem" }}>
             🏆 Podium van de {raceOptions.find((opt) => opt.value === raceId)?.displayValue}
           </div>
-          <div style={{ width: "100%", height: "1px", backgroundColor: "white" }}></div>
-          <div
-            style={{
-              color: "#fde047",
-              fontSize: "2.5rem",
-            }}
-          >
+          <div className="divider-line" />
+          <div style={{ color: "var(--podium-gold)", fontSize: "2.5rem" }}>
             {totals.at(0)?.username} {totals.at(0)?.behaald}
           </div>
-          <div
-            style={{
-              color: "#e2e8f0",
-              fontSize: "2rem",
-            }}
-          >
+          <div style={{ color: "var(--podium-silver)", fontSize: "2rem" }}>
             {totals.at(1)?.username} {totals.at(1)?.behaald}
           </div>
-          <div
-            style={{
-              color: "#fbbf24",
-              fontSize: "1.5rem",
-            }}
-          >
+          <div style={{ color: "var(--podium-bronze)", fontSize: "1.5rem" }}>
             {totals.at(2)?.username} {totals.at(2)?.behaald}
           </div>
           {totals.slice(3).map((total) => {

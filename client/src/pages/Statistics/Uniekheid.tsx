@@ -34,7 +34,7 @@ const Uniekheid = () => {
   }, [raceId, budgetParticipation]);
 
   return (
-    <div style={{ gap: "10px", display: "flex" }}>
+    <div className="h-stack">
       <UniekheidTable title="Aan de start" data={data.start} />
       <UniekheidTable title="Nu" data={data.huidig} />
       <div style={{ marginLeft: "200px" }}>

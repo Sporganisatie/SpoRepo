@@ -1,8 +1,6 @@
+/* Layout: applied with .v-stack from JSX for the vertical rhythm. */
 .teamselection-page {
   box-sizing: content-box;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
   margin-left: var(--space-4);
   margin-right: var(--space-4);
 }
@@ -40,18 +38,9 @@
   transform: translateY(1px);
 }
 
-/* Two-column controls row (filters | rider-type tiles). */
-.team-select-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
-}
-
-/* Two-column body (available riders | selected team). */
+/* Body and controls use .grid-2 from JSX; the body keeps its panels at their
+   natural height instead of stretching. */
 .team-select-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
   align-items: flex-start;
 }
 
@@ -68,14 +57,10 @@
   font-size: var(--text-base);
   font-weight: 600;
   color: var(--fg-default);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .budget-meter-text strong {
-  color: var(--fg-default);
-  font-size: var(--text-base);
-  font-weight: 600;
   margin-right: 0.15rem;
 }
 
@@ -147,33 +132,7 @@
   overflow: auto;
 }
 
-/* Rider-button table column rules. */
-.selectable-riders-table-wrapper {
-  width: 100%;
-}
-
-/* Action-button cell sits on the right in the available-riders table. */
-.selectable-riders-table-wrapper .rdt_TableCell:last-child {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  padding-right: 0;
-}
-
-/* First column of the picked-team table is a fixed-width action button. */
-.teamselection-table-wrapper .rdt_TableCol:first-child,
-.teamselection-table-wrapper .rdt_TableCell:first-child {
-  width: 2.7rem;
-  min-width: 2.7rem;
-  flex-grow: 0;
-  padding: 0;
-}
-
-.teamselection-table-wrapper .rdt_TableCell:first-child {
-  display: flex;
-  align-items: center;
-}
-
+/* Rider-button table column rules — see .rdt-action-col-first / .rdt-action-cell-last in panel.css. */
 .teamselect-rider-button {
   border: none;
   color: white;
@@ -221,16 +180,11 @@
 
 /* ─── Mobile / narrow viewports ─────────────────────────────────────────── */
 
-/* Stack the controls and body into a single column. */
+/* Stack the controls and body into a single column. (.grid-2 collapses itself.) */
 @media (max-width: 1024px) {
   .teamselection-page {
     margin-left: var(--space-2);
     margin-right: var(--space-2);
-  }
-
-  .team-select-controls,
-  .team-select-body {
-    grid-template-columns: 1fr;
   }
 
   /* On mobile, surface the rider-type tiles above the filters. */

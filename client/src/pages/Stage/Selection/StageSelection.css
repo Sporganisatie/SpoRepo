@@ -1,9 +1,7 @@
+/* Layout: applied with .v-stack from JSX for the vertical rhythm. */
 .stage-selection-page {
   box-sizing: border-box;
   padding: 0 var(--space-4) var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
 }
 
 .stage-select-page-header {
@@ -51,12 +49,7 @@
   align-items: flex-start;
 }
 
-/* Tighten cell padding in all tables on the stage selection page. */
-.stage-selection-page .rdt_TableCol,
-.stage-selection-page .rdt_TableCell {
-  padding-left: var(--space-2);
-  padding-right: var(--space-2);
-}
+/* Compact cell padding is applied via .rdt-compact on the page root. */
 
 /* Panel headers on this page use the lighter "even-row" surface, wrap when
    tight (the completion bars need room), and add a small inter-row gap. */

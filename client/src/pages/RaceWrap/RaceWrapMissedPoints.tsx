@@ -20,9 +20,8 @@ const RaceWrapMissedPoints = ({ missedPoints }: { missedPoints: MissedPointsTota
   }, [missedPoints]);
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ display: "flex", gap: "1rem" }}>
-        <SreDataTable
+    <div className="h-stack">
+      <SreDataTable
           title="Gemiste punten"
           columns={[
             {
@@ -87,7 +86,6 @@ const RaceWrapMissedPoints = ({ missedPoints }: { missedPoints: MissedPointsTota
           ]}
           data={optimalScoreRanking}
         />
-      </div>
     </div>
   );
 };

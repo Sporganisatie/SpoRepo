@@ -149,3 +149,106 @@
 .stat-tile.punch,
 .stat-tile.aanvaller  { border-top-color: #f97316; }
 .stat-tile.knecht     { border-top-color: var(--bg-control-hover); }
+
+/* ─── Layout primitives ───────────────────────────────────────────────────── */
+
+/* Vertical stack with the standard inter-row rhythm. */
+.v-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Two-column grid that collapses to a single column on narrow viewports. */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 1024px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tabular numerals — keep digits aligned in numeric columns and meters. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Horizontal stack with the standard inter-item rhythm; no wrap. */
+.h-stack {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Auto-wrapping horizontal cluster for tile/table grids that should reflow. */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Centered column — used for podium and award layouts. */
+.center-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Chart canvas frame — neutral background for recharts. */
+.chart-frame {
+  background-color: var(--chart-bg);
+  padding: var(--space-6);
+}
+
+/* 1-pixel horizontal divider. */
+.divider-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--fg-default);
+}
+
+/* ─── react-data-table-component utility classes ──────────────────────────────
+   Apply these to a wrapper that contains one or more rdt tables. They replace
+   ad-hoc page-scoped selectors and keep table tweaks discoverable in one place. */
+
+/* Tighter horizontal cell padding for dense tables. */
+.rdt-compact .rdt_TableCol,
+.rdt-compact .rdt_TableCell {
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+/* Indent the first column so its content has breathing room from the panel edge. */
+.rdt-indent-first .rdt_TableHeadRow .rdt_TableCol:first-child,
+.rdt-indent-first .rdt_TableRow .rdt_TableCell:first-child {
+  padding-left: var(--space-4);
+}
+
+/* Prevent body cells from wrapping (useful for short numerics). */
+.rdt-nowrap .rdt_TableCell {
+  white-space: nowrap;
+}
+
+/* First column is a fixed 2.7rem action-button slot. */
+.rdt-action-col-first .rdt_TableCol:first-child,
+.rdt-action-col-first .rdt_TableCell:first-child {
+  width: 2.7rem;
+  min-width: 2.7rem;
+  flex-grow: 0;
+  padding: 0;
+}
+.rdt-action-col-first .rdt_TableCell:first-child {
+  display: flex;
+  align-items: center;
+}
+
+/* Last cell is a right-anchored action button (row-reverse, no right padding). */
+.rdt-action-cell-last .rdt_TableCell:last-child {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding-right: 0;
+}

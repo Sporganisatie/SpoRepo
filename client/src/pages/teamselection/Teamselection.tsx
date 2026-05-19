@@ -51,18 +51,18 @@ const TeamSelection: React.FC = () => {
   };
 
   if (!data) {
-    return <div className="teamselection-page" />;
+    return <div className="teamselection-page v-stack" />;
   }
 
   return (
-    <div className="teamselection-page">
+    <div className="teamselection-page v-stack">
       <div className="team-select-page-header">
         <CountdownClock24H targetDate={new Date(data.raceStart)} />
         <button className="team-select-page-header-cta" onClick={() => navigate(`/${raceId}/stage/1`)}>
           Naar Etappe 1 →
         </button>
       </div>
-      <div className="team-select-controls">
+      <div className="team-select-controls grid-2">
         <FilterElements
           updateFilter={updateAndFilter}
           resetFilter={resetFilter}
@@ -71,7 +71,7 @@ const TeamSelection: React.FC = () => {
         />
         <RiderTypeTotals team={data.team} />
       </div>
-      <div className="team-select-body">
+      <div className="team-select-body grid-2">
         <SelectableRidersTable
           data={filteredRiders}
           loading={isLoading}

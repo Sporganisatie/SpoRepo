@@ -35,7 +35,7 @@ const StageSelection = () => {
   const within24h = data.deadline != null && isWithin24h(data.deadline);
 
   return (
-    <div className="stage-selection-page">
+    <div className="stage-selection-page v-stack rdt-compact">
       <div className="stage-select-page-header">
         <StageNav />
         <button className="stage-select-page-cta" onClick={() => setShowProfiles(true)}>

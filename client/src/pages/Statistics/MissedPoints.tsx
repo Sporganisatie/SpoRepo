@@ -35,19 +35,15 @@ const MissedPoints = () => {
 
   return (
     <div>
-      {
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {data.map((missedPoints, index) => (
-            <div key={index} style={{ margin: "5px" }}>
-              <MissedPointsTable
-                key={index}
-                title={missedPoints.username}
-                riders={missedPoints.data}
-              />
-            </div>
-          ))}
-        </div>
-      }
+      <div className="cluster">
+        {data.map((missedPoints, index) => (
+          <MissedPointsTable
+            key={index}
+            title={missedPoints.username}
+            riders={missedPoints.data}
+          />
+        ))}
+      </div>
     </div>
   );
 };

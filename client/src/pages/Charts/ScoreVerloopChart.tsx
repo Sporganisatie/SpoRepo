@@ -140,7 +140,7 @@ const ScoreVerloopChart = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#222", padding: "20px" }}>
+    <div className="chart-frame">
       <div>
         <div
           style={{ display: "inline-block", cursor: "pointer", color: "white" }}

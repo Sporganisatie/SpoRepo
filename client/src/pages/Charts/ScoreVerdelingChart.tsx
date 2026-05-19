@@ -34,7 +34,7 @@ const ScoreVerdelingChart = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#222", padding: "20px" }}>
+    <div className="chart-frame">
       <BarChart width={chartdata.data.length * 70} height={600} data={chartdata.data}>
         <CartesianGrid
           strokeDasharray="3 3"

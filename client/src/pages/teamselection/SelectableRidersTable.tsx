@@ -77,7 +77,7 @@ const SelectableRidersTable = ({
   ];
 
   return (
-    <div className="selectable-riders-table-wrapper panel">
+    <div className="panel rdt-action-cell-last">
       <div className="panel-header">
         <h3 className="panel-title">Beschikbare renners</h3>
         <span className="panel-meta">

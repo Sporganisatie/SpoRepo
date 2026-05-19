@@ -11,25 +11,10 @@
   }
 }
 
-/* Left column on the result page stacks the team-result and user-score panels. */
+/* Left column on the result page stacks the team-result and user-score panels
+   (vertical rhythm via .v-stack from JSX; nowrap cells via .rdt-nowrap). */
 .stage-result-left-column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
   min-width: 0;
-}
-
-/* Give the first column of the team-results table some breathing room on the
-   panel's left edge. */
-.stage-result-team-results-panel .rdt_TableHeadRow .rdt_TableCol:first-child,
-.stage-result-team-results-panel .rdt_TableRow .rdt_TableCell:first-child {
-  padding-left: var(--space-4);
-}
-
-/* Position and point cells are short numerics and shouldn't wrap, even on
- * narrow viewports where percentage column widths get tight. */
-.stage-result-left-column .rdt_TableCell {
-  white-space: nowrap;
 }
 
 /* Virtual-result banner — shown above the page header on virtual stages. */

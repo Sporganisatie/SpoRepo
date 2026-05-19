@@ -29,21 +29,13 @@ const Klassementen = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <div key={1} style={{ margin: "5px" }}>
-          <KlassementenTable key="Algemeen" title="Algemeen" riders={data[0]} resultTitle="Tijd" />
-        </div>
-        <div key={1} style={{ margin: "5px" }}>
-          <KlassementenTable key="Punten" title="Punten" riders={data[1]} resultTitle="Punten" />
-        </div>
+      <div className="cluster">
+        <KlassementenTable key="Algemeen" title="Algemeen" riders={data[0]} resultTitle="Tijd" />
+        <KlassementenTable key="Punten" title="Punten" riders={data[1]} resultTitle="Punten" />
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        <div key={1} style={{ margin: "5px" }}>
-          <KlassementenTable key="Berg" title="Berg" riders={data[2]} resultTitle="Punten" />
-        </div>
-        <div key={1} style={{ margin: "5px" }}>
-          <KlassementenTable key="Jongeren" title="Jongeren" riders={data[3]} resultTitle="Tijd" />
-        </div>
+      <div className="cluster">
+        <KlassementenTable key="Berg" title="Berg" riders={data[2]} resultTitle="Punten" />
+        <KlassementenTable key="Jongeren" title="Jongeren" riders={data[3]} resultTitle="Tijd" />
       </div>
     </div>
   );

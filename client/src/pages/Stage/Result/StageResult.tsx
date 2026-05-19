@@ -22,11 +22,11 @@ const StageResult = () => {
   const [showProfiles, setShowProfiles] = useState<boolean>(false);
 
   if (!data) {
-    return <div className="stage-selection-page stage-result-page" />;
+    return <div className="stage-selection-page stage-result-page v-stack rdt-compact" />;
   }
 
   return (
-    <div className="stage-selection-page stage-result-page">
+    <div className="stage-selection-page stage-result-page v-stack rdt-compact">
       <div className="stage-select-page-header">
         <StageNav />
         <button className="stage-select-page-cta" onClick={() => setShowProfiles(true)}>
@@ -53,8 +53,8 @@ const StageResult = () => {
       </div>
 
       <div className="stage-select-body">
-        <div className="stage-result-left-column">
-          <div className="panel stage-result-team-results-panel">
+        <div className="stage-result-left-column v-stack rdt-nowrap">
+          <div className="panel rdt-indent-first">
             <TeamResultsTable data={data.teamResult} />
           </div>
           <div className="panel">

@@ -35,7 +35,7 @@ const Overlap = () => {
   }, [raceId, budgetParticipation]);
 
   return (
-    <div style={{ gap: "10px", display: "flex" }}>
+    <div className="h-stack">
       <Overlaptable title="Overlap (Renners)" overlaps={data.overlap} />
       <Overlaptable title="Overlap (% budget)" overlaps={data.overlapBudget} />
     </div>
