@@ -54,7 +54,7 @@ const StageResult = () => {
 
       <div className="stage-select-body">
         <div className="stage-result-left-column v-stack rdt-nowrap">
-          <div className="panel rdt-indent-first">
+          <div className="panel rdt-padded">
             <TeamResultsTable data={data.teamResult} />
           </div>
           <div className="panel">

@@ -76,16 +76,15 @@ const TeamSelectionTable = ({
 
   const columns: TableColumn<RiderParticipation>[] = [
     {
-      cell: (row: RiderParticipation) => {
-        return (
-          <button
-            className="teamselect-rider-button deselect"
-            onClick={() => removeRider(row.riderParticipationId)}
-          >
-            🞫
-          </button>
-        );
-      },
+      width: "2.7rem",
+      cell: (row: RiderParticipation) => (
+        <button
+          className="teamselect-rider-button deselect"
+          onClick={() => removeRider(row.riderParticipationId)}
+        >
+          🞫
+        </button>
+      ),
     },
     {
       name: "Naam",
@@ -118,7 +117,7 @@ const TeamSelectionTable = ({
     >
       <div
         id="stickyTable"
-        className="panel rdt-action-col-first"
+        className="panel"
         style={{
           position: "absolute",
           top: "0px",

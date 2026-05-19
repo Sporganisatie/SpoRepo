@@ -1,9 +1,15 @@
 /* Generic panel chrome — used across redesigned pages. */
 
-.panel {
+/* Cards: panel (has header + clips body), filter bar and tile group (open). */
+.panel,
+.team-select-filters,
+.rider-type-tiles {
   background-color: var(--bg-surface);
   border: 1px solid var(--bg-elevated);
   border-radius: 0.5rem;
+}
+
+.panel {
   overflow: hidden;
 }
 
@@ -67,22 +73,12 @@
   transition: width 200ms ease-out, background-color 200ms;
 }
 
-.meter-fill.warning  { background-color: #f59e0b; }
-.meter-fill.over,
-.meter-fill.danger   { background-color: var(--accent-red); }
-.meter-fill.complete { background-color: var(--accent-green); }
+.meter-fill.warning { background-color: #f59e0b; }
+.meter-fill.over    { background-color: var(--accent-red); }
 
 /* Hide SreDataTable's internal title bar inside a panel — the panel provides one. */
 .panel .rdt_TableHeader {
   display: none;
-}
-
-/* Card chrome — shared by the filter bar and tile groups (a panel without header/clip). */
-.team-select-filters,
-.rider-type-tiles {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--bg-elevated);
-  border-radius: 0.5rem;
 }
 
 /* Small-caps eyebrow label — used above stat tiles and filter fields. */
@@ -210,45 +206,8 @@
 .rank-change-up   { color: var(--accent-green); }
 .rank-change-down { color: var(--accent-red); }
 
-/* ─── react-data-table-component utility classes ──────────────────────────────
-   Apply these to a wrapper that contains one or more rdt tables. They replace
-   ad-hoc page-scoped selectors and keep table tweaks discoverable in one place. */
-
-/* Tighter horizontal cell padding for dense tables. */
+/* Compact cell padding for dense rdt tables — applied via .rdt-compact wrapper. */
 .rdt-compact .rdt_TableCol,
 .rdt-compact .rdt_TableCell {
-  padding-left: var(--space-2);
-  padding-right: var(--space-2);
-}
-
-/* Indent the first column so its content has breathing room from the panel edge. */
-.rdt-indent-first .rdt_TableHeadRow .rdt_TableCol:first-child,
-.rdt-indent-first .rdt_TableRow .rdt_TableCell:first-child {
-  padding-left: var(--space-4);
-}
-
-/* Prevent body cells from wrapping (useful for short numerics). */
-.rdt-nowrap .rdt_TableCell {
-  white-space: nowrap;
-}
-
-/* First column is a fixed 2.7rem action-button slot. */
-.rdt-action-col-first .rdt_TableCol:first-child,
-.rdt-action-col-first .rdt_TableCell:first-child {
-  width: 2.7rem;
-  min-width: 2.7rem;
-  flex-grow: 0;
-  padding: 0;
-}
-.rdt-action-col-first .rdt_TableCell:first-child {
-  display: flex;
-  align-items: center;
-}
-
-/* Last cell is a right-anchored action button (row-reverse, no right padding). */
-.rdt-action-cell-last .rdt_TableCell:last-child {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  padding-right: 0;
+  padding-inline: var(--space-2);
 }

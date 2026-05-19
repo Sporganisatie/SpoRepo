@@ -132,7 +132,20 @@
   overflow: auto;
 }
 
-/* Rider-button table column rules — see .rdt-action-col-first / .rdt-action-cell-last in panel.css. */
+/* Strip cell padding around the rider add/remove button so it sits flush. */
+.rdt_TableCell:has(> .teamselect-rider-button) {
+  padding: 0;
+}
+
+/* Available-riders table: last cell is a right-anchored action button. */
+.rdt-action-cell-last .rdt_TableCell:last-child {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding-right: 0;
+}
+
+/* Rider add/remove button. */
 .teamselect-rider-button {
   border: none;
   color: white;
