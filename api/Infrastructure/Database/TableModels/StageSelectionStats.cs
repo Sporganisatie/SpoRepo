@@ -12,13 +12,15 @@ public class StageSelectionStats
 
     public int DnfBudget { get; set; }
 
-    public int Positie { get; set; } // TODO rename in DB als we ook klassement positie willen opslaan
+    public int EtappePositie { get; set; }
 
-    public bool Laatste { get; set; } // TODO rename in DB als we ook klassement positie willen opslaan
+    public bool EtappeLaatste { get; set; }
 
-    // public int PositieNaEtappe { get; set; }
+    public int StandPositie { get; set; }
 
-    // public int LaatsteNaEtappe { get; set; }
+    public bool StandLaatste { get; set; }
+
+    public int StandChange { get; set; }
 
     public virtual StageSelectie StageSelection { get; set; }
 }

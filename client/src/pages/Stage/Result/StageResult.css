@@ -19,10 +19,10 @@
   min-width: 0;
 }
 
-/* Give the first column of the left-column tables some breathing room on the
+/* Give the first column of the team-results table some breathing room on the
    panel's left edge. */
-.sr-left-column .rdt_TableHeadRow .rdt_TableCol:first-child,
-.sr-left-column .rdt_TableRow .rdt_TableCell:first-child {
+.sr-team-results-panel .rdt_TableHeadRow .rdt_TableCol:first-child,
+.sr-team-results-panel .rdt_TableRow .rdt_TableCell:first-child {
   padding-left: var(--space-4);
 }
 

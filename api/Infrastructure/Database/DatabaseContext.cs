@@ -463,8 +463,11 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             entity.Property(e => e.Gemist).HasColumnName("gemist");
             entity.Property(e => e.DnfCount).HasColumnName("dnf_count");
             entity.Property(e => e.DnfBudget).HasColumnName("dnf_budget");
-            entity.Property(e => e.Positie).HasColumnName("positie");
-            entity.Property(e => e.Laatste).HasColumnName("laatste");
+            entity.Property(e => e.EtappePositie).HasColumnName("etappe_positie");
+            entity.Property(e => e.EtappeLaatste).HasColumnName("etappe_laatste");
+            entity.Property(e => e.StandPositie).HasColumnName("stand_positie");
+            entity.Property(e => e.StandLaatste).HasColumnName("stand_laatste");
+            entity.Property(e => e.StandChange).HasColumnName("stand_change");
 
             entity.HasOne(e => e.StageSelection)
                 .WithOne(e => e.StageSelectionStats)

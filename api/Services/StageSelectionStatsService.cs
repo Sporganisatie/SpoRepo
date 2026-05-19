@@ -14,54 +14,82 @@ public class StageSelectionStatsService(DatabaseContext DB)
             .ThenInclude(ap => ap.RiderParticipations)
             .Include(ss => ss.StageSelectionStats)
             .Where(ss => ss.StageId == stageId)
-            .OrderByDescending(ss => ss.StageScore)
+            .ToListAsync();
+
+        var prevStageSelections = await DB.StageSelections
+            .Include(ss => ss.StageSelectionStats)
+            .Where(ss => ss.Stage.RaceId == stage.RaceId && ss.Stage.Stagenr == stage.Stagenr - 1)
             .ToListAsync();
 
         var results = await DB.ResultsPoints.Where(rp => rp.StageId == stageId).ToListAsync();
-        var (budgetRankings, regularRankings) = GetEtappeRankings(stageSelections);
+        var (budget, regular) = GetEtappeRankings(stageSelections, prevStageSelections);
 
         foreach (var stageSelection in stageSelections)
         {
-            var rankings = stageSelection.AccountParticipation.BudgetParticipation ? budgetRankings : regularRankings;
+            var rankings = stageSelection.AccountParticipation.BudgetParticipation ? budget : regular;
             AddOrUpdateStats(stageSelection, results, rankings, stage.Type);
         }
 
         await DB.SaveChangesAsync();
     }
 
-    private static void AddOrUpdateStats(StageSelectie stageSelection, List<ResultsPoint> results, List<Ranking> rankings, StageType stageType)
+    private static void AddOrUpdateStats(StageSelectie stageSelection, List<ResultsPoint> results, RankingData rankings, StageType stageType)
     {
         var stats = stageSelection.StageSelectionStats ?? new StageSelectionStats();
 
         stats.Optimaal = OptimalPoints(stageSelection, results, stageType);
         stats.Gemist = stats.Optimaal - stageSelection.StageScore;
+
         stats.DnfCount = stageSelection.AccountParticipation.RiderParticipations.Count(rp => rp.Dnf); // TODO gaat fout bij herberekening van oudere etappe
         stats.DnfBudget = stageSelection.AccountParticipation.RiderParticipations.Where(rp => rp.Dnf).Sum(rp => rp.Price); // TODO gaat fout bij herberekening van oudere etappe
 
-        var ranking = rankings.Single(r => r.StageSelectionId == stageSelection.StageSelectionId).Rank;
-        var isLaatste = ranking == rankings.Max(r => r.Rank);
-        stats.Positie = ranking;
-        stats.Laatste = isLaatste;
+        var etappeRank = rankings.EtappeRanking.Single(r => r.StageSelectionId == stageSelection.StageSelectionId).Rank;
+        var etappeLaatste = etappeRank == rankings.EtappeRanking.Max(r => r.Rank);
+        stats.EtappePositie = etappeRank;
+        stats.EtappeLaatste = etappeLaatste;
+
+        var standRank = rankings.StandRanking.Single(r => r.StageSelectionId == stageSelection.StageSelectionId).Rank;
+        var standLaatste = standRank == rankings.StandRanking.Max(r => r.Rank);
+        stats.StandPositie = standRank;
+        stats.StandLaatste = standLaatste;
+
+        stats.StandChange = rankings.StandChange.Single(r => r.StageSelectionId == stageSelection.StageSelectionId).Rank;
 
         stageSelection.StageSelectionStats = stats;
     }
 
-    #region EtappeRankings
-    private static (List<Ranking> budget, List<Ranking> regular) GetEtappeRankings(List<StageSelectie> stageSelections)
+    #region rankings
+    private static (RankingData budget, RankingData regular) GetEtappeRankings(List<StageSelectie> stageSelections, List<StageSelectie> prevStageSelections)
     {
-        return (GetEtappeRanking(stageSelections.Where(ss => ss.AccountParticipation.BudgetParticipation).ToList()),
-            GetEtappeRanking(stageSelections.Where(ss => !ss.AccountParticipation.BudgetParticipation).ToList()));
+        var budget = GetRankings(stageSelections.Where(ss => ss.AccountParticipation.BudgetParticipation).ToList(), prevStageSelections);
+        var regular = GetRankings(stageSelections.Where(ss => !ss.AccountParticipation.BudgetParticipation).ToList(), prevStageSelections);
+        return (budget, regular);
+    }
+
+    private static RankingData GetRankings(List<StageSelectie> stageSelecties, List<StageSelectie> prevStageSelections)
+    {
+        var etappeRanking = GetEtappeRanking(stageSelecties);
+        var standRanking = GetStandRankings(stageSelecties);
+        var standChange = standRanking.Select(sr =>
+        {
+            var prevRank = prevStageSelections.SingleOrDefault(ss => ss.AccountParticipationId == sr.AccountParticipationId)?.StageSelectionStats?.StandPositie;
+            var change = prevRank.HasValue ? prevRank.Value - sr.Rank : 0;
+            return new Ranking(sr.StageSelectionId, sr.AccountParticipationId, change);
+        }).ToList();
+
+        return new RankingData(etappeRanking, standRanking, standChange);
     }
 
     private static List<Ranking> GetEtappeRanking(List<StageSelectie> stageSelecties)
     {
+        var ordered = stageSelecties.OrderByDescending(ss => ss.StageScore).ToList();
         var rank = 0;
         var extraRankIncreaseAfterTie = 0;
         var ranking = new List<Ranking>();
-        for (int i = 0; i < stageSelecties.Count; i++)
+        for (int i = 0; i < ordered.Count; i++)
         {
-            var user = stageSelecties[i];
-            if (rank == 0 || user.StageScore < stageSelecties[i - 1].StageScore)
+            var user = ordered[i];
+            if (rank == 0 || user.StageScore < ordered[i - 1].StageScore)
             {
                 rank += 1 + extraRankIncreaseAfterTie;
                 extraRankIncreaseAfterTie = 0;
@@ -70,7 +98,31 @@ public class StageSelectionStatsService(DatabaseContext DB)
             {
                 extraRankIncreaseAfterTie++;
             }
-            ranking.Add(new Ranking(user.StageSelectionId, rank));
+            ranking.Add(new Ranking(user.StageSelectionId, user.AccountParticipationId, rank));
+        }
+
+        return ranking;
+    }
+
+    private static List<Ranking> GetStandRankings(List<StageSelectie> stageSelecties)
+    {
+        var ordered = stageSelecties.OrderByDescending(ss => ss.TotalScore).ToList();
+        var rank = 0;
+        var extraRankIncreaseAfterTie = 0;
+        var ranking = new List<Ranking>();
+        for (int i = 0; i < ordered.Count; i++)
+        {
+            var user = ordered[i];
+            if (rank == 0 || user.StageScore < ordered[i - 1].TotalScore)
+            {
+                rank += 1 + extraRankIncreaseAfterTie;
+                extraRankIncreaseAfterTie = 0;
+            }
+            else
+            {
+                extraRankIncreaseAfterTie++;
+            }
+            ranking.Add(new Ranking(user.StageSelectionId, user.AccountParticipationId, rank));
         }
 
         return ranking;
@@ -121,5 +173,7 @@ public class StageSelectionStatsService(DatabaseContext DB)
     }
     #endregion
 
-    private record Ranking(int StageSelectionId, int Rank);
+    private record Ranking(int StageSelectionId, int AccountParticipationId, int Rank);
+
+    private record RankingData(List<Ranking> EtappeRanking, List<Ranking> StandRanking, List<Ranking> StandChange);
 }

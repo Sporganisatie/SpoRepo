@@ -54,7 +54,7 @@ const StageResult = () => {
 
       <div className="ss-body">
         <div className="sr-left-column">
-          <div className="ts-panel">
+          <div className="ts-panel sr-team-results-panel">
             <TeamResultsTable data={data.teamResult} />
           </div>
           <div className="ts-panel">
