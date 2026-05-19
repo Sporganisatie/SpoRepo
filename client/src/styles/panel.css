@@ -73,14 +73,11 @@
 .meter-fill.complete { background-color: var(--accent-green); }
 
 /* Hide SreDataTable's internal title bar inside a panel — the panel provides one. */
-.panel header[role="heading"],
 .panel .rdt_TableHeader {
   display: none;
 }
 
-/* Card surface — shares the panel's bg+border+radius but stays open (no overflow clip,
-   no built-in header). Used for the filter bar, tile groups, etc. */
-.surface,
+/* Card chrome — shared by the filter bar and tile groups (a panel without header/clip). */
 .team-select-filters,
 .rider-type-tiles {
   background-color: var(--bg-surface);
@@ -88,8 +85,7 @@
   border-radius: 0.5rem;
 }
 
-/* Small-caps eyebrow label — used above stat tiles, filter fields, etc. */
-.label-eyebrow,
+/* Small-caps eyebrow label — used above stat tiles and filter fields. */
 .stat-tile-label,
 .team-select-filter-label {
   font-size: 0.7rem;
@@ -209,6 +205,10 @@
   height: 1px;
   background-color: var(--fg-default);
 }
+
+/* Rank-change indicators (▲ up / ▼ down) shared across ranked tables. */
+.rank-change-up   { color: var(--accent-green); }
+.rank-change-down { color: var(--accent-red); }
 
 /* ─── react-data-table-component utility classes ──────────────────────────────
    Apply these to a wrapper that contains one or more rdt tables. They replace

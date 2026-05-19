@@ -12,72 +12,38 @@ export const userScoreSchema = z.object({
 
 export type UserScore = z.infer<typeof userScoreSchema>;
 
-const formatRankChange = (change: number) => {
-  if (change === 0) return "-";
-  if (change > 0) return `▲${change}`;
-  return `▼${Math.abs(change)}`;
-};
-
-const userScoreRowStyle = [
-  {
-    when: (row: UserScore) => row.isLoggedInUser,
-    classNames: ["selected"],
-  },
-];
-
-const UserScoreTable = ({ data }: { data: UserScore[] }) => {
-  const columns: TableColumn<UserScore>[] = [
-    {
-      name: "",
-      width: "30px",
-      style: { justifyContent: "center", },
-      selector: (_row: UserScore, rowIndex?: number) => (rowIndex ?? 0) + 1,
-    },
-    {
-      name: "",
-      width: "35px",
-      style: { justifyContent: "center", },
-      selector: (row: UserScore) => formatRankChange(row.change),
-      conditionalCellStyles: [
-        {
-          when: (row) => row.change < 0,
-          style: {
-            color: "red",
-          },
-        },
-        {
-          when: (row) => row.change > 0,
-          style: {
-            color: "green",
-          },
-        },
-      ],
-    },
-    {
-      name: "Naam",
-      grow: 2,
-      selector: (row: UserScore) => row.username,
-    },
-    {
-      name: "Stage Score",
-      selector: (row: UserScore) => row.stagescore,
-    },
-    {
-      name: "Total Score",
-      selector: (row: UserScore) => row.totalscore,
-    },
-  ];
-
+const RankChange = ({ change }: { change: number }) => {
+  if (change === 0) return <>-</>;
+  const dir = change > 0 ? "up" : "down";
   return (
-    <SreDataTable
-      columns={columns}
-      data={data}
-      pointerOnHover
-      pagination
-      paginationPerPage={20}
-      conditionalRowStyles={userScoreRowStyle}
-    />
+    <span className={`rank-change-${dir}`}>
+      {change > 0 ? "▲" : "▼"}
+      {Math.abs(change)}
+    </span>
   );
 };
+
+const centered = { style: { justifyContent: "center" } };
+
+const columns: TableColumn<UserScore>[] = [
+  { name: "", width: "30px", ...centered, selector: (_r, i) => (i ?? 0) + 1 },
+  { name: "", width: "35px", ...centered, cell: (r) => <RankChange change={r.change} /> },
+  { name: "Naam", grow: 2, selector: (r) => r.username },
+  { name: "Stage Score", selector: (r) => r.stagescore },
+  { name: "Total Score", selector: (r) => r.totalscore },
+];
+
+const rowStyles = [{ when: (r: UserScore) => r.isLoggedInUser, classNames: ["selected"] }];
+
+const UserScoreTable = ({ data }: { data: UserScore[] }) => (
+  <SreDataTable
+    columns={columns}
+    data={data}
+    pointerOnHover
+    pagination
+    paginationPerPage={20}
+    conditionalRowStyles={rowStyles}
+  />
+);
 
 export default UserScoreTable;
