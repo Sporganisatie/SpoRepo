@@ -27,23 +27,23 @@ const StageResult = () => {
 
   return (
     <div className="stage-selection-page stage-result-page">
-      <div className="ss-page-header">
+      <div className="stage-select-page-header">
         <StageNav />
-        <button className="ss-page-cta" onClick={() => setShowProfiles(true)}>
+        <button className="stage-select-page-cta" onClick={() => setShowProfiles(true)}>
           Profielen
         </button>
-        <button className="ss-page-cta" onClick={() => setShowTeamComparison(true)}>
+        <button className="stage-select-page-cta" onClick={() => setShowTeamComparison(true)}>
           Opstellingen
         </button>
         {data.virtualResult && (
-          <div className="sr-virtual-banner">
+          <div className="stage-result-virtual-banner">
             Virtuele eindpunten o.b.v. de recentste etappe uitslag.
           </div>
         )}
-        <div className="ss-page-header-right">
+        <div className="stage-select-page-header-right">
           {data.finalStandings && (
             <button
-              className="ss-page-cta"
+              className="stage-select-page-cta"
               onClick={() => router.navigate(`/${raceId}/racewrap`)}
             >
               Racewrap
@@ -52,14 +52,14 @@ const StageResult = () => {
         </div>
       </div>
 
-      <div className="ss-body">
-        <div className="sr-left-column">
-          <div className="ts-panel sr-team-results-panel">
+      <div className="stage-select-body">
+        <div className="stage-result-left-column">
+          <div className="panel stage-result-team-results-panel">
             <TeamResultsTable data={data.teamResult} />
           </div>
-          <div className="ts-panel">
-            <div className="ts-panel-header">
-              <h3 className="ts-panel-title">Poule stand</h3>
+          <div className="panel">
+            <div className="panel-header">
+              <h3 className="panel-title">Poule stand</h3>
             </div>
             <UserScoreTable data={data.userScores} />
           </div>

@@ -18,12 +18,12 @@ const ClassificationPanel = ({ title, rows, resultColName }: PanelProps) => {
   const canExpand = rows.length > COLLAPSED_COUNT;
 
   return (
-    <div className="ts-panel">
-      <div className="ts-panel-header">
-        <h3 className="ts-panel-title">{title}</h3>
+    <div className="panel">
+      <div className="panel-header">
+        <h3 className="panel-title">{title}</h3>
         {canExpand && (
           <button
-            className="ts-panel-toggle"
+            className="panel-toggle"
             onClick={() => setExpanded((e) => !e)}
             title={expanded ? "Minder tonen" : `Toon nog ${rows.length - COLLAPSED_COUNT}`}
             aria-expanded={expanded}
@@ -39,7 +39,7 @@ const ClassificationPanel = ({ title, rows, resultColName }: PanelProps) => {
 
 const ClassificationOverview = ({ data }: { data: Classifications }) => {
   return (
-    <div className="ss-classifications">
+    <div className="stage-select-classifications">
       <ClassificationPanel title="Algemeen" rows={data.gc} resultColName="Tijd" />
       <ClassificationPanel title="Punten" rows={data.points} resultColName="Punten" />
       <ClassificationPanel title="Berg" rows={data.kom} resultColName="Punten" />

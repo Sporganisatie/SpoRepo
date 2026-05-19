@@ -15,8 +15,8 @@ const SKILLS: { key: SkillKey; label: string }[] = [
 const SelectableRiderFoldout: React.FC<ExpanderComponentProps<SelectableRider>> = ({ data }) => (
   <div className="rider-skills">
     {SKILLS.map(({ key, label }) => (
-      <div key={key} className={`rider-skill-tile ${key}`}>
-        <div className="rider-skill-tile__label">{label}</div>
+      <div key={key} className={`stat-tile ${key}`}>
+        <div className="stat-tile-label">{label}</div>
         <StarRating score={data.details[key]} />
       </div>
     ))}

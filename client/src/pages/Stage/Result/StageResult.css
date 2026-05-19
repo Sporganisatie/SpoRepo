@@ -1,18 +1,18 @@
 /* StageResult uses a 1:1 split rather than stage-selection's 1:2. */
-.stage-result-page .ss-body {
+.stage-result-page .stage-select-body {
   grid-template-columns: 1fr 1fr;
 }
 
 /* Mobile / narrow: stack into a single column. The override above has higher
    specificity than the base mobile rule, so we re-state it here. */
 @media (max-width: 1024px) {
-  .stage-result-page .ss-body {
+  .stage-result-page .stage-select-body {
     grid-template-columns: 1fr;
   }
 }
 
 /* Left column on the result page stacks the team-result and user-score panels. */
-.sr-left-column {
+.stage-result-left-column {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -21,19 +21,19 @@
 
 /* Give the first column of the team-results table some breathing room on the
    panel's left edge. */
-.sr-team-results-panel .rdt_TableHeadRow .rdt_TableCol:first-child,
-.sr-team-results-panel .rdt_TableRow .rdt_TableCell:first-child {
+.stage-result-team-results-panel .rdt_TableHeadRow .rdt_TableCol:first-child,
+.stage-result-team-results-panel .rdt_TableRow .rdt_TableCell:first-child {
   padding-left: var(--space-4);
 }
 
 /* Position and point cells are short numerics and shouldn't wrap, even on
  * narrow viewports where percentage column widths get tight. */
-.sr-left-column .rdt_TableCell {
+.stage-result-left-column .rdt_TableCell {
   white-space: nowrap;
 }
 
 /* Virtual-result banner — shown above the page header on virtual stages. */
-.sr-virtual-banner {
+.stage-result-virtual-banner {
   font-size: var(--text-base);
   font-weight: 600;
   color: var(--podium-gold);
@@ -43,7 +43,7 @@
 /* Tab bar in the classifications panel header.
    The header's own vertical padding is removed so the tab buttons can keep
    their internal padding without inflating the header height. */
-.ss-body .sr-tabs {
+.stage-select-body .stage-result-tabs {
   gap: var(--space-1);
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -51,7 +51,7 @@
   padding-bottom: 0;
 }
 
-.sr-tab {
+.stage-result-tab {
   background-color: transparent;
   color: var(--fg-muted);
   border: 0;
@@ -66,23 +66,23 @@
 }
 
 @media (max-width: 600px) {
-  .ss-body .sr-tabs {
+  .stage-select-body .stage-result-tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
   }
 }
 
-.sr-tab:hover:not(:disabled) {
+.stage-result-tab:hover:not(:disabled) {
   background-color: var(--bg-control);
   color: var(--fg-default);
 }
 
-.sr-tab.active {
+.stage-result-tab.active {
   background-color: var(--bg-control);
   color: var(--fg-default);
 }
 
-.sr-tab:disabled {
+.stage-result-tab:disabled {
   color: var(--bg-control);
   cursor: not-allowed;
 }

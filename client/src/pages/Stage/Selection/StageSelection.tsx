@@ -36,29 +36,29 @@ const StageSelection = () => {
 
   return (
     <div className="stage-selection-page">
-      <div className="ss-page-header">
+      <div className="stage-select-page-header">
         <StageNav />
-        <button className="ss-page-cta" onClick={() => setShowProfiles(true)}>
+        <button className="stage-select-page-cta" onClick={() => setShowProfiles(true)}>
           Profielen
         </button>
         {!within24h && (
-          <div className="ss-deadline">
+          <div className="stage-select-deadline">
             {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
           </div>
         )}
-        <div className="ss-page-header-right">
+        <div className="stage-select-page-header-right">
           {within24h && data.deadline && (
             <CountdownClock24H targetDate={data.deadline} className="compact" />
           )}
           {stagenr === "1" && (
-            <button className="ss-page-cta" onClick={() => navigate("/")}>
+            <button className="stage-select-page-cta" onClick={() => navigate("/")}>
               Teamselectie
             </button>
           )}
         </div>
       </div>
 
-      <div className="ss-body">
+      <div className="stage-select-body">
         <StageSelectionTeam
           team={data.team}
           isFetching={isLoading}

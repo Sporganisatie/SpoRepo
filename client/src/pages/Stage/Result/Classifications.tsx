@@ -38,12 +38,12 @@ const StageClassifications = ({
   const active = tabs.find(([key]) => key === activeTab)?.[1] ?? tabs[0][1];
 
   return (
-    <div className="ts-panel">
-      <div className="ts-panel-header sr-tabs">
+    <div className="panel">
+      <div className="panel-header stage-result-tabs">
         {tabs.map(([key, cfg]) => (
           <button
             key={key}
-            className={`sr-tab ${activeTab === key ? "active" : ""}`}
+            className={`stage-result-tab ${activeTab === key ? "active" : ""}`}
             disabled={cfg.rows.length === 0}
             onClick={() => setActiveTab(key)}
           >

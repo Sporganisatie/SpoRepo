@@ -118,18 +118,18 @@ const TeamSelectionTable = ({
     >
       <div
         id="stickyTable"
-        className="teamselection-table-wrapper ts-panel"
+        className="teamselection-table-wrapper panel"
         style={{
           position: "absolute",
           top: "0px",
           width: "100%",
         }}
       >
-        <div className="ts-panel-header">
-          <h3 className="ts-panel-title">Mijn team {teamCount}/20</h3>
+        <div className="panel-header">
+          <h3 className="panel-title">Mijn team {teamCount}/20</h3>
           <BudgetMeter used={used} total={budget} />
         </div>
-        <div className="ts-team-panel-body">
+        <div className="team-select-team-body">
           <SreDataTable
             columns={columns}
             data={data}

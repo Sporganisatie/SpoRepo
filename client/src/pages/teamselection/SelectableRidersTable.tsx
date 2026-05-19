@@ -77,10 +77,10 @@ const SelectableRidersTable = ({
   ];
 
   return (
-    <div className="selectable-riders-table-wrapper ts-panel">
-      <div className="ts-panel-header">
-        <h3 className="ts-panel-title">Beschikbare renners</h3>
-        <span className="ts-panel-meta">
+    <div className="selectable-riders-table-wrapper panel">
+      <div className="panel-header">
+        <h3 className="panel-title">Beschikbare renners</h3>
+        <span className="panel-meta">
           {data.length} van {totalRiders}
         </span>
       </div>

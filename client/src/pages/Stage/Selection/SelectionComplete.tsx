@@ -24,7 +24,7 @@ const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string
   const fillClass = complete ? "complete" : "danger";
 
   return (
-    <div className="ss-completion-row">
+    <div className="stage-select-completion-row">
       <svg
         className="meter-svg segmented"
         viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
@@ -47,7 +47,7 @@ const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string
       </svg>
       <FontAwesomeIcon
         icon={faShirt}
-        className={`ss-completion-jersey ${kopman ? `active ${jerseyClass}` : ""}`}
+        className={`stage-select-completion-jersey ${kopman ? `active ${jerseyClass}` : ""}`}
       />
     </div>
   );
@@ -55,7 +55,7 @@ const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string
 
 const SelectionsComplete = ({ bars, jerseyClass }: SelectionCompleteProps) => {
   return (
-    <div className="ss-completion">
+    <div className="stage-select-completion">
       {bars.map((b, i) => (
         <Bar key={i} selected={b.selected} kopman={b.kopman} jerseyClass={jerseyClass} />
       ))}

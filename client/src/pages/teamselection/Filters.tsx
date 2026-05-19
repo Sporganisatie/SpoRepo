@@ -50,12 +50,12 @@ function FilterElements(props: FiltersProps) {
     .concat(props.teams.map((team) => ({ displayValue: team, value: team })))
     .sort();
   return (
-    <div className="ts-filters">
-      <div className="ts-filter-group">
-        <label className="ts-filter-label" htmlFor="filter-name">
+    <div className="team-select-filters">
+      <div className="team-select-filter-group">
+        <label className="team-select-filter-label" htmlFor="filter-name">
           Naam
         </label>
-        <div className="ts-filter-controls">
+        <div className="team-select-filter-controls">
           <input
             id="filter-name"
             type="text"
@@ -65,9 +65,9 @@ function FilterElements(props: FiltersProps) {
           />
         </div>
       </div>
-      <div className="ts-filter-group">
-        <span className="ts-filter-label">Prijs</span>
-        <div className="ts-filter-controls">
+      <div className="team-select-filter-group">
+        <span className="team-select-filter-label">Prijs</span>
+        <div className="team-select-filter-controls">
           <Select<number>
             value={props.filters.minPrice}
             options={priceOptions}
@@ -75,7 +75,7 @@ function FilterElements(props: FiltersProps) {
               props.updateFilter({ minPrice: selectedOption });
             }}
           />
-          <span className="ts-filter-range-sep">–</span>
+          <span className="team-select-filter-range-sep">–</span>
           <Select<number>
             value={props.filters.maxPrice}
             options={priceOptions}
@@ -85,9 +85,9 @@ function FilterElements(props: FiltersProps) {
           />
         </div>
       </div>
-      <div className="ts-filter-group">
-        <span className="ts-filter-label">Skill</span>
-        <div className="ts-filter-controls">
+      <div className="team-select-filter-group">
+        <span className="team-select-filter-label">Skill</span>
+        <div className="team-select-filter-controls">
           <Select
             value={props.filters.skill}
             options={skillOptions}
@@ -97,9 +97,9 @@ function FilterElements(props: FiltersProps) {
           />
         </div>
       </div>
-      <div className="ts-filter-group">
-        <span className="ts-filter-label">Team</span>
-        <div className="ts-filter-controls">
+      <div className="team-select-filter-group">
+        <span className="team-select-filter-label">Team</span>
+        <div className="team-select-filter-controls">
           <ArrowSelect
             value={props.filters.team}
             allowLooping={true}
@@ -110,8 +110,8 @@ function FilterElements(props: FiltersProps) {
           />
         </div>
       </div>
-      <div className="ts-filter-spacer" />
-      <button className="ts-filter-reset" onClick={() => props.resetFilter()}>
+      <div className="team-select-filter-spacer" />
+      <button className="team-select-filter-reset" onClick={() => props.resetFilter()}>
         Reset
       </button>
     </div>

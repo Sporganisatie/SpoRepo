@@ -6,25 +6,25 @@
   gap: var(--space-4);
 }
 
-.ss-page-header {
+.stage-select-page-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
 
-.ss-page-header-right {
+.stage-select-page-header-right {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
 
-.ss-deadline {
+.stage-select-deadline {
   font-size: var(--text-base);
   color: var(--fg-default);
 }
 
-.ss-page-cta {
+.stage-select-page-cta {
   box-sizing: content-box;
   display: inline-flex;
   align-items: center;
@@ -40,11 +40,11 @@
   transition: background-color 150ms;
 }
 
-.ss-page-cta:hover {
+.stage-select-page-cta:hover {
   background-color: var(--bg-control);
 }
 
-.ss-body {
+.stage-select-body {
   display: grid;
   grid-template-columns: minmax(20rem, 1fr) 2fr;
   gap: var(--space-4);
@@ -58,10 +58,13 @@
   padding-right: var(--space-2);
 }
 
-/* All panel headers on this page use the lighter "even-row" surface. */
-.stage-selection-page .ts-panel-header {
+/* Panel headers on this page use the lighter "even-row" surface, wrap when
+   tight (the completion bars need room), and add a small inter-row gap. */
+.stage-selection-page .panel-header {
   background-color: var(--bg-surface);
   border-bottom-color: var(--bg-elevated);
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }
 
 .rider-team-text {
@@ -74,14 +77,14 @@
   min-width: 0;
 }
 
-.ss-classifications {
+.stage-select-classifications {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-3);
 }
 
 /* Selection-completion bars (rendered inside the team panel header). */
-.ss-completion {
+.stage-select-completion {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -89,7 +92,7 @@
   min-width: 0;
 }
 
-.ss-completion-row {
+.stage-select-completion-row {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -116,25 +119,19 @@
 .meter-svg .meter-segment.filled.complete { fill: var(--accent-green); }
 .meter-svg .meter-segment.filled.danger   { fill: var(--accent-red); }
 
-.ss-completion-jersey {
+.stage-select-completion-jersey {
   font-size: var(--text-base);
   color: var(--bg-control);
   flex-shrink: 0;
 }
 
-.ss-completion-jersey.active        { color: var(--podium-gold); }
-.ss-completion-jersey.active.giro   { color: #f472b6; }
-.ss-completion-jersey.active.tour   { color: #fbbf24; }
-.ss-completion-jersey.active.vuelta { color: var(--accent-red); }
-
-/* Tighten the header so the bars fit comfortably. */
-.stage-selection-page .ts-panel-header {
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
+.stage-select-completion-jersey.active        { color: var(--podium-gold); }
+.stage-select-completion-jersey.active.giro   { color: #f472b6; }
+.stage-select-completion-jersey.active.tour   { color: #fbbf24; }
+.stage-select-completion-jersey.active.vuelta { color: var(--accent-red); }
 
 /* Stage selection +/- and kopman buttons share the same chrome as team-selection. */
-.ss-action-cell {
+.stage-select-action-cell {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
@@ -142,7 +139,7 @@
 }
 
 @media (max-width: 1024px) {
-  .ss-body {
+  .stage-select-body {
     grid-template-columns: 1fr;
   }
 }
@@ -151,16 +148,11 @@
   .stage-selection-page {
     padding: 0 var(--space-2) var(--space-2);
   }
-  .ss-classifications {
+  .stage-select-classifications {
     grid-template-columns: 1fr;
   }
-  .ss-completion {
+  .stage-select-completion {
     max-width: none;
     flex: 1 1 100%;
   }
-}
-
-/* Existing rule preserved. */
-.rdt_TableHeadRow rdt_TableCell:last-child {
-  padding: 0;
 }

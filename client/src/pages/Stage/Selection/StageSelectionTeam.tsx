@@ -164,7 +164,7 @@ const StageSelectionTeam = ({
       name: (
         <FontAwesomeIcon
           icon={faShirt}
-          className={`ss-completion-jersey active ${jerseyClass}`}
+          className={`stage-select-completion-jersey active ${jerseyClass}`}
           title="Kopman"
         />
       ),
@@ -183,8 +183,8 @@ const StageSelectionTeam = ({
   ];
 
   return (
-    <div className="ts-panel">
-      <div className="ts-panel-header">
+    <div className="panel">
+      <div className="panel-header">
         <SelectionsComplete bars={bars} jerseyClass={jerseyClass} />
       </div>
       <SreDataTable

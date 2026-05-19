@@ -21,11 +21,11 @@ const RiderTypeTotals = ({ team }: { team: RiderParticipation[] }) => {
         const count = riders.length;
         const budget = riders.reduce((sum, r) => sum + r.price, 0);
         return (
-          <div key={key} className={`rider-type-tile ${cls}`}>
-            <div className="rider-type-tile-label">{label}</div>
-            <div className="rider-type-tile-stats">
-              <span className="rider-type-tile-count">{count}</span>
-              <span className="rider-type-tile-budget">{formatM(budget)}</span>
+          <div key={key} className={`stat-tile ${cls}`}>
+            <div className="stat-tile-label">{label}</div>
+            <div className="stat-tile-stats">
+              <span className="stat-tile-count">{count}</span>
+              <span className="stat-tile-budget">{formatM(budget)}</span>
             </div>
           </div>
         );

@@ -8,7 +8,7 @@
 }
 
 /* Page header: countdown + stage CTA. */
-.ts-page-header {
+.team-select-page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,7 +16,7 @@
   min-height: 3rem;
 }
 
-.ts-page-header-cta {
+.team-select-page-header-cta {
   display: none;
   margin-left: auto;
   white-space: nowrap;
@@ -31,24 +31,24 @@
   transition: filter 150ms;
 }
 
-.ts-page-header-cta:hover {
+.team-select-page-header-cta:hover {
   background-color: var(--accent-green);
   filter: brightness(1.15);
 }
 
-.ts-page-header-cta:active {
+.team-select-page-header-cta:active {
   transform: translateY(1px);
 }
 
 /* Two-column controls row (filters | rider-type tiles). */
-.ts-controls {
+.team-select-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
 
 /* Two-column body (available riders | selected team). */
-.ts-body {
+.team-select-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
@@ -83,69 +83,16 @@
   color: var(--accent-red);
 }
 
-/* Rider-type stat tiles. */
+/* Rider-type stat tiles — 6-column grid layout. Chrome from .surface. */
 .rider-type-tiles {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--bg-elevated);
-  border-radius: 0.5rem;
   padding: var(--space-3);
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: var(--space-2);
 }
 
-.rider-type-tile {
-  background-color: var(--bg-elevated);
-  border-top: 3px solid var(--accent-blue);
-  border-radius: 0.375rem;
-  padding: var(--space-2) var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.rider-type-tile-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--fg-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.rider-type-tile-stats {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-}
-
-.rider-type-tile-count {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-.rider-type-tile-budget {
-  font-size: var(--text-sm);
-  color: var(--fg-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.rider-type-tile.klassement { border-top-color: var(--podium-gold); }
-.rider-type-tile.klimmer    { border-top-color: var(--accent-red); }
-.rider-type-tile.sprinter   { border-top-color: var(--accent-green); }
-.rider-type-tile.tijdrijder { border-top-color: var(--accent-blue); }
-.rider-type-tile.aanvaller  { border-top-color: #f97316; }
-.rider-type-tile.knecht     { border-top-color: var(--bg-control-hover); }
-
-/* Filter bar. */
-.ts-filters {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--bg-elevated);
-  border-radius: 0.5rem;
+/* Filter bar — chrome from .surface. */
+.team-select-filters {
   padding: var(--space-3) var(--space-4);
   display: flex;
   flex-wrap: wrap;
@@ -153,42 +100,35 @@
   align-items: flex-end;
 }
 
-.ts-filter-group {
+.team-select-filter-group {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   min-width: 0;
 }
 
-.ts-filter-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--fg-muted);
-}
-
-.ts-filter-controls {
+.team-select-filter-controls {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-.ts-filter-controls input,
-.ts-filter-controls select {
+.team-select-filter-controls input,
+.team-select-filter-controls select {
   height: 2rem;
   box-sizing: border-box;
 }
 
-.ts-filter-range-sep {
+.team-select-filter-range-sep {
   color: var(--fg-muted);
   user-select: none;
 }
 
-.ts-filter-spacer {
+.team-select-filter-spacer {
   flex: 1;
 }
 
-.ts-filter-reset {
+.team-select-filter-reset {
   background-color: transparent;
   color: var(--fg-muted);
   font-size: var(--text-sm);
@@ -196,43 +136,42 @@
   border-radius: 0.25rem;
 }
 
-.ts-filter-reset:hover {
+.team-select-filter-reset:hover {
   background-color: var(--bg-elevated);
   color: var(--fg-default);
 }
 
 /* Sticky team panel — the inner table scrolls within the panel body. */
-.ts-team-panel-body {
+.team-select-team-body {
   max-height: calc(100vh - 50px - 4rem);
   overflow: auto;
 }
 
-/* Existing rider-button table column rules. */
+/* Rider-button table column rules. */
 .selectable-riders-table-wrapper {
   width: 100%;
 }
 
-div.selectable-riders-table-wrapper div.rdt_TableRow div.rdt_TableCell:last-child {
+/* Action-button cell sits on the right in the available-riders table. */
+.selectable-riders-table-wrapper .rdt_TableCell:last-child {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
   padding-right: 0;
 }
 
-div.teamselection-table-wrapper div.rdt_TableHeadRow div.rdt_TableCol:first-child {
+/* First column of the picked-team table is a fixed-width action button. */
+.teamselection-table-wrapper .rdt_TableCol:first-child,
+.teamselection-table-wrapper .rdt_TableCell:first-child {
   width: 2.7rem;
-  flex-grow: 0;
   min-width: 2.7rem;
+  flex-grow: 0;
   padding: 0;
 }
 
-div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
+.teamselection-table-wrapper .rdt_TableCell:first-child {
   display: flex;
   align-items: center;
-  width: 2.7rem;
-  flex-grow: 0;
-  min-width: 2.7rem;
-  padding: 0;
 }
 
 .teamselect-rider-button {
@@ -260,37 +199,13 @@ div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
   background-color: #b91c1c;
 }
 
-/* Rider-skills foldout (expanded row in the available-riders table). */
+/* Rider-skills foldout (expanded row in the available-riders table) — 5-column grid of .stat-tile. */
 .rider-skills {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
 }
-
-.rider-skill-tile {
-  background-color: var(--bg-elevated);
-  border-top: 3px solid var(--accent-blue);
-  border-radius: 0.375rem;
-  padding: var(--space-2) var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.rider-skill-tile__label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--fg-muted);
-}
-
-.rider-skill-tile.gc     { border-top-color: var(--podium-gold); }
-.rider-skill-tile.climb  { border-top-color: var(--accent-red); }
-.rider-skill-tile.sprint { border-top-color: var(--accent-green); }
-.rider-skill-tile.tt     { border-top-color: var(--accent-blue); }
-.rider-skill-tile.punch  { border-top-color: #f97316; }
 
 @media (max-width: 1024px) {
   .rider-skills {
@@ -313,13 +228,13 @@ div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
     margin-right: var(--space-2);
   }
 
-  .ts-controls,
-  .ts-body {
+  .team-select-controls,
+  .team-select-body {
     grid-template-columns: 1fr;
   }
 
   /* On mobile, surface the rider-type tiles above the filters. */
-  .ts-controls > .rider-type-tiles {
+  .team-select-controls > .rider-type-tiles {
     order: -1;
   }
 
@@ -334,7 +249,7 @@ div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
   }
 
   /* Without sticky, let the team panel grow naturally with its content. */
-  .ts-team-panel-body {
+  .team-select-team-body {
     max-height: none;
   }
 
@@ -345,42 +260,42 @@ div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
 
 /* Phone-size adjustments. */
 @media (max-width: 600px) {
-  .ts-page-header {
+  .team-select-page-header {
     flex-wrap: wrap;
     gap: var(--space-2);
   }
 
-  .ts-page-header-cta {
+  .team-select-page-header-cta {
     display: inline-block;
     margin-left: 0;
     width: 100%;
     text-align: center;
   }
 
-  .ts-filters {
+  .team-select-filters {
     padding: var(--space-2) var(--space-3);
     gap: var(--space-2);
   }
 
-  .ts-filter-group {
+  .team-select-filter-group {
     flex: 1 1 100%;
   }
 
-  .ts-filter-group input,
-  .ts-filter-group select {
+  .team-select-filter-group input,
+  .team-select-filter-group select {
     width: 100%;
   }
 
-  .ts-filter-spacer {
+  .team-select-filter-spacer {
     display: none;
   }
 
-  .ts-filter-reset {
+  .team-select-filter-reset {
     width: 100%;
     margin-top: var(--space-1);
   }
 
-  .ts-panel-header {
+  .panel-header {
     padding: var(--space-2) var(--space-3);
     flex-wrap: wrap;
   }
@@ -394,7 +309,7 @@ div.teamselection-table-wrapper div.rdt_TableRow div.rdt_TableCell:first-child {
     padding: var(--space-2);
   }
 
-  .rider-type-tile-count {
+  .stat-tile-count {
     font-size: var(--text-lg);
   }
 }

@@ -5,13 +5,6 @@
   outline: 0;
 }
 
-/* tables still need 'cellspacing="0"' in the markup */
-table {
-  border: 0;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
 button {
   background-color: var(--bg-control);
   border: 0;
