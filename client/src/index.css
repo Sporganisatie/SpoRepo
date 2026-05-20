@@ -78,6 +78,10 @@ div.pageContainer {
   color: var(--bg-disabled);
 }
 
+.dim td {
+  color: var(--bg-disabled);
+}
+
 .tableLink {
   text-decoration: none;
 }

@@ -34,6 +34,29 @@
   border-bottom: 1px solid var(--bg-page);
 }
 
+.sre-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sre-table thead th.sortable:hover {
+  background-color: var(--bg-elevated);
+}
+
+.sre-table .sort-indicator {
+  color: var(--fg-muted);
+  font-size: 10px;
+}
+
+.sre-table.sre-pointer tbody tr {
+  cursor: pointer;
+}
+
+.sre-table-expanded > td {
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--bg-surface);
+}
+
 .sre-table tbody td {
   font-weight: 400;
   font-size: 13px;
@@ -50,7 +73,7 @@
 }
 
 .sre-table tbody tr:hover {
-  background-color: var(--bg-control);
+  background-color: var(--bg-page);
 }
 
 .sre-table tbody tr:last-child {

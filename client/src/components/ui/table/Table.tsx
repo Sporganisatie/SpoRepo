@@ -11,6 +11,8 @@ interface TableColumn<T> {
   cell: (row: T, index: number) => ReactNode;
   align?: Align;
   padding?: string;
+  sortable?: boolean;
+  sortFn?: (a: T, b: T) => number;
 }
 
 interface PositionOpts {
@@ -26,11 +28,16 @@ interface RiderOpts<T> {
   width?: string;
   kopman?: (row: T) => boolean;
   fallback?: ReactNode;
+  sortable?: boolean;
+  sortFn?: (a: T, b: T) => number;
 }
 
-interface TextOpts {
+interface TextOpts<T> {
   width?: string;
   align?: Align;
+  padding?: string;
+  sortable?: boolean;
+  sortFn?: (a: T, b: T) => number;
 }
 
 interface RankChangeOpts {
@@ -51,7 +58,7 @@ interface ColumnHelpers<T> {
   text: (
     name: ReactNode,
     selector: (row: T, index: number) => ReactNode,
-    opts?: TextOpts,
+    opts?: TextOpts<T>,
   ) => TableColumn<T>;
   rankChange: (
     selector: (row: T) => number | string | null | undefined,
@@ -96,12 +103,24 @@ function makeHelpers<T>(): ColumnHelpers<T> {
         if (rider == null) return opts.fallback ?? "";
         return <RiderLink rider={rider} kopman={opts.kopman?.(row)} />;
       },
+      sortable: opts.sortable,
+      sortFn:
+        opts.sortFn ??
+        ((a, b) => {
+          const ra = selector(a);
+          const rb = selector(b);
+          if (!ra || !rb) return 0;
+          return ra.lastname.localeCompare(rb.lastname);
+        }),
     }),
     text: (name, selector, opts = {}) => ({
       name,
       width: opts.width,
       align: opts.align,
+      padding: opts.padding,
       cell: selector,
+      sortable: opts.sortable,
+      sortFn: opts.sortFn,
     }),
     rankChange: (selector, opts = {}) => ({
       name: opts.name ?? "",
@@ -146,12 +165,17 @@ interface Props<T> {
   rowClassName?: (row: T) => string | undefined;
   paginated?: boolean;
   noHead?: boolean;
+  pointerOnHover?: boolean;
+  expandedContent?: (row: T) => ReactNode;
 }
 
-function getKey<T>(row: T, keyField: KeyField<T> | undefined, fallback: number): string | number {
+type SortState = { col: number; dir: "asc" | "desc" } | null;
+type Key = string | number;
+
+function getKey<T>(row: T, keyField: KeyField<T> | undefined, fallback: number): Key {
   if (keyField == null) return fallback;
   if (typeof keyField === "function") return keyField(row);
-  return row[keyField] as unknown as string | number;
+  return row[keyField] as unknown as Key;
 }
 
 function Table<T>({
@@ -162,19 +186,48 @@ function Table<T>({
   rowClassName,
   paginated,
   noHead,
+  pointerOnHover,
+  expandedContent,
 }: Props<T>) {
   const columns = children(makeHelpers<T>());
   const [page, setPage] = useState(0);
+  const [sort, setSort] = useState<SortState>(null);
+  const [expanded, setExpanded] = useState<Set<Key>>(new Set());
 
-  const totalPages = paginated ? Math.max(1, Math.ceil(data.length / PAGE_SIZE)) : 1;
+  const toggleExpand = (key: Key, e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button, a")) return;
+    setExpanded((curr) => {
+      const next = new Set(curr);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  const sortedData = (() => {
+    if (!sort) return data;
+    const fn = columns[sort.col]?.sortFn;
+    if (!fn) return data;
+    const out = [...data].sort(fn);
+    return sort.dir === "desc" ? out.reverse() : out;
+  })();
+
+  const totalPages = paginated ? Math.max(1, Math.ceil(sortedData.length / PAGE_SIZE)) : 1;
   const currentPage = Math.min(page, totalPages - 1);
   const visibleRows = paginated
-    ? data.slice(currentPage * PAGE_SIZE, currentPage * PAGE_SIZE + PAGE_SIZE)
-    : data;
-  const showPagination = paginated && data.length > PAGE_SIZE;
+    ? sortedData.slice(currentPage * PAGE_SIZE, currentPage * PAGE_SIZE + PAGE_SIZE)
+    : sortedData;
+  const showPagination = paginated && sortedData.length > PAGE_SIZE;
+
+  const toggleSort = (colIdx: number) =>
+    setSort((curr) => {
+      if (curr?.col !== colIdx) return { col: colIdx, dir: "asc" };
+      if (curr.dir === "asc") return { col: colIdx, dir: "desc" };
+      return null;
+    });
 
   return (
-    <table className="sre-table">
+    <table className={`sre-table${pointerOnHover ? " sre-pointer" : ""}`}>
       {title != null && <caption>{title}</caption>}
       <colgroup>
         {columns.map((c, i) => (
@@ -185,20 +238,30 @@ function Table<T>({
         <thead>
           <tr>
             {columns.map((c, i) => (
-              <th key={i} style={{ textAlign: c.align, padding: c.padding }}>
+              <th
+                key={i}
+                style={{ textAlign: c.align, padding: c.padding }}
+                className={c.sortable ? "sortable" : undefined}
+                onClick={c.sortable ? () => toggleSort(i) : undefined}
+              >
                 {c.name}
+                {sort?.col === i && (
+                  <span className="sort-indicator"> {sort.dir === "asc" ? "▲" : "▼"}</span>
+                )}
               </th>
             ))}
           </tr>
         </thead>
       )}
       <tbody>
-        {visibleRows.map((row, rowIdx) => {
+        {visibleRows.flatMap((row, rowIdx) => {
           const dataIdx = paginated ? currentPage * PAGE_SIZE + rowIdx : rowIdx;
-          return (
+          const key = getKey(row, keyField, dataIdx);
+          const dataRow = (
             <tr
-              key={getKey(row, keyField, dataIdx)}
+              key={key}
               className={rowClassName?.(row)}
+              onClick={expandedContent ? (e) => toggleExpand(key, e) : undefined}
             >
               {columns.map((c, i) => (
                 <td key={i} style={{ textAlign: c.align, padding: c.padding }}>
@@ -207,6 +270,13 @@ function Table<T>({
               ))}
             </tr>
           );
+          if (!expandedContent || !expanded.has(key)) return [dataRow];
+          return [
+            dataRow,
+            <tr key={`${key}-exp`} className="sre-table-expanded">
+              <td colSpan={columns.length}>{expandedContent(row)}</td>
+            </tr>,
+          ];
         })}
       </tbody>
       {showPagination && (
@@ -216,7 +286,8 @@ function Table<T>({
               <div className="sre-table-pagination">
                 <span>
                   {currentPage * PAGE_SIZE + 1}–
-                  {Math.min((currentPage + 1) * PAGE_SIZE, data.length)} van {data.length}
+                  {Math.min((currentPage + 1) * PAGE_SIZE, sortedData.length)} van{" "}
+                  {sortedData.length}
                 </span>
                 <button
                   type="button"
