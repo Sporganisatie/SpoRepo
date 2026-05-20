@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Rider } from "../../../models/Rider";
 import RiderLink from "../../shared/RiderLink";
 import "./table.css";
@@ -15,55 +15,52 @@ interface TableColumn<T> {
   sortFn?: (a: T, b: T) => number;
 }
 
-interface PositionOpts {
-  name?: string;
+interface ColumnOpts<T> {
+  name?: ReactNode;
   width?: string;
-  ordinal?: boolean;
   align?: Align;
   padding?: string;
+  sortable?: boolean;
+  sortFn?: (a: T, b: T) => number;
 }
 
-interface RiderOpts<T> {
-  name?: string;
-  width?: string;
+interface PositionOpts<T> extends ColumnOpts<T> {
+  ordinal?: boolean;
+}
+
+interface RiderOpts<T> extends ColumnOpts<T> {
   kopman?: (row: T) => boolean;
   fallback?: ReactNode;
-  sortable?: boolean;
-  sortFn?: (a: T, b: T) => number;
-}
-
-interface TextOpts<T> {
-  width?: string;
-  align?: Align;
-  padding?: string;
-  sortable?: boolean;
-  sortFn?: (a: T, b: T) => number;
-}
-
-interface RankChangeOpts {
-  name?: string;
-  width?: string;
-  padding?: string;
 }
 
 interface ColumnHelpers<T> {
   position: (
     selector: (row: T, index: number) => number | null | undefined,
-    opts?: PositionOpts,
+    opts?: PositionOpts<T>,
   ) => TableColumn<T>;
   rider: (
-    selector: (row: T) => Rider | null | undefined,
+    selector: (row: T, index: number) => Rider | null | undefined,
     opts?: RiderOpts<T>,
   ) => TableColumn<T>;
   text: (
-    name: ReactNode,
     selector: (row: T, index: number) => ReactNode,
-    opts?: TextOpts<T>,
+    opts?: ColumnOpts<T>,
   ) => TableColumn<T>;
   rankChange: (
-    selector: (row: T) => number | string | null | undefined,
-    opts?: RankChangeOpts,
+    selector: (row: T, index: number) => number | string | null | undefined,
+    opts?: ColumnOpts<T>,
   ) => TableColumn<T>;
+}
+
+function baseColumn<T>(opts: ColumnOpts<T>): Partial<TableColumn<T>> {
+  return {
+    name: opts.name,
+    width: opts.width,
+    align: opts.align,
+    padding: opts.padding,
+    sortable: opts.sortable,
+    sortFn: opts.sortFn,
+  };
 }
 
 function renderRankChange(change: number | string | null | undefined): ReactNode {
@@ -85,10 +82,9 @@ function renderRankChange(change: number | string | null | undefined): ReactNode
 function makeHelpers<T>(): ColumnHelpers<T> {
   return {
     position: (selector, opts = {}) => ({
+      ...baseColumn(opts),
       name: opts.name ?? "Positie",
       width: opts.width ?? "70px",
-      align: opts.align,
-      padding: opts.padding,
       cell: (row, index) => {
         const v = selector(row, index);
         if (v == null || v === 0) return "";
@@ -96,38 +92,32 @@ function makeHelpers<T>(): ColumnHelpers<T> {
       },
     }),
     rider: (selector, opts = {}) => ({
+      ...baseColumn(opts),
       name: opts.name ?? "Renner",
       width: opts.width ?? "180px",
-      cell: (row) => {
-        const rider = selector(row);
-        if (rider == null) return opts.fallback ?? "";
-        return <RiderLink rider={rider} kopman={opts.kopman?.(row)} />;
-      },
-      sortable: opts.sortable,
       sortFn:
         opts.sortFn ??
         ((a, b) => {
-          const ra = selector(a);
-          const rb = selector(b);
+          const ra = selector(a, 0);
+          const rb = selector(b, 0);
           if (!ra || !rb) return 0;
           return ra.lastname.localeCompare(rb.lastname);
         }),
+      cell: (row, index) => {
+        const rider = selector(row, index);
+        if (rider == null) return opts.fallback ?? "";
+        return <RiderLink rider={rider} kopman={opts.kopman?.(row)} />;
+      },
     }),
-    text: (name, selector, opts = {}) => ({
-      name,
-      width: opts.width,
-      align: opts.align,
-      padding: opts.padding,
+    text: (selector, opts = {}) => ({
+      ...baseColumn(opts),
       cell: selector,
-      sortable: opts.sortable,
-      sortFn: opts.sortFn,
     }),
     rankChange: (selector, opts = {}) => ({
-      name: opts.name ?? "",
+      ...baseColumn(opts),
       width: opts.width ?? "50px",
-      align: "center",
-      padding: opts.padding,
-      cell: (row) => renderRankChange(selector(row)),
+      align: opts.align ?? "center",
+      cell: (row, index) => renderRankChange(selector(row, index)),
     }),
   };
 }
@@ -135,22 +125,22 @@ function makeHelpers<T>(): ColumnHelpers<T> {
 const PAGE_SIZE = 20;
 
 const IconFirst = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
   </svg>
 );
 const IconLast = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z" />
   </svg>
 );
 const IconPrev = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
   </svg>
 );
 const IconNext = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
   </svg>
 );
@@ -194,6 +184,16 @@ function Table<T>({
   const [sort, setSort] = useState<SortState>(null);
   const [expanded, setExpanded] = useState<Set<Key>>(new Set());
 
+  useEffect(() => {
+    setExpanded((curr) => {
+      if (curr.size === 0) return curr;
+      const valid = new Set(data.map((row, i) => getKey(row, keyField, i)));
+      const next = new Set<Key>();
+      for (const k of curr) if (valid.has(k)) next.add(k);
+      return next.size === curr.size ? curr : next;
+    });
+  }, [data, keyField]);
+
   const toggleExpand = (key: Key, e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return;
     setExpanded((curr) => {
@@ -208,8 +208,7 @@ function Table<T>({
     if (!sort) return data;
     const fn = columns[sort.col]?.sortFn;
     if (!fn) return data;
-    const out = [...data].sort(fn);
-    return sort.dir === "desc" ? out.reverse() : out;
+    return [...data].sort(sort.dir === "desc" ? (a, b) => -fn(a, b) : fn);
   })();
 
   const totalPages = paginated ? Math.max(1, Math.ceil(sortedData.length / PAGE_SIZE)) : 1;
@@ -289,19 +288,13 @@ function Table<T>({
                   {Math.min((currentPage + 1) * PAGE_SIZE, sortedData.length)} van{" "}
                   {sortedData.length}
                 </span>
-                <button
-                  type="button"
-                  disabled={currentPage === 0}
-                  onClick={() => setPage(0)}
-                  aria-label="Eerste pagina"
-                >
+                <button type="button" disabled={currentPage === 0} onClick={() => setPage(0)}>
                   <IconFirst />
                 </button>
                 <button
                   type="button"
                   disabled={currentPage === 0}
                   onClick={() => setPage(currentPage - 1)}
-                  aria-label="Vorige pagina"
                 >
                   <IconPrev />
                 </button>
@@ -309,7 +302,6 @@ function Table<T>({
                   type="button"
                   disabled={currentPage >= totalPages - 1}
                   onClick={() => setPage(currentPage + 1)}
-                  aria-label="Volgende pagina"
                 >
                   <IconNext />
                 </button>
@@ -317,7 +309,6 @@ function Table<T>({
                   type="button"
                   disabled={currentPage >= totalPages - 1}
                   onClick={() => setPage(totalPages - 1)}
-                  aria-label="Laatste pagina"
                 >
                   <IconLast />
                 </button>

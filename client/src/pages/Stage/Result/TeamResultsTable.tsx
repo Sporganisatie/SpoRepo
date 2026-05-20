@@ -19,10 +19,10 @@ const TeamResultsTable = ({ data }: { data: RiderScore[] }) => (
     {(col) => [
       col.position((r) => r.stagePos, { width: "12%", ordinal: true }),
       col.rider((r) => r.rider, { kopman: (r) => r.kopman, fallback: "Totaal", width: "35%" }),
-      col.text("Dag", (r) => r.stageScore, { width: "12%" }),
-      col.text("Klassementen", (r) => r.classificationScore, { width: "17%" }),
-      col.text("Team", (r) => r.teamScore, { width: "12%" }),
-      col.text("Totaal", (r) => r.totalScore, { width: "12%" }),
+      col.text((r) => r.stageScore, { name: "Dag", width: "12%" }),
+      col.text((r) => r.classificationScore, { name: "Klassementen", width: "17%" }),
+      col.text((r) => r.teamScore, { name: "Team", width: "12%" }),
+      col.text((r) => r.totalScore, { name: "Totaal", width: "12%" }),
     ]}
   </Table>
 );

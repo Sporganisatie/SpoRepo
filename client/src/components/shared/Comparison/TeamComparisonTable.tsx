@@ -30,7 +30,6 @@ const TeamComparisonTable = ({
   >
     {(col) => [
       col.text(
-        "",
         (r) =>
           r.stagePos == null || r.stagePos === 0
             ? r.dnf
@@ -40,7 +39,6 @@ const TeamComparisonTable = ({
         { width: "50px" },
       ),
       col.text(
-        "",
         (r) =>
           r.rider ? (
             <RiderLink rider={r.rider} kopman={r.kopman} />
@@ -51,7 +49,7 @@ const TeamComparisonTable = ({
           ),
         { width: "200px" },
       ),
-      col.text("", (r) => (r.totalScore === -1 ? "" : r.totalScore), { width: "60px" }),
+      col.text((r) => (r.totalScore === -1 ? "" : r.totalScore), { width: "60px" }),
     ]}
   </Table>
 );

@@ -21,9 +21,9 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => (
     {(col) => [
       col.position((_r, i) => i + 1, { name: "", width: "30px", align: "center", padding: "0" }),
       col.rankChange((r) => r.change, { width: "35px", padding: "0" }),
-      col.text("Naam", (r) => r.username),
-      col.text("Stage Score", (r) => r.stagescore),
-      col.text("Total Score", (r) => r.totalscore),
+      col.text((r) => r.username, { name: "Naam" }),
+      col.text((r) => r.stagescore, { name: "Stage Score" }),
+      col.text((r) => r.totalscore, { name: "Total Score" }),
     ]}
   </Table>
 );

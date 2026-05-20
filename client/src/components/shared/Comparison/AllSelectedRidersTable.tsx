@@ -25,8 +25,8 @@ const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => (
   >
     {(col) => [
       col.rider((r) => r.rider, { name: "Naam", width: "200px" }),
-      col.text("#", (r) => r.count, { width: "60px" }),
-      col.text("Users", (r) => [...r.users].sort().join(", "), { width: "310px" }),
+      col.text((r) => r.count, { name: "#", width: "60px" }),
+      col.text((r) => [...r.users].sort().join(", "), { name: "Users", width: "310px" }),
     ]}
   </Table>
 );
