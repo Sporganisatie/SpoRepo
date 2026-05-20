@@ -57,7 +57,7 @@ public class AdminController(
         }
         else if (aankomende)
         {
-            var aankomendeEtappe = DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).ToList().First(s => !s.Complete);
+            var aankomendeEtappe = DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).FirstOrDefault(s => !s.Complete && !s.Race.Finished);
             await Scraper.StageResults(aankomendeEtappe);
             await Scheduler.RunTimer();
         }
