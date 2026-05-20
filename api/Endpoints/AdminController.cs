@@ -51,13 +51,13 @@ public class AdminController(
     {
         if (mostRecentStarted)
         {
-            var mostRecentStartedStage = DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).ToList().First(s => s.Starttime < DateTime.UtcNow);
+            var mostRecentStartedStage = await DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).FirstAsync(s => s.Starttime < DateTime.UtcNow);
             await Scraper.StageResults(mostRecentStartedStage);
             await Scheduler.RunTimer();
         }
         else if (aankomende)
         {
-            var aankomendeEtappe = DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).FirstOrDefault(s => !s.Complete && !s.Race.Finished);
+            var aankomendeEtappe = await DB.Stages.Include(s => s.Race).OrderBy(s => s.Starttime).FirstOrDefaultAsync(s => !s.Complete && !s.Race.Finished);
             await Scraper.StageResults(aankomendeEtappe);
             await Scheduler.RunTimer();
         }
