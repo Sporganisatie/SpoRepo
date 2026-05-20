@@ -1,8 +1,6 @@
-import type { TableColumn } from "react-data-table-component";
 import type { Rider } from "../../../models/Rider";
-import RiderLink from "../RiderLink";
 import { StageSelectedEnum } from "../../../models/UserSelection";
-import SreDataTable from "../SreDataTable";
+import Table from "../../ui/table/Table";
 
 export type AllSelectedRiderRow = {
   rider: Rider;
@@ -11,48 +9,26 @@ export type AllSelectedRiderRow = {
   selected: StageSelectedEnum;
 };
 
-const conditionalRowStyles = [
-  {
-    when: (row: AllSelectedRiderRow) => row.selected === StageSelectedEnum.InStageSelection,
-    classNames: ["selected"],
-  },
-  {
-    when: (row: AllSelectedRiderRow) => row.selected === StageSelectedEnum.InTeam,
-    classNames: ["notselected"],
-  },
-];
-
-const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => {
-  const columns: TableColumn<AllSelectedRiderRow>[] = [
-    {
-      name: "Naam",
-      width: "200px",
-      cell: (row: AllSelectedRiderRow) => <RiderLink rider={row.rider} />,
-      sortable: true,
-    },
-    {
-      name: "#",
-      width: "60px",
-      selector: (row: AllSelectedRiderRow) => row.count,
-      sortable: true,
-    },
-    {
-      name: "Users",
-      width: "310px",
-      selector: (row: AllSelectedRiderRow) => row.users.sort((a, b) => (a > b ? 1 : -1)).join(", "),
-      sortable: true,
-    },
-  ];
-
-  return (
-    <SreDataTable
-      title={"Alle Geselecteerd"}
-      columns={columns}
-      data={riders}
-      conditionalRowStyles={conditionalRowStyles}
-      noTableHead
-    />
-  );
+const rowClass = (row: AllSelectedRiderRow) => {
+  if (row.selected === StageSelectedEnum.InStageSelection) return "selected";
+  if (row.selected === StageSelectedEnum.InTeam) return "notselected";
+  return undefined;
 };
+
+const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => (
+  <Table
+    data={riders}
+    title="Alle Geselecteerd"
+    noHead
+    keyField={(r) => r.rider.riderId}
+    rowClassName={rowClass}
+  >
+    {(col) => [
+      col.rider((r) => r.rider, { name: "Naam", width: "200px" }),
+      col.text("#", (r) => r.count, { width: "60px" }),
+      col.text("Users", (r) => [...r.users].sort().join(", "), { width: "310px" }),
+    ]}
+  </Table>
+);
 
 export default AllSelectedRiders;

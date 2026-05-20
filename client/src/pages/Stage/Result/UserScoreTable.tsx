@@ -1,6 +1,5 @@
-import type { TableColumn } from "react-data-table-component";
 import { z } from "zod";
-import SreDataTable from "../../../components/shared/SreDataTable";
+import Table from "../../../components/ui/table/Table";
 
 export const userScoreSchema = z.object({
   username: z.string(),
@@ -12,38 +11,21 @@ export const userScoreSchema = z.object({
 
 export type UserScore = z.infer<typeof userScoreSchema>;
 
-const RankChange = ({ change }: { change: number }) => {
-  if (change === 0) return <>-</>;
-  const dir = change > 0 ? "up" : "down";
-  return (
-    <span className={`rank-change-${dir}`}>
-      {change > 0 ? "▲" : "▼"}
-      {Math.abs(change)}
-    </span>
-  );
-};
-
-const centered = { style: { justifyContent: "center" } };
-
-const columns: TableColumn<UserScore>[] = [
-  { name: "", width: "30px", ...centered, selector: (_r, i) => (i ?? 0) + 1 },
-  { name: "", width: "35px", ...centered, cell: (r) => <RankChange change={r.change} /> },
-  { name: "Naam", grow: 2, selector: (r) => r.username },
-  { name: "Stage Score", selector: (r) => r.stagescore },
-  { name: "Total Score", selector: (r) => r.totalscore },
-];
-
-const rowStyles = [{ when: (r: UserScore) => r.isLoggedInUser, classNames: ["selected"] }];
-
 const UserScoreTable = ({ data }: { data: UserScore[] }) => (
-  <SreDataTable
-    columns={columns}
+  <Table
     data={data}
-    pointerOnHover
-    pagination
-    paginationPerPage={20}
-    conditionalRowStyles={rowStyles}
-  />
+    keyField="username"
+    paginated
+    rowClassName={(r) => (r.isLoggedInUser ? "selected" : undefined)}
+  >
+    {(col) => [
+      col.position((_r, i) => i + 1, { name: "", width: "30px", align: "center", padding: "0" }),
+      col.rankChange((r) => r.change, { width: "35px", padding: "0" }),
+      col.text("Naam", (r) => r.username),
+      col.text("Stage Score", (r) => r.stagescore),
+      col.text("Total Score", (r) => r.totalscore),
+    ]}
+  </Table>
 );
 
 export default UserScoreTable;

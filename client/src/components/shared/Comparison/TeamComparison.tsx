@@ -28,14 +28,14 @@ const TeamComparison = () => {
       <div style={{ display: "inline-block", marginLeft: "5px", marginBottom: "5px" }}>
         <button onClick={toggleAll}>Toggle alle</button>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+      <div className="team-comparison-row">
         {data?.teams
           .filter((_, index) => toggles.at(index)?.showUser)
           .map((userSelection, index) => (
             <TeamComparisonUser key={index} userSelection={userSelection} />
           ))}
-        <AllSelectedRiders riders={data?.counts ?? []} />
       </div>
+      <AllSelectedRiders riders={data?.counts ?? []} />
     </div>
   );
 };
