@@ -20,3 +20,11 @@ export enum StageSelectedEnum {
   InTeam,
   InStageSelection,
 }
+
+export const stageSelectionRowClass = (
+  selected: StageSelectedEnum | undefined,
+): string | undefined => {
+  if (selected === StageSelectedEnum.InStageSelection) return "selected";
+  if (selected === StageSelectedEnum.InTeam) return "notselected";
+  return undefined;
+};

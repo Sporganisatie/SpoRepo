@@ -3,6 +3,7 @@ import AllSelectedRiders from "./AllSelectedRidersTable";
 import { useTeamComparison } from "./TeamComparisonHook";
 import TeamComparisonUser from "./TeamComparisonUser";
 import SmallSwitch from "../SmallSwitch";
+import "./TeamComparison.css";
 
 const TeamComparison = () => {
   const [toggles, setToggles] = useState<{ username: string; showUser: boolean }[]>([]);

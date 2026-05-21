@@ -1,0 +1,42 @@
+.team-comparison .sre-table,
+.team-comparison .sre-table tbody td,
+.team-comparison .sre-table thead th {
+  font-size: var(--text-sm);
+}
+
+.team-comparison .sre-table {
+  width: auto;
+}
+
+.team-comparison .sre-table caption {
+  min-height: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: normal;
+}
+
+.team-comparison .tc-user-name .sre-table caption {
+  font-size: var(--text-lg);
+}
+
+.team-comparison-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.team-comparison-user {
+  flex: 0 0 24%;
+}
+
+@media screen and (max-width: 768px) {
+  .team-comparison-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .team-comparison-user {
+    flex: 0 0 auto;
+  }
+}

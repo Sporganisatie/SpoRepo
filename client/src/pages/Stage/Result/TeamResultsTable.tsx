@@ -1,6 +1,6 @@
-import { riderSchema } from "../../../models/Rider";
+import { riderSchema } from "@/models/Rider";
 import { z } from "zod";
-import Table from "../../../components/ui/table/Table";
+import Table from "@/components/ui/table/Table";
 
 export const riderScoreSchema = z.object({
   rider: riderSchema.nullable(),
@@ -17,7 +17,7 @@ export type RiderScore = z.infer<typeof riderScoreSchema>;
 const TeamResultsTable = ({ data }: { data: RiderScore[] }) => (
   <Table data={data}>
     {(col) => [
-      col.position((r) => r.stagePos, { width: "12%", ordinal: true }),
+      col.text((r) => (r.stagePos ? `${r.stagePos}e` : ""), { name: "Positie", width: "12%" }),
       col.rider((r) => r.rider, { kopman: (r) => r.kopman, fallback: "Totaal", width: "35%" }),
       col.text((r) => r.stageScore, { name: "Dag", width: "12%" }),
       col.text((r) => r.classificationScore, { name: "Klassementen", width: "17%" }),

@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import ClassificationTable from "../Selection/ClassificationTable";
-import type { Classifications, ClassificationRow } from "../models/StageSelectionData";
+import ClassificationTable from "@/pages/Stage/Selection/ClassificationTable";
+import type { Classifications, ClassificationRow } from "@/pages/Stage/models/StageSelectionData";
 import "./StageClassifications.css";
 
 type TabKey = "Etappe" | "Algemeen" | "Punten" | "Berg" | "Jongeren";
 
 interface TabConfig {
   rows: ClassificationRow[];
-  resultColName: string;
   showRankChange: boolean;
 }
 
@@ -26,11 +25,11 @@ const StageClassifications = ({
 
   const tabs = useMemo(() => {
     const all: Array<[TabKey, TabConfig]> = [
-      ["Etappe", { rows: data.stage ?? [], resultColName: "Tijd", showRankChange: false }],
-      ["Algemeen", { rows: data.gc, resultColName: "Tijd", showRankChange: true }],
-      ["Punten", { rows: data.points, resultColName: "Punten", showRankChange: true }],
-      ["Berg", { rows: data.kom, resultColName: "Punten", showRankChange: true }],
-      ["Jongeren", { rows: data.youth, resultColName: "Tijd", showRankChange: true }],
+      ["Etappe", { rows: data.stage ?? [], showRankChange: false }],
+      ["Algemeen", { rows: data.gc, showRankChange: true }],
+      ["Punten", { rows: data.points, showRankChange: true }],
+      ["Berg", { rows: data.kom, showRankChange: true }],
+      ["Jongeren", { rows: data.youth, showRankChange: true }],
     ];
     return all.filter(([key]) => !(finalStandings && key === "Etappe"));
   }, [data, finalStandings]);
@@ -53,7 +52,6 @@ const StageClassifications = ({
       </div>
       <ClassificationTable
         rows={active.rows}
-        resultColName={active.resultColName}
         pagination={true}
         showRankChange={active.showRankChange}
       />

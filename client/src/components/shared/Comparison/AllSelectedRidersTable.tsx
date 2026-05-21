@@ -1,6 +1,6 @@
-import type { Rider } from "../../../models/Rider";
-import { StageSelectedEnum } from "../../../models/UserSelection";
-import Table from "../../ui/table/Table";
+import type { Rider } from "@/models/Rider";
+import { StageSelectedEnum, stageSelectionRowClass } from "@/models/UserSelection";
+import Table from "@/components/ui/table/Table";
 
 export type AllSelectedRiderRow = {
   rider: Rider;
@@ -9,24 +9,18 @@ export type AllSelectedRiderRow = {
   selected: StageSelectedEnum;
 };
 
-const rowClass = (row: AllSelectedRiderRow) => {
-  if (row.selected === StageSelectedEnum.InStageSelection) return "selected";
-  if (row.selected === StageSelectedEnum.InTeam) return "notselected";
-  return undefined;
-};
-
 const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => (
   <Table
     data={riders}
     title="Alle Geselecteerd"
-    noHead
+    hideHeader
     keyField={(r) => r.rider.riderId}
-    rowClassName={rowClass}
+    rowClassName={(r) => stageSelectionRowClass(r.selected)}
   >
     {(col) => [
-      col.rider((r) => r.rider, { name: "Naam", width: "200px" }),
-      col.text((r) => r.count, { name: "#", width: "60px" }),
-      col.text((r) => [...r.users].sort().join(", "), { name: "Users", width: "310px" }),
+      col.rider((r) => r.rider, { width: "200px" }),
+      col.text((r) => r.count, { width: "60px" }),
+      col.text((r) => [...r.users].sort().join(", "), { width: "310px" }),
     ]}
   </Table>
 );

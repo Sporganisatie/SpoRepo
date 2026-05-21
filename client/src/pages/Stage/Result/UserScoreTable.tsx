@@ -1,5 +1,5 @@
 import { z } from "zod";
-import Table from "../../../components/ui/table/Table";
+import Table from "@/components/ui/table/Table";
 
 export const userScoreSchema = z.object({
   username: z.string(),
@@ -16,10 +16,10 @@ const UserScoreTable = ({ data }: { data: UserScore[] }) => (
     data={data}
     keyField="username"
     paginated
-    rowClassName={(r) => (r.isLoggedInUser ? "selected" : undefined)}
+    rowClassName={(r) => (r.isLoggedInUser ? "current-user" : undefined)}
   >
     {(col) => [
-      col.position((_r, i) => i + 1, { name: "", width: "30px", align: "center", padding: "0" }),
+      col.text((_, i) => i + 1, { width: "30px", align: "center", padding: "0" }),
       col.rankChange((r) => r.change, { width: "35px", padding: "0" }),
       col.text((r) => r.username, { name: "Naam" }),
       col.text((r) => r.stagescore, { name: "Stage Score" }),

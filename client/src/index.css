@@ -69,7 +69,8 @@ div.pageContainer {
   color: var(--fg-on-light);
 }
 
-.selected {
+.selected,
+.current-user {
   font-weight: bold;
 }
 

@@ -1,12 +1,12 @@
 import { useEffect, useState, type ReactNode } from "react";
-import type { Rider } from "../../../models/Rider";
-import RiderLink from "../../shared/RiderLink";
+import type { Rider } from "@/models/Rider";
+import RiderLink from "@/components/shared/RiderLink";
 import "./table.css";
 
 type Align = "left" | "right" | "center";
 
 interface TableColumn<T> {
-  name: ReactNode;
+  name?: ReactNode;
   width?: string;
   cell: (row: T, index: number) => ReactNode;
   align?: Align;
@@ -24,20 +24,12 @@ interface ColumnOpts<T> {
   sortFn?: (a: T, b: T) => number;
 }
 
-interface PositionOpts<T> extends ColumnOpts<T> {
-  ordinal?: boolean;
-}
-
 interface RiderOpts<T> extends ColumnOpts<T> {
   kopman?: (row: T) => boolean;
   fallback?: ReactNode;
 }
 
 interface ColumnHelpers<T> {
-  position: (
-    selector: (row: T, index: number) => number | null | undefined,
-    opts?: PositionOpts<T>,
-  ) => TableColumn<T>;
   rider: (
     selector: (row: T, index: number) => Rider | null | undefined,
     opts?: RiderOpts<T>,
@@ -81,16 +73,6 @@ function renderRankChange(change: number | string | null | undefined): ReactNode
 
 function makeHelpers<T>(): ColumnHelpers<T> {
   return {
-    position: (selector, opts = {}) => ({
-      ...baseColumn(opts),
-      name: opts.name ?? "Positie",
-      width: opts.width ?? "70px",
-      cell: (row, index) => {
-        const v = selector(row, index);
-        if (v == null || v === 0) return "";
-        return opts.ordinal ? `${v}e` : v;
-      },
-    }),
     rider: (selector, opts = {}) => ({
       ...baseColumn(opts),
       name: opts.name ?? "Renner",
@@ -154,7 +136,7 @@ interface Props<T> {
   keyField?: KeyField<T>;
   rowClassName?: (row: T) => string | undefined;
   paginated?: boolean;
-  noHead?: boolean;
+  hideHeader?: boolean;
   pointerOnHover?: boolean;
   expandedContent?: (row: T) => ReactNode;
 }
@@ -175,7 +157,7 @@ function Table<T>({
   keyField,
   rowClassName,
   paginated,
-  noHead,
+  hideHeader,
   pointerOnHover,
   expandedContent,
 }: Props<T>) {
@@ -233,7 +215,7 @@ function Table<T>({
           <col key={i} style={c.width ? { width: c.width } : undefined} />
         ))}
       </colgroup>
-      {!noHead && (
+      {!hideHeader && (
         <thead>
           <tr>
             {columns.map((c, i) => (

@@ -1,17 +1,31 @@
-import type { StageComparisonRider } from "../../../models/UserSelection";
-import { StageSelectedEnum } from "../../../models/UserSelection";
-import RiderLink from "../RiderLink";
-import Table from "../../ui/table/Table";
+import type { StageComparisonRider } from "@/models/UserSelection";
+import { stageSelectionRowClass } from "@/models/UserSelection";
+import RiderLink from "@/components/shared/RiderLink";
+import Table from "@/components/ui/table/Table";
 
 const rowClass = (row: StageComparisonRider) => {
-  const base =
-    row.selected === StageSelectedEnum.InStageSelection
-      ? "selected"
-      : row.selected === StageSelectedEnum.InTeam
-        ? "notselected"
-        : undefined;
-  if (row.dnf) return base ? `${base} dnf` : "dnf";
-  return base;
+  const parts: string[] = [];
+  const selection = stageSelectionRowClass(row.selected);
+  if (selection) parts.push(selection);
+  if (row.dnf) parts.push("dnf");
+  return parts.length ? parts.join(" ") : undefined;
+};
+
+const renderStagePos = (r: StageComparisonRider) => {
+  if (r.stagePos != null && r.stagePos !== 0) return `${r.stagePos}e`;
+  if (r.dnf) return "DNF";
+  return "";
+};
+
+const renderRider = (r: StageComparisonRider) => {
+  if (r.rider) return <RiderLink rider={r.rider} kopman={r.kopman} />;
+  if (r.totalScore === -1) return "";
+  return "Totaal";
+};
+
+const renderTotalScore = (r: StageComparisonRider) => {
+  if (r.totalScore === -1) return "";
+  return r.totalScore;
 };
 
 const TeamComparisonTable = ({
@@ -24,32 +38,14 @@ const TeamComparisonTable = ({
   <Table
     data={riders}
     title={title}
-    noHead
+    hideHeader
     keyField={(r) => r.rider?.riderId ?? `total-${r.totalScore}`}
     rowClassName={rowClass}
   >
     {(col) => [
-      col.text(
-        (r) =>
-          r.stagePos == null || r.stagePos === 0
-            ? r.dnf
-              ? "DNF"
-              : ""
-            : `${r.stagePos}e`,
-        { width: "50px" },
-      ),
-      col.text(
-        (r) =>
-          r.rider ? (
-            <RiderLink rider={r.rider} kopman={r.kopman} />
-          ) : r.totalScore === -1 ? (
-            ""
-          ) : (
-            "Totaal"
-          ),
-        { width: "200px" },
-      ),
-      col.text((r) => (r.totalScore === -1 ? "" : r.totalScore), { width: "60px" }),
+      col.text(renderStagePos, { width: "50px" }),
+      col.text(renderRider, { width: "200px" }),
+      col.text(renderTotalScore, { width: "60px" }),
     ]}
   </Table>
 );
