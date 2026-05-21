@@ -13,6 +13,7 @@ interface TableColumn<T> {
   padding?: string;
   sortable?: boolean;
   sortFn?: (a: T, b: T) => number;
+  omit?: boolean;
 }
 
 interface ColumnOpts<T> {
@@ -22,6 +23,7 @@ interface ColumnOpts<T> {
   padding?: string;
   sortable?: boolean;
   sortFn?: (a: T, b: T) => number;
+  omit?: boolean;
 }
 
 interface RiderOpts<T> extends ColumnOpts<T> {
@@ -52,6 +54,7 @@ function baseColumn<T>(opts: ColumnOpts<T>): Partial<TableColumn<T>> {
     padding: opts.padding,
     sortable: opts.sortable,
     sortFn: opts.sortFn,
+    omit: opts.omit,
   };
 }
 
@@ -127,13 +130,13 @@ const IconNext = () => (
   </svg>
 );
 
-type KeyField<T> = keyof T | ((row: T) => string | number);
+type RowKey<T> = keyof T | ((row: T) => string | number);
 
 interface Props<T> {
   data: T[];
   children: (col: ColumnHelpers<T>) => TableColumn<T>[];
   title?: ReactNode;
-  keyField?: KeyField<T>;
+  rowKey?: RowKey<T>;
   rowClassName?: (row: T) => string | undefined;
   paginated?: boolean;
   hideHeader?: boolean;
@@ -144,24 +147,24 @@ interface Props<T> {
 type SortState = { col: number; dir: "asc" | "desc" } | null;
 type Key = string | number;
 
-function getKey<T>(row: T, keyField: KeyField<T> | undefined, fallback: number): Key {
-  if (keyField == null) return fallback;
-  if (typeof keyField === "function") return keyField(row);
-  return row[keyField] as unknown as Key;
+function getKey<T>(row: T, rowKey: RowKey<T> | undefined, fallback: number): Key {
+  if (rowKey == null) return fallback;
+  if (typeof rowKey === "function") return rowKey(row);
+  return row[rowKey] as unknown as Key;
 }
 
 function Table<T>({
   data,
   children,
   title,
-  keyField,
+  rowKey,
   rowClassName,
   paginated,
   hideHeader,
   pointerOnHover,
   expandedContent,
 }: Props<T>) {
-  const columns = children(makeHelpers<T>());
+  const columns = children(makeHelpers<T>()).filter((c) => !c.omit);
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState<SortState>(null);
   const [expanded, setExpanded] = useState<Set<Key>>(new Set());
@@ -169,12 +172,12 @@ function Table<T>({
   useEffect(() => {
     setExpanded((curr) => {
       if (curr.size === 0) return curr;
-      const valid = new Set(data.map((row, i) => getKey(row, keyField, i)));
+      const valid = new Set(data.map((row, i) => getKey(row, rowKey, i)));
       const next = new Set<Key>();
       for (const k of curr) if (valid.has(k)) next.add(k);
       return next.size === curr.size ? curr : next;
     });
-  }, [data, keyField]);
+  }, [data, rowKey]);
 
   const toggleExpand = (key: Key, e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest("button, a")) return;
@@ -237,7 +240,7 @@ function Table<T>({
       <tbody>
         {visibleRows.flatMap((row, rowIdx) => {
           const dataIdx = paginated ? currentPage * PAGE_SIZE + rowIdx : rowIdx;
-          const key = getKey(row, keyField, dataIdx);
+          const key = getKey(row, rowKey, dataIdx);
           const dataRow = (
             <tr
               key={key}

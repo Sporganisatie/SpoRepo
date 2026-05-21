@@ -38,7 +38,7 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
 
   return (
     <div className="arrow-select">
-      <button className="arrow-select__btn" onClick={() => handleMove(-1)} aria-label="Vorige">
+      <button className="arrow-select__btn" onClick={() => handleMove(-1)}>
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
       <Select
@@ -49,7 +49,7 @@ function ArrowSelect<T extends string | number>(props: ArrowSelectProps<T>) {
         }}
         value={options[currentIndex]?.value}
       />
-      <button className="arrow-select__btn" onClick={() => handleMove(1)} aria-label="Volgende">
+      <button className="arrow-select__btn" onClick={() => handleMove(1)}>
         <FontAwesomeIcon icon={faChevronRight} />
       </button>
     </div>

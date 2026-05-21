@@ -14,7 +14,7 @@ const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => (
     data={riders}
     title="Alle Geselecteerd"
     hideHeader
-    keyField={(r) => r.rider.riderId}
+    rowKey={(r) => r.rider.riderId}
     rowClassName={(r) => stageSelectionRowClass(r.selected)}
   >
     {(col) => [

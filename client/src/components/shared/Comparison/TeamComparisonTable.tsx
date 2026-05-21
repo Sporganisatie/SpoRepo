@@ -39,7 +39,7 @@ const TeamComparisonTable = ({
     data={riders}
     title={title}
     hideHeader
-    keyField={(r) => r.rider?.riderId ?? `total-${r.totalScore}`}
+    rowKey={(r) => r.rider?.riderId ?? `total-${r.totalScore}`}
     rowClassName={rowClass}
   >
     {(col) => [

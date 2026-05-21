@@ -14,7 +14,7 @@ export type UserScore = z.infer<typeof userScoreSchema>;
 const UserScoreTable = ({ data }: { data: UserScore[] }) => (
   <Table
     data={data}
-    keyField="username"
+    rowKey="username"
     paginated
     rowClassName={(r) => (r.isLoggedInUser ? "current-user" : undefined)}
   >
