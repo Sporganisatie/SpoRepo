@@ -51,7 +51,8 @@ public class AdminController(
     {
         if (mostRecentStarted)
         {
-            var mostRecentStartedStage = await DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).FirstAsync(s => s.Starttime < DateTime.UtcNow);
+            var now = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            var mostRecentStartedStage = await DB.Stages.Include(s => s.Race).OrderByDescending(s => s.Starttime).FirstAsync(s => s.Starttime < now);
             await Scraper.StageResults(mostRecentStartedStage);
             await Scheduler.RunTimer();
         }
