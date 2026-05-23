@@ -148,7 +148,7 @@ export function useTeamSelection() {
       )
       .map((rider) => rider.team);
     const teamSize = oldData.team.filter((rider) => rider.riderParticipationId !== 0).length;
-    oldData.allRiders.forEach((r) => {
+    oldData.allRiders.forEach(r => {
       if (
         r.selectable === SelectableEnum.Selected ||
         r.details.riderParticipationId === rider.details.riderParticipationId

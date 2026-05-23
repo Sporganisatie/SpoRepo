@@ -14,13 +14,13 @@ const AllSelectedRiders = ({ riders }: { riders: AllSelectedRiderRow[] }) => (
     data={riders}
     title="Alle Geselecteerd"
     hideHeader
-    rowKey={(r) => r.rider.riderId}
-    rowClassName={(r) => stageSelectionRowClass(r.selected)}
+    rowKey={r => r.rider.riderId}
+    rowClassName={r => stageSelectionRowClass(r.selected)}
   >
     {(col) => [
-      col.rider((r) => r.rider, { width: "200px" }),
-      col.text((r) => r.count, { width: "60px" }),
-      col.text((r) => [...r.users].sort().join(", "), { width: "310px" }),
+      col.rider(r => r.rider, { width: "200px" }),
+      col.text(r => r.count, { width: "60px" }),
+      col.text(r => [...r.users].sort().join(", "), { width: "310px" }),
     ]}
   </Table>
 );
