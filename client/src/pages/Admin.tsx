@@ -19,6 +19,7 @@ const Admin = () => {
   const [raceName2, setRace2] = useState("");
   const [statsRaceId, setStatsRaceId] = useState("");
   const [statsStageNr, setStatsStageNr] = useState("");
+  const [apStatsRaceId, setApStatsRaceId] = useState("");
 
   const [error, setError] = useState<AdminError | string | null>(null);
 
@@ -41,6 +42,7 @@ const Admin = () => {
   const etappesToevoegen = (params: any) => call(`/api/Admin/AddStages`, params);
   const downloadStageProfiles = (params: any) => call(`/api/Admin/DownloadStageProfiles`, params);
   const calculateStageSelectionStats = (params: any) => call(`/api/Admin/CalculateStageSelectionStats`, params);
+  const calculateAccountParticipationStats = (params: any) => call(`/api/Admin/CalculateAccountParticipationStats`, params);
   const resetCache = () => call(`/api/Admin/resetCache`);
 
   const [diag, setDiag] = useState<any>(null);
@@ -168,6 +170,21 @@ const Admin = () => {
           }
         >
           Calculate StageSelection stats
+        </button>
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        <input
+          style={{ marginRight: "5px", width: "70px" }}
+          type="text"
+          value={apStatsRaceId}
+          onChange={(e) => setApStatsRaceId(e.target.value)}
+          placeholder="raceId"
+        />
+        <button
+          style={{ marginRight: "5px", width: "260px" }}
+          onClick={() => calculateAccountParticipationStats({ raceId: apStatsRaceId })}
+        >
+          Calculate AccountParticipation stats
         </button>
       </div>
       <div style={{ marginTop: "10px" }}>

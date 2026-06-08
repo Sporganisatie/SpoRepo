@@ -37,7 +37,8 @@ public class AdminController(
     Scheduler Scheduler,
     DatabaseContext DB,
     IMemoryCache MemoryCache,
-    StageSelectionStatsService StageSelectionStatsService) : ControllerBase
+    StageSelectionStatsService StageSelectionStatsService,
+    AccountParticipationStatsService AccountParticipationStatsService) : ControllerBase
 {
     [HttpGet("startlist")]
     public async Task<IActionResult> ScrapeStartList(string raceName, int year, int raceId)
@@ -117,6 +118,13 @@ public class AdminController(
             calculated = finishedStages.Count,
             finishedStages = finishedStages.Select(s => s.Stagenr).ToList()
         });
+    }
+
+    [HttpGet("CalculateAccountParticipationStats")]
+    public async Task<IActionResult> CalculateAccountParticipationStats(int raceId)
+    {
+        await AccountParticipationStatsService.Calculate(raceId);
+        return Ok(new { raceId });
     }
 
     [HttpGet("resetCache")]

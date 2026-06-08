@@ -35,6 +35,8 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
 
     public DbSet<StageSelectionStats> StageSelectionStats { get; set; }
 
+    public DbSet<AccountParticipationStats> AccountParticipationStats { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -472,6 +474,20 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             entity.HasOne(e => e.StageSelection)
                 .WithOne(e => e.StageSelectionStats)
                 .HasForeignKey<StageSelectionStats>(e => e.StageSelectionId);
+        });
+
+        modelBuilder.Entity<AccountParticipationStats>(entity =>
+        {
+            entity.HasKey(e => e.AccountParticipationId).HasName("account_participation_stats_pkey");
+            entity.ToTable("account_participation_stats");
+
+            entity.Property(e => e.AccountParticipationId).HasColumnName("account_participation_id");
+            entity.Property(e => e.TotaalGemist).HasColumnName("totaal_gemist");
+            entity.Property(e => e.Positie).HasColumnName("positie");
+
+            entity.HasOne(e => e.AccountParticipation)
+                .WithOne(e => e.AccountParticipationStats)
+                .HasForeignKey<AccountParticipationStats>(e => e.AccountParticipationId);
         });
     }
 }
