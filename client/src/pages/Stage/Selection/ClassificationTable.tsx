@@ -13,25 +13,25 @@ const ClassificationTable = ({
 }) => (
   <Table
     data={rows}
-    rowKey={(r) => r.rider.riderId}
+    rowKey={r => r.rider.riderId}
     paginated={pagination}
     hideHeader
-    rowClassName={(r) => stageSelectionRowClass(r.selected)}
+    rowClassName={r => stageSelectionRowClass(r.selected)}
   >
     {(col) => [
-      col.text((r) => r.result.position || "", {
+      col.text(r => r.result.position || "", {
         width: "30px",
         align: "center",
         padding: "0",
       }),
-      col.rankChange((r) => r.result.change, {
+      col.rankChange(r => r.result.change, {
         width: "40px",
         padding: "0",
         omit: !showRankChange,
       }),
-      col.rider((r) => r.rider, { width: "38%" }),
-      col.text((r) => <span className="rider-team-text">{r.team}</span>, { width: "38%" }),
-      col.text((r) => r.result.result),
+      col.rider(r => r.rider, { width: "38%" }),
+      col.text(r => <span className="rider-team-text">{r.team}</span>, { width: "38%" }),
+      col.text(r => r.result.result),
     ]}
   </Table>
 );
