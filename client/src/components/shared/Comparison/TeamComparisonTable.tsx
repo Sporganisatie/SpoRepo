@@ -4,11 +4,11 @@ import RiderLink from "@/components/shared/RiderLink";
 import Table from "@/components/ui/table/Table";
 
 const rowClass = (row: StageComparisonRider) => {
-  const parts: string[] = [];
+  const classnames: string[] = [];
   const selection = stageSelectionRowClass(row.selected);
-  if (selection) parts.push(selection);
-  if (row.dnf) parts.push("dnf");
-  return parts.length ? parts.join(" ") : undefined;
+  if (selection) classnames.push(selection);
+  if (row.dnf) classnames.push("dnf");
+  return classnames.length ? classnames.join(" ") : undefined;
 };
 
 const renderStagePos = (r: StageComparisonRider) => {
