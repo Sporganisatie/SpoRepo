@@ -1,0 +1,128 @@
+.sre-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: var(--fg-default);
+  background-color: var(--bg-surface);
+}
+
+.sre-table caption {
+  caption-side: top;
+  padding: 0 var(--space-2) 0 var(--space-4);
+  background-color: var(--bg-surface);
+  text-align: left;
+  font-weight: 400;
+  font-size: 22px;
+  min-height: 56px;
+  line-height: 56px;
+}
+
+.sre-table th,
+.sre-table td {
+  padding: 0 var(--space-2);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sre-table thead th {
+  background-color: var(--bg-surface);
+  font-weight: 500;
+  font-size: 12px;
+  height: 31px;
+  border-bottom: 1px solid var(--bg-page);
+}
+
+.sre-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sre-table thead th.sortable:hover {
+  background-color: var(--bg-elevated);
+}
+
+.sre-table .sort-indicator {
+  color: var(--fg-muted);
+  font-size: 10px;
+}
+
+.sre-table.sre-pointer tbody tr {
+  cursor: pointer;
+}
+
+.sre-table-expanded > td {
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--bg-surface);
+}
+
+.sre-table tbody td {
+  font-weight: 400;
+  font-size: 13px;
+  height: 31px;
+}
+
+.sre-table tbody tr {
+  border-bottom: 1px solid var(--bg-page);
+  transition: background-color 150ms;
+}
+
+.sre-table tbody tr:nth-child(odd) {
+  background-color: var(--bg-elevated);
+}
+
+.sre-table tbody tr:hover {
+  background-color: var(--bg-page);
+}
+
+.sre-table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.sre-table tfoot td {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--bg-page);
+  padding: 0 var(--space-2);
+}
+
+.sre-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  min-height: 56px;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.sre-table-pagination > span {
+  margin-right: var(--space-2);
+}
+
+.sre-table-pagination button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--fg-default);
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.sre-table-pagination button svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.sre-table-pagination button:hover:not(:disabled) {
+  background-color: var(--bg-control);
+}
+
+.sre-table-pagination button:disabled {
+  color: var(--bg-disabled);
+  cursor: default;
+}

@@ -60,11 +60,6 @@ div.pageContainer {
   padding-top: calc(var(--navbar-height) + var(--page-top-buffer));
 }
 
-.notselected > :first-child,
-.selected > :first-child {
-  text-align: center;
-}
-
 .notselected > :first-child {
   background-color: var(--bg-control-hover);
 }
@@ -74,8 +69,18 @@ div.pageContainer {
   color: var(--fg-on-light);
 }
 
-.selected {
+.selected,
+.current-user {
   font-weight: bold;
+}
+
+.dnf td {
+  text-decoration: line-through;
+  color: var(--bg-disabled);
+}
+
+.dim td {
+  color: var(--bg-disabled);
 }
 
 .tableLink {

@@ -15,5 +15,5 @@ export function useRaceName(): string | undefined {
     queryFn: async () => (await axios.get("/api/race/all")).data,
     staleTime: 60_000,
   });
-  return useMemo(() => data?.find((r) => r.value === raceId)?.displayValue, [data, raceId]);
+  return useMemo(() => data?.find(r => r.value === raceId)?.displayValue, [data, raceId]);
 }

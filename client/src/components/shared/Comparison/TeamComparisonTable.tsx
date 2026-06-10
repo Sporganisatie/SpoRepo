@@ -1,26 +1,32 @@
-import type { TableColumn } from "react-data-table-component";
-import type { StageComparisonRider } from "../../../models/UserSelection";
-import { StageSelectedEnum } from "../../../models/UserSelection";
-import RiderLink from "../RiderLink";
-import SreDataTable from "../SreDataTable";
+import type { StageComparisonRider } from "@/models/UserSelection";
+import { stageSelectionRowClass } from "@/models/UserSelection";
+import RiderLink from "@/components/shared/RiderLink";
+import Table from "@/components/ui/table/Table";
 
-const conditionalRowStyles = [
-  {
-    when: (row: StageComparisonRider) => row.selected === StageSelectedEnum.InStageSelection,
-    classNames: ["selected"],
-  },
-  {
-    when: (row: StageComparisonRider) => row.selected === StageSelectedEnum.InTeam,
-    classNames: ["notselected"],
-  },
-  {
-    when: (row: StageComparisonRider) => row.dnf,
-    style: {
-      textDecoration: "line-through",
-      color: "grey",
-    },
-  },
-];
+const rowClass = (row: StageComparisonRider) => {
+  const classnames: string[] = [];
+  const selection = stageSelectionRowClass(row.selected);
+  if (selection) classnames.push(selection);
+  if (row.dnf) classnames.push("dnf");
+  return classnames.length ? classnames.join(" ") : undefined;
+};
+
+const renderStagePos = (r: StageComparisonRider) => {
+  if (r.stagePos != null && r.stagePos !== 0) return `${r.stagePos}e`;
+  if (r.dnf) return "DNF";
+  return "";
+};
+
+const renderRider = (r: StageComparisonRider) => {
+  if (r.rider) return <RiderLink rider={r.rider} kopman={r.kopman} />;
+  if (r.totalScore === -1) return "";
+  return "Totaal";
+};
+
+const renderTotalScore = (r: StageComparisonRider) => {
+  if (r.totalScore === -1) return "";
+  return r.totalScore;
+};
 
 const TeamComparisonTable = ({
   title,
@@ -28,46 +34,19 @@ const TeamComparisonTable = ({
 }: {
   title: string;
   riders: StageComparisonRider[];
-}) => {
-  const columns: TableColumn<StageComparisonRider>[] = [
-    {
-      name: "Positie",
-      minWidth: "10px",
-      cell: (row: StageComparisonRider) =>
-        row.stagePos == null || row.stagePos === 0 ? (row.dnf ? "DNF" : "") : row.stagePos + "e",
-    },
-    {
-      name: "Renner",
-      minWidth: "200px",
-      // width: "60%",
-      cell: (row: StageComparisonRider) =>
-        row.rider == null ? (
-          row.totalScore === -1 ? (
-            ""
-          ) : (
-            "Totaal"
-          )
-        ) : (
-          <RiderLink rider={row.rider} kopman={row.kopman} />
-        ),
-    },
-    {
-      name: "Totaal",
-      minWidth: "10px",
-      // width: "20%",
-      cell: (row: StageComparisonRider) => (row.totalScore === -1 ? "" : row.totalScore),
-    },
-  ];
-
-  return (
-    <SreDataTable
-      title={title}
-      columns={columns}
-      data={riders}
-      conditionalRowStyles={conditionalRowStyles}
-      noTableHead
-    />
-  );
-};
+}) => (
+  <Table
+    data={riders}
+    title={title}
+    hideHeader
+    rowClassName={rowClass}
+  >
+    {(col) => [
+      col.text(renderStagePos, { width: "50px" }),
+      col.text(renderRider, { width: "200px" }),
+      col.text(renderTotalScore, { width: "60px" }),
+    ]}
+  </Table>
+);
 
 export default TeamComparisonTable;

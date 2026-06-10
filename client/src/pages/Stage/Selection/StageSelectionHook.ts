@@ -63,7 +63,7 @@ function applyClassificationSelection(
   selected: boolean
 ): Classifications {
   const map = (rows: ClassificationRow[]) =>
-    rows.map((r) => updateClassificationRow(r, riderId, selected));
+    rows.map(r => updateClassificationRow(r, riderId, selected));
   return {
     gc: map(classifications.gc),
     points: map(classifications.points),

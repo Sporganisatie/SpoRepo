@@ -57,33 +57,6 @@ dialog::backdrop {
   padding: var(--space-4);
 }
 
-/* TeamComparison renders dense rider tables; shrink the typography for that
-   modal only. !important is needed because react-data-table-component uses
-   styled-components with high-specificity rules. */
-.team-comparison,
-.team-comparison .rdt_Table,
-.team-comparison .rdt_TableHeadRow,
-.team-comparison .rdt_TableRow,
-.team-comparison .rdt_TableCol,
-.team-comparison .rdt_TableCell {
-  font-size: var(--text-sm) !important;
-}
-
-.team-comparison .rdt_TableHeader {
-  display: flex !important;
-  min-height: 0 !important;
-  padding: var(--space-2) var(--space-3) !important;
-}
-
-.team-comparison .rdt_TableHeader > div {
-  font-size: var(--text-base) !important;
-  font-weight: 600 !important;
-}
-
-.team-comparison .tc-user-name .rdt_TableHeader > div {
-  font-size: var(--text-lg) !important;
-}
-
 @media screen and (max-width: 768px) {
   dialog {
     margin-top: 0;

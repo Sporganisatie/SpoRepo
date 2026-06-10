@@ -15,7 +15,7 @@ const StarRating = ({ score, max = 10, color }: StarRatingProps) => {
   const unitsPerStar = max / TOTAL_STARS;
 
   return (
-    <span className="star-rating" aria-label={`${clamped / 2} of ${TOTAL_STARS} stars`}>
+    <span className="star-rating">
       {Array.from({ length: TOTAL_STARS }).map((_, i) => {
         const filledUnits = clamp(clamped - i * unitsPerStar, 0, unitsPerStar);
         const pct = (filledUnits / unitsPerStar) * 100;

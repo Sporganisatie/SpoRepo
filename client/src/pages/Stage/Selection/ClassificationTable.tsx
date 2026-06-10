@@ -1,94 +1,39 @@
-import type { TableColumn } from "react-data-table-component";
-import RiderLink from "../../../components/shared/RiderLink";
-import { StageSelectedEnum } from "../../../models/UserSelection";
-import type { ClassificationRow } from "../models/StageSelectionData";
-import SreDataTable from "../../../components/shared/SreDataTable";
-
-const classificationRowStyle = [
-  {
-    when: (row: ClassificationRow) => row.selected === StageSelectedEnum.InStageSelection,
-    classNames: ["selected"],
-  },
-  {
-    when: (row: ClassificationRow) => row.selected === StageSelectedEnum.InTeam,
-    classNames: ["notselected"],
-  },
-];
+import { stageSelectionRowClass } from "@/models/UserSelection";
+import type { ClassificationRow } from "@/pages/Stage/models/StageSelectionData";
+import Table from "@/components/ui/table/Table";
 
 const ClassificationTable = ({
   rows,
-  title,
-  resultColName,
   pagination,
   showRankChange,
 }: {
   rows: ClassificationRow[];
-  title?: string;
-  resultColName: string;
   pagination?: boolean;
   showRankChange?: boolean;
-}) => {
-  const columns: TableColumn<ClassificationRow>[] = [
-    {
-      name: "",
-      width: "30px",
-      style: {
-        paddingLeft: 0,
-        paddingRight: 0,
-        flexGrow: 0,
-        display: "flex",
-        justifyContent: "center",
-      },
-      selector: (row: ClassificationRow) => row.result.position,
-    },
-    {
-      name: "",
-      width: "70px",
-      selector: (row: ClassificationRow) => row.result.change ?? "",
-      omit: !showRankChange,
-      conditionalCellStyles: [
-        {
-          when: (row) => row.result.change?.startsWith("▼") ?? false,
-          style: {
-            color: "red",
-          },
-        },
-        {
-          when: (row) => row.result.change?.startsWith("▲") ?? false,
-          style: {
-            color: "green",
-          },
-        },
-      ],
-    },
-    {
-      name: "Naam",
-      grow: 2,
-      cell: (row: ClassificationRow) => <RiderLink rider={row.rider} />,
-    },
-    {
-      name: "Team",
-      grow: 2,
-      cell: (row: ClassificationRow) => <span className="rider-team-text">{row.team}</span>,
-    },
-    {
-      name: resultColName,
-      selector: (row: ClassificationRow) => row.result.result,
-    },
-  ];
-
-  return (
-    <SreDataTable
-      title={title}
-      columns={columns}
-      data={rows}
-      conditionalRowStyles={classificationRowStyle}
-      pointerOnHover
-      pagination={pagination}
-      paginationPerPage={20}
-      noTableHead
-    />
-  );
-};
+}) => (
+  <Table
+    data={rows}
+    rowKey={r => r.rider.riderId}
+    paginated={pagination}
+    hideHeader
+    rowClassName={r => stageSelectionRowClass(r.selected)}
+  >
+    {(col) => [
+      col.text(r => r.result.position || "", {
+        width: "30px",
+        align: "center",
+        padding: "0",
+      }),
+      col.rankChange(r => r.result.change, {
+        width: "40px",
+        padding: "0",
+        omit: !showRankChange,
+      }),
+      col.rider(r => r.rider, { width: "38%" }),
+      col.text(r => <span className="rider-team-text">{r.team}</span>, { width: "38%" }),
+      col.text(r => r.result.result),
+    ]}
+  </Table>
+);
 
 export default ClassificationTable;

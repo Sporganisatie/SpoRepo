@@ -17,7 +17,7 @@ const RiderTypeTotals = ({ team }: { team: RiderParticipation[] }) => {
   return (
     <div className="rider-type-tiles">
       {RIDER_TYPES.map(({ key, label, cls }) => {
-        const riders = team.filter((r) => r.type === key);
+        const riders = team.filter(r => r.type === key);
         const count = riders.length;
         const budget = riders.reduce((sum, r) => sum + r.price, 0);
         return (

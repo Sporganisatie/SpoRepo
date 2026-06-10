@@ -51,7 +51,7 @@ const Admin = () => {
     setDiag(null);
     axios
       .get(`/api/Admin/playwrightDiag`)
-      .then((r) => setDiag(r.data))
+      .then(r => setDiag(r.data))
       .catch(handleError);
   };
 

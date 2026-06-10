@@ -3,7 +3,7 @@ import TeamComparisonTable from "./TeamComparisonTable";
 
 const TeamComparisonUser = ({ userSelection }: { userSelection: UserSelection }) => {
   return (
-    <div style={{ flex: "0 0 24%" }}>
+    <div className="team-comparison-user">
       <div className="tc-user-name">
         <TeamComparisonTable title={userSelection.username} riders={userSelection.riders} />
       </div>
