@@ -19,7 +19,7 @@ const BudgetMeter = ({ used, total }: BudgetMeterProps) => {
   const textClass = over ? "over" : "";
 
   return (
-    <div className="budget-meter" aria-label="Budget">
+    <div className="budget-meter">
       <div className="meter-track">
         <div
           className={`meter-fill ${fillClass}`}

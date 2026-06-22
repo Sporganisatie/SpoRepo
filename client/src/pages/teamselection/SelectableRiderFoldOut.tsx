@@ -1,4 +1,3 @@
-import type { ExpanderComponentProps } from "react-data-table-component";
 import type { SelectableRider } from "./Models/SelectableRider";
 import StarRating from "../../components/shared/StarRating";
 
@@ -12,7 +11,7 @@ const SKILLS: { key: SkillKey; label: string }[] = [
   { key: "punch", label: "Punch" },
 ];
 
-const SelectableRiderFoldout: React.FC<ExpanderComponentProps<SelectableRider>> = ({ data }) => (
+const SelectableRiderFoldout = ({ data }: { data: SelectableRider }) => (
   <div className="rider-skills">
     {SKILLS.map(({ key, label }) => (
       <div key={key} className={`stat-tile ${key}`}>

@@ -132,17 +132,21 @@
   overflow: auto;
 }
 
-/* Strip cell padding around the rider add/remove button so it sits flush. */
-.rdt_TableCell:has(> .teamselect-rider-button) {
-  padding: 0;
+/* Row state for the SelectableRidersTable. */
+.sre-table tbody tr.row-blocked {
+  background-color: #450a0a;
 }
 
-/* Available-riders table: last cell is a right-anchored action button. */
-.rdt-action-cell-last .rdt_TableCell:last-child {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  padding-right: 0;
+.sre-table tbody tr.row-blocked:hover {
+  background-color: #5a1010;
+}
+
+.sre-table tbody tr.row-in-team {
+  background-color: var(--bg-disabled);
+}
+
+.sre-table tbody tr.row-in-team:hover {
+  background-color: var(--bg-control-hover);
 }
 
 /* Rider add/remove button. */

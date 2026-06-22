@@ -1,7 +1,5 @@
-import type { TableColumn } from "react-data-table-component";
 import type { InputData } from "./Klassementen";
-import RiderLink from "../../components/shared/RiderLink";
-import SreDataTable from "../../components/shared/SreDataTable";
+import Table from "@/components/ui/table/Table";
 
 const KlassementenTable = ({
   title,
@@ -11,36 +9,16 @@ const KlassementenTable = ({
   title: string;
   resultTitle: string;
   riders: InputData[];
-}) => {
-  const columns: TableColumn<InputData>[] = [
-    {
-      name: "Positie",
-      width: "70px",
-      cell: (row: InputData) => row.position,
-    },
-    {
-      name: "Naam",
-      width: "180px",
-      cell: (row: InputData) => <RiderLink rider={row.rider} />,
-    },
-    {
-      name: resultTitle,
-      width: "120px",
-      cell: (row: InputData) => row.result,
-    },
-    {
-      name: "Gekozen",
-      width: "100px",
-      cell: (row: InputData) => row.accounts.length,
-    },
-    {
-      name: "Users",
-      width: "300px",
-      cell: (row: InputData) => row.accounts.join(", "),
-    },
-  ];
-
-  return <SreDataTable title={title} columns={columns} data={riders} />;
-};
+}) => (
+  <Table data={riders ?? []} title={title} rowKey="position">
+    {(col) => [
+      col.text((r) => r.position, { name: "Positie", width: "70px" }),
+      col.rider((r) => r.rider, { name: "Naam" }),
+      col.text((r) => r.result, { name: resultTitle, width: "120px" }),
+      col.text((r) => r.accounts.length, { name: "Gekozen", width: "100px" }),
+      col.text((r) => r.accounts.join(", "), { name: "Users", width: "300px" }),
+    ]}
+  </Table>
+);
 
 export default KlassementenTable;

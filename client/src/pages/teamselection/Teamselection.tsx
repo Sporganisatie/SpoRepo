@@ -17,7 +17,7 @@ const TeamSelection: React.FC = () => {
   document.title = "Team Selectie";
   const navigate = useNavigate();
   const raceId = useRaceContext();
-  const { data, isLoading, addRider, removeRider } = useTeamSelection();
+  const { data, addRider, removeRider } = useTeamSelection();
   const [filteredRiders, setFilteredRiders] = useState<SelectableRider[]>([]);
   const [filters, setFilters] = useState(getDefaulFilterState());
   function getDefaulFilterState(): Filters {
@@ -74,14 +74,12 @@ const TeamSelection: React.FC = () => {
       <div className="team-select-body grid-2">
         <SelectableRidersTable
           data={filteredRiders}
-          loading={isLoading}
           totalRiders={data.allRiders.length}
           addRider={addRider}
           removeRider={removeRider}
         />
         <TeamSelectionTable
           data={data.team}
-          loading={isLoading}
           removeRider={removeRider}
           budget={data.budget}
           budgetOver={data.budgetOver}

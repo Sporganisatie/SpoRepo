@@ -25,7 +25,7 @@ const StageSelection = () => {
   const [showProfiles, setShowProfiles] = useState<boolean>(false);
   document.title = `Etappe ${stagenr} opstelling`;
 
-  const { data, isLoading, addRider, removeRider, addKopman, removeKopman } = useStageSelection();
+  const { data, addRider, removeRider, addKopman, removeKopman } = useStageSelection();
   const navigate = useNavigate();
 
   if (!data) {
@@ -61,7 +61,6 @@ const StageSelection = () => {
       <div className="stage-select-body">
         <StageSelectionTeam
           team={data.team}
-          isFetching={isLoading}
           compleet={data.compleet}
           budgetCompleet={data.budgetCompleet}
           addRider={addRider}
