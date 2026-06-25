@@ -1,20 +1,15 @@
 import { useMemo } from "react";
-import type { TableColumn } from "react-data-table-component";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShirt } from "@fortawesome/free-solid-svg-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import RiderLink from "../../../components/shared/RiderLink";
-import type { StageSelectableRider } from "../models/StageSelectableRider";
-import type { StageSelectionData } from "../models/StageSelectionData";
-import SreDataTable from "../../../components/shared/SreDataTable";
+import type { StageSelectableRider } from "@/pages/Stage/models/StageSelectableRider";
+import type { StageSelectionData } from "@/pages/Stage/models/StageSelectionData";
+import Table from "@/components/ui/table/Table";
 import SelectionsComplete, { type BarValue } from "./SelectionComplete";
-import { useRaceName } from "../../../components/shared/useRaceName";
-import { useBudgetContext } from "../../../components/shared/BudgetContextProvider";
-import { useStage } from "../StageHook";
+import { useRaceName } from "@/components/shared/useRaceName";
+import { useBudgetContext } from "@/components/shared/BudgetContextProvider";
+import { useStage } from "@/pages/Stage/StageHook";
 
 export interface StageSelectionTeamProps {
   team: StageSelectableRider[];
-  isFetching: boolean;
   compleet: number;
   budgetCompleet: number | null;
   addRider: (id: number) => void;
@@ -62,13 +57,6 @@ function summarizeTeam(team: StageSelectableRider[]): TeamStats {
   return { selectedCount, hasKopman: kopmanIdx !== -1, kopmanIdx, sorted };
 }
 
-const conditionalRowStyles = [
-  {
-    when: (row: StageSelectableRider) => row.rider.dnf,
-    style: { color: "#64748b" },
-  },
-];
-
 interface ToggleCellProps {
   active: boolean;
   eligible: boolean;
@@ -97,7 +85,6 @@ const ToggleCell = ({ active, eligible, onAdd, onRemove, addGlyph }: ToggleCellP
 
 const StageSelectionTeam = ({
   team,
-  isFetching,
   compleet,
   budgetCompleet,
   addRider,
@@ -134,67 +121,51 @@ const StageSelectionTeam = ({
         ? [otherBar, teamBar]
         : [teamBar, otherBar];
 
-  const columns: TableColumn<StageSelectableRider>[] = [
-    {
-      name: "Naam",
-      grow: 5,
-      cell: (row) => <RiderLink rider={row.rider.rider} />,
-    },
-    {
-      name: "Team",
-      grow: 4,
-      cell: (row) => <span className="rider-team-text">{row.rider.team}</span>,
-      sortable: true,
-      sortFunction: (a, b) => a.rider.team.localeCompare(b.rider.team),
-    },
-    {
-      name: "",
-      width: "10%",
-      cell: (row) => (
-        <ToggleCell
-          active={row.selected}
-          eligible={stats.selectedCount < 9 && !row.rider.dnf}
-          onAdd={() => addRider(row.rider.riderParticipationId)}
-          onRemove={() => removeRider(row.rider.riderParticipationId)}
-          addGlyph="➤"
-        />
-      ),
-    },
-    {
-      name: (
-        <FontAwesomeIcon
-          icon={faShirt}
-          className={`stage-select-completion-jersey active ${jerseyClass}`}
-          title="Kopman"
-        />
-      ),
-      width: "10%",
-      center: true,
-      cell: (row) => (
-        <ToggleCell
-          active={row.isKopman}
-          eligible={row.selected && !row.rider.dnf}
-          onAdd={() => addKopman(row.rider.riderParticipationId)}
-          onRemove={() => removeKopman(row.rider.riderParticipationId)}
-          addGlyph="★"
-        />
-      ),
-    },
-  ];
-
   return (
     <div className="panel">
       <div className="panel-header">
         <SelectionsComplete bars={bars} jerseyClass={jerseyClass} />
       </div>
-      <SreDataTable
-        columns={columns}
+      <Table
         data={stats.sorted}
-        progressPending={isFetching}
-        conditionalRowStyles={conditionalRowStyles}
+        hideHeader
         pointerOnHover
-        noTableHead
-      />
+        rowKey={(r) => r.rider.riderParticipationId}
+        rowClassName={(r) => (r.rider.dnf ? "dim" : undefined)}
+      >
+        {(col) => [
+          col.rider((r) => r.rider.rider, { width: "44%" }),
+          col.text((r) => <span className="rider-team-text">{r.rider.team}</span>, {
+            width: "36%",
+            sortable: true,
+            sortFn: (a, b) => a.rider.team.localeCompare(b.rider.team),
+          }),
+          col.text(
+            (r) => (
+              <ToggleCell
+                active={r.selected}
+                eligible={stats.selectedCount < 9 && !r.rider.dnf}
+                onAdd={() => addRider(r.rider.riderParticipationId)}
+                onRemove={() => removeRider(r.rider.riderParticipationId)}
+                addGlyph="➤"
+              />
+            ),
+            { width: "10%" },
+          ),
+          col.text(
+            (r) => (
+              <ToggleCell
+                active={r.isKopman}
+                eligible={r.selected && !r.rider.dnf}
+                onAdd={() => addKopman(r.rider.riderParticipationId)}
+                onRemove={() => removeKopman(r.rider.riderParticipationId)}
+                addGlyph="★"
+              />
+            ),
+            { width: "10%", align: "center" },
+          ),
+        ]}
+      </Table>
     </div>
   );
 };

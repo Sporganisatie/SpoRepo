@@ -29,7 +29,6 @@ const Bar = ({ selected, kopman, jerseyClass }: BarValue & { jerseyClass: string
         className="meter-svg segmented"
         viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
         preserveAspectRatio="none"
-        aria-hidden
       >
         {Array.from({ length: SEGMENTS }, (_, i) => {
           const filled = i < clamped;

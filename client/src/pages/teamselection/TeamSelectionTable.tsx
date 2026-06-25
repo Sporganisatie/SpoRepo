@@ -1,28 +1,15 @@
-import type { TableColumn } from "react-data-table-component";
-import RiderLink from "../../components/shared/RiderLink";
 import type { RiderParticipation } from "../../models/RiderParticipation";
 import { useEffect } from "react";
-import SreDataTable from "../../components/shared/SreDataTable";
+import Table from "../../components/ui/table/Table";
 import BudgetMeter from "./BudgetMeter";
-
-const conditionalRowStyles = [
-  {
-    when: (row: RiderParticipation) => row.riderId === 0,
-    style: {
-      color: "#64748b",
-    },
-  },
-];
 
 const TeamSelectionTable = ({
   data,
-  loading,
   removeRider,
   budget,
   budgetOver,
 }: {
   data: RiderParticipation[];
-  loading: boolean;
   removeRider: (id: number) => void;
   budget: number;
   budgetOver: number;
@@ -74,36 +61,6 @@ const TeamSelectionTable = ({
     };
   }, []);
 
-  const columns: TableColumn<RiderParticipation>[] = [
-    {
-      width: "2.7rem",
-      cell: (row: RiderParticipation) => (
-        <button
-          className="teamselect-rider-button deselect"
-          onClick={() => removeRider(row.riderParticipationId)}
-        >
-          🞫
-        </button>
-      ),
-    },
-    {
-      name: "Naam",
-      cell: (row: RiderParticipation) => <RiderLink rider={row.rider} />,
-    },
-    {
-      name: "Type",
-      cell: (row: RiderParticipation) => row.type,
-    },
-    {
-      name: "Price",
-      selector: (row: RiderParticipation) => (row.price === 0 ? "" : row.price),
-    },
-    {
-      name: "Team",
-      selector: (row: RiderParticipation) => row.team,
-    },
-  ];
-
   const teamCount = data.filter((x) => x.riderParticipationId !== 0).length;
   const used = budget - budgetOver;
 
@@ -129,13 +86,30 @@ const TeamSelectionTable = ({
           <BudgetMeter used={used} total={budget} />
         </div>
         <div className="team-select-team-body">
-          <SreDataTable
-            columns={columns}
+          <Table
             data={data}
-            conditionalRowStyles={conditionalRowStyles}
-            progressPending={loading}
             pointerOnHover
-          />
+            rowClassName={(r) => (r.riderId === 0 ? "dim" : undefined)}
+          >
+            {(col) => [
+              col.text(
+                (r) =>
+                  r.riderParticipationId === 0 ? null : (
+                    <button
+                      className="teamselect-rider-button deselect"
+                      onClick={() => removeRider(r.riderParticipationId)}
+                    >
+                      🞫
+                    </button>
+                  ),
+                { width: "2.7rem", padding: "0" },
+              ),
+              col.rider((r) => r.rider, { name: "Naam" }),
+              col.text((r) => r.type, { name: "Type" }),
+              col.text((r) => (r.price === 0 ? "" : r.price), { name: "Price" }),
+              col.text((r) => r.team, { name: "Team" }),
+            ]}
+          </Table>
         </div>
       </div>
     </div>
