@@ -125,7 +125,7 @@
             "RiderId": 1000
         },
         {
-            "Age": 24,
+            "Age": 25,
             "BirthDate": "2001-06-24T00:00:00",
             "EventRiderId": 213263,
             "Price": 1000000,
@@ -2074,7 +2074,7 @@
             "BirthDate": "2001-08-26T00:00:00",
             "EventRiderId": 213329,
             "Price": 750000,
-            "Status": 1,
+            "Status": 2,
             "TeamId": 30,
             "Type": 6,
             "NationalityCode": "GBR",
@@ -2094,7 +2094,7 @@
             "RiderId": 7023
         },
         {
-            "Age": 29,
+            "Age": 30,
             "BirthDate": "1996-06-24T00:00:00",
             "EventRiderId": 213330,
             "Price": 750000,
@@ -3246,6 +3246,342 @@
                 }
             ],
             "RiderId": 5315
+        },
+        {
+            "Age": 22,
+            "BirthDate": "2003-07-10T00:00:00",
+            "EventRiderId": 213371,
+            "Price": 750000,
+            "Status": 1,
+            "TeamId": 30,
+            "Type": 6,
+            "NationalityCode": "NOO",
+            "FirstName": "Per Strand",
+            "LastName": "Hagenes",
+            "NameShort": "P. Hagenes",
+            "Qualities": [],
+            "RiderId": 7842
+        },
+        {
+            "Age": 23,
+            "BirthDate": "2002-07-08T00:00:00",
+            "EventRiderId": 213372,
+            "Price": 1000000,
+            "Status": 1,
+            "TeamId": 30,
+            "Type": 6,
+            "NationalityCode": "ITA",
+            "FirstName": "Davide",
+            "LastName": "Piganzoli",
+            "NameShort": "D. Piganzoli",
+            "Qualities": [
+                {
+                    "Type": 0,
+                    "Value": 2
+                },
+                {
+                    "Type": 1,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 7765
+        },
+        {
+            "Age": 31,
+            "BirthDate": "1995-05-07T00:00:00",
+            "EventRiderId": 213373,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 124,
+            "Type": 6,
+            "NationalityCode": "NOO",
+            "FirstName": "Anders",
+            "LastName": "Skaarseth",
+            "NameShort": "A. Skaarseth",
+            "Qualities": [],
+            "RiderId": 6926
+        },
+        {
+            "Age": 26,
+            "BirthDate": "2000-03-12T00:00:00",
+            "EventRiderId": 213374,
+            "Price": 1000000,
+            "Status": 1,
+            "TeamId": 124,
+            "Type": 4,
+            "NationalityCode": "NOO",
+            "FirstName": "Søren",
+            "LastName": "Wærenskjold",
+            "NameShort": "S. Wærenskjold",
+            "Qualities": [
+                {
+                    "Type": 2,
+                    "Value": 2
+                },
+                {
+                    "Type": 3,
+                    "Value": 4
+                },
+                {
+                    "Type": 4,
+                    "Value": 2
+                },
+                {
+                    "Type": 6,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 7246
+        },
+        {
+            "Age": 28,
+            "BirthDate": "1998-03-25T00:00:00",
+            "EventRiderId": 213375,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 124,
+            "Type": 6,
+            "NationalityCode": "DNK",
+            "FirstName": "Anthon",
+            "LastName": "Charmig",
+            "NameShort": "A. Charmig",
+            "Qualities": [
+                {
+                    "Type": 1,
+                    "Value": 2
+                },
+                {
+                    "Type": 4,
+                    "Value": 2
+                },
+                {
+                    "Type": 5,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 7669
+        },
+        {
+            "Age": 30,
+            "BirthDate": "1995-09-20T00:00:00",
+            "EventRiderId": 213376,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 124,
+            "Type": 5,
+            "NationalityCode": "NOO",
+            "FirstName": "Jonas",
+            "LastName": "Abrahamsen",
+            "NameShort": "J. Abrahamsen",
+            "Qualities": [
+                {
+                    "Type": 4,
+                    "Value": 2
+                },
+                {
+                    "Type": 6,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 6912
+        },
+        {
+            "Age": 30,
+            "BirthDate": "1995-07-16T00:00:00",
+            "EventRiderId": 213377,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 124,
+            "Type": 6,
+            "NationalityCode": "NOO",
+            "FirstName": "Torstein",
+            "LastName": "Træen",
+            "NameShort": "T. Træen",
+            "Qualities": [
+                {
+                    "Type": 1,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 6950
+        },
+        {
+            "Age": 30,
+            "BirthDate": "1995-07-29T00:00:00",
+            "EventRiderId": 213378,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 211,
+            "Type": 5,
+            "NationalityCode": "BEL",
+            "FirstName": "Quinten",
+            "LastName": "Hermans",
+            "NameShort": "Q. Hermans",
+            "Qualities": [
+                {
+                    "Type": 4,
+                    "Value": 4
+                },
+                {
+                    "Type": 5,
+                    "Value": 4
+                }
+            ],
+            "RiderId": 6903
+        },
+        {
+            "Age": 28,
+            "BirthDate": "1997-10-22T00:00:00",
+            "EventRiderId": 213379,
+            "Price": 1000000,
+            "Status": 1,
+            "TeamId": 8,
+            "Type": 4,
+            "NationalityCode": "DEU",
+            "FirstName": "Max",
+            "LastName": "Kanter",
+            "NameShort": "M. Kanter",
+            "Qualities": [
+                {
+                    "Type": 3,
+                    "Value": 4
+                }
+            ],
+            "RiderId": 6410
+        },
+        {
+            "Age": 25,
+            "BirthDate": "2001-05-04T00:00:00",
+            "EventRiderId": 213380,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 52,
+            "Type": 6,
+            "NationalityCode": "GBR",
+            "FirstName": "Lewis",
+            "LastName": "Askey",
+            "NameShort": "L. Askey",
+            "Qualities": [],
+            "RiderId": 7047
+        },
+        {
+            "Age": 31,
+            "BirthDate": "1994-08-18T00:00:00",
+            "EventRiderId": 213381,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 52,
+            "Type": 6,
+            "NationalityCode": "LVA",
+            "FirstName": "Krists",
+            "LastName": "Neilands",
+            "NameShort": "K. Neilands",
+            "Qualities": [
+                {
+                    "Type": 1,
+                    "Value": 2
+                },
+                {
+                    "Type": 4,
+                    "Value": 2
+                },
+                {
+                    "Type": 5,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 2010
+        },
+        {
+            "Age": 26,
+            "BirthDate": "2000-03-02T00:00:00",
+            "EventRiderId": 213382,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 52,
+            "Type": 5,
+            "NationalityCode": "ITA",
+            "FirstName": "Marco",
+            "LastName": "Frigo",
+            "NameShort": "M. Frigo",
+            "Qualities": [],
+            "RiderId": 7788
+        },
+        {
+            "Age": 26,
+            "BirthDate": "1999-07-19T00:00:00",
+            "EventRiderId": 213383,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 52,
+            "Type": 6,
+            "NationalityCode": "FRA",
+            "FirstName": "Matis",
+            "LastName": "Louvel",
+            "NameShort": "M. Louvel",
+            "Qualities": [
+                {
+                    "Type": 6,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 6994
+        },
+        {
+            "Age": 36,
+            "BirthDate": "1990-04-07T00:00:00",
+            "EventRiderId": 213384,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 52,
+            "Type": 6,
+            "NationalityCode": "NZL",
+            "FirstName": "George",
+            "LastName": "Bennett",
+            "NameShort": "G. Bennett",
+            "Qualities": [
+                {
+                    "Type": 0,
+                    "Value": 2
+                },
+                {
+                    "Type": 1,
+                    "Value": 4
+                },
+                {
+                    "Type": 4,
+                    "Value": 2
+                },
+                {
+                    "Type": 5,
+                    "Value": 4
+                }
+            ],
+            "RiderId": 696
+        },
+        {
+            "Age": 36,
+            "BirthDate": "1990-04-19T00:00:00",
+            "EventRiderId": 213385,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 52,
+            "Type": 6,
+            "NationalityCode": "BEL",
+            "FirstName": "Tom",
+            "LastName": "Van Asbroeck",
+            "NameShort": "T. Van Asbroeck",
+            "Qualities": [
+                {
+                    "Type": 3,
+                    "Value": 2
+                },
+                {
+                    "Type": 6,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 426
         }
     ]
 }
