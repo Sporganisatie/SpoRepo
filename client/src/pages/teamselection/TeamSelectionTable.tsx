@@ -82,8 +82,7 @@ const TeamSelectionTable = ({
         }}
       >
         <div className="panel-header">
-          <h3 className="panel-title">Mijn team {teamCount}/20</h3>
-          <BudgetMeter used={used} total={budget} />
+          <BudgetMeter used={used} total={budget} openSpaces={20 - teamCount} />
         </div>
         <div className="team-select-team-body">
           <Table
