@@ -6,7 +6,6 @@ import { useStageSelection } from "./StageSelectionHook";
 import { useStage } from "../StageHook";
 import StageNav from "../StageNav";
 import CountdownClock24H, { isWithin24h } from "../../teamselection/CountdownClock";
-import TeamComparison from "../../../components/shared/Comparison/TeamComparison";
 import Modal from "../../../components/ui/modal/Modal";
 import StageProfiles from "../StageProfiles";
 import "./StageSelection.css";
@@ -15,8 +14,12 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   weekday: "long",
   day: "numeric",
   month: "long",
-  hour: "numeric",
-  minute: "numeric",
+};
+
+const timeOnlyOptions: Intl.DateTimeFormatOptions = {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
 };
 
 const StageSelection = () => {
@@ -33,6 +36,12 @@ const StageSelection = () => {
   }
 
   const within24h = data.deadline != null && isWithin24h(data.deadline);
+  let deadlineDisplay = "";
+  if (data.deadline) {
+    const fullDatePart = data.deadline.toLocaleDateString("nl-NL", dateOptions);
+    const timePart = data.deadline.toLocaleTimeString("nl-NL", timeOnlyOptions);
+    deadlineDisplay = within24h ? `Start: ${timePart}` : `${fullDatePart} om ${timePart}`;
+  }
 
   return (
     <div className="stage-selection-page v-stack rdt-compact">
@@ -41,12 +50,8 @@ const StageSelection = () => {
         <button className="stage-select-page-cta" onClick={() => setShowProfiles(true)}>
           Profielen
         </button>
-        {!within24h && (
-          <div className="stage-select-deadline">
-            {data.deadline?.toLocaleDateString("nl-NL", dateOptions) ?? ""}
-          </div>
-        )}
         <div className="stage-select-page-header-right">
+          <div className="stage-select-deadline">{deadlineDisplay}</div>
           {within24h && data.deadline && (
             <CountdownClock24H targetDate={data.deadline} className="compact" />
           )}
