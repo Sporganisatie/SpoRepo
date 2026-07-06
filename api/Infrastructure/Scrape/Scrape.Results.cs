@@ -9,7 +9,7 @@ public partial class Scrape
 {
     private (string query, bool complete) ResultsQuery(IEnumerable<(string Tab, HtmlNode Results)> classificationTables, Stage stage, bool finishedOverride)
     {
-        var riderResults = new Dictionary<string, RiderResult>();
+        var riderResults = new Dictionary<int, RiderResult>();
         var teamWinners = new Dictionary<string, string>();
         foreach (var table in classificationTables)
         {
@@ -27,7 +27,7 @@ public partial class Scrape
         return (BuildResultsQuery(riderResults.Values, stage), complete);
     }
 
-    private bool StageComplete(int stageId, Dictionary<string, RiderResult> riderResults, bool finishedOverride)
+    private bool StageComplete(int stageId, Dictionary<int, RiderResult> riderResults, bool finishedOverride)
     {
         var stage = DB.Stages.Single(x => x.StageId == stageId);
         var dnfCount = riderResults.Count(r => r.Value.Dnf);
@@ -39,7 +39,7 @@ public partial class Scrape
         if (stage.Stagenr == 1)
         {
             var totalRiders = DB.RiderParticipations.Count(rp => rp.RaceId == stage.RaceId);
-            var stageComplete = totalRiders == stageCount + dnfCount;
+            var stageComplete = (totalRiders == stageCount + dnfCount) || stage.Type is StageType.TTT;
             var gcComplete = totalRiders == gcCount + dnfCount;
             var pointsComplete = pointsCount > 0;
             var komplete = komCount > 0; // Soms manual update nodig als bergpunten ontbreken in etappe 1
@@ -49,14 +49,14 @@ public partial class Scrape
         else
         {
             var prevResult = DB.ResultsPoints.Where(rp => rp.Stage.Stagenr == stage.Stagenr - 1 && rp.Stage.RaceId == stage.RaceId);
-            var stageComplete = prevResult.Count(p => p.StagePos != 0) == stageCount + dnfCount;
+            var stageComplete = (prevResult.Count(p => p.StagePos != 0) == stageCount + dnfCount) || stage.Type is StageType.TTT;
             var gcComplete = prevResult.Count(p => p.Gc.Position != 0) == gcCount + dnfCount;
             var pointsComplete = prevResult.Count(p => p.Points.Position != 0) <= pointsCount + dnfCount;
             var komplete = prevResult.Count(p => p.Kom.Position != 0) <= komCount + dnfCount;
             var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
-        stage.Complete = stage.Complete || stage.Type is StageType.TTT || stage.StageId is 965 or 966 or 975;
+        stage.Complete = stage.Complete || stage.StageId is 965 or 966 or 975;
         stage.Finished = stageCount > 0 && !finishedOverride;
         DB.SaveChanges();
 
@@ -65,20 +65,21 @@ public partial class Scrape
 
     private static string BuildResultsQuery(IEnumerable<RiderResult> riderResults, Stage stage)
     {
-        return @$"DELETE FROM results_points WHERE stage_id = {stage.StageId}; INSERT INTO results_points(stage_id, rider_participation_id, 
+        return @$"DELETE FROM results_points WHERE stage_id = {stage.StageId};
+                INSERT INTO results_points(stage_id, rider_participation_id, 
                 stagepos, stagescore, stageresult, gcpos, gcscore, gcresult, gcchange,
                 pointspos, pointsscore, pointsresult, pointschange, kompos, komscore, komresult, komchange,
                 yocpos, yocscore, yocresult, yocchange, teamscore, totalscore)
                 VALUES" + string.Join(", ", riderResults.Where(x => !x.Dnf).Select(rider =>
                 @$"(
-                    {stage.StageId}, (SELECT rider_participation_id FROM rider_participation WHERE race_id = {stage.RaceId} AND rider_id = (SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')),
+                    {stage.StageId}, (SELECT rider_participation_id FROM rider_participation WHERE race_id = {stage.RaceId} AND startnummer = {rider.Startnummer}),
                     {rider.Stagepos}, {rider.Stagescore}, '{rider.Stageresult}', {rider.Gcpos}, {rider.Gcscore}, '{rider.Gcresult}', '{rider.Gcchange}',
                     {rider.Pointspos}, {rider.Pointsscore}, '{rider.Pointsresult}', '{rider.Pointschange}', {rider.Kompos}, {rider.Komscore}, '{rider.Komresult}', '{rider.Komchange}',
                     {rider.Yocpos}, {rider.Yocscore}, '{rider.Yocresult}', '{rider.Yocchange}', {rider.Teamscore}, {rider.Totalscore}
                 )"));
     }
 
-    private static void UpdateTeamPoints(ref Dictionary<string, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, StageType type)
+    private static void UpdateTeamPoints(ref Dictionary<int, RiderResult> riderResults, Dictionary<string, string> teamWinners, IEnumerable<string> tabs, StageType type)
     {
         foreach (var rider in riderResults)
         {
@@ -91,12 +92,12 @@ public partial class Scrape
         }
     }
 
-    private void UpdateDnfRiders(Dictionary<string, RiderResult> riderResults, Stage stage)
+    private void UpdateDnfRiders(Dictionary<int, RiderResult> riderResults, Stage stage)
     {
-        var dnfRiders = riderResults.Values.Where(x => x.Dnf);
+        var dnfRiders = riderResults.Values.Where(x => x.Dnf).ToList();
         if (!dnfRiders.Any()) return;
-        var rpDnfQuery = $"UPDATE rider_participation SET dnf = TRUE WHERE race_id = {stage.RaceId} AND rider_id IN("
-                    + string.Join(",", dnfRiders.Select(rider => $"(SELECT rider_id FROM rider WHERE pcs_id = '{rider.PcsId}')"))
+        var rpDnfQuery = $"UPDATE rider_participation SET dnf = TRUE WHERE race_id = {stage.RaceId} AND startnummer IN("
+                    + string.Join(",", dnfRiders.Select(rider => rider.Startnummer))
                     + "); ";
 
         var dnfRpIds = $"(SELECT rider_participation_id FROM rider_participation WHERE race_id = {stage.RaceId} AND dnf)";
@@ -107,15 +108,15 @@ public partial class Scrape
         DB.Database.ExecuteSqlRaw(rpDnfQuery + removeFromStageSelectionsQuery);
     }
 
-    private static void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<string, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
+    private static void ProcessResults(string tab, HtmlNode htmlResults, ref Dictionary<int, RiderResult> riderResults, StageType type, ref Dictionary<string, string> teamWinners)
     {
         if (tab == PcsTeams || (tab == "" && type is StageType.TTT)) return;
         var pcsRows = ResultsDict(htmlResults);
         teamWinners[tab] = pcsRows.FirstOrDefault(x => x.Rank != 0)?.Team;
         foreach (var pcsRow in pcsRows)
         {
-            riderResults.TryAdd(pcsRow.PcsId, new(pcsRow.PcsId, pcsRow.Team));
-            riderResults[pcsRow.PcsId] = AddResults(riderResults[pcsRow.PcsId], pcsRow, tab, type);
+            riderResults.TryAdd(pcsRow.Startnummer, new(pcsRow.Startnummer, pcsRow.Team));
+            riderResults[pcsRow.Startnummer] = AddResults(riderResults[pcsRow.Startnummer], pcsRow, tab, type);
         }
         foreach (var (key, value) in riderResults)
         {
@@ -141,7 +142,7 @@ public partial class Scrape
         }
 
         var rows = htmlResults.QuerySelectorAll("tbody tr");
-        return rows.Select(row => BuildPcsRider(columns, row, colToIgnore)).Where(x => x.PcsId != "skip-rider");
+        return rows.Select(row => BuildPcsRider(columns, row, colToIgnore)).Where(x => x.PcsId != "skip-rider" && x.Startnummer > 0);
     }
 
     private static PcsRow BuildPcsRider(List<string> columns, HtmlNode row, int? colToIgnore)
@@ -154,6 +155,8 @@ public partial class Scrape
 
         var fields = columns.Zip(values, (col, val) => new { col, val }).ToDictionary(x => x.col, x => x.val);
         if (!fields.TryGetValue("Rider", out HtmlNode value)) return new() { PcsId = "skip-rider" };
+        var bibText = row.QuerySelector("td.bibs")?.InnerText?.Trim();
+        var startnummer = int.TryParse(bibText, out var parsedBib) ? parsedBib : 0;
         var pcsId = value.QuerySelector("a").GetAttributeValue("href", "")[6..];
 
         var rnkText = GetString(fields, "Rnk");
@@ -164,13 +167,14 @@ public partial class Scrape
         }
         else if (!int.TryParse(rnkText, out rank))
         {
-            return new() { Dnf = true, PcsId = pcsId };
+            return new() { Dnf = true, Startnummer = startnummer, PcsId = pcsId };
         }
 
         return new()
         {
             Rank = rank,
             RankChange = GetRankChange(fields),
+            Startnummer = startnummer,
             PcsId = pcsId,
             Time = GetTime(fields),
             Team = GetString(fields, "Team"),
@@ -251,7 +255,7 @@ public partial class Scrape
             _ => riderResult
         };
 
-    private static void AddTTTResults(ref Dictionary<string, RiderResult> riderResults, HtmlNode Results)
+    private static void AddTTTResults(ref Dictionary<int, RiderResult> riderResults, HtmlNode Results)
     {
         var teamOrder = Results.ChildNodes.Skip(1).Select(li => li.QuerySelectorAll("a").First().InnerText.Trim()).ToList();
         foreach (var (key, value) in riderResults)
@@ -273,13 +277,14 @@ internal record PcsRow
     public bool Dnf { get; set; }
     public int Rank { get; set; }
     public string RankChange { get; set; }
+    public int Startnummer { get; set; }
     public string PcsId { get; set; }
     public string Time { get; set; }
     public string Team { get; set; }
     public string Points { get; set; }
 }
 
-internal record RiderResult(string PcsId, string Team)
+internal record RiderResult(int Startnummer, string Team)
 {
     public bool Dnf { get; set; }
     public int Stagepos { get; set; }

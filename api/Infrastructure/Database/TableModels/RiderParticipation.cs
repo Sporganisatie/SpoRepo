@@ -26,6 +26,8 @@ public class RiderParticipation
 
     public int Gc { get; set; }
 
+    public int Startnummer { get; set; }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public RiderType Type { get; set; }
 

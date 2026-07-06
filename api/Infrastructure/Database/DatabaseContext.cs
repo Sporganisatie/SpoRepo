@@ -329,6 +329,7 @@ public class DatabaseContext(IOptions<AppSettings> Configuration) : DbContext
             entity.Property(e => e.Punch).HasColumnName("punch");
             entity.Property(e => e.RaceId).HasColumnName("race_id");
             entity.Property(e => e.RiderId).HasColumnName("rider_id");
+            entity.Property(e => e.Startnummer).HasColumnName("startnummer");
             entity.Property(e => e.Sprint).HasColumnName("sprint");
             entity.Property(e => e.Team)
                 .IsRequired()

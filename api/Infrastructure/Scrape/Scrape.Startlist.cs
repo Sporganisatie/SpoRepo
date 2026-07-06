@@ -19,6 +19,8 @@ public partial class Scrape
             foreach (var rider in team.QuerySelectorAll("li"))
             {
                 // Extract PCS data
+                var bibText = rider.QuerySelector("span.bib")?.InnerText?.Trim();
+                var startnummer = int.TryParse(bibText, out var parsedBib) ? parsedBib : 0;
                 var names = rider.QuerySelector("a").InnerText.Split(" ");
                 var lastname = string.Join(" ", names.Where(n => n.ToUpperInvariant().Equals(n)));
                 var firstnames = names.Where(n => !n.ToUpperInvariant().Equals(n));
@@ -37,7 +39,7 @@ public partial class Scrape
                     var q = sc.Qualities.ToDictionary(q => q.Type, q => q.Value);
                     var type = MapType(sc.Type);
 
-                    riderParticipationInserts.Add($"({raceId}, {riderId}, {(int)sc.Price}, '{teamName}', {Qval(0, q)}, {Qval(1, q)}, {Qval(2, q)}, {Qval(3, q)}, {Qval(4, q)}, '{type}')");
+                    riderParticipationInserts.Add($"({raceId}, {riderId}, {(int)sc.Price}, '{teamName}', {Qval(0, q)}, {Qval(1, q)}, {Qval(2, q)}, {Qval(3, q)}, {Qval(4, q)}, {startnummer}, '{type}')");
                     riderInserts.Add(riderInsert);
                     rpIds.Add($"(SELECT rider_participation_id FROM rider_participation WHERE rider_id = {riderId} AND race_id = {raceId})");
                 }
@@ -77,7 +79,7 @@ public partial class Scrape
     private static string BuildQuery(IEnumerable<string> riderInserts, IEnumerable<string> riderParticipationInserts, IEnumerable<string> rpIds, int raceId)
     {
         var riderQuery = "INSERT INTO rider(pcs_id, country, firstname, lastname, initials) VALUES" + string.Join(", ", riderInserts) + " ON CONFLICT (PCS_id) DO UPDATE SET country = EXCLUDED.country, firstname = EXCLUDED.firstname, lastname = EXCLUDED.lastname, initials = EXCLUDED.initials;\n ";
-        var participationQuery = "INSERT INTO rider_participation (race_id, rider_id, price, team, gc, climb, tt, sprint, punch, type) VALUES" + string.Join(", ", riderParticipationInserts) + " ON CONFLICT (race_id,rider_id) DO UPDATE SET team = EXCLUDED.team, price = EXCLUDED.price, gc = EXCLUDED.gc, climb = EXCLUDED.climb, tt = EXCLUDED.tt, sprint = EXCLUDED.sprint, punch = EXCLUDED.punch, type = EXCLUDED.type;\n ";
+        var participationQuery = "INSERT INTO rider_participation (race_id, rider_id, price, team, gc, climb, tt, sprint, punch, startnummer, type) VALUES" + string.Join(", ", riderParticipationInserts) + " ON CONFLICT (race_id,rider_id) DO UPDATE SET team = EXCLUDED.team, price = EXCLUDED.price, gc = EXCLUDED.gc, climb = EXCLUDED.climb, tt = EXCLUDED.tt, sprint = EXCLUDED.sprint, punch = EXCLUDED.punch, startnummer = EXCLUDED.startnummer, type = EXCLUDED.type;\n ";
 
         var startListIds = $"({string.Join(", ", rpIds)})";
         var ridersInRace = $"(SELECT rider_participation_id FROM rider_participation WHERE race_id = {raceId})";
