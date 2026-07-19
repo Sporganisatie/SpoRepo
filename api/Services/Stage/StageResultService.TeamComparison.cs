@@ -41,6 +41,7 @@ public partial class StageResultService
                         Rider = joined.RiderParticipation.Rider,
                         Kopman = joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId,
                         StagePos = res?.StagePos, // Default value if result is null
+                        Dnf = joined.RiderParticipation.Dnf,
                         TotalScore = (budgetParticipation ? ((res?.Totalscore ?? 0) - (res?.Teamscore ?? 0)) : (res?.Totalscore ?? 0))
                             + (int)(joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? (res?.StageScore ?? 0) * 0.5 : 0),
                         Selected = userStageSelection.Contains(joined.RiderParticipation.RiderParticipationId)
@@ -48,7 +49,6 @@ public partial class StageResultService
                             : teamSelection.Contains(joined.RiderParticipation.RiderParticipationId)
                                 ? StageSelectedEnum.InTeam
                                 : StageSelectedEnum.None,
-                        // Dnf = joined.RiderParticipation.Dnf // TODO: Only use if StagePos is empty, mainly for UI changes
                     })
                 );
 
@@ -76,9 +76,9 @@ public partial class StageResultService
                     {
                         Rider = rp.RiderParticipation.Rider,
                         StagePos = rp.Result.StagePos,
+                        Dnf = rp.RiderParticipation.Dnf,
                         TotalScore = budgetParticipation ? (rp.Result.Totalscore - rp.Result.Teamscore) : rp.Result.Totalscore,
                         Selected = userStageSelection.Contains(rp.RiderParticipation.RiderParticipationId) ? StageSelectedEnum.InStageSelection : teamSelection.Contains(rp.RiderParticipation.RiderParticipationId) ? StageSelectedEnum.InTeam : StageSelectedEnum.None,
-                        // Dnf = rp.RiderParticipation.Dnf // TODO alleen gebruiken als stagePos empty, vooral ui change
                     }).ToList();
 
             output.Add(new UserSelection(stageSelection.AccountParticipation.Account.Username, riderScores, gemist));

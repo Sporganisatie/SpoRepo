@@ -7,13 +7,13 @@ const rowClass = (row: StageComparisonRider) => {
   const classnames: string[] = [];
   const selection = stageSelectionRowClass(row.selected);
   if (selection) classnames.push(selection);
-  if (row.dnf) classnames.push("dnf");
+  if (row.dnf && row.stagePos == null) classnames.push("dnf");
   return classnames.length ? classnames.join(" ") : undefined;
 };
 
 const renderStagePos = (r: StageComparisonRider) => {
   if (r.stagePos != null && r.stagePos !== 0) return `${r.stagePos}e`;
-  if (r.dnf) return "DNF";
+  if (r.dnf && r.stagePos == null) return "DNF";
   return "";
 };
 
