@@ -45,7 +45,7 @@ public partial class StageResultService
                     TeamScore = budgetParticipation ? 0 : rp?.Teamscore ?? 0,
                     TotalScore = (int)((joined.RiderParticipation.RiderParticipationId == stageSelection.KopmanId ? (rp?.StageScore ?? 0) * 0.5 : 0) + (rp?.Totalscore ?? 0) - (budgetParticipation ? rp?.Teamscore ?? 0 : 0)),
                     Dnf = joined.RiderParticipation.Dnf
-                })).ToList().OrderByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos).ThenBy(rc => rc.Dnf);
+                })).ToList().OrderBy(rc => rc.StagePos is null && rc.Dnf).ThenByDescending(rc => rc.TotalScore).ThenBy(rc => rc.StagePos);
     }
 
     public IEnumerable<UserScore> GetUserScores(Stage stage, bool budgetParticipation)
