@@ -17,7 +17,7 @@ public partial class StatisticsService
             .Select(rp => new UniekheidRennerRow(
                 rp, //TODO afronding error, afronden in UI
                 Math.Round((participants - rp.AccountParticipations.Count(ap => ap.BudgetParticipation == budgetParticipation)) * rp.Price / budget / (participants - 1), 1),
-                rp.AccountParticipations.Select(x => x.Account.Username))).ToList();
+                rp.AccountParticipations.Where(ap => ap.BudgetParticipation == budgetParticipation).Select(x => x.Account.Username))).ToList();
 
         var uniekheden = DB.AccountParticipations.Include(ap => ap.Account).Include(ap => ap.RiderParticipations).AsNoTracking()
             .Where(ap => ap.RaceId == raceId && ap.BudgetParticipation == budgetParticipation)
