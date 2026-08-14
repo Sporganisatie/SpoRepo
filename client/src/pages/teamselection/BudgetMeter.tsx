@@ -17,7 +17,7 @@ const BudgetMeter = ({ used, total, openSpaces }: BudgetMeterProps) => {
   return (
     <div className="budget-meter">
       <span className={`tabular ${textClass}`}>Plekken: {openSpaces}</span>
-      <span className={`tabular ${textClass}`}>Budget: {formatM(remaining)}</span>
+      <span className={`tabular ${textClass}`}>Budget over: {formatM(remaining)}</span>
       <span className={`tabular ${textClass}`}>Per plek: {formatM(remainingPerOpenSpace)}</span>
     </div>
   );
