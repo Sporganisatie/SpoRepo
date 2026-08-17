@@ -68,9 +68,86 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
+        continue-on-error: true
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'SpoReDev'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F4BE917BD05D462C8CD1DBA436752F8E }}
           package: ./app.zip
+
+      # The action above throws away Kudu's response body on a non-202 (its
+      # _getFormattedError only keeps "<statusMessage> (CODE: <statusCode>)"), and it
+      # does not retry HTTP error statuses at all. So when it fails we redo the zip
+      # deploy by hand: same Kudu endpoint, but printing what Kudu actually said and
+      # retrying, since every failure so far has been a one-off 500 on the upload POST.
+      - name: Retry deploy and report Kudu's actual error
+        if: steps.deploy-to-webapp.outcome == 'failure'
+        shell: pwsh
+        env:
+          PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F4BE917BD05D462C8CD1DBA436752F8E }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          [xml]$pp = $env:PUBLISH_PROFILE
+          $prof = $pp.publishData.publishProfile | Where-Object { $_.publishMethod -eq 'ZipDeploy' } | Select-Object -First 1
+          if (-not $prof) { $prof = $pp.publishData.publishProfile | Where-Object { $_.publishMethod -eq 'MSDeploy' } | Select-Object -First 1 }
+          if (-not $prof) { throw 'No ZipDeploy or MSDeploy entry found in the publish profile secret.' }
+
+          $scmHost = ($prof.publishUrl -split ':')[0]
+          $pass = $prof.userPWD
+          Write-Host "::add-mask::$pass"
+          $headers = @{ Authorization = 'Basic ' + [Convert]::ToBase64String(
+            [Text.Encoding]::ASCII.GetBytes("$($prof.userName):$pass")) }
+
+          $sizeMb = [math]::Round((Get-Item ./app.zip).Length / 1MB, 1)
+          Write-Host "SCM host: $scmHost   package: $sizeMb MB"
+
+          $deployed = $false
+          foreach ($attempt in 1..3) {
+            Write-Host "::group::zipdeploy attempt $attempt of 3"
+            $sw = [Diagnostics.Stopwatch]::StartNew()
+            $resp = Invoke-WebRequest -Method POST -Headers $headers -InFile ./app.zip `
+              -Uri "https://$scmHost/api/zipdeploy?isAsync=true&deployer=GitHubActionsRetry" `
+              -ContentType 'application/zip' -TimeoutSec 900 -SkipHttpErrorCheck
+            $sw.Stop()
+            Write-Host "upload took $([int]$sw.Elapsed.TotalSeconds)s -> HTTP $($resp.StatusCode)"
+
+            if ($resp.StatusCode -ne 202) {
+              Write-Host 'Kudu rejected the upload. Full response body:'
+              Write-Host $resp.Content
+              Write-Host '::endgroup::'
+              if ($attempt -lt 3) { Start-Sleep -Seconds 30; continue }
+              throw "zipdeploy failed on all 3 attempts (last status $($resp.StatusCode))."
+            }
+
+            $pollUrl = $resp.Headers['Location']
+            if ($pollUrl -is [array]) { $pollUrl = $pollUrl[0] }
+            Write-Host "accepted, polling $pollUrl"
+
+            $deadline = (Get-Date).AddMinutes(15)
+            while ($true) {
+              Start-Sleep -Seconds 5
+              $poll = Invoke-WebRequest -Uri $pollUrl -Headers $headers -TimeoutSec 120 -SkipHttpErrorCheck
+              if ($poll.StatusCode -ge 400) {
+                Write-Host "poll returned HTTP $($poll.StatusCode): $($poll.Content)"
+                break
+              }
+              $d = $poll.Content | ConvertFrom-Json
+              Write-Host "  status=$($d.status) complete=$($d.complete) $($d.status_text)"
+              if ($d.complete) {
+                # Kudu status 4 = Success, 3 = Failed
+                if ($d.status -eq 4) { $deployed = $true }
+                else { Write-Host "deployment ended with status $($d.status). log_url: $($d.log_url)" }
+                break
+              }
+              if ((Get-Date) -gt $deadline) { Write-Host 'timed out after 15m waiting for Kudu to finish'; break }
+            }
+            Write-Host '::endgroup::'
+
+            if ($deployed) { break }
+            if ($attempt -lt 3) { Start-Sleep -Seconds 30 }
+          }
+
+          if (-not $deployed) { throw 'Deployment did not complete successfully after 3 attempts.' }
+          Write-Host 'Deployment succeeded.'
