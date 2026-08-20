@@ -106,4 +106,32 @@ internal static class PcsClient
         doc.LoadHtml(html);
         return doc.DocumentNode;
     }
+
+    public static async Task<byte[]?> TryLoadBinaryAsync(string url, string? refererUrl = null)
+    {
+        var browser = await GetBrowserAsync();
+        await using var ctx = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        });
+
+        var headers = new Dictionary<string, string>();
+        if (!string.IsNullOrWhiteSpace(refererUrl))
+        {
+            headers["Referer"] = refererUrl;
+        }
+
+        var response = await ctx.APIRequest.GetAsync(url, new APIRequestContextOptions
+        {
+            Headers = headers,
+            FailOnStatusCode = false,
+        });
+
+        if (!response.Ok)
+        {
+            return null;
+        }
+
+        return await response.BodyAsync();
+    }
 }

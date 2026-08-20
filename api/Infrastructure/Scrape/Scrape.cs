@@ -6,11 +6,13 @@ using SpoRE.Infrastructure.Database;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using SpoRE.Services;
+using System.Net;
 
 namespace SpoRE.Infrastructure.Scrape;
 
 public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, StageSelectionStatsService StageSelectionStatsService)
 {
+    private const int DownloadRetryMaxAttempts = 3;
     private const string PcsStage = "STAGE";
     private const string PcsGc = "GC";
     private const string PcsPoints = "POINTS";
@@ -120,6 +122,7 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, StageS
     {
         var (race, stageRows) = await GetRaceAndStageRows(raceId);
         using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
 
         var stageNr = 1;
         foreach (var row in stageRows)
@@ -128,7 +131,8 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, StageS
             var stageFolder = Path.Combine(outputPath, RaceString(race.Name), race.Year.ToString(), $"stage-{stageNr}");
             Directory.CreateDirectory(stageFolder);
 
-            var profilesHtml = await PcsClient.LoadAsync($"https://www.procyclingstats.com/{href}/info/profiles");
+            var profilesUrl = ResolvePcsUrl($"{href}/info/profiles");
+            var profilesHtml = await PcsClient.LoadAsync(profilesUrl);
             var items = profilesHtml.QuerySelectorAll("ul.list li");
 
             var climbNr = 1;
@@ -149,12 +153,87 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, StageS
 
                 if (fileName is null) continue;
 
-                var imageUrl = $"https://www.procyclingstats.com/{imgSrc}";
-                var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+                var imageUrl = ResolvePcsUrl(imgSrc);
+                byte[] imageBytes = [];
+                var downloaded = false;
+
+                for (var attempt = 1; attempt <= DownloadRetryMaxAttempts; attempt++)
+                {
+                    var attemptBytes = await DownloadImageBytesAsync(httpClient, imageUrl, imgSrc, profilesUrl);
+                    if (attemptBytes is not null)
+                    {
+                        imageBytes = attemptBytes;
+                        downloaded = true;
+                        break;
+                    }
+                }
+
+                if (!downloaded) continue;
+
                 await File.WriteAllBytesAsync(Path.Combine(stageFolder, fileName), imageBytes);
             }
 
             stageNr++;
+        }
+    }
+
+    private static async Task<byte[]?> DownloadImageBytesAsync(HttpClient httpClient, string imageUrl, string imgSrc, string refererUrl)
+    {
+        if (TryGetBytesFromDataUri(imgSrc, out var embeddedBytes)) return embeddedBytes;
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, imageUrl);
+        request.Headers.Referrer = new Uri(refererUrl);
+
+        using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+        {
+            // Cloudflare occasionally blocks plain HttpClient requests.
+            return await PcsClient.TryLoadBinaryAsync(imageUrl, refererUrl);
+        }
+
+        return null;
+    }
+
+    private static string ResolvePcsUrl(string source)
+    {
+        if (Uri.TryCreate(source, UriKind.Absolute, out var absolute))
+        {
+            return absolute.ToString();
+        }
+
+        var baseUri = new Uri("https://www.procyclingstats.com/");
+        return new Uri(baseUri, source).ToString();
+    }
+
+    private static bool TryGetBytesFromDataUri(string imgSrc, out byte[] bytes)
+    {
+        bytes = [];
+        if (string.IsNullOrWhiteSpace(imgSrc) || !imgSrc.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var commaIndex = imgSrc.IndexOf(',');
+        if (commaIndex < 0) return false;
+
+        var metadata = imgSrc[..commaIndex];
+        var payload = imgSrc[(commaIndex + 1)..];
+
+        if (!metadata.Contains(";base64", StringComparison.OrdinalIgnoreCase)) return false;
+
+        try
+        {
+            bytes = Convert.FromBase64String(payload);
+            return true;
+        }
+        catch (FormatException)
+        {
+            return false;
         }
     }
 
