@@ -56,7 +56,7 @@ public partial class Scrape
             var yocComplete = prevResult.Count(p => p.Youth.Position != 0) <= yocCount + dnfCount;
             stage.Complete = stageComplete && gcComplete && pointsComplete && komplete && yocComplete;
         }
-        stage.Complete = stage.Complete || stage.StageId is 965 or 966 or 975;
+        stage.Complete = stage.Complete || stage.Starttime < DateTime.UtcNow.AddDays(-1);
         stage.Finished = stageCount > 0 && !finishedOverride;
         DB.SaveChanges();
 

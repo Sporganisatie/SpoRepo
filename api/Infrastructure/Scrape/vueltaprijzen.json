@@ -738,7 +738,7 @@
             "BirthDate": "1996-02-13T00:00:00",
             "EventRiderId": 213494,
             "Price": 500000,
-            "Status": 1,
+            "Status": 2,
             "TeamId": 5,
             "Type": 6,
             "NationalityCode": "BEL",
@@ -1521,7 +1521,7 @@
             "BirthDate": "1995-09-04T00:00:00",
             "EventRiderId": 213530,
             "Price": 500000,
-            "Status": 1,
+            "Status": 2,
             "TeamId": 12,
             "Type": 2,
             "NationalityCode": "BEL",
@@ -4343,6 +4343,149 @@
                 }
             ],
             "RiderId": 7603
+        },
+        {
+            "Age": 27,
+            "BirthDate": "1999-06-01T00:00:00",
+            "EventRiderId": 213665,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 5,
+            "Type": 5,
+            "NationalityCode": "BEL",
+            "FirstName": "Mauri",
+            "LastName": "Vansevenant",
+            "NameShort": "M. Vansevenant",
+            "Qualities": [
+                {
+                    "Type": 1,
+                    "Value": 4
+                },
+                {
+                    "Type": 5,
+                    "Value": 4
+                }
+            ],
+            "RiderId": 6474
+        },
+        {
+            "Age": 27,
+            "BirthDate": "1999-05-28T00:00:00",
+            "EventRiderId": 213666,
+            "Price": 1500000,
+            "Status": 1,
+            "TeamId": 12,
+            "Type": 4,
+            "NationalityCode": "GBR",
+            "FirstName": "Ben",
+            "LastName": "Turner",
+            "NameShort": "B. Turner",
+            "Qualities": [
+                {
+                    "Type": 3,
+                    "Value": 4
+                },
+                {
+                    "Type": 5,
+                    "Value": 2
+                },
+                {
+                    "Type": 6,
+                    "Value": 4
+                }
+            ],
+            "RiderId": 7531
+        },
+        {
+            "Age": 22,
+            "BirthDate": "2004-02-15T00:00:00",
+            "EventRiderId": 213667,
+            "Price": 1000000,
+            "Status": 1,
+            "TeamId": 12,
+            "Type": 3,
+            "NationalityCode": "GBR",
+            "FirstName": "Joshua",
+            "LastName": "Tarling",
+            "NameShort": "J. Tarling",
+            "Qualities": [
+                {
+                    "Type": 2,
+                    "Value": 10
+                }
+            ],
+            "RiderId": 7749
+        },
+        {
+            "Age": 23,
+            "BirthDate": "2002-09-01T00:00:00",
+            "EventRiderId": 213668,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 12,
+            "Type": 6,
+            "NationalityCode": "NOO",
+            "FirstName": "Embret",
+            "LastName": "Svestad-Bardseng",
+            "NameShort": "E. Svestad-Bardseng",
+            "Qualities": [],
+            "RiderId": 7786
+        },
+        {
+            "Age": 30,
+            "BirthDate": "1996-02-12T00:00:00",
+            "EventRiderId": 213669,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 12,
+            "Type": 6,
+            "NationalityCode": "AUS",
+            "FirstName": "Lucas",
+            "LastName": "Hamilton",
+            "NameShort": "L. Hamilton",
+            "Qualities": [
+                {
+                    "Type": 1,
+                    "Value": 2
+                },
+                {
+                    "Type": 5,
+                    "Value": 2
+                }
+            ],
+            "RiderId": 5335
+        },
+        {
+            "Age": 32,
+            "BirthDate": "1993-09-06T00:00:00",
+            "EventRiderId": 213670,
+            "Price": 500000,
+            "Status": 1,
+            "TeamId": 12,
+            "Type": 6,
+            "NationalityCode": "AUS",
+            "FirstName": "Jack",
+            "LastName": "Haig",
+            "NameShort": "J. Haig",
+            "Qualities": [
+                {
+                    "Type": 0,
+                    "Value": 4
+                },
+                {
+                    "Type": 1,
+                    "Value": 4
+                },
+                {
+                    "Type": 4,
+                    "Value": 6
+                },
+                {
+                    "Type": 5,
+                    "Value": 4
+                }
+            ],
+            "RiderId": 1099
         }
     ]
 }
