@@ -63,6 +63,8 @@ public partial class Scrape(DatabaseContext DB, IMemoryCache MemoryCache, StageS
             await transaction.CommitAsync();
         }
 
+        await StageSelectionStatsService.Calculate(stage.StageId);
+
         var nextStage = DB.Stages.Include(s => s.Race).AsNoTracking().SingleOrDefault(x => x.Stagenr == stage.Stagenr + 1 && x.RaceId == stage.RaceId);
         if (nextStage?.Starttime < DateTime.Now) // Nodig als er meerdere etappes herberekend moeten worden, dan gaat dit door tot de huidige/laatste etappe
         {
