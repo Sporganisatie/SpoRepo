@@ -16,6 +16,7 @@ import RaceUitslagen from "./pages/Statistics/EtappeUitslagen/RaceUitslagen";
 import RiderPage from "./pages/RiderPage/RiderPage";
 import ScoreVerdelingChart from "./pages/Charts/ScoreVerdelingChart";
 import RaceScoreVerloopChart from "./pages/Charts/RaceScoreVerloopChart";
+import RacePositieScoreChart from "./pages/Charts/RacePositieScoreChart";
 import Klassementen from "./pages/Statistics/Klassementen";
 import RulesPopup from "./pages/RulesPopup";
 import { Root } from "./App";
@@ -115,6 +116,10 @@ const router = createBrowserRouter([
       {
         path: "charts/scoreverloop",
         Component: RaceScoreVerloopChart,
+      },
+      {
+        path: "charts/positiescore",
+        Component: RacePositieScoreChart,
       },
       {
         path: ":raceId/charts/scoreverloop",

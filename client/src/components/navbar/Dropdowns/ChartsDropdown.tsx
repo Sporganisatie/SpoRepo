@@ -10,11 +10,9 @@ const ChartsDropdown = (props: { raceSelected: boolean }) => {
       {...props}
       name="Grafieken"
       icon={faChartLine}
-      alwaysLinks={
-        [
-          // { url: "/charts/totalscorespread", title: "Score verdeling Totaal" }
-        ]
-      }
+      alwaysLinks={[
+        // { url: "/charts/totalscorespread", title: "Score verdeling Totaal" }
+      ]}
       raceOnlyLinks={[
         { url: `/${race}/charts/scoreverloop`, title: "Relatief Scoreverloop" },
         { url: `/${race}/charts/scoreverdeling`, title: "Score Verdeling" },

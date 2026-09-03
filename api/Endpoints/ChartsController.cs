@@ -20,6 +20,16 @@ public class ChartsController(StatisticsService Service) : ControllerBase
     public IActionResult RaceScoreVerloop(bool budgetParticipation)
         => Ok(Service.RaceScoreVerloop(budgetParticipation));
 
+    [HttpGet("racePositieScoreVerloop")]
+    [ProducesResponseType(200)]
+    public IActionResult RacePositieScoreVerloop(bool budgetParticipation, bool bigFour, bool relative, int startRaceId, int endRaceId, PositionScoringMethod puntentelling)
+        => Ok(Service.RacePositieScoreVerloop(budgetParticipation, bigFour, relative, startRaceId, endRaceId, puntentelling));
+
+    [HttpGet("racePositieScoreRaceOptions")]
+    [ProducesResponseType(200)]
+    public IActionResult RacePositieScoreRaceOptions()
+        => Ok(Service.RacePositieScoreRaceOptions());
+
     [HttpGet("perfectScoreVerloop")]
     [ProducesResponseType(200)]
     public IActionResult PerfectScoreVerloop(int raceId, bool budgetParticipation)
