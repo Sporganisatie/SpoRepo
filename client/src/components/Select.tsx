@@ -9,10 +9,11 @@ export interface SelectProps<T extends string | number> {
   options: SelectOption<T>[];
   onChange: (selectedOption: T) => void;
   value?: T;
+  style?: React.CSSProperties;
 }
 
 function Select<T extends string | number>(props: SelectProps<T>) {
-  const { options, onChange, value: initialValue } = props;
+  const { options, onChange, value: initialValue, style } = props;
 
   const [value, setValue] = useState(initialValue);
 
@@ -28,7 +29,7 @@ function Select<T extends string | number>(props: SelectProps<T>) {
 
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
-      <select onChange={handleChange} value={value}>
+      <select onChange={handleChange} value={value} style={style}>
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.displayValue}

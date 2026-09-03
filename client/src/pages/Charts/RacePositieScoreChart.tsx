@@ -41,7 +41,7 @@ const RacePositieScoreChart = () => {
         });
     }, []);
 
-    // raceOptions is ordered newest to oldest (after the "Alles" entry at index 0), so the
+    // raceOptions is ordered newest to oldest (after the "   " entry at index 0), so the
     // end race can only be the selected start race or a more recent one (a lower index).
     const endRaceOptions = useMemo(() => {
         if (startRaceId === 0) return raceOptions;
@@ -87,47 +87,63 @@ const RacePositieScoreChart = () => {
 
     return (
         <div className="chart-frame">
-            <div>
-                <div
-                    style={{ display: "inline-block", cursor: "pointer", color: "white" }}
-                    onClick={() => setBigFour(!bigFour)}
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "flex-end",
+                    gap: "8px",
+                    marginBottom: "10px",
+                }}
+            >
+                <label
+                    style={{ display: "flex", alignItems: "center", gap: "4px", color: "white", cursor: "pointer" }}
                 >
                     Big Four
-                    <input type="checkbox" checked={bigFour} onChange={() => { }} />
-                </div>
-                <div
-                    style={{ display: "inline-block", cursor: "pointer", color: "white", marginLeft: "10px" }}
-                    onClick={() => setRelative(!relative)}
+                    <input type="checkbox" checked={bigFour} onChange={() => setBigFour(!bigFour)} />
+                </label>
+                <label
+                    style={{ display: "flex", alignItems: "center", gap: "4px", color: "white", cursor: "pointer" }}
                 >
                     Relatief
-                    <input type="checkbox" checked={relative} onChange={() => { }} />
-                </div>
-                <div style={{ display: "inline-block", color: "white", marginLeft: "10px" }}>
+                    <input type="checkbox" checked={relative} onChange={() => setRelative(!relative)} />
+                </label>
+                <label style={{ display: "flex", flexDirection: "column", gap: "4px", color: "white", fontSize: "13px" }}>
                     Start race
                     <Select<number>
                         value={startRaceId}
                         options={raceOptions}
                         onChange={(selectedOption: number) => setStartRaceId(Number(selectedOption))}
+                        style={{ minWidth: "85px" }}
                     />
-                </div>
-                <div style={{ display: "inline-block", color: "white", marginLeft: "10px" }}>
+                </label>
+                <label style={{ display: "flex", flexDirection: "column", gap: "4px", color: "white", fontSize: "13px" }}>
                     Eind race
                     <Select<number>
                         value={endRaceId}
                         options={endRaceOptions}
                         onChange={(selectedOption: number) => setEndRaceId(Number(selectedOption))}
+                        style={{ minWidth: "85px" }}
                     />
-                </div>
-                <div style={{ display: "inline-block", color: "white", marginLeft: "10px" }}>
+                </label>
+                <label style={{ display: "flex", flexDirection: "column", gap: "4px", color: "white", fontSize: "13px" }}>
                     Puntentelling
                     <Select<string>
                         value={puntentelling}
                         options={PUNTENTELLING_OPTIONS}
                         onChange={(selectedOption: string) => setPuntentelling(selectedOption)}
                     />
-                </div>
+                </label>
             </div>
-            <div>
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    gap: "6px",
+                    marginBottom: "12px",
+                }}
+            >
                 {toggles.map((user, index) => (
                     <SmallSwitch
                         key={index}
@@ -137,9 +153,7 @@ const RacePositieScoreChart = () => {
                         toggleUser={() => toggleUser(index)}
                     />
                 ))}
-                <div style={{ display: "inline-block", marginLeft: "5px", marginBottom: "5px" }}>
-                    <button onClick={toggleAll}>Toggle alle</button>
-                </div>
+                <button onClick={toggleAll}>Toggle alle</button>
             </div>
             <div>
                 <LineChart width={Math.min(data.data.length * 70, 1540)} height={600} data={data.data}>
