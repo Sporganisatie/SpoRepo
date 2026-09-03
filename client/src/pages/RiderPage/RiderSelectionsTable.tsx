@@ -3,11 +3,11 @@ import type { RiderSelectionRow } from "./models/RiderRaceDetail";
 
 interface RiderSelectionsTableProps {
     selections: RiderSelectionRow[];
-    timesSelectedByAnyone: number;
     totalParticipants: number;
 }
 
-const RiderSelectionsTable = ({ selections, timesSelectedByAnyone, totalParticipants }: RiderSelectionsTableProps) => {
+const RiderSelectionsTable = ({ selections, totalParticipants }: RiderSelectionsTableProps) => {
+    const timesSelectedByAnyone = selections.length;
     const popularityPercentage = Math.round((timesSelectedByAnyone / totalParticipants) * 100);
 
     return (

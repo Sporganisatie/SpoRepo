@@ -74,7 +74,6 @@ const RiderPage = () => {
           />
           <RiderSelectionsTable
             selections={raceDetail.selections}
-            timesSelectedByAnyone={raceDetail.timesSelectedByAnyone}
             totalParticipants={raceDetail.totalParticipants}
           />
         </div>

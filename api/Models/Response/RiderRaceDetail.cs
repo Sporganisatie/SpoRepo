@@ -38,7 +38,6 @@ public record RiderRaceDetail(
     bool Dnf,
     int Price,
     int TotalParticipants,
-    int TimesSelectedByAnyone,
     IEnumerable<RiderStageScoreRow> Stages,
     IEnumerable<RiderClassificationRow> Classifications,
     IEnumerable<RiderSelectionRow> Selections);

@@ -48,7 +48,6 @@ export const riderRaceDetailSchema = z.object({
     dnf: z.boolean(),
     price: z.number(),
     totalParticipants: z.number(),
-    timesSelectedByAnyone: z.number(),
     stages: z.array(riderStageScoreRowSchema),
     classifications: z.array(riderClassificationRowSchema),
     selections: z.array(riderSelectionRowSchema),
