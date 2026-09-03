@@ -11,7 +11,12 @@ namespace SpoRE.Controllers;
 public class RiderController(RiderService Service) : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(RaceState), 200)]
-    public IActionResult GetAsync(int riderId)
-        => Ok(Service.GetRiderInfo(riderId));
+    [ProducesResponseType(typeof(RiderOverview), 200)]
+    public IActionResult GetAsync(int riderId, bool budgetParticipation)
+        => Ok(Service.GetRiderOverview(riderId, budgetParticipation));
+
+    [HttpGet("race")]
+    [ProducesResponseType(typeof(RiderRaceDetail), 200)]
+    public IActionResult GetRaceDetail(int riderId, int raceId, bool budgetParticipation)
+        => Ok(Service.GetRiderRaceDetail(riderId, raceId, budgetParticipation));
 }

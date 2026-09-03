@@ -1,0 +1,101 @@
+.rider-page {
+    width: 100%;
+}
+
+.rider-page .panel {
+    width: fit-content;
+}
+
+.rider-page-header {
+    align-self: center;
+}
+
+.rider-page .panel.rider-page-header {
+    min-width: 400px;
+}
+
+.rider-page-header .panel-header {
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    min-height: 0;
+}
+
+.rider-overview-table .sre-table tbody td {
+    color: var(--fg-muted);
+}
+
+.rider-race-too-expensive {
+    color: var(--accent-red);
+}
+
+.rider-race-tables {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-4);
+}
+
+.rider-race-tables .sre-table thead th {
+    height: 27px;
+    font-size: 12px;
+}
+
+.rider-race-tables .sre-table tbody td {
+    height: 26px;
+    font-size: 13px;
+}
+
+.row-year-divider td {
+    border-top: 2px solid var(--fg-muted);
+}
+
+.rider-race-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding-bottom: var(--space-1);
+}
+
+.rider-race-nav-item {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 2.25rem;
+    background-color: var(--bg-elevated);
+    color: var(--fg-default);
+    border: 1px solid var(--bg-elevated);
+    border-radius: 0.375rem;
+    padding: 0 var(--space-3);
+    font-size: var(--text-sm);
+    font-family: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 150ms;
+}
+
+.rider-race-nav-item:hover {
+    background-color: var(--bg-control);
+}
+
+.rider-race-nav-item.active {
+    background-color: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.rider-race-nav-item.disabled {
+    color: var(--bg-disabled);
+    cursor: default;
+    pointer-events: none;
+}
+
+.rider-race-nav-back {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    margin-right: var(--space-2);
+}

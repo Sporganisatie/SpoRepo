@@ -20,12 +20,10 @@ const RaceDropdown = () => {
 
   function handleOnchange(selectedOption: number) {
     raceDispatch(selectedOption);
-    const match = location.pathname.match(/\d+(.*)/);
+    const match = location.pathname.match(/^\/(\d+)(\/.*)?$/);
 
     if (match) {
-      navigate(`/${selectedOption}${match[1]}`);
-    } else {
-      raceDispatch(selectedOption);
+      navigate(`/${selectedOption}${match[2] ?? ""}`);
     }
   }
 

@@ -12,6 +12,7 @@ button {
   padding: var(--space-2);
   cursor: pointer;
 }
+
 button:hover {
   background-color: var(--bg-control-hover);
   transition: 200ms;
@@ -31,6 +32,7 @@ select {
   padding: var(--space-2);
   cursor: pointer;
 }
+
 select:hover {
   background-color: var(--bg-control-hover);
   transition: 200ms;
@@ -60,11 +62,11 @@ div.pageContainer {
   padding-top: calc(var(--navbar-height) + var(--page-top-buffer));
 }
 
-.notselected > :first-child {
+.notselected> :first-child {
   background-color: var(--bg-control-hover);
 }
 
-.selected > :first-child {
+.selected> :first-child {
   background-color: #94a3b8;
   color: var(--fg-on-light);
 }
@@ -81,6 +83,11 @@ div.pageContainer {
 
 .dim td {
   color: var(--bg-disabled);
+}
+
+.row-total td {
+  font-weight: bold;
+  border-top: 1px solid var(--fg-muted);
 }
 
 .tableLink {
@@ -134,7 +141,7 @@ div.pageContainer {
 /* The Select component wraps its <select> in a div; make that div the colored
    surface so the bg fills the whole control regardless of intrinsic <select>
    sizing quirks. */
-.arrow-select > div {
+.arrow-select>div {
   display: flex;
   align-items: stretch;
   background-color: var(--bg-elevated);
@@ -162,9 +169,11 @@ div.pageContainer {
     min-width: 2rem;
     padding: 0 var(--space-2);
   }
-  .arrow-select > div {
+
+  .arrow-select>div {
     padding: 0 var(--space-2);
   }
+
   .arrow-select select {
     min-width: 0;
     padding-right: var(--space-1);

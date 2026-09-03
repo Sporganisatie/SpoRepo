@@ -142,6 +142,8 @@ interface Props<T> {
   hideHeader?: boolean;
   pointerOnHover?: boolean;
   expandedContent?: (row: T) => ReactNode;
+  onRowClick?: (row: T) => void;
+  fitContent?: boolean;
 }
 
 type SortState = { col: number; dir: "asc" | "desc" } | null;
@@ -163,6 +165,8 @@ function Table<T>({
   hideHeader,
   pointerOnHover,
   expandedContent,
+  onRowClick,
+  fitContent,
 }: Props<T>) {
   const columns = children(makeHelpers<T>()).filter((c) => !c.omit);
   const [page, setPage] = useState(0);
@@ -211,7 +215,7 @@ function Table<T>({
     });
 
   return (
-    <table className={`sre-table${pointerOnHover ? " sre-pointer" : ""}`}>
+    <table className={`sre-table${pointerOnHover ? " sre-pointer" : ""}${fitContent ? " sre-table-fit" : ""}`}>
       {title != null && <caption>{title}</caption>}
       <colgroup>
         {columns.map((c, i) => (
@@ -245,7 +249,13 @@ function Table<T>({
             <tr
               key={key}
               className={rowClassName?.(row)}
-              onClick={expandedContent ? (e) => toggleExpand(key, e) : undefined}
+              onClick={
+                expandedContent
+                  ? (e) => toggleExpand(key, e)
+                  : onRowClick
+                    ? () => onRowClick(row)
+                    : undefined
+              }
             >
               {columns.map((c, i) => (
                 <td key={i} style={{ textAlign: c.align, padding: c.padding }}>
