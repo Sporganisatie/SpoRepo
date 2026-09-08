@@ -90,7 +90,7 @@ public partial class StatisticsService
         return new(participants, uitslagen.Prepend(start).Select(x => ConvertToDict(x)));
     }
 
-    public LineChartData StagenummerScoreVerloop(bool budgetParticipation, bool genormaliseerd, bool totaalScore = false)
+    public LineChartData StagenummerScoreVerloop(bool budgetParticipation, bool genormaliseerd, bool totaalScore, int startRaceId, int endRaceId)
     {
         var rows = (from ss in DB.StageSelections
                     where ss.AccountParticipation.BudgetParticipation == budgetParticipation
@@ -102,8 +102,28 @@ public partial class StatisticsService
                         ss.AccountParticipation.Account.Username,
                         ss.Stage.StageId,
                         ss.Stage.Stagenr,
+                        RaceYear = ss.Stage.Race.Year,
+                        RaceName = ss.Stage.Race.Name,
                         Score = totaalScore ? ss.TotalScore : ss.StageScore
                     }).ToList();
+
+        var startRace = DB.Races.AsNoTracking().SingleOrDefault(r => r.RaceId == startRaceId);
+        if (startRace != null)
+        {
+            rows = rows
+                .Where(r => r.RaceYear > startRace.Year
+                    || (r.RaceYear == startRace.Year && string.Compare(r.RaceName, startRace.Name, StringComparison.Ordinal) >= 0))
+                .ToList();
+        }
+
+        var endRace = DB.Races.AsNoTracking().SingleOrDefault(r => r.RaceId == endRaceId);
+        if (endRace != null)
+        {
+            rows = rows
+                .Where(r => r.RaceYear < endRace.Year
+                    || (r.RaceYear == endRace.Year && string.Compare(r.RaceName, endRace.Name, StringComparison.Ordinal) <= 0))
+                .ToList();
+        }
 
         var stageAverages = rows.GroupBy(r => r.StageId).ToDictionary(g => g.Key, g => g.Average(x => x.Score));
 

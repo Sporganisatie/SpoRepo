@@ -22,8 +22,8 @@ public class ChartsController(StatisticsService Service) : ControllerBase
 
     [HttpGet("stagenummerScoreVerloop")]
     [ProducesResponseType(200)]
-    public IActionResult StagenummerScoreVerloop(bool budgetParticipation, bool genormaliseerd, bool totaalScore = false)
-        => Ok(Service.StagenummerScoreVerloop(budgetParticipation, genormaliseerd, totaalScore));
+    public IActionResult StagenummerScoreVerloop(bool budgetParticipation, bool genormaliseerd, bool totaalScore, int startRaceId, int endRaceId)
+        => Ok(Service.StagenummerScoreVerloop(budgetParticipation, genormaliseerd, totaalScore, startRaceId, endRaceId));
 
     [HttpGet("racePositieScoreVerloop")]
     [ProducesResponseType(200)]
