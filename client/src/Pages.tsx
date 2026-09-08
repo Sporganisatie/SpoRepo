@@ -17,6 +17,7 @@ import RiderPage from "./pages/RiderPage/RiderPage";
 import ScoreVerdelingChart from "./pages/Charts/ScoreVerdelingChart";
 import RaceScoreVerloopChart from "./pages/Charts/RaceScoreVerloopChart";
 import RacePositieScoreChart from "./pages/Charts/RacePositieScoreChart";
+import StagenummerScoreChart from "./pages/Charts/StagenummerScoreChart";
 import Klassementen from "./pages/Statistics/Klassementen";
 import RulesPopup from "./pages/RulesPopup";
 import { Root } from "./App";
@@ -120,6 +121,10 @@ const router = createBrowserRouter([
       {
         path: "charts/positiescore",
         Component: RacePositieScoreChart,
+      },
+      {
+        path: "charts/stagenummerscore",
+        Component: StagenummerScoreChart,
       },
       {
         path: ":raceId/charts/scoreverloop",

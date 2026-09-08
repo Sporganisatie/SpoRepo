@@ -90,6 +90,63 @@ public partial class StatisticsService
         return new(participants, uitslagen.Prepend(start).Select(x => ConvertToDict(x)));
     }
 
+    public LineChartData StagenummerScoreVerloop(bool budgetParticipation, bool genormaliseerd, bool totaalScore = false)
+    {
+        var rows = (from ss in DB.StageSelections
+                    where ss.AccountParticipation.BudgetParticipation == budgetParticipation
+                        && ss.Stage.RaceId != 99 && ss.Stage.Race.Name != "classics"
+                        && ss.Stage.Finished
+                    select new
+                    {
+                        ss.AccountParticipation.AccountId,
+                        ss.AccountParticipation.Account.Username,
+                        ss.Stage.StageId,
+                        ss.Stage.Stagenr,
+                        Score = totaalScore ? ss.TotalScore : ss.StageScore
+                    }).ToList();
+
+        var stageAverages = rows.GroupBy(r => r.StageId).ToDictionary(g => g.Key, g => g.Average(x => x.Score));
+
+        // Uitkomst van de query: gemiddelde relatieve score (score - gemiddelde van die stage) per speler, per stagenr.
+        var perStagenrAverages = rows
+            .Select(r => new { r.AccountId, r.Username, r.Stagenr, Relatief = r.Score - stageAverages[r.StageId] })
+            .GroupBy(r => new { r.AccountId, r.Username, r.Stagenr })
+            .Select(g => new { g.Key.AccountId, g.Key.Username, g.Key.Stagenr, Gemiddelde = g.Average(x => x.Relatief) })
+            .ToList();
+
+        // Schaling gebeurt pas na het groeperen per stagenr: het gemiddelde van de speler is het gemiddelde
+        // van diens eigen per-stagenr uitkomsten hierboven, niet van de losse selecties. Genormaliseerd is
+        // een shift (verschuiving) met dit gemiddelde, geen percentage-deling, zodat elke speler se lijn
+        // rond 0 uitkomt.
+        var spelerGemiddeldes = perStagenrAverages
+            .GroupBy(x => x.AccountId)
+            .ToDictionary(g => g.Key, g => g.Average(x => x.Gemiddelde));
+
+        var uitslagen = perStagenrAverages
+            .GroupBy(x => x.Stagenr)
+            .OrderBy(g => g.Key)
+            .Select(g => new Scores(
+                g.Select(x =>
+                {
+                    var spelerGemiddelde = spelerGemiddeldes[x.AccountId];
+                    var value = genormaliseerd ? x.Gemiddelde - spelerGemiddelde : x.Gemiddelde;
+                    return new UsernameScore(x.Username, (int)Math.Round(value));
+                }).ToList(),
+                g.Key.ToString()))
+            .ToList();
+
+        var participants = perStagenrAverages
+            .Select(x => new { x.AccountId, x.Username })
+            .Distinct()
+            .OrderBy(x => x.AccountId)
+            .Select(x => x.Username)
+            .ToList();
+
+        var start = new Scores(participants.Select(x => new UsernameScore(x, 0)).ToList(), "");
+
+        return new(participants, uitslagen.Prepend(start).Select(x => ConvertToDict(x)));
+    }
+
     public LineChartData PerfectScoreVerloop(int raceId, bool budgetParticipation)
     {
         var missedPoints = MissedPoints(raceId, budgetParticipation).ToList();
