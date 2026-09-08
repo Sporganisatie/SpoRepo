@@ -157,7 +157,7 @@ public class RiderService(DatabaseContext DB, Userdata User)
             return new RiderStageScoreRow(
                 s.Stagenr,
                 StageLabel(s, "Eindpunten"),
-                rp.StageScore,
+                s.Type == StageType.FinalStandings ? null : rp.StageScore,
                 rp.Gc.Score ?? 0,
                 rp.Points.Score ?? 0,
                 rp.Kom.Score ?? 0,
@@ -183,7 +183,7 @@ public class RiderService(DatabaseContext DB, Userdata User)
             return new RiderClassificationRow(
                 s.Stagenr,
                 StageLabel(s, "Eindstand"),
-                Position(rp.StagePos),
+                s.Type == StageType.FinalStandings ? null : Position(rp.StagePos),
                 rp.StageResult ?? "",
                 Cell(rp.Gc),
                 Cell(rp.Points),
